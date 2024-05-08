@@ -20,7 +20,8 @@ export class CaseReportValidateService {
   async findAll() {
     const caseReportValidates = await this.caseReportValidateRepository.find({
       relations:{
-        caseReportOriginal: true
+        caseReportOriginal: true,
+        log: true
       }
     });
 
