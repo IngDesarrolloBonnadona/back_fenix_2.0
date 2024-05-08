@@ -1,5 +1,6 @@
 import { CaseReportOriginal } from "src/modules/case-report-original/entities/case-report-original.entity";
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Log } from "src/modules/log/entities/log.entity";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity({ name: 'ReportesCasoValidado'})
 export class CaseReportValidate {
@@ -75,4 +76,7 @@ export class CaseReportValidate {
     @ManyToOne(() => CaseReportOriginal, (caseReportOriginal) => caseReportOriginal.caseReportValidate)
     @JoinColumn({name: "rcval_id_caso_original_FK"})
     caseReportOriginal: CaseReportOriginal
+
+    @OneToMany(() => Log, (log) => log.caseReportValidate)
+    log: Log[]
 }   

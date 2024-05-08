@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { CaseReportValidate } from "src/modules/case-report-validate/entities/case-report-validate.entity";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity({ name: 'Logs'})
 export class Log {
@@ -11,10 +12,10 @@ export class Log {
     @Column()
     log_id_usuario_FK: number;
 
-    @Column()
+    @Column({ type: 'varchar' })
     log_accion: string;
 
-    @Column()
+    @Column({ type: 'varchar' })
     log_ip: string;
 
     @Column({ default: true })
@@ -28,4 +29,8 @@ export class Log {
 
     @DeleteDateColumn()
     log_fecha_eliminacion: Date;
+
+    @ManyToOne(() => CaseReportValidate, (caseReportValidate) => caseReportValidate.log)
+    @JoinColumn({ name: 'log_id_caso_validado_FK'})
+    caseReportValidate: CaseReportValidate
 }
