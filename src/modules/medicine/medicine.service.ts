@@ -4,6 +4,8 @@ import { UpdateMedicineDto } from './dto/update-medicine.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Medicine as MedicineEntity } from './entities/medicine.entity';
 import { Repository } from 'typeorm';
+import { HttpException } from '@nestjs/common';
+import { HttpStatus } from '@nestjs/common';
 
 @Injectable()
 export class MedicineService {
@@ -55,7 +57,10 @@ export class MedicineService {
     const medicine = await this.findOne(id);
 
     if (!medicine) {
-      throw new NotFoundException();
+      throw new HttpException(
+        'No se encontro el medicamento',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
 
     medicine.med_fecha_eliminacion = new Date();

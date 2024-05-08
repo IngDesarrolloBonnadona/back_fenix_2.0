@@ -4,6 +4,8 @@ import { UpdateDeviceDto } from './dto/update-device.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Device as DeviceEntity } from './entities/device.entity';
 import { Repository } from 'typeorm';
+import { HttpException } from '@nestjs/common';
+import { HttpStatus } from '@nestjs/common';
 
 @Injectable()
 export class DeviceService {
@@ -55,7 +57,10 @@ export class DeviceService {
     const device = await this.findOne(id);
 
     if (!device) {
-      throw new NotFoundException();
+      throw new HttpException(
+        'No se encontro el dispositivo',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
 
     device.disp_fecha_eliminacion = new Date();
