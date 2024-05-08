@@ -1,6 +1,6 @@
 import { CaseReportOriginal } from "src/modules/case-report-original/entities/case-report-original.entity";
 import { Unit } from "src/modules/unit/entities/unit.entity";
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity({ name: 'Servicios'})
 export class Service {
@@ -16,11 +16,14 @@ export class Service {
     @Column({ default: true })
     serv_estado: boolean;
 
-    @Column({ default: () => 'CURRENT_TIMESTAMP' })
+    @CreateDateColumn()
     serv_fecha_creacion: Date;
 
-    @Column({ default: () => 'CURRENT_TIMESTAMP' })
+    @UpdateDateColumn()
     serv_fecha_actualizacion: Date;
+
+    @DeleteDateColumn()
+    serv_fecha_eliminacion: Date
 
     @OneToMany(() => Unit, (unit) => unit.service)
     unit: Unit[];

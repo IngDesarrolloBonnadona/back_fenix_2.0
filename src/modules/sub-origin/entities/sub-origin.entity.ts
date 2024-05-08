@@ -1,6 +1,6 @@
 import { CaseReportOriginal } from "src/modules/case-report-original/entities/case-report-original.entity";
 import { Origin } from "src/modules/origin/entities/origin.entity";
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity({ name: 'SubFuentes'})
 export class SubOrigin {
@@ -19,11 +19,14 @@ export class SubOrigin {
     @Column({ default: true })
     sfu_estado: boolean;
 
-    @Column({ default: () => 'CURRENT_TIMESTAMP' })
+    @CreateDateColumn()
     sfu_fecha_creacion: Date;
 
-    @Column({ default: () => 'CURRENT_TIMESTAMP' })
+    @UpdateDateColumn()
     sfu_fecha_actualizacion: Date;
+
+    @DeleteDateColumn()
+    sfu_fecha_eliminacion : Date;
     
     @ManyToOne(() => Origin, (origin) => origin.subOrigins)
     @JoinColumn({ name: 'sfu_id_fuente_FK'})

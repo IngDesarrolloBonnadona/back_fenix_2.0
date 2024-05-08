@@ -1,5 +1,5 @@
 import { StatusReport } from "src/modules/status-report/entities/status-report.entity";
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity({ name: 'MovimientosReporte'})
 export class MovementReport {
@@ -18,11 +18,14 @@ export class MovementReport {
     @Column({ default: true })
     mrep_estado: boolean;
 
-    @Column({ default: () => 'CURRENT_TIMESTAMP' })
+    @CreateDateColumn()
     mrep_fecha_creacion: Date;
 
-    @Column({ default: () => 'CURRENT_TIMESTAMP' })
+    @UpdateDateColumn()
     mrep_fecha_actualizacion: Date;
+
+    @DeleteDateColumn()
+    mrep_fecha_eliminacion: Date;
 
     @OneToMany(() => StatusReport, (statusReport) => statusReport.movementReport)
     statusReport: StatusReport[];

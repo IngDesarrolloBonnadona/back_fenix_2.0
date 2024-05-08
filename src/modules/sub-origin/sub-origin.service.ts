@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateSubOriginDto } from './dto/create-sub-origin.dto';
 import { UpdateSubOriginDto } from './dto/update-sub-origin.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -18,24 +18,45 @@ export class SubOriginService {
   }
 
   async findAll() {
-    return await this.subOriginRepository.find({
+    const subOrigins = await this.subOriginRepository.find({
       relations: {
         origin: true,
         caseReportOriginal: true
       }
     });
+
+    if (!subOrigins) {
+      throw new HttpException(
+        'No se encontró la lista de subfuentes',
+        HttpStatus.NOT_FOUND,
+      );
+    };
+
+    return subOrigins
   }
 
   async findOne(id: number) {
-    return await this.subOriginRepository.findOne({ where: { id } });
+    const subOrigin = await this.subOriginRepository.findOne({ where: { id } });
+
+    if (!subOrigin) {
+      throw new HttpException(
+        'No se encontró el subfuente',
+        HttpStatus.NOT_FOUND,
+      );
+    };
+
+    return subOrigin
   }
 
   async update(id: number, updateSubOriginDto: UpdateSubOriginDto) {
     const subOrigin = await this.findOne(id);
 
     if (!subOrigin) {
-      throw new NotFoundException();
-    }
+      throw new HttpException(
+        'No se encontró el subfuente',
+        HttpStatus.NOT_FOUND,
+      );
+    };
 
     Object.assign(subOrigin, updateSubOriginDto)
 
@@ -48,8 +69,15 @@ export class SubOriginService {
     const subOrigin = await this.findOne(id);
 
     if (!subOrigin) {
-      throw new NotFoundException();
-    }
-    return await this.subOriginRepository.remove(subOrigin);
+      throw new HttpException(
+        'No se encontró el subfuente',
+        HttpStatus.NOT_FOUND,
+      );
+    };
+
+    subOrigin.sfu_fecha_eliminacion = new Date();
+    subOrigin.sfu_estado = false
+
+    return await this.subOriginRepository.save(subOrigin);
   }
 }

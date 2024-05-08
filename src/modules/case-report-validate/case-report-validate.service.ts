@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCaseReportValidateDto } from './dto/create-case-report-validate.dto';
 import { UpdateCaseReportValidateDto } from './dto/update-case-report-validate.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -18,15 +18,33 @@ export class CaseReportValidateService {
   }
 
   async findAll() {
-    return await this.caseReportValidateRepository.find({
+    const caseReportValidates = await this.caseReportValidateRepository.find({
       relations:{
         caseReportOriginal: true
       }
     });
+
+    if (!caseReportValidates) {
+      throw new HttpException(
+        'No se encontró la lista de reportes validado',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return caseReportValidates
   }
 
   async findOne(id: number) {
-    return await this.caseReportValidateRepository.findOne({ where: { id } });
+const caseReportValidate = await this.caseReportValidateRepository.findOne({ where: { id } });
+
+    if (!caseReportValidate) {
+      throw new HttpException(
+        'No se encontró el reporte validado',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return caseReportValidate
   }
 
   async update(id: number, updateCaseReportValidateDto: UpdateCaseReportValidateDto) {
@@ -34,7 +52,10 @@ export class CaseReportValidateService {
 
     // Valida si existe
     if (!caseReportValidate) {
-      throw new NotFoundException();
+      throw new HttpException(
+        'No se encontró el reporte validado',
+        HttpStatus.NOT_FOUND,
+      );
     }
 
     // Actualiza los campos con los valores proporcionados
@@ -50,8 +71,15 @@ export class CaseReportValidateService {
     const caseReportValidate = await this.findOne(id);
 
     if (!caseReportValidate) {
-      throw new NotFoundException();
+      throw new HttpException(
+        'No se encontró el reporte validado',
+        HttpStatus.NOT_FOUND,
+      );
     }
-    return this.caseReportValidateRepository.remove(caseReportValidate)
+
+    caseReportValidate.rcval_fecha_eliminacion = new Date();
+    caseReportValidate.rcval_estado = false;
+
+    return this.caseReportValidateRepository.save(caseReportValidate)
   }
 }

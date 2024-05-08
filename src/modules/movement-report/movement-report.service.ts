@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateMovementReportDto } from './dto/create-movement-report.dto';
 import { UpdateMovementReportDto } from './dto/update-movement-report.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -18,22 +18,43 @@ export class MovementReportService {
   }
 
   async findAll() {
-    return await this.movementReportRepository.find({
+    const movementReports = await this.movementReportRepository.find({
       relations: {
         statusReport: true
       }
     })
+
+    if (!movementReports) {
+      throw new HttpException(
+        'No se encontró la lista de movimientos de reportes.',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return movementReports
   }
 
   async findOne(id: number) {
-    return await this.movementReportRepository.findOne({ where: { id } });
+    const movementReport = await this.movementReportRepository.findOne({ where: { id } });
+
+    if (!movementReport) {
+      throw new HttpException(
+        'No se encontró el movimiento de reporte.',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return movementReport
   }
 
   async update(id: number, updateMovementReportDto: UpdateMovementReportDto) {
     const movementReport = await this.findOne(id);
 
     if (!movementReport) {
-      throw new NotFoundException();
+      throw new HttpException(
+        'No se encontró el movimiento de reporte.',
+        HttpStatus.NOT_FOUND,
+      );
     }
 
     Object.assign(movementReport, updateMovementReportDto)
@@ -47,8 +68,15 @@ export class MovementReportService {
     const movementReport = await this.findOne(id);
 
     if (!movementReport) {
-      throw new NotFoundException();
+      throw new HttpException(
+        'No se encontró el movimiento de reporte.',
+        HttpStatus.NOT_FOUND,
+      );
     }
-    return await this.movementReportRepository.remove(movementReport);
+
+    movementReport.mrep_fecha_eliminacion = new Date();
+    movementReport.mrep_estado = false;
+    
+    return await this.movementReportRepository.save(movementReport);
   }
 }

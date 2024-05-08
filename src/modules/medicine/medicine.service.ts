@@ -23,7 +23,10 @@ export class MedicineService {
     const medicines = await this.medicineRepository.find()
 
     if (!medicines) {
-      throw new NotFoundException();
+      throw new HttpException(
+        'No se encontró la lista de medicamentos',
+        HttpStatus.NOT_FOUND,
+      );
     }
 
     return medicines;
@@ -33,7 +36,10 @@ export class MedicineService {
     const medicine = await this.medicineRepository.findOne({ where: { id } })
 
     if (!medicine) {
-      throw new NotFoundException();
+      throw new HttpException(
+        'No se encontró el medicamento',
+        HttpStatus.NOT_FOUND,
+      );
     }
 
     return medicine;
@@ -43,7 +49,10 @@ export class MedicineService {
     const medicine = await this.findOne(id);
 
     if (!medicine) {
-      throw new NotFoundException();
+      throw new HttpException(
+        'No se encontró el medicamento',
+        HttpStatus.NOT_FOUND,
+      );
     }
 
     Object.assign(medicine, updateMedicineDto)
@@ -58,8 +67,8 @@ export class MedicineService {
 
     if (!medicine) {
       throw new HttpException(
-        'No se encontro el medicamento',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        'No se encontró el medicamento',
+        HttpStatus.NOT_FOUND,
       );
     }
 

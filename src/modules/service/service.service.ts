@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { UpdateServiceDto } from './dto/update-service.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -18,23 +18,44 @@ export class ServiceService {
   }
 
   async findAll() {
-    return await this.serviceRepository.find({
+    const services = await this.serviceRepository.find({
       relations: {
         unit: true,
         caseReportOriginal: true
       }
     });
+
+    if (!services) {
+      throw new HttpException(
+        'No se encontró la lista de servicios',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return services
   }
 
   async findOne(id: number) {
-    return await this.serviceRepository.findOne({ where: { id } });
+    const service = await this.serviceRepository.findOne({ where: { id } });
+
+    if (!service) {
+      throw new HttpException(
+        'No se encontró el servicio',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    
+    return service
   }
 
   async update(id: number, updateServiceDto: UpdateServiceDto) {
     const service = await this.findOne(id);
 
     if (!service) {
-      throw new NotFoundException();
+      throw new HttpException(
+        'No se encontró el servicio',
+        HttpStatus.NOT_FOUND,
+      );
     }
 
     Object.assign(service, updateServiceDto)
@@ -45,8 +66,15 @@ export class ServiceService {
     const service = await this.findOne(id);
 
     if (!service) {
-      throw new NotFoundException();
+      throw new HttpException(
+        'No se encontró el servicio',
+        HttpStatus.NOT_FOUND,
+      );
     }
-    return this.serviceRepository.remove(service);
+
+    service.serv_fecha_eliminacion = new Date()
+    service.serv_estado = false
+
+    return this.serviceRepository.save(service);
   }
 }

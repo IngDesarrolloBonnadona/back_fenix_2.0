@@ -23,7 +23,10 @@ export class DeviceService {
     const devices = await this.deviceRepository.find();
 
     if (!devices) {
-      throw new NotFoundException();
+      throw new HttpException(
+        'No se encontró la lista de dispositivos',
+        HttpStatus.NOT_FOUND,
+      );
     }
 
     return devices
@@ -33,7 +36,10 @@ export class DeviceService {
     const device = await this.deviceRepository.findOne({ where: { id } })
 
     if (!device) {
-      throw new NotFoundException();
+      throw new HttpException(
+        'No se encontró el dispositivo',
+        HttpStatus.NOT_FOUND,
+      );
     }
 
     return device;
@@ -43,7 +49,10 @@ export class DeviceService {
     const device = await this.findOne(id);
 
     if (!device) {
-      throw new NotFoundException();
+      throw new HttpException(
+        'No se encontró el dispositivo',
+        HttpStatus.NOT_FOUND,
+      );
     }
 
     Object.assign(device, updateDeviceDto)
@@ -58,8 +67,8 @@ export class DeviceService {
 
     if (!device) {
       throw new HttpException(
-        'No se encontro el dispositivo',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        'No se encontró el dispositivo',
+        HttpStatus.NOT_FOUND,
       );
     }
 

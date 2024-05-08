@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateOriginDto } from './dto/create-origin.dto';
 import { UpdateOriginDto } from './dto/update-origin.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -18,23 +18,44 @@ export class OriginService {
   }
 
   async findAll() {
-    return await this.originRepository.find({
+    const origins = await this.originRepository.find({
       relations: {
         subOrigins: true,
         caseReportOriginal: true
       }
     });
+
+    if (!origins) {
+      throw new HttpException(
+        'No se encontró la lista de fuentes',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return origins
   }
 
   async findOne(id: number) {
-    return await this.originRepository.findOne({ where: { id } });
+    const origin = await this.originRepository.findOne({ where: { id } });
+
+    if (!origin) {
+      throw new HttpException(
+        'No se encontró la fuente',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return origin;
   }
 
   async update(id: number, updateOriginDto: UpdateOriginDto) {
     const origin = await this.findOne(id);
 
     if (!origin) {
-      throw new NotFoundException();
+      throw new HttpException(
+        'No se encontró la fuente',
+        HttpStatus.NOT_FOUND,
+      );
     }
 
     Object.assign(origin, updateOriginDto)
@@ -48,8 +69,15 @@ export class OriginService {
     const origin = await this.findOne(id);
 
     if (!origin) {
-      throw new NotFoundException();
+      throw new HttpException(
+        'No se encontró la fuente',
+        HttpStatus.NOT_FOUND,
+      );
     }
-    return await this.originRepository.remove(origin);
+
+    origin.fu_fecha_eliminacion = new Date(),
+    origin.fu_estado = false;
+
+    return await this.originRepository.save(origin);
   }
 }

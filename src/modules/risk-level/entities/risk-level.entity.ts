@@ -1,5 +1,5 @@
 import { CaseReportOriginal } from "src/modules/case-report-original/entities/case-report-original.entity";
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity({ name: 'NivelesRiesgo'})
 export class RiskLevel {
@@ -15,11 +15,14 @@ export class RiskLevel {
     @Column({ default: true })
     nries_estado: boolean;
 
-    @Column({ default: () => 'CURRENT_TIMESTAMP' })
+    @CreateDateColumn()
     nries_fecha_creacion: Date;
 
-    @Column({ default: () => 'CURRENT_TIMESTAMP' })
+    @UpdateDateColumn()
     nries_fecha_actualizacion: Date;
+
+    @DeleteDateColumn()
+    nries_fecha_eliminacion : Date;
 
     @OneToMany(() => CaseReportOriginal, (caseReportOriginal) => caseReportOriginal.riskLevel)
     caseReportOriginal: CaseReportOriginal[];

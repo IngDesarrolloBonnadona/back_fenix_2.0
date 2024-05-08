@@ -160,7 +160,7 @@ export class CaseReportOriginalService {
 
     if (!caseReportsOriginal) {
       throw new HttpException(
-        'Caso no encontrado.',
+        'No se encontró la lista de reportes.',
         HttpStatus.NOT_FOUND,
       );
     }
@@ -173,7 +173,7 @@ export class CaseReportOriginalService {
 
     if (!caseReportsOriginal) {
       throw new HttpException(
-        'Caso no encontrado.',
+        `No se encontró el caso numero #${id}.`,
         HttpStatus.NOT_FOUND,
       );
     }
@@ -193,7 +193,7 @@ export class CaseReportOriginalService {
 
     if (!caseReportsOriginal) {
       throw new HttpException(
-        'Caso no encontrado.',
+        'No se encontró el caso.',
         HttpStatus.NOT_FOUND,
       );
     }
@@ -210,7 +210,7 @@ export class CaseReportOriginalService {
 
     if (!caseReportsOriginal) {
       throw new HttpException(
-        'Caso no encontrado.',
+        'No se encontró el caso.',
         HttpStatus.NOT_FOUND,
       );
     }

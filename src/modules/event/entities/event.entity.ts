@@ -1,6 +1,6 @@
 import { CaseReportOriginal } from "src/modules/case-report-original/entities/case-report-original.entity";
 import { EventType } from "src/modules/event-type/entities/event-type.entity";
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity({ name: 'Sucesos'})
 export class Event {
@@ -19,11 +19,14 @@ export class Event {
     @Column({ default: true })
     suc_estado: boolean;
 
-    @Column({ default: () => 'CURRENT_TIMESTAMP' })
+    @CreateDateColumn()
     suc_fecha_creacion: Date;
 
-    @Column({ default: () => 'CURRENT_TIMESTAMP' })
+    @UpdateDateColumn()
     suc_fecha_actualizacion: Date;
+
+    @DeleteDateColumn()
+    suc_fecha_eliminacion: Date;
 
     @ManyToOne(() => EventType, (eventType) => eventType.event)
     @JoinColumn({ name: 'suc_id_tipo_suceso_FK'})

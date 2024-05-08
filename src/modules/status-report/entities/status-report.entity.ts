@@ -1,6 +1,6 @@
 import { CaseReportOriginal } from "src/modules/case-report-original/entities/case-report-original.entity";
 import { MovementReport } from "src/modules/movement-report/entities/movement-report.entity";
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity({ name: 'EstadosReporte' })
 export class StatusReport {
@@ -22,11 +22,14 @@ export class StatusReport {
     @Column({ default: true })
     erep_estado: boolean;
 
-    @Column({ default: () => 'CURRENT_TIMESTAMP' })
+    @CreateDateColumn()
     erep_fecha_creacion: Date;
 
-    @Column({ default: () => 'CURRENT_TIMESTAMP' })
+    @UpdateDateColumn()
     erep_fecha_actualizacion: Date;
+
+    @DeleteDateColumn()
+    erep_fecha_eliminacion: Date
 
     @ManyToOne(() => MovementReport, (movementReport) => movementReport.statusReport)
     @JoinColumn({ name: 'erep_id_movimiento_reporte_FK'})

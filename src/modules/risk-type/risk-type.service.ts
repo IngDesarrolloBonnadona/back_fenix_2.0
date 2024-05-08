@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateRiskTypeDto } from './dto/create-risk-type.dto';
 import { UpdateRiskTypeDto } from './dto/update-risk-type.dto';
 import { Repository } from 'typeorm';
@@ -18,22 +18,43 @@ export class RiskTypeService {
   }
 
   async findAll() {
-    return await this.riskTypeRepository.find({
+    const riskTypes = await this.riskTypeRepository.find({
       relations: {
         caseReportOriginal: true,
       }
     });
+
+    if (!riskTypes) {
+      throw new HttpException(
+        'No se encontró la lista de tipos de riesgo',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return riskTypes
   }
 
   async findOne(id: number) {
-    return await this.riskTypeRepository.findOne({ where: { id } });
+    const riskType = await this.riskTypeRepository.findOne({ where: { id } });
+
+    if (!riskType) {
+      throw new HttpException(
+        'No se encontró el tipo de riesgo',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return riskType
   }
 
   async update(id: number, updateRiskTypeDto: UpdateRiskTypeDto) {
     const riskType = await this.findOne(id);
 
     if (!riskType) {
-      throw new NotFoundException();
+      throw new HttpException(
+        'No se encontró el tipo de riesgo',
+        HttpStatus.NOT_FOUND,
+      );
     }
 
     Object.assign(riskType, updateRiskTypeDto);
@@ -46,8 +67,15 @@ export class RiskTypeService {
     const riskType = await this.findOne(id);
 
     if (!riskType) {
-      throw new NotFoundException();
+      throw new HttpException(
+        'No se encontró el tipo de riesgo',
+        HttpStatus.NOT_FOUND,
+      );
     }
-    return await this.riskTypeRepository.remove(riskType);
+
+    riskType.tries_fecha_eliminacion = new Date()
+    riskType.tries_estado = false;
+
+    return await this.riskTypeRepository.save(riskType);
   }
 }

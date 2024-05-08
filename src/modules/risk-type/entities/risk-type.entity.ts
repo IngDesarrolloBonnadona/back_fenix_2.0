@@ -1,5 +1,5 @@
 import { CaseReportOriginal } from "src/modules/case-report-original/entities/case-report-original.entity";
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity({ name: 'TiposRiesgo'})
 export class RiskType {
@@ -15,11 +15,14 @@ export class RiskType {
     @Column({ default: true })
     tries_estado: boolean;
 
-    @Column({ default: () => 'CURRENT_TIMESTAMP' })
+    @CreateDateColumn()
     tries_fecha_creacion: Date;
 
-    @Column({ default: () => 'CURRENT_TIMESTAMP' })
+    @UpdateDateColumn()
     tries_fecha_actualizacion: Date;
+
+    @DeleteDateColumn()
+    tries_fecha_eliminacion: Date;
 
     @OneToMany(() => CaseReportOriginal, (caseReportOriginal) => caseReportOriginal.riskType)
     caseReportOriginal: CaseReportOriginal[];

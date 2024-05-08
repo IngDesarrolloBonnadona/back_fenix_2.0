@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -18,23 +18,44 @@ export class EventService {
   }
 
   async findAll() {
-    return await this.eventRepository.find({
+    const events = await this.eventRepository.find({
       relations: {
         eventType: true,
         caseReportOriginal: true
       }
     });
+
+    if (!events) {
+      throw new HttpException(
+        'No se encontró la lista de eventos.',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return events
   }
 
   async findOne(id: number) {
-    return await this.eventRepository.findOne({ where: { id } });
+    const event = await this.eventRepository.findOne({ where: { id } });
+    
+    if (!event) {
+      throw new HttpException(
+        'No se encontró el evento.',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return event
   }
 
   async update(id: number, updateEventDto: UpdateEventDto) {
     const event = await this.findOne(id);
 
     if (!event) {
-      throw new NotFoundException();
+      throw new HttpException(
+        'No se encontró el evento.',
+        HttpStatus.NOT_FOUND,
+      );
     }
 
     Object.assign(event, updateEventDto)
@@ -48,8 +69,15 @@ export class EventService {
     const event = await this.findOne(id);
 
     if (!event) {
-      throw new NotFoundException();
+      throw new HttpException(
+        'No se encontró el evento.',
+        HttpStatus.NOT_FOUND,
+      );
     }
-    return await this.eventRepository.remove(event);
+
+    event.suc_fecha_eliminacion = new Date();
+    event.suc_estado = false;
+
+    return await this.eventRepository.save(event);
   }
 }

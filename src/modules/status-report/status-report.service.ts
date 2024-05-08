@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateStatusReportDto } from './dto/create-status-report.dto';
 import { UpdateStatusReportDto } from './dto/update-status-report.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -18,23 +18,44 @@ export class StatusReportService {
   }
 
   async findAll() {
-    return await this.statusReportRepository.find({
+    const statusReports = await this.statusReportRepository.find({
       relations: {
         movementReport: true,
         caseReportOriginal: true
       }
     })
+
+    if (!statusReports) {
+      throw new HttpException(
+        'No se encontró la lista de estado de reportes',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return statusReports
   }
 
   async findOne(id: number) {
-    return await this.statusReportRepository.findOne({ where: { id } });
+    const statusReport = await this.statusReportRepository.findOne({ where: { id } });
+
+    if (!statusReport) {
+      throw new HttpException(
+        'No se encontró el estado de reporte',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return statusReport
   }
 
   async update(id: number, updateStatusReportDto: UpdateStatusReportDto) {
     const statusReport = await this.findOne(id);
 
     if (!statusReport) {
-      throw new NotFoundException();
+      throw new HttpException(
+        'No se encontró el estado de reporte',
+        HttpStatus.NOT_FOUND,
+      );
     }
 
     Object.assign(statusReport, updateStatusReportDto)
@@ -48,8 +69,15 @@ export class StatusReportService {
     const statusReport = await this.findOne(id);
 
     if (!statusReport) {
-      throw new NotFoundException();
+      throw new HttpException(
+        'No se encontró el estado de reporte',
+        HttpStatus.NOT_FOUND,
+      );
     }
-    return await this.statusReportRepository.remove(statusReport);
+
+    statusReport.erep_fecha_eliminacion = new Date();
+    statusReport.erep_estado = false;
+
+    return await this.statusReportRepository.save(statusReport);
   }
 }

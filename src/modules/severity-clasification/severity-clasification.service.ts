@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateSeverityClasificationDto } from './dto/create-severity-clasification.dto';
 import { UpdateSeverityClasificationDto } from './dto/update-severity-clasification.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -18,22 +18,43 @@ export class SeverityClasificationService {
   }
 
   async findAll() {
-    return await this.severityClasifRepository.find({
+    const severityClasifs = await this.severityClasifRepository.find({
       relations: {
         caseReportOriginal: true
       }
     });
+
+    if (!severityClasifs) {
+      throw new HttpException(
+        'No se encontró la lista de clasificaciones de severidad',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return severityClasifs
   }
 
   async findOne(id: number) {
-    return await this.severityClasifRepository.findOne({ where: { id } });
+    const severityClasif = await this.severityClasifRepository.findOne({ where: { id } });
+
+    if (!severityClasif) {
+      throw new HttpException(
+        'No se encontró la clasificacion de severidad',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return severityClasif
   }
 
   async update(id: number, updateSeverityClasificationDto: UpdateSeverityClasificationDto) {
     const severityClasif = await this.findOne(id);
 
     if (!severityClasif) {
-      throw new NotFoundException();
+      throw new HttpException(
+        'No se encontró la clasificacion de severidad',
+        HttpStatus.NOT_FOUND,
+      );
     }
 
     Object.assign(severityClasif, updateSeverityClasificationDto)
@@ -47,8 +68,15 @@ export class SeverityClasificationService {
     const severityClasif = await this.findOne(id);
 
     if (!severityClasif) {
-      throw new NotFoundException();
+      throw new HttpException(
+        'No se encontró la clasificacion de severidad',
+        HttpStatus.NOT_FOUND,
+      );
     }
-    return await this.severityClasifRepository.remove(severityClasif);
+
+    severityClasif.csev_fecha_eliminacion = new Date();
+    severityClasif.csev_estado = false;
+
+    return await this.severityClasifRepository.save(severityClasif);
   }
 }

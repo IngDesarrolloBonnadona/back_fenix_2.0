@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUnitDto } from './dto/create-unit.dto';
 import { UpdateUnitDto } from './dto/update-unit.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -18,23 +18,44 @@ export class UnitService {
   }
 
   async findAll() {
-    return await this.unitRepository.find({
+    const units = await this.unitRepository.find({
       relations: {
         service: true,
         caseReportOriginal: true
       }
     });
+
+    if (!units) {
+      throw new HttpException(
+        'No se encontró la lista de unidades.',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return units
   }
 
   async findOne(id: number) {
-    return await this.unitRepository.findOne({ where: { id } });
+    const unit = await this.unitRepository.findOne({ where: { id } });
+
+    if (!unit) {
+      throw new HttpException(
+        'No se encontró la unidad.',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return unit
   }
 
   async update(id: number, updateUnitDto: UpdateUnitDto) {
     const unit = await this.findOne(id);
 
     if (!unit) {
-      throw new NotFoundException();
+      throw new HttpException(
+        'No se encontró la unidad.',
+        HttpStatus.NOT_FOUND,
+      );
     }
 
     Object.assign(unit, updateUnitDto)
@@ -48,8 +69,14 @@ export class UnitService {
     const unit = await this.findOne(id);
 
     if (!unit) {
-      throw new NotFoundException();
+      throw new HttpException(
+        'No se encontró la unidad.',
+        HttpStatus.NOT_FOUND,
+      );
     }
-    return await this.unitRepository.remove(unit);
+    unit.unid_fecha_eliminacion = new Date();
+    unit.unid_estado = false;
+    
+    return await this.unitRepository.save(unit);
   }
 }
