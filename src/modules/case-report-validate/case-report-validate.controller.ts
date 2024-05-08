@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { CaseReportValidateService } from './case-report-validate.service';
 import { CreateCaseReportValidateDto } from './dto/create-case-report-validate.dto';
 import { UpdateCaseReportValidateDto } from './dto/update-case-report-validate.dto';
+import { CaseReportValidate } from './entities/case-report-validate.entity';
 
 @Controller('case-report-validate')
 export class CaseReportValidateController {
@@ -13,22 +14,25 @@ export class CaseReportValidateController {
   }
 
   @Get()
-  findAll() {
+  findAll() : Promise<CaseReportValidate[]> {
     return this.caseReportValidateService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: number) : Promise<CaseReportValidate> {
     return this.caseReportValidateService.findOne(+id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCaseReportValidateDto: UpdateCaseReportValidateDto) {
+  update(
+    @Param('id') id: number, 
+    @Body() updateCaseReportValidateDto: UpdateCaseReportValidateDto
+  ) : Promise<CaseReportValidate> {
     return this.caseReportValidateService.update(+id, updateCaseReportValidateDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: number) : Promise<CaseReportValidate> {
     return this.caseReportValidateService.remove(+id);
   }
 }

@@ -8,6 +8,6 @@ async function bootstrap() {
 
   const port = +process.env.TYPEORM_PORT_RUN
   await app.listen(port);
-  logger.log(`The aplication is runnin on port: ${port || 3001}`)
+  logger.log(`The aplication is running on port: ${port || 3001}`)
 }
 bootstrap();

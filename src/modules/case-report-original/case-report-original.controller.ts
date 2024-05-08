@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/
 import { CaseReportOriginalService } from './case-report-original.service';
 import { UpdateCaseReportOriginalDto } from './dto/update-case-report-original.dto';
 import { Request } from 'express';
+import { CaseReportOriginal } from './entities/case-report-original.entity';
 
 @Controller('case-report-original')
 export class CaseReportOriginalController {
@@ -21,35 +22,43 @@ export class CaseReportOriginalController {
   // }
 
   @Post()
-  create( @Body() request: any, @Req() req: Request) {
+  create( 
+    @Body() request: any, 
+    @Req() req: Request
+  ) {
     const { createCaseReportOriginal, createMedicine, createDevice } = request;
     const clientIp = req['clientIp'];   // Obtener la dirección IP del cliente del objeto Request
     
-    return this.CaseReportOriginalService.createReportOriginalValidate(
+    this.CaseReportOriginalService.createReportOriginalValidate(
       createCaseReportOriginal,
       createMedicine,
       createDevice,
       clientIp
     )
+
+    return this.CaseReportOriginalService.findAll();
   } 
 
   @Get()
-  findAll() {
+  findAll() : Promise<CaseReportOriginal[]> {
     return this.CaseReportOriginalService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: number) : Promise<CaseReportOriginal> {
     return this.CaseReportOriginalService.findOne(+id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() UpdateCaseReportOriginalDto: UpdateCaseReportOriginalDto) {
+  update(
+    @Param('id') id: number, 
+    @Body() UpdateCaseReportOriginalDto: UpdateCaseReportOriginalDto
+  ) : Promise<CaseReportOriginal> {
     return this.CaseReportOriginalService.update(+id, UpdateCaseReportOriginalDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: number) : Promise<CaseReportOriginal> {
     return this.CaseReportOriginalService.remove(+id);
   }
 }

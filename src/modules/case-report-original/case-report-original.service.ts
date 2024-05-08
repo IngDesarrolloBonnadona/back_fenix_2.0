@@ -38,16 +38,14 @@ export class CaseReportOriginalService {
     createMedicine: CreateMedicineDto[],
     createDevice: CreateDeviceDto[],
     clientIp: string,
-  ) {
+  ) : Promise<any> {
 
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
     try {
-      //Reporte Original
       const caseReportOriginal = this.caseReportOriginalRepository.create(createCaseReportOriginal)
-      //guardamos Reporte Original (Temporal)
       await queryRunner.manager.save(caseReportOriginal)
 
       //Reporte Validado
@@ -84,10 +82,8 @@ export class CaseReportOriginalService {
       caseReportValidate.rcval_ries_materializado = caseReportOriginal.rcori_ries_materializado;
       caseReportValidate.rcval_pac_asociado = caseReportOriginal.rcori_pac_asociado;
 
-      //guardamos Reporte Validado(Temporal)
       await queryRunner.manager.save(caseReportValidate)
 
-      //Medicamentos
       for (const medicine of createMedicine) {
         const med = this.medicineRepository.create({
           ...medicine,
@@ -96,7 +92,6 @@ export class CaseReportOriginalService {
         await queryRunner.manager.save(med)
       }
 
-      // Dispositivos
       for (const device of createDevice) {
         const dev = this.deviceRepository.create({
           ...device,
@@ -105,7 +100,6 @@ export class CaseReportOriginalService {
         await queryRunner.manager.save(dev)
       }
       
-      // Estado Reporte
       const movementReportFound = await this.movementReportRepository.findOne({
         where: {
           mrep_nombre : movementReport.REPORT_CREATION,
