@@ -7,11 +7,13 @@ import { DataSource, Repository } from 'typeorm';
 import { CaseReportValidate as CaseReportValidateEntity } from '../case-report-validate/entities/case-report-validate.entity';
 import { Medicine as MedicineEntity } from '../medicine/entities/medicine.entity';
 import { Device as DeviceEntity } from '../device/entities/device.entity';
-import { StatusReport, StatusReport as StatusReportEntity } from '../status-report/entities/status-report.entity';
+import { StatusReport as StatusReportEntity } from '../status-report/entities/status-report.entity';
+import { Log as LogEntity } from '../log/entities/log.entity';
 import { CreateMedicineDto } from '../medicine/dto/create-medicine.dto';
 import { CreateDeviceDto } from '../device/dto/create-device.dto';
 import { MovementReport as MovementReportEntity } from '../movement-report/entities/movement-report.entity';
 import { movementReport } from './enums/movement-repoty.enum';
+import { logReports } from 'src/enums/logs.enum';
 
 @Injectable()
 export class CaseReportOriginalService {
@@ -35,6 +37,7 @@ export class CaseReportOriginalService {
     createCaseReportOriginal: CreateCaseReportOriginalDto,
     createMedicine: CreateMedicineDto[],
     createDevice: CreateDeviceDto[],
+    clientIp: string,
   ) {
 
     const queryRunner = this.dataSource.createQueryRunner();
@@ -122,8 +125,17 @@ export class CaseReportOriginalService {
       statusReport.erep_id_movimiento_reporte_FK = movementReportFound.id
 
       await queryRunner.manager.save(statusReport)
-      
+
+      const log = new LogEntity()
+      log.log_id_caso_validado_FK = caseReportValidate.id;
+      log.log_id_usuario_FK = caseReportOriginal.rcori_id_reportante_FK;
+      log.log_accion = logReports.LOG_CREATION;
+      log.log_ip = clientIp
+
+      await queryRunner.manager.save(log)   
+        
       await queryRunner.commitTransaction();
+
       return { message: 'Reporte creado satisfactoriamente.' };
     } catch (error) {
       await queryRunner.rollbackTransaction();

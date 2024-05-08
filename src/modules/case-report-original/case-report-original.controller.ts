@@ -1,9 +1,7 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/common';
 import { CaseReportOriginalService } from './case-report-original.service';
-import { CreateCaseReportOriginalDto } from './dto/create-case-report-original.dto';
 import { UpdateCaseReportOriginalDto } from './dto/update-case-report-original.dto';
-import { CreateMedicineDto } from '../medicine/dto/create-medicine.dto';
-import { CreateDeviceDto } from '../device/dto/create-device.dto';
+import { Request } from 'express';
 
 @Controller('case-report-original')
 export class CaseReportOriginalController {
@@ -23,16 +21,17 @@ export class CaseReportOriginalController {
   // }
 
   @Post()
-  create( @Body() request: any) {
-    const { createCaseReportOriginal, createMedicine, createDevice } = request
+  create( @Body() request: any, @Req() req: Request) {
+    const { createCaseReportOriginal, createMedicine, createDevice } = request;
+    const clientIp = req['clientIp'];   // Obtener la dirección IP del cliente del objeto Request
+    
     return this.CaseReportOriginalService.createReportOriginalValidate(
       createCaseReportOriginal,
       createMedicine,
-      createDevice
+      createDevice,
+      clientIp
     )
   } 
-  
-
 
   @Get()
   findAll() {
