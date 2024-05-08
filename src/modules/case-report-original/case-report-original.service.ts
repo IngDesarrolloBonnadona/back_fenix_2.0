@@ -51,19 +51,19 @@ export class CaseReportOriginalService {
       await queryRunner.manager.save(caseReportOriginal)
 
       //Reporte Validado
-      const caseReportValidateFound = await this.caseReportValidateRepository.findOne({
-        where : {
-          rcval_id_caso_original_FK : caseReportOriginal.id,
-          rcval_validado : false
-        }
-      })
+      // const caseReportValidateFound = await this.caseReportValidateRepository.findOne({
+      //   where : {
+      //     rcval_id_caso_original_FK : caseReportOriginal.id,
+      //     rcval_validado : false
+      //   }
+      // })
 
-      if (caseReportValidateFound) {
-        return new HttpException(
-          `El caso validado ya existe.`,
-          HttpStatus.FOUND
-        )
-      }
+      // if (caseReportValidateFound) {
+      //   throw new HttpException(
+      //     `El caso validado ya existe.`,
+      //     HttpStatus.FOUND
+      //   )
+      // }
 
       const caseReportValidate = new CaseReportValidateEntity();
       caseReportValidate.rcval_id_caso_original_FK = caseReportOriginal.id;
@@ -114,7 +114,7 @@ export class CaseReportOriginalService {
       })
 
       if (!movementReportFound) {
-        return new HttpException(
+        throw new HttpException(
           `El movimiento ${movementReport.REPORT_CREATION} no existe.`,
           HttpStatus.NOT_FOUND
         )
