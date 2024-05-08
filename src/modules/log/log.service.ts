@@ -1,26 +1,81 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateLogDto } from './dto/create-log.dto';
 import { UpdateLogDto } from './dto/update-log.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Log as LogEntity } from './entities/log.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class LogService {
-  create(createLogDto: CreateLogDto) {
-    return 'This action adds a new log';
+  constructor(
+    @InjectRepository(LogEntity)
+    private readonly logRepository: Repository<LogEntity>
+  ){}
+
+  async create(createLogDto: CreateLogDto) {
+    const log = this.logRepository.create(createLogDto);
+    return await this.logRepository.save(log)
   }
 
-  findAll() {
-    return `This action returns all log`;
+  async findAll() {
+    const logs = await this.logRepository.find({
+      relations: {
+        caseReportValidate: true,
+      }
+    })
+
+    if (!logs) {
+      throw new HttpException(
+        'No se encontró la lista de logs.',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    return logs;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} log`;
+  async findOne(id: number) {
+    const log = await this.logRepository.findOne({ where: { id } });
+
+    if (!log) {
+      throw new HttpException(
+        'No se encontró el log.',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return log;
   }
 
-  update(id: number, updateLogDto: UpdateLogDto) {
-    return `This action updates a #${id} log`;
+  async update(id: number, updateLogDto: UpdateLogDto) {
+    const log = await this.findOne(id);
+
+    if (!log) {
+      throw new HttpException(
+        'No se encontró el log.',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    
+    Object.assign(log, updateLogDto)
+
+    log.log_fecha_actualizacion = new Date();
+
+    return await this.logRepository.save(log);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} log`;
+  async remove(id: number) {
+    const log = await this.findOne(id);
+
+    if (!log) {
+      throw new HttpException(
+        'No se encontró el log.',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    log.log_fecha_eliminacion = new Date();
+    log.log_estado = false;
+
+    return await this.logRepository.save(log);
   }
 }
