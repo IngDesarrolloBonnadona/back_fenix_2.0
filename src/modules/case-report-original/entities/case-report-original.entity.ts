@@ -20,64 +20,64 @@ export class CaseReportOriginal {
     id: number
 
     @Column()
-    rcori_id_tipocaso_FK: number
+    ori_cr_casetype_id_fk: number
 
     @Column()
-    rcori_id_paciente_FK: number;
+    ori_cr_patient_id_fk: number;
     
     @Column()
-    rcori_id_reportante_FK: number;
+    ori_cr_reporter_id_fk: number;
 
     @Column()
-    rcori_id_tipo_suceso_FK: number;
+    ori_cr_eventtype_id_fk: number;
 
     @Column()
-    rcori_id_servicio_FK: number;
+    ori_cr_service_id_fk: number;
 
     @Column()
-    rcori_id_suceso_FK: number;
+    ori_cr_event_id_fk: number;
 
     @Column({ nullable: true })
-    rcori_id_tipo_riesgo_FK: number;
+    ori_cr_risktype_id_fk: number;
     
     @Column({ nullable: true })
-    rcori_id_clasif_severidad_FK: number;
+    ori_cr_severityclasif_id_fk: number;
     
     @Column()
-    rcori_id_fuente_FK: number;
+    ori_cr_origin_id_fk: number;
     
     @Column()
-    rcori_id_subfuente_FK: number;
+    ori_cr_suborigin_id_fk: number;
     
     @Column({ nullable: true })
-    rcori_id_nivel_riesgo_FK: number;
+    ori_cr_risklevel_id_fk: number;
 
     @Column()
-    rcori_id_unidad_FK: number;
+    ori_cr_unit_id_fk: number;
     
     @Column({ type: 'varchar', nullable: true })
-    rcori_descripcion: string;
+    ori_cr_description: string;
     
     @Column({ type: 'varchar', nullable: true })
-    rcori_acc_inmediatas: string;
+    ori_cr_inmediateaction: string;
     
     @Column({ nullable: true })
-    rcori_ries_materializado: boolean;
+    ori_cr_materializedrisk: boolean;
     
     @Column({ nullable: true })
-    rcori_pac_asociado: boolean;
+    ori_cr_associatedpatient: boolean;
     
     @Column({ default: true })
-    rcori_estado: boolean;
+    ori_cr_status: boolean;
 
     @CreateDateColumn()
-    rcori_fecha_creacion: Date;
+    createdAt: Date;
     
     @UpdateDateColumn()
-    rcori_fecha_actualizacion: Date;
+    updateAt: Date;
 
     @DeleteDateColumn()
-    rcori_fecha_eliminacion: Date
+    deletedAt: Date
 
     @OneToMany(() => CaseReportValidate, (caseReportValidate) => caseReportValidate.caseReportOriginal)
     caseReportValidate: CaseReportValidate[]
@@ -92,42 +92,42 @@ export class CaseReportOriginal {
     statusReport: StatusReport[]
 
     @ManyToOne(() => CaseType, (caseType) => caseType.caseReportOriginal)
-    @JoinColumn({ name: 'rcori_id_tipocaso_FK'})
+    @JoinColumn({ name: 'ori_cr_casetype_id_fk'})
     caseType: CaseType
 
     @ManyToOne(() => RiskType, (riskType) => riskType.caseReportOriginal)
-    @JoinColumn({ name: 'rcori_id_tipo_riesgo_FK'})
+    @JoinColumn({ name: 'ori_cr_risktype_id_fk'})
     riskType: RiskType
 
     @ManyToOne(() => SeverityClasification, (severityClasification) => severityClasification.caseReportOriginal)
-    @JoinColumn({ name: 'rcori_id_clasif_severidad_FK'})
+    @JoinColumn({ name: 'ori_cr_severityclasif_id_fk'})
     severityClasification: SeverityClasification
 
     @ManyToOne(() => Origin, (origin) => origin.caseReportOriginal)
-    @JoinColumn({ name: 'rcori_id_fuente_FK'})
+    @JoinColumn({ name: 'ori_cr_origin_id_fk'})
     origin: Origin
 
     @ManyToOne(() => SubOrigin, (subOrigin) => subOrigin.caseReportOriginal)
-    @JoinColumn({ name: 'rcori_id_subfuente_FK'})
+    @JoinColumn({ name: 'ori_cr_suborigin_id_fk'})
     subOrigin: SubOrigin
 
     @ManyToOne(() => RiskLevel, (riskLevel) => riskLevel.caseReportOriginal)
-    @JoinColumn({ name: 'rcori_id_nivel_riesgo_FK'})
+    @JoinColumn({ name: 'ori_cr_risklevel_id_fk'})
     riskLevel: RiskLevel
 
     @ManyToOne(() => EventType, (eventType) => eventType.caseReportOriginal)
-    @JoinColumn({ name: 'rcori_id_tipo_suceso_FK'})
+    @JoinColumn({ name: 'ori_cr_eventtype_id_fk'})
     eventType: EventType
 
     @ManyToOne(() => Event, (event) => event.caseReportOriginal)
-    @JoinColumn({ name: 'rcori_id_suceso_FK'})
+    @JoinColumn({ name: 'ori_cr_event_id_fk'})
     event: Event
 
     @ManyToOne(() => Service, (service) => service.caseReportOriginal)
-    @JoinColumn({ name: 'rcori_id_servicio_FK'})
+    @JoinColumn({ name: 'ori_cr_service_id_fk'})
     service: Service
 
     @ManyToOne(() => Unit, (unit) => unit.caseReportOriginal)
-    @JoinColumn({ name: 'rcori_id_unidad_FK'})
+    @JoinColumn({ name: 'ori_cr_unit_id_fk'})
     unit: Unit
 }

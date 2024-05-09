@@ -4,6 +4,12 @@ import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToO
 
 @Entity({ name: 'ReportesCasoValidado'})
 export class CaseReportValidate {
+    // @PrimaryGeneratedColumn("uuid")
+    // id: number
+
+    // @Column()
+    // rcval_id: number
+
     @PrimaryGeneratedColumn()
     id: number
     

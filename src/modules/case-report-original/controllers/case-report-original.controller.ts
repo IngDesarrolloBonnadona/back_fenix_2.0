@@ -1,8 +1,8 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/common';
-import { CaseReportOriginalService } from './case-report-original.service';
-import { UpdateCaseReportOriginalDto } from './dto/update-case-report-original.dto';
+import { CaseReportOriginalService } from '../services/case-report-original.service';
+import { UpdateCaseReportOriginalDto } from '../dto/update-case-report-original.dto';
 import { Request } from 'express';
-import { CaseReportOriginal } from './entities/case-report-original.entity';
+import { CaseReportOriginal } from '../entities/case-report-original.entity';
 
 @Controller('case-report-original')
 export class CaseReportOriginalController {

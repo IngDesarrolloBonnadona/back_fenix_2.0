@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { CaseReportOriginalService } from './case-report-original.service';
-import { CaseReportOriginalController } from './case-report-original.controller';
+import { CaseReportOriginalService } from './services/case-report-original.service';
+import { CaseReportOriginalController } from './controllers/case-report-original.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CaseReportOriginal } from './entities/case-report-original.entity';
 import { CaseReportValidate } from '../case-report-validate/entities/case-report-validate.entity';

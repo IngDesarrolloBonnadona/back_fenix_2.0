@@ -1,18 +1,18 @@
 import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
-import { CreateCaseReportOriginalDto } from './dto/create-case-report-original.dto';
-import { UpdateCaseReportOriginalDto } from './dto/update-case-report-original.dto';
+import { CreateCaseReportOriginalDto } from '../dto/create-case-report-original.dto';
+import { UpdateCaseReportOriginalDto } from '../dto/update-case-report-original.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CaseReportOriginal as CaseReportOriginalEntity } from './entities/case-report-original.entity';
+import { CaseReportOriginal as CaseReportOriginalEntity } from '../entities/case-report-original.entity';
 import { DataSource, Repository } from 'typeorm';
-import { CaseReportValidate as CaseReportValidateEntity } from '../case-report-validate/entities/case-report-validate.entity';
-import { Medicine as MedicineEntity } from '../medicine/entities/medicine.entity';
-import { Device as DeviceEntity } from '../device/entities/device.entity';
-import { StatusReport as StatusReportEntity } from '../status-report/entities/status-report.entity';
-import { Log as LogEntity } from '../log/entities/log.entity';
-import { CreateMedicineDto } from '../medicine/dto/create-medicine.dto';
-import { CreateDeviceDto } from '../device/dto/create-device.dto';
-import { MovementReport as MovementReportEntity } from '../movement-report/entities/movement-report.entity';
-import { movementReport } from './enums/movement-repoty.enum';
+import { CaseReportValidate as CaseReportValidateEntity } from '../../case-report-validate/entities/case-report-validate.entity';
+import { Medicine as MedicineEntity } from '../../medicine/entities/medicine.entity';
+import { Device as DeviceEntity } from '../../device/entities/device.entity';
+import { StatusReport as StatusReportEntity } from '../../status-report/entities/status-report.entity';
+import { Log as LogEntity } from '../../log/entities/log.entity';
+import { CreateMedicineDto } from '../../medicine/dto/create-medicine.dto';
+import { CreateDeviceDto } from '../../device/dto/create-device.dto';
+import { MovementReport as MovementReportEntity } from '../../movement-report/entities/movement-report.entity';
+import { movementReport } from '../enums/movement-repoty.enum';
 import { logReports } from 'src/enums/logs.enum';
 
 @Injectable()
@@ -65,22 +65,22 @@ export class CaseReportOriginalService {
 
       const caseReportValidate = new CaseReportValidateEntity();
       caseReportValidate.rcval_id_caso_original_FK = caseReportOriginal.id;
-      caseReportValidate.rcval_id_tipocaso_FK = caseReportOriginal.rcori_id_tipocaso_FK;
-      caseReportValidate.rcval_id_paciente_FK = caseReportOriginal.rcori_id_paciente_FK;
-      caseReportValidate.rcval_id_reportante_FK = caseReportOriginal.rcori_id_reportante_FK;
-      caseReportValidate.rcval_id_tipo_suceso_FK = caseReportOriginal.rcori_id_tipo_suceso_FK;
-      caseReportValidate.rcval_id_servicio_FK = caseReportOriginal.rcori_id_servicio_FK;
-      caseReportValidate.rcval_id_suceso_FK = caseReportOriginal.rcori_id_suceso_FK;
-      caseReportValidate.rcval_id_tipo_riesgo_FK = caseReportOriginal.rcori_id_tipo_riesgo_FK;
-      caseReportValidate.rcval_id_clasif_severidad_FK = caseReportOriginal.rcori_id_clasif_severidad_FK;
-      caseReportValidate.rcval_id_fuente_FK = caseReportOriginal.rcori_id_fuente_FK;
-      caseReportValidate.rcval_id_subfuente_FK = caseReportOriginal.rcori_id_subfuente_FK;
-      caseReportValidate.rcval_id_nivel_riesgo_FK = caseReportOriginal.rcori_id_nivel_riesgo_FK;
-      caseReportValidate.rcval_id_unidad_FK = caseReportOriginal.rcori_id_unidad_FK;
-      caseReportValidate.rcval_descripcion = caseReportOriginal.rcori_descripcion;
-      caseReportValidate.rcval_acc_inmediatas = caseReportOriginal.rcori_acc_inmediatas;
-      caseReportValidate.rcval_ries_materializado = caseReportOriginal.rcori_ries_materializado;
-      caseReportValidate.rcval_pac_asociado = caseReportOriginal.rcori_pac_asociado;
+      caseReportValidate.rcval_id_tipocaso_FK = caseReportOriginal.ori_cr_casetype_id_fk;
+      caseReportValidate.rcval_id_paciente_FK = caseReportOriginal.ori_cr_patient_id_fk;
+      caseReportValidate.rcval_id_reportante_FK = caseReportOriginal.ori_cr_reporter_id_fk;
+      caseReportValidate.rcval_id_tipo_suceso_FK = caseReportOriginal.ori_cr_eventtype_id_fk;
+      caseReportValidate.rcval_id_servicio_FK = caseReportOriginal.ori_cr_service_id_fk;
+      caseReportValidate.rcval_id_suceso_FK = caseReportOriginal.ori_cr_event_id_fk;
+      caseReportValidate.rcval_id_tipo_riesgo_FK = caseReportOriginal.ori_cr_risktype_id_fk;
+      caseReportValidate.rcval_id_clasif_severidad_FK = caseReportOriginal.ori_cr_severityclasif_id_fk;
+      caseReportValidate.rcval_id_fuente_FK = caseReportOriginal.ori_cr_origin_id_fk;
+      caseReportValidate.rcval_id_subfuente_FK = caseReportOriginal.ori_cr_suborigin_id_fk;
+      caseReportValidate.rcval_id_nivel_riesgo_FK = caseReportOriginal.ori_cr_risklevel_id_fk;
+      caseReportValidate.rcval_id_unidad_FK = caseReportOriginal.ori_cr_unit_id_fk;
+      caseReportValidate.rcval_descripcion = caseReportOriginal.ori_cr_description;
+      caseReportValidate.rcval_acc_inmediatas = caseReportOriginal.ori_cr_inmediateaction;
+      caseReportValidate.rcval_ries_materializado = caseReportOriginal.ori_cr_materializedrisk;
+      caseReportValidate.rcval_pac_asociado = caseReportOriginal.ori_cr_associatedpatient;
 
       await queryRunner.manager.save(caseReportValidate)
 
@@ -122,7 +122,7 @@ export class CaseReportOriginalService {
 
       const log = new LogEntity()
       log.log_id_caso_validado_FK = caseReportValidate.id;
-      log.log_id_usuario_FK = caseReportOriginal.rcori_id_reportante_FK;
+      log.log_id_usuario_FK = caseReportOriginal.ori_cr_reporter_id_fk;
       log.log_accion = logReports.LOG_CREATION;
       log.log_ip = clientIp
 
@@ -139,7 +139,7 @@ export class CaseReportOriginalService {
         log,
       }
 
-      return { message: 'Reporte creado satisfactoriamente.', data: reportData };
+      return { message: `Reporte #${reportData.caseReportOriginal.id} creado satisfactoriamente.`, data: reportData };
     } catch (error) {
       await queryRunner.rollbackTransaction();
 
@@ -171,11 +171,12 @@ export class CaseReportOriginalService {
         service: true,
         unit: true,
       },
+      
     });
 
     if (!caseReportsOriginal) {
       throw new HttpException(
-        'No se encontró la lista de reportes.',
+        'No hay reportes creados actualmente.',
         HttpStatus.NOT_FOUND,
       );
     }
@@ -216,7 +217,7 @@ export class CaseReportOriginalService {
 
     Object.assign(caseReportsOriginal, UpdateCaseReportOriginalDto);
 
-    caseReportsOriginal.rcori_fecha_actualizacion = new Date();
+    caseReportsOriginal.updateAt = new Date();
     return await this.caseReportOriginalRepository.save(caseReportsOriginal);
   }
 
@@ -230,8 +231,8 @@ export class CaseReportOriginalService {
       );
     }
 
-    caseReportsOriginal.rcori_fecha_eliminacion = new Date()
-    caseReportsOriginal.rcori_estado = false;
+    caseReportsOriginal.deletedAt = new Date()
+    caseReportsOriginal.ori_cr_status = false;
 
     return await this.caseReportOriginalRepository.save(caseReportsOriginal);
   }
