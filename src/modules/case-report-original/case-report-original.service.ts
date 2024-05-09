@@ -130,7 +130,16 @@ export class CaseReportOriginalService {
         
       await queryRunner.commitTransaction();
 
-      return { message: 'Reporte creado satisfactoriamente.' };
+      const reportData = {
+        caseReportOriginal,
+        caseReportValidate,
+        createdMedicine: createMedicine,
+        createdDevice: createDevice,
+        statusReport,
+        log,
+      }
+
+      return { message: 'Reporte creado satisfactoriamente.', data: reportData };
     } catch (error) {
       await queryRunner.rollbackTransaction();
 
