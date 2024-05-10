@@ -64,46 +64,53 @@ export class CaseReportOriginalService {
       // }
 
       const caseReportValidate = new CaseReportValidateEntity();
-      caseReportValidate.rcval_id_caso_original_FK = caseReportOriginal.id;
-      caseReportValidate.rcval_id_tipocaso_FK = caseReportOriginal.ori_cr_casetype_id_fk;
-      caseReportValidate.rcval_id_paciente_FK = caseReportOriginal.ori_cr_patient_id_fk;
-      caseReportValidate.rcval_id_reportante_FK = caseReportOriginal.ori_cr_reporter_id_fk;
-      caseReportValidate.rcval_id_tipo_suceso_FK = caseReportOriginal.ori_cr_eventtype_id_fk;
-      caseReportValidate.rcval_id_servicio_FK = caseReportOriginal.ori_cr_service_id_fk;
-      caseReportValidate.rcval_id_suceso_FK = caseReportOriginal.ori_cr_event_id_fk;
-      caseReportValidate.rcval_id_tipo_riesgo_FK = caseReportOriginal.ori_cr_risktype_id_fk;
-      caseReportValidate.rcval_id_clasif_severidad_FK = caseReportOriginal.ori_cr_severityclasif_id_fk;
-      caseReportValidate.rcval_id_fuente_FK = caseReportOriginal.ori_cr_origin_id_fk;
-      caseReportValidate.rcval_id_subfuente_FK = caseReportOriginal.ori_cr_suborigin_id_fk;
-      caseReportValidate.rcval_id_nivel_riesgo_FK = caseReportOriginal.ori_cr_risklevel_id_fk;
-      caseReportValidate.rcval_id_unidad_FK = caseReportOriginal.ori_cr_unit_id_fk;
-      caseReportValidate.rcval_descripcion = caseReportOriginal.ori_cr_description;
-      caseReportValidate.rcval_acc_inmediatas = caseReportOriginal.ori_cr_inmediateaction;
-      caseReportValidate.rcval_ries_materializado = caseReportOriginal.ori_cr_materializedrisk;
-      caseReportValidate.rcval_pac_asociado = caseReportOriginal.ori_cr_associatedpatient;
+      caseReportValidate.val_cr_originalcase_id_fk = caseReportOriginal.id;
+      caseReportValidate.val_cr_casetype_id_fk = caseReportOriginal.ori_cr_casetype_id_fk;
+      caseReportValidate.val_cr_patient_id_fk = caseReportOriginal.ori_cr_patient_id_fk;
+      caseReportValidate.val_cr_reporter_id_fk = caseReportOriginal.ori_cr_reporter_id_fk;
+      caseReportValidate.val_cr_eventtype_id_fk = caseReportOriginal.ori_cr_eventtype_id_fk;
+      caseReportValidate.val_cr_service_id_fk = caseReportOriginal.ori_cr_service_id_fk;
+      caseReportValidate.val_cr_event_id_fk = caseReportOriginal.ori_cr_event_id_fk;
+      caseReportValidate.val_cr_risktype_id_fk = caseReportOriginal.ori_cr_risktype_id_fk;
+      caseReportValidate.val_cr_severityclasif_id_fk = caseReportOriginal.ori_cr_severityclasif_id_fk;
+      caseReportValidate.val_cr_origin_id_fk = caseReportOriginal.ori_cr_origin_id_fk;
+      caseReportValidate.val_cr_suborigin_id_fk = caseReportOriginal.ori_cr_suborigin_id_fk;
+      caseReportValidate.val_cr_risklevel_id_fk = caseReportOriginal.ori_cr_risklevel_id_fk;
+      caseReportValidate.val_cr_unit_id_fk = caseReportOriginal.ori_cr_unit_id_fk;
+      caseReportValidate.val_cr_description = caseReportOriginal.ori_cr_description;
+      caseReportValidate.val_cr_inmediateaction = caseReportOriginal.ori_cr_inmediateaction;
+      caseReportValidate.val_cr_materializedrisk = caseReportOriginal.ori_cr_materializedrisk;
+      caseReportValidate.val_cr_associatedpatient = caseReportOriginal.ori_cr_associatedpatient;
 
       await queryRunner.manager.save(caseReportValidate)
 
-      for (const medicine of createMedicine) {
-        const med = this.medicineRepository.create({
-          ...medicine,
-          med_id_caso_FK: caseReportOriginal.id
-        });
-        await queryRunner.manager.save(med)
+      const hasMedicine = createMedicine && createMedicine.length > 0;
+      const hasDevice = createDevice && createDevice.length > 0;
+
+      if(hasMedicine) {
+        for (const medicine of createMedicine) {
+          const med = this.medicineRepository.create({
+            ...medicine,
+            med_case_id_fk: caseReportOriginal.id
+          });
+          await queryRunner.manager.save(med)
+        }
       }
 
-      for (const device of createDevice) {
-        const dev = this.deviceRepository.create({
-          ...device,
-          disp_id_caso_FK: caseReportOriginal.id
-        })
-        await queryRunner.manager.save(dev)
+      if(hasDevice) {
+        for (const device of createDevice) {
+          const dev = this.deviceRepository.create({
+            ...device,
+            dev_case_id_fk: caseReportOriginal.id
+          })
+          await queryRunner.manager.save(dev)
+        }
       }
       
       const movementReportFound = await this.movementReportRepository.findOne({
         where: {
-          mrep_nombre : movementReport.REPORT_CREATION,
-          mrep_estado : true
+          mov_r_name : movementReport.REPORT_CREATION,
+          m_r_status : true
         }
       })
 
@@ -115,15 +122,15 @@ export class CaseReportOriginalService {
       }
 
       const statusReport = new StatusReportEntity()
-      statusReport.erep_id_caso_original_FK = caseReportOriginal.id;
-      statusReport.erep_id_movimiento_reporte_FK = movementReportFound.id
+      statusReport.sta_r_originalcase_id_fk = caseReportOriginal.id;
+      statusReport.sta_r_movement_id_fk = movementReportFound.id
 
       await queryRunner.manager.save(statusReport)
 
       const log = new LogEntity()
-      log.log_id_caso_validado_FK = caseReportValidate.id;
-      log.log_id_usuario_FK = caseReportOriginal.ori_cr_reporter_id_fk;
-      log.log_accion = logReports.LOG_CREATION;
+      log.log_validatedcase_id_fk = caseReportValidate.id;
+      log.log_user_id_fk = caseReportOriginal.ori_cr_reporter_id_fk;
+      log.log_action = logReports.LOG_CREATION;
       log.log_ip = clientIp
 
       await queryRunner.manager.save(log)   

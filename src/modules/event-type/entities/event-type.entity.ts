@@ -3,37 +3,37 @@ import { CaseType } from "src/modules/case-type/entities/case-type.entity";
 import { Event } from "src/modules/event/entities/event.entity";
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
-@Entity({ name: 'TiposSuceso'})
+@Entity()
 export class EventType {
     @PrimaryGeneratedColumn()
     id: number;
     
     @Column()
-    tsuc_id_tipo_caso_FK: number;
+    eve_t_casetype_id_FK: number;
     
     @Column({ type: 'varchar' })
-    tsuc_nombre: string;
+    eve_t_name: string;
 
     @Column({ type: 'varchar', nullable: true })
-    tsuc_descripcion: string;
+    eve_t_description: string;
 
     @Column({ default: true })
-    tsuc_estado: boolean;
+    eve_t_status: boolean;
 
     @CreateDateColumn()
-    tsuc_fecha_creacion: Date;
+    createdAt: Date;
 
     @UpdateDateColumn()
-    tsuc_fecha_actualizacion: Date;
+    updateAt: Date;
 
     @DeleteDateColumn()
-    tsuc_fecha_eliminacion: Date;
+    deletedAt: Date;
 
     @OneToMany(() => Event, (event) => event.eventType)
     event: Event[];
 
     @ManyToOne(() => CaseType, (caseType) => caseType.eventType)
-    @JoinColumn({ name: 'tsuc_id_tipo_caso_FK'})
+    @JoinColumn({ name: 'eve_t_casetype_id_FK'})
     caseType: CaseType
 
     @OneToMany(() => CaseReportOriginal, (caseReportOriginal) => caseReportOriginal.eventType)

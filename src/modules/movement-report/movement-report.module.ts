@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { MovementReportService } from './movement-report.service';
-import { MovementReportController } from './movement-report.controller';
+import { MovementReportService } from './services/movement-report.service';
+import { MovementReportController } from './controllers/movement-report.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MovementReport } from './entities/movement-report.entity';
 

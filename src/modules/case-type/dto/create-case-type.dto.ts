@@ -1,5 +1,5 @@
 export class CreateCaseTypeDto {
-    tcas_nombre: string;
-    tcas_descripcion: string;
-    tcas_estado: boolean;
+    cas_t_name: string;
+    cas_t_description: string;
+    cas_t_status: boolean;
 }

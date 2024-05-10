@@ -1,5 +1,5 @@
 export class CreateRiskLevelDto {
-    nries_nombre: string;
-    nries_descripcion: string;
-    nries_estado: boolean;
+    ris_l_name: string;
+    ris_l_description: string;
+    ris_l_status: boolean;
 }

@@ -1,36 +1,36 @@
 import { CaseReportValidate } from "src/modules/case-report-validate/entities/case-report-validate.entity";
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
-@Entity({ name: 'Logs'})
+@Entity()
 export class Log {
     @PrimaryGeneratedColumn()
     id: number;
 
     @Column()
-    log_id_caso_validado_FK: number;
+    log_validatedcase_id_fk: number;
 
     @Column()
-    log_id_usuario_FK: number;
+    log_user_id_fk: number;
 
     @Column({ type: 'varchar' })
-    log_accion: string;
+    log_action: string;
 
     @Column({ type: 'varchar' })
     log_ip: string;
 
     @Column({ default: true })
-    log_estado: boolean;
+    log_status: boolean;
 
     @CreateDateColumn()
-    log_fecha_creacion: Date;
+    createdAt: Date;
 
     @UpdateDateColumn()
-    log_fecha_actualizacion: Date;
+    updateAt: Date;
 
     @DeleteDateColumn()
-    log_fecha_eliminacion: Date;
+    deletedAt: Date;
 
     @ManyToOne(() => CaseReportValidate, (caseReportValidate) => caseReportValidate.log)
-    @JoinColumn({ name: 'log_id_caso_validado_FK'})
+    @JoinColumn({ name: 'log_validatedcase_id_fk'})
     caseReportValidate: CaseReportValidate
 }

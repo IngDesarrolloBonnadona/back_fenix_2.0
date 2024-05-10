@@ -1,6 +1,6 @@
 export class CreateMovementReportDto {
-    mrep_nombre: string;
-    mrep_descripcion: string;
-    mrep_tiempo: number;
-    mrep_estado: boolean;
+    mov_r_name: string;
+    mov_r_description: string;
+    mov_r_time: number;
+    mov_r_status: boolean;
 }

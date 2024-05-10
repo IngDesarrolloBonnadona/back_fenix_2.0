@@ -1,6 +1,7 @@
 export class CreateMedicineDto {
-    med_id_caso_FK: number
-    med_nombre: string;
-    med_descripcion: string;
-    med_estado: boolean;
+    med_case_id_fk: number
+    med_code: number
+    med_name: string;
+    med_description: string;
+    med_status: boolean;
 }

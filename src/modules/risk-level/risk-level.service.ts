@@ -59,7 +59,7 @@ export class RiskLevelService {
 
     Object.assign(riskLevel, updateRiskLevelDto)
 
-    riskLevel.nries_fecha_actualizacion = new Date();
+    riskLevel.updateAt = new Date();
     
     return await this.riskLevelRepository.save(riskLevel);
   }
@@ -74,8 +74,8 @@ export class RiskLevelService {
       );
     }
 
-    riskLevel.nries_fecha_eliminacion = new Date();
-    riskLevel.nries_estado = false;
+    riskLevel.deletedAt = new Date();
+    riskLevel.ris_l_status = false;
 
     return await this.riskLevelRepository.save(riskLevel);
   }

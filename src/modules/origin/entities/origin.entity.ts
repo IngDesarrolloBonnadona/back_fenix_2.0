@@ -2,28 +2,28 @@ import { CaseReportOriginal } from "src/modules/case-report-original/entities/ca
 import { SubOrigin } from "src/modules/sub-origin/entities/sub-origin.entity";
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
-@Entity({ name: 'Fuentes'})
+@Entity()
 export class Origin {
     @PrimaryGeneratedColumn()
     id: number;
 
     @Column({ type: 'varchar' })
-    fu_nombre: string;
+    orig_name: string;
 
     @Column({ type: 'varchar', nullable: true })
-    fu_descripcion: string;
+    orig_description: string;
 
     @Column({ default: true })
-    fu_estado: boolean;
+    orig_status: boolean;
 
     @CreateDateColumn()
-    fu_fecha_creacion: Date;
+    createdAt: Date;
 
     @UpdateDateColumn()
-    fu_fecha_actualizacion: Date;
+    updateAt: Date;
 
     @DeleteDateColumn()
-    fu_fecha_eliminacion: Date;
+    deletedAt: Date;
     
     @OneToMany(() => SubOrigin, (subOrigin) => subOrigin.origin)
     subOrigins: SubOrigin[];

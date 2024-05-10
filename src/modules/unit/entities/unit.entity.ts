@@ -2,34 +2,34 @@ import { CaseReportOriginal } from "src/modules/case-report-original/entities/ca
 import { Service } from "src/modules/service/entities/service.entity";
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
-@Entity({ name: 'Unidades'})
+@Entity()
 export class Unit {
     @PrimaryGeneratedColumn()
     id: number;
 
     @Column()
-    unid_id_servicio_FK: number
+    unit_service_id_FK: number
 
     @Column({ type: 'varchar' })
-    unid_nombre: string;
+    unit_name: string;
 
     @Column({ type: 'varchar', nullable: true })
-    unid_descripcion: string;
+    unit_description: string;
 
     @Column({ default: true })
-    unid_estado: boolean;
+    unit_status: boolean;
 
     @CreateDateColumn()
-    unid_fecha_creacion: Date;
+    createdAt: Date;
 
     @UpdateDateColumn()
-    unid_fecha_actualizacion: Date;
+    updateAt: Date;
 
     @DeleteDateColumn()
-    unid_fecha_eliminacion: Date;
+    deletedAt: Date;
 
     @ManyToOne(() => Service, (service) => service.unit)
-    @JoinColumn({ name: 'unid_id_servicio_FK'})
+    @JoinColumn({ name: 'unit_service_id_FK'})
     service: Service
 
     @OneToMany(() => CaseReportOriginal, (caseReportOriginal) => caseReportOriginal.unit)

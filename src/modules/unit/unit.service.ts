@@ -60,7 +60,7 @@ export class UnitService {
 
     Object.assign(unit, updateUnitDto)
 
-    unit.unid_fecha_actualizacion = new Date();
+    unit.updateAt = new Date();
     
     return await this.unitRepository.save(unit);
   }
@@ -74,8 +74,8 @@ export class UnitService {
         HttpStatus.NOT_FOUND,
       );
     }
-    unit.unid_fecha_eliminacion = new Date();
-    unit.unid_estado = false;
+    unit.deletedAt = new Date();
+    unit.unit_status = false;
     
     return await this.unitRepository.save(unit);
   }

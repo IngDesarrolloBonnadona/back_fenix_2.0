@@ -1,5 +1,5 @@
 export class CreateServiceDto {
-    serv_nombre: string;
-    serv_descripcion: string;
-    serv_estado: boolean;
+    serv_name: string;
+    serv_description: string;
+    serv_status: boolean;
 }

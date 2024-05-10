@@ -1,6 +1,6 @@
 export class CreateSubOriginDto {
-    sfu_id_fuente_FK: number
-    sfu_nombre: string;
-    sfu_descripcion: string;
-    sfu_estado: boolean;
+    sub_o_origin_id_FK: number
+    sub_o_name: string;
+    sub_o_description: string;
+    sub_o_status: boolean;
 }

@@ -1,5 +1,5 @@
 export class CreateSeverityClasificationDto {
-    csev_nombre: string;
-    csev_descripcion: string;
-    csev_estado: boolean;
+    sev_c_name: string;
+    sev_c_description: string;
+    sev_c_status: boolean;
 }

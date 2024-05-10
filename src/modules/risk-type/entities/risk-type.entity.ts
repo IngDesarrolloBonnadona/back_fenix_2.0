@@ -1,28 +1,28 @@
 import { CaseReportOriginal } from "src/modules/case-report-original/entities/case-report-original.entity";
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
-@Entity({ name: 'TiposRiesgo'})
+@Entity()
 export class RiskType {
     @PrimaryGeneratedColumn()
     id: number;
 
     @Column({ type: 'varchar' })
-    tries_nombre: string;
+    ris_t_name: string;
 
     @Column({ type: 'varchar', nullable: true })
-    tries_descripcion: string;
+    ris_t_description: string;
 
     @Column({ default: true })
-    tries_estado: boolean;
+    ris_t_status: boolean;
 
     @CreateDateColumn()
-    tries_fecha_creacion: Date;
+    createdAt: Date;
 
     @UpdateDateColumn()
-    tries_fecha_actualizacion: Date;
+    updateAt: Date;
 
     @DeleteDateColumn()
-    tries_fecha_eliminacion: Date;
+    deletedAt: Date;
 
     @OneToMany(() => CaseReportOriginal, (caseReportOriginal) => caseReportOriginal.riskType)
     caseReportOriginal: CaseReportOriginal[];

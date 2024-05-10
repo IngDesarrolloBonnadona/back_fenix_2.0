@@ -1,6 +1,6 @@
 export class CreateUnitDto {
-    unid_id_servicio_FK: number
-    unid_nombre: string;
-    unid_descripcion: string;
-    unid_estado: boolean;
+    unit_service_id_FK: number
+    unit_name: string;
+    unit_description: string;
+    unit_status: boolean;
 }

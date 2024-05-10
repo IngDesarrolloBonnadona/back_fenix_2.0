@@ -1,7 +1,7 @@
 export class CreateLogDto {
-    log_id_caso_validado_FK: number;
-    log_id_usuario_FK: number;
-    log_accion: string;
+    log_validatedcase_id_fk: number;
+    log_user_id_fk: number;
+    log_action: string;
     log_ip: string;
-    log_estado: boolean;
+    log_status: boolean;
 }

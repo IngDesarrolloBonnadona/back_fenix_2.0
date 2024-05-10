@@ -29,14 +29,21 @@ export class CaseReportOriginalController {
     const { createCaseReportOriginal, createMedicine, createDevice } = request;
     const clientIp = req['clientIp'];   // Obtener la dirección IP del cliente del objeto Request
     
-    const created = this.CaseReportOriginalService.createReportOriginalValidate(
-      createCaseReportOriginal,
-      createMedicine,
-      createDevice,
-      clientIp
-    )
-
-    return created;
+    if (createMedicine && createDevice) {
+      return this.CaseReportOriginalService.createReportOriginalValidate(
+        createCaseReportOriginal,
+        createMedicine,
+        createDevice,
+        clientIp
+      )
+    } else {
+      return this.CaseReportOriginalService.createReportOriginalValidate(
+        createCaseReportOriginal,
+        [],
+        [],
+        clientIp
+      )
+    }
   } 
 
   @Get()

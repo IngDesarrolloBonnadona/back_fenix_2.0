@@ -14,7 +14,7 @@ import { SubOrigin } from "src/modules/sub-origin/entities/sub-origin.entity";
 import { Unit } from "src/modules/unit/entities/unit.entity";
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
-@Entity({ name: 'ReportesCasoOriginal'})
+@Entity()
 export class CaseReportOriginal {
     @PrimaryGeneratedColumn()
     id: number

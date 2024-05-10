@@ -1,36 +1,36 @@
 import { CaseReportOriginal } from "src/modules/case-report-original/entities/case-report-original.entity";
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
-@Entity({ name: 'Medicamentos'})
+@Entity()
 export class Medicine {
     @PrimaryGeneratedColumn()
     id: number;
 
     @Column()
-    med_id_caso_FK: number
+    med_case_id_fk: number
 
     @Column()
-    med_codigo: number
+    med_code: number
 
     @Column({ type: 'varchar' })
-    med_nombre: string;
+    med_name: string;
 
     @Column({ type: 'varchar', nullable: true })
-    med_descripcion: string;
+    med_description: string;
 
     @Column({ default: true })
-    med_estado: boolean;
+    med_status: boolean;
 
     @CreateDateColumn()
-    med_fecha_creacion: Date;
+    createdAt: Date;
 
     @UpdateDateColumn()
-    med_fecha_actualizacion: Date;
+    updateAt: Date;
 
     @DeleteDateColumn()
-    med_fecha_eliminacion: Date
+    deletedAt: Date
 
     @ManyToOne(() => CaseReportOriginal, (caseReportOriginal) => caseReportOriginal.medicine)
-    @JoinColumn({ name: 'med_id_caso_FK'})
+    @JoinColumn({ name: 'med_case_id_fk'})
     caseReportOriginal: CaseReportOriginal
 }

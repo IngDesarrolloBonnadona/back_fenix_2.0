@@ -60,7 +60,7 @@ export class EventService {
 
     Object.assign(event, updateEventDto)
 
-    event.suc_fecha_actualizacion = new Date();
+    event.updateAt = new Date();
     
     return await this.eventRepository.save(event);
   }
@@ -75,8 +75,8 @@ export class EventService {
       );
     }
 
-    event.suc_fecha_eliminacion = new Date();
-    event.suc_estado = false;
+    event.deletedAt = new Date();
+    event.eve_status = false;
 
     return await this.eventRepository.save(event);
   }
