@@ -55,7 +55,7 @@ export class CaseReportOriginal {
     @Column()
     ori_cr_unit_id_fk: number;
     
-    @Column({ type: 'varchar', nullable: true })
+    @Column({ type: 'varchar' })
     ori_cr_description: string;
     
     @Column({ type: 'varchar', nullable: true })

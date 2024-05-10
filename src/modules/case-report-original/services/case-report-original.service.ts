@@ -48,21 +48,6 @@ export class CaseReportOriginalService {
       const caseReportOriginal = this.caseReportOriginalRepository.create(createCaseReportOriginal)
       await queryRunner.manager.save(caseReportOriginal)
 
-      //Reporte Validado
-      // const caseReportValidateFound = await this.caseReportValidateRepository.findOne({
-      //   where : {
-      //     rcval_id_caso_original_FK : caseReportOriginal.id,
-      //     rcval_validado : false
-      //   }
-      // })
-
-      // if (caseReportValidateFound) {
-      //   throw new HttpException(
-      //     `El caso validado ya existe.`,
-      //     HttpStatus.FOUND
-      //   )
-      // }
-
       const caseReportValidate = new CaseReportValidateEntity();
       caseReportValidate.val_cr_originalcase_id_fk = caseReportOriginal.id;
       caseReportValidate.val_cr_casetype_id_fk = caseReportOriginal.ori_cr_casetype_id_fk;
