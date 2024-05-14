@@ -3,69 +3,58 @@ import { CaseReportOriginalService } from '../services/case-report-original.serv
 import { UpdateCaseReportOriginalDto } from '../dto/update-case-report-original.dto';
 import { Request } from 'express';
 import { CaseReportOriginal } from '../entities/case-report-original.entity';
+import { CreateCaseReportOriginalDto } from '../dto/create-case-report-original.dto';
+import { ValidateCaseReportOriginalDto } from '../dto/validate-case-report-original.dto';
+
 
 @Controller('case-report-original')
 export class CaseReportOriginalController {
-  constructor(private readonly CaseReportOriginalService: CaseReportOriginalService) {}
+  constructor(
+    private readonly CaseReportOriginalService: CaseReportOriginalService,
+  ) {}
 
-  // @Post()
-  // create(
-  //   @Body() createCaseReportOriginal: CreateCaseReportOriginalDto,
-  //   @Body() createMedicine: CreateMedicineDto[],
-  //   @Body() createDevice: CreateDeviceDto[]
-  // ) {
-  //   return this.CaseReportOriginalService.createReportOriginalValidate(
-  //     createCaseReportOriginal,
-  //     createMedicine,
-  //     createDevice
-  //   );
-  // }
-
-  @Post()
-  create( 
-    @Body() request: any, 
-    @Req() req: Request
-  ) {
-    const { createCaseReportOriginal, createMedicine, createDevice } = request;
-    const clientIp = req['clientIp'];   // Obtener la dirección IP del cliente del objeto Request
-    
-    if (createMedicine && createDevice) {
-      return this.CaseReportOriginalService.createReportOriginalValidate(
-        createCaseReportOriginal,
-        createMedicine,
-        createDevice,
-        clientIp
-      )
-    } else {
-      return this.CaseReportOriginalService.createReportOriginalValidate(
-        createCaseReportOriginal,
-        [],
-        [],
-        clientIp
-      )
-    }
+  @Post('/validateReports')
+  async validateReportsExistence( @Body() data: any ) : Promise<any>{
+    const { validateCaseReportOriginal } = data
+    return await this.CaseReportOriginalService.validateReports(validateCaseReportOriginal);
   } 
+  
+  @Post('/createReports')
+  async createReports(@Body() data: any, @Req() req: Request) : Promise<any>{
+    const { createCaseReportOriginal, createMedicine, createDevice } = data;
+    const clientIp = req['clientIp'];
 
-  @Get()
-  findAll() : Promise<CaseReportOriginal[]> {
+    return await this.CaseReportOriginalService.createReportOriginalValidate(
+          createCaseReportOriginal,
+          createMedicine,
+          createDevice,
+          clientIp,
+        );
+  }
+
+  @Get('/listCasesReportOriginal')
+  findAll(): Promise<CaseReportOriginal[]> {
     return this.CaseReportOriginalService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: number) : Promise<CaseReportOriginal> {
-    return this.CaseReportOriginalService.findOne(+id);
+  @Get('/findCaseReportOriginal/:id')
+  findOne(@Param('id') id: number): Promise<CaseReportOriginal> {
+    return this.CaseReportOriginalService.findOne(id);
   }
 
-  @Patch(':id')
+  @Patch('/updateReportOriginal/:id')
   update(
-    @Param('id') id: number, 
-    @Body() UpdateCaseReportOriginalDto: UpdateCaseReportOriginalDto
-  ) : Promise<CaseReportOriginal> {
-    return this.CaseReportOriginalService.update(+id, UpdateCaseReportOriginalDto);
+    @Param('id') id: number,
+    @Body() UpdateCaseReportOriginalDto: UpdateCaseReportOriginalDto,
+  ): Promise<CaseReportOriginal> {
+    return this.CaseReportOriginalService.update(
+      id,
+      UpdateCaseReportOriginalDto,
+    );
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: number) : Promise<CaseReportOriginal> {
-    return this.CaseReportOriginalService.remove(+id);
+  @Delete('/deleteReportOriginal/:id')
+  remove(@Param('id') id: number): Promise<CaseReportOriginal> {
+    return this.CaseReportOriginalService.remove(id);
   }
 }

@@ -14,6 +14,7 @@ import { CreateDeviceDto } from '../../device/dto/create-device.dto';
 import { MovementReport as MovementReportEntity } from '../../movement-report/entities/movement-report.entity';
 import { movementReport } from '../enums/movement-repoty.enum';
 import { logReports } from 'src/enums/logs.enum';
+import { ValidateCaseReportOriginalDto } from '../dto/validate-case-report-original.dto';
 
 @Injectable()
 export class CaseReportOriginalService {
@@ -32,6 +33,27 @@ export class CaseReportOriginalService {
     private readonly movementReportRepository: Repository<MovementReportEntity>,
     private dataSource: DataSource,
   ) {}
+
+  async validateReports (
+    validateCaseReportOriginal: ValidateCaseReportOriginalDto,
+  ) : Promise<any> {
+
+    const similarReport = await this.caseReportOriginalRepository.find({
+      where: {
+        ori_cr_casetype_id_fk: validateCaseReportOriginal.ori_cr_casetype_id_fk,
+        ori_cr_unit_id_fk: validateCaseReportOriginal.ori_cr_unit_id_fk,
+        ori_cr_patient_id_fk: validateCaseReportOriginal.ori_cr_patient_id_fk,
+        ori_cr_event_id_fk: validateCaseReportOriginal.ori_cr_event_id_fk,
+        ori_cr_eventtype_id_fk: validateCaseReportOriginal.ori_cr_eventtype_id_fk,
+      },
+    });
+    
+    if (similarReport.length > 0) {
+      return { message: 'Existen casos similares encontrados', data: similarReport }
+    } else {
+      return { message: 'No existen casos similares'}
+    }
+  }
 
   async createReportOriginalValidate(
     createCaseReportOriginal: CreateCaseReportOriginalDto,
@@ -223,9 +245,9 @@ export class CaseReportOriginalService {
       );
     }
 
-    caseReportsOriginal.deletedAt = new Date()
+    await this.caseReportOriginalRepository.softRemove(caseReportsOriginal);
     caseReportsOriginal.ori_cr_status = false;
 
-    return await this.caseReportOriginalRepository.save(caseReportsOriginal);
+    return caseReportsOriginal;
   }
 }
