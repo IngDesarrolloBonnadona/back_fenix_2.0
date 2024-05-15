@@ -6,7 +6,7 @@ async function bootstrap() {
   const logger = new Logger();
   const app = await NestFactory.create(AppModule);
 
-  const port = +process.env.TYPEORM_PORT_RUN
+  const port = +process.env.TYPEORM_PORT_RUN || 10000
   await app.listen(port);
   logger.log(`The aplication is running on port: ${port || 10000}`)
 }
