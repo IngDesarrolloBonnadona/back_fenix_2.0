@@ -19,12 +19,12 @@ export class CaseReportOriginalController {
     return await this.CaseReportOriginalService.validateReports(validateCaseReportOriginal);
   } 
   
-  @Post('/createReports')
-  async createReports(@Body() data: any, @Req() req: Request) : Promise<any>{
+  @Post('/createReportOriginal')
+  async createReportOriginal(@Body() data: any, @Req() req: Request) : Promise<any>{
     const { createCaseReportOriginal, createMedicine, createDevice } = data;
     const clientIp = req['clientIp'];
 
-    return await this.CaseReportOriginalService.createReportOriginalValidate(
+    return await this.CaseReportOriginalService.createReportOriginal(
           createCaseReportOriginal,
           createMedicine,
           createDevice,
@@ -32,29 +32,29 @@ export class CaseReportOriginalController {
         );
   }
 
-  @Get('/listCasesReportOriginal')
-  findAll(): Promise<CaseReportOriginal[]> {
-    return this.CaseReportOriginalService.findAll();
+  @Get('/listReportsOriginal')
+  listReportsOriginal(): Promise<CaseReportOriginal[]> {
+    return this.CaseReportOriginalService.findAllReportsOriginal();
   }
 
-  @Get('/findCaseReportOriginal/:id')
-  findOne(@Param('id') id: number): Promise<CaseReportOriginal> {
-    return this.CaseReportOriginalService.findOne(id);
+  @Get('/findReportOriginal/:id')
+  findReportOriginal(@Param('id') id: number): Promise<CaseReportOriginal> {
+    return this.CaseReportOriginalService.findOneReportOriginal(id);
   }
 
   @Patch('/updateReportOriginal/:id')
-  update(
+  updateReportOriginal(
     @Param('id') id: number,
     @Body() UpdateCaseReportOriginalDto: UpdateCaseReportOriginalDto,
   ): Promise<CaseReportOriginal> {
-    return this.CaseReportOriginalService.update(
+    return this.CaseReportOriginalService.updateReportOriginal(
       id,
       UpdateCaseReportOriginalDto,
     );
   }
 
   @Delete('/deleteReportOriginal/:id')
-  remove(@Param('id') id: number): Promise<CaseReportOriginal> {
-    return this.CaseReportOriginalService.remove(id);
+  deleteReportOriginal(@Param('id') id: number): Promise<CaseReportOriginal> {
+    return this.CaseReportOriginalService.removeReportOriginal(id);
   }
 }

@@ -10,5 +10,6 @@ import { CaseReportValidate } from './entities/case-report-validate.entity';
   ],
   controllers: [CaseReportValidateController],
   providers: [CaseReportValidateService],
+  exports: [CaseReportValidateService]
 })
 export class CaseReportValidateModule {}

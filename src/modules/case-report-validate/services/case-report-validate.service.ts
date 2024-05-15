@@ -12,12 +12,32 @@ export class CaseReportValidateService {
     private readonly caseReportValidateRepository: Repository<CaseReportValidateEntity>
   ){}
 
-  async create(createCaseReportValidateDto: CreateCaseReportValidateDto) {
-    const CaseReportValidate = this.caseReportValidateRepository.create(createCaseReportValidateDto);
-    return await this.caseReportValidateRepository.save(CaseReportValidate);
+  async createReportValidateTransaction(
+    queryRunner: any,
+    caseReportOriginal: any): Promise<CaseReportValidateEntity> {
+    const caseReportValidate = this.caseReportValidateRepository.create({
+      val_cr_originalcase_id_fk : caseReportOriginal.id,
+      val_cr_casetype_id_fk : caseReportOriginal.ori_cr_casetype_id_fk,
+      val_cr_patient_id_fk : caseReportOriginal.ori_cr_patient_id_fk,
+      val_cr_reporter_id_fk : caseReportOriginal.ori_cr_reporter_id_fk,
+      val_cr_eventtype_id_fk : caseReportOriginal.ori_cr_eventtype_id_fk,
+      val_cr_service_id_fk : caseReportOriginal.ori_cr_service_id_fk,
+      val_cr_event_id_fk : caseReportOriginal.ori_cr_event_id_fk,
+      val_cr_risktype_id_fk : caseReportOriginal.ori_cr_risktype_id_fk,
+      val_cr_severityclasif_id_fk : caseReportOriginal.ori_cr_severityclasif_id_fk,
+      val_cr_origin_id_fk : caseReportOriginal.ori_cr_origin_id_fk,
+      val_cr_suborigin_id_fk : caseReportOriginal.ori_cr_suborigin_id_fk,
+      val_cr_risklevel_id_fk : caseReportOriginal.ori_cr_risklevel_id_fk,
+      val_cr_unit_id_fk : caseReportOriginal.ori_cr_unit_id_fk,
+      val_cr_description : caseReportOriginal.ori_cr_description,
+      val_cr_inmediateaction : caseReportOriginal.ori_cr_inmediateaction,
+      val_cr_materializedrisk : caseReportOriginal.ori_cr_materializedrisk,
+      val_cr_associatedpatient : caseReportOriginal.ori_cr_associatedpatient,
+    })
+    return await queryRunner.manager.save(caseReportValidate)
   }
 
-  async findAll() {
+  async findAllReportsValidate() {
     const caseReportValidates = await this.caseReportValidateRepository.find({
       relations:{
         caseReportOriginal: true,
@@ -35,7 +55,7 @@ export class CaseReportValidateService {
     return caseReportValidates
   }
 
-  async findOne(id: number) {
+  async findOneReportValidate(id: number) {
 const caseReportValidate = await this.caseReportValidateRepository.findOne({ where: { id } });
 
     if (!caseReportValidate) {
@@ -48,8 +68,8 @@ const caseReportValidate = await this.caseReportValidateRepository.findOne({ whe
     return caseReportValidate
   }
 
-  async update(id: number, updateCaseReportValidateDto: UpdateCaseReportValidateDto) {
-    const caseReportValidate = await this.findOne(id);
+  async updateReportValidate(id: number, updateCaseReportValidateDto: UpdateCaseReportValidateDto) {
+    const caseReportValidate = await this.findOneReportValidate(id);
 
     // Valida si existe
     if (!caseReportValidate) {
@@ -62,14 +82,13 @@ const caseReportValidate = await this.caseReportValidateRepository.findOne({ whe
     // Actualiza los campos con los valores proporcionados
     Object.assign(caseReportValidate, updateCaseReportValidateDto)
 
-    // Actualiza la fecha de actualización
     caseReportValidate.updateAt = new Date();
     
     return this.caseReportValidateRepository.save(caseReportValidate);
   }
 
-  async remove(id: number) {
-    const caseReportValidate = await this.findOne(id);
+  async removeReportValidate(id: number) {
+    const caseReportValidate = await this.findOneReportValidate(id);
 
     if (!caseReportValidate) {
       throw new HttpException(
@@ -78,9 +97,8 @@ const caseReportValidate = await this.caseReportValidateRepository.findOne({ whe
       );
     }
 
-    caseReportValidate.deletedAt = new Date();
-    caseReportValidate.val_cr_status = false;
+    await this.caseReportValidateRepository.softRemove(caseReportValidate)
 
-    return this.caseReportValidateRepository.save(caseReportValidate)
+    return caseReportValidate
   }
 }

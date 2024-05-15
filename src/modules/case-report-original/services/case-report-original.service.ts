@@ -4,33 +4,30 @@ import { UpdateCaseReportOriginalDto } from '../dto/update-case-report-original.
 import { InjectRepository } from '@nestjs/typeorm';
 import { CaseReportOriginal as CaseReportOriginalEntity } from '../entities/case-report-original.entity';
 import { DataSource, Repository } from 'typeorm';
-import { CaseReportValidate as CaseReportValidateEntity } from '../../case-report-validate/entities/case-report-validate.entity';
 import { Medicine as MedicineEntity } from '../../medicine/entities/medicine.entity';
 import { Device as DeviceEntity } from '../../device/entities/device.entity';
-import { StatusReport as StatusReportEntity } from '../../status-report/entities/status-report.entity';
-import { Log as LogEntity } from '../../log/entities/log.entity';
 import { CreateMedicineDto } from '../../medicine/dto/create-medicine.dto';
 import { CreateDeviceDto } from '../../device/dto/create-device.dto';
 import { MovementReport as MovementReportEntity } from '../../movement-report/entities/movement-report.entity';
-import { movementReport } from '../enums/movement-repoty.enum';
+import { movementReport } from '../enums/movement-report.enum';
 import { logReports } from 'src/enums/logs.enum';
 import { ValidateCaseReportOriginalDto } from '../dto/validate-case-report-original.dto';
+import { CaseReportValidateService } from 'src/modules/case-report-validate/services/case-report-validate.service';
+import { CreateStatusReportDto } from 'src/modules/status-report/dto/create-status-report.dto';
+import { CreateLogDto } from 'src/modules/log/dto/create-log.dto';
 
 @Injectable()
 export class CaseReportOriginalService {
   constructor(
     @InjectRepository(CaseReportOriginalEntity)
     private readonly caseReportOriginalRepository: Repository<CaseReportOriginalEntity>,
-    @InjectRepository(CaseReportValidateEntity)
-    private readonly caseReportValidateRepository: Repository<CaseReportValidateEntity>,
     @InjectRepository(MedicineEntity)
     private readonly medicineRepository: Repository<MedicineEntity>,
     @InjectRepository(DeviceEntity)
     private readonly deviceRepository: Repository<DeviceEntity>,
-    @InjectRepository(StatusReportEntity)
-    private readonly statusReportRepository: Repository<StatusReportEntity>,
     @InjectRepository(MovementReportEntity)
     private readonly movementReportRepository: Repository<MovementReportEntity>,
+    private readonly caseReportValidateService: CaseReportValidateService,
     private dataSource: DataSource,
   ) {}
 
@@ -55,7 +52,7 @@ export class CaseReportOriginalService {
     }
   }
 
-  async createReportOriginalValidate(
+  async createReportOriginal(
     createCaseReportOriginal: CreateCaseReportOriginalDto,
     createMedicine: CreateMedicineDto[],
     createDevice: CreateDeviceDto[],
@@ -70,39 +67,22 @@ export class CaseReportOriginalService {
       const caseReportOriginal = this.caseReportOriginalRepository.create(createCaseReportOriginal)
       await queryRunner.manager.save(caseReportOriginal)
 
-      const caseReportValidate = new CaseReportValidateEntity();
-      caseReportValidate.val_cr_originalcase_id_fk = caseReportOriginal.id;
-      caseReportValidate.val_cr_casetype_id_fk = caseReportOriginal.ori_cr_casetype_id_fk;
-      caseReportValidate.val_cr_patient_id_fk = caseReportOriginal.ori_cr_patient_id_fk;
-      caseReportValidate.val_cr_reporter_id_fk = caseReportOriginal.ori_cr_reporter_id_fk;
-      caseReportValidate.val_cr_eventtype_id_fk = caseReportOriginal.ori_cr_eventtype_id_fk;
-      caseReportValidate.val_cr_service_id_fk = caseReportOriginal.ori_cr_service_id_fk;
-      caseReportValidate.val_cr_event_id_fk = caseReportOriginal.ori_cr_event_id_fk;
-      caseReportValidate.val_cr_risktype_id_fk = caseReportOriginal.ori_cr_risktype_id_fk;
-      caseReportValidate.val_cr_severityclasif_id_fk = caseReportOriginal.ori_cr_severityclasif_id_fk;
-      caseReportValidate.val_cr_origin_id_fk = caseReportOriginal.ori_cr_origin_id_fk;
-      caseReportValidate.val_cr_suborigin_id_fk = caseReportOriginal.ori_cr_suborigin_id_fk;
-      caseReportValidate.val_cr_risklevel_id_fk = caseReportOriginal.ori_cr_risklevel_id_fk;
-      caseReportValidate.val_cr_unit_id_fk = caseReportOriginal.ori_cr_unit_id_fk;
-      caseReportValidate.val_cr_description = caseReportOriginal.ori_cr_description;
-      caseReportValidate.val_cr_inmediateaction = caseReportOriginal.ori_cr_inmediateaction;
-      caseReportValidate.val_cr_materializedrisk = caseReportOriginal.ori_cr_materializedrisk;
-      caseReportValidate.val_cr_associatedpatient = caseReportOriginal.ori_cr_associatedpatient;
-
-      await queryRunner.manager.save(caseReportValidate)
+      const caseReportValidate = await this.caseReportValidateService.createReportValidateTransaction(queryRunner, caseReportOriginal)
 
       const hasMedicine = createMedicine && createMedicine.length > 0;
-      const hasDevice = createDevice && createDevice.length > 0;
-
+      
       if(hasMedicine) {
         for (const medicine of createMedicine) {
           const med = this.medicineRepository.create({
             ...medicine,
             med_case_id_fk: caseReportOriginal.id
           });
+
           await queryRunner.manager.save(med)
         }
       }
+      
+      const hasDevice = createDevice && createDevice.length > 0;
 
       if(hasDevice) {
         for (const device of createDevice) {
@@ -110,6 +90,7 @@ export class CaseReportOriginalService {
             ...device,
             dev_case_id_fk: caseReportOriginal.id
           })
+
           await queryRunner.manager.save(dev)
         }
       }
@@ -128,13 +109,13 @@ export class CaseReportOriginalService {
         )
       }
 
-      const statusReport = new StatusReportEntity()
+      const statusReport = new CreateStatusReportDto()
       statusReport.sta_r_originalcase_id_fk = caseReportOriginal.id;
       statusReport.sta_r_movement_id_fk = movementReportFound.id
 
       await queryRunner.manager.save(statusReport)
 
-      const log = new LogEntity()
+      const log = new CreateLogDto()
       log.log_validatedcase_id_fk = caseReportValidate.id;
       log.log_user_id_fk = caseReportOriginal.ori_cr_reporter_id_fk;
       log.log_action = logReports.LOG_CREATION;
@@ -153,7 +134,7 @@ export class CaseReportOriginalService {
         log,
       }
 
-      return { message: `Reporte #${reportData.caseReportOriginal.id} creado satisfactoriamente.`, data: reportData };
+      return { message: `Reporte #${reportData.caseReportOriginal.id} se creó satisfactoriamente.`, data: reportData };
     } catch (error) {
       await queryRunner.rollbackTransaction();
 
@@ -167,7 +148,7 @@ export class CaseReportOriginalService {
     }
   }
 
-  async findAll() {
+  async findAllReportsOriginal() {
     const caseReportsOriginal = await this.caseReportOriginalRepository.find({
       relations: {
         caseReportValidate: true,
@@ -198,7 +179,7 @@ export class CaseReportOriginalService {
     return caseReportsOriginal
   }
 
-  async findOne(id: number) {
+  async findOneReportOriginal(id: number) {
     const caseReportsOriginal = await this.caseReportOriginalRepository.findOne({ where: { id } });
 
     if (!caseReportsOriginal) {
@@ -211,11 +192,11 @@ export class CaseReportOriginalService {
     return caseReportsOriginal
   }
 
-  async update(
+  async updateReportOriginal(
     id: number,
     UpdateCaseReportOriginalDto: UpdateCaseReportOriginalDto,
   ) {
-    const caseReportsOriginal = await this.findOne(id);
+    const caseReportsOriginal = await this.findOneReportOriginal(id);
 
     if (!caseReportsOriginal) {
       throw new HttpException(
@@ -230,8 +211,8 @@ export class CaseReportOriginalService {
     return await this.caseReportOriginalRepository.save(caseReportsOriginal);
   }
 
-  async remove(id: number) {
-    const caseReportsOriginal = await this.findOne(id);
+  async removeReportOriginal(id: number) {
+    const caseReportsOriginal = await this.findOneReportOriginal(id);
 
     if (!caseReportsOriginal) {
       throw new HttpException(
@@ -241,7 +222,6 @@ export class CaseReportOriginalService {
     }
 
     await this.caseReportOriginalRepository.softRemove(caseReportsOriginal);
-    caseReportsOriginal.ori_cr_status = false;
 
     return caseReportsOriginal;
   }
