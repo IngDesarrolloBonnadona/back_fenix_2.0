@@ -213,18 +213,16 @@ export class CaseReportOriginalService {
     return await this.caseReportOriginalRepository.save(caseReportsOriginal);
   }
 
-  async removeReportOriginal(id: number) {
+  async deleteReportOriginal(id: number) {
     const caseReportsOriginal = await this.findOneReportOriginal(id);
 
-    if (!caseReportsOriginal) {
+    const isEliminated = await this.caseReportOriginalRepository.softDelete(caseReportsOriginal.id);
+
+    if (isEliminated) {
       throw new HttpException(
-        'No se encontró el caso.',
-        HttpStatus.NOT_FOUND,
+        `El caso #${id} se eliminó correctamente`,
+        HttpStatus.OK,
       );
-    }
-
-    await this.caseReportOriginalRepository.softRemove(caseReportsOriginal);
-
-    return caseReportsOriginal;
+    } 
   }
 }

@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { CaseTypeService } from './entities/case-type.service';
+import { CaseTypeService } from './services/case-type.service';
 import { CaseTypeController } from './controllers/case-type.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CaseType } from './entities/case-type.entity';

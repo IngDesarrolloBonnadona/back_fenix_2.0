@@ -1,8 +1,8 @@
 import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
-import { CreateUnitDto } from './dto/create-unit.dto';
-import { UpdateUnitDto } from './dto/update-unit.dto';
+import { CreateUnitDto } from '../dto/create-unit.dto';
+import { UpdateUnitDto } from '../dto/update-unit.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Unit as UnitEntity } from './entities/unit.entity';
+import { Unit as UnitEntity } from '../entities/unit.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -67,16 +67,14 @@ export class UnitService {
 
   async remove(id: number) {
     const unit = await this.findOne(id);
-
-    if (!unit) {
-      throw new HttpException(
-        'No se encontró la unidad.',
-        HttpStatus.NOT_FOUND,
-      );
-    }
-    unit.deletedAt = new Date();
-    unit.unit_status = false;
     
-    return await this.unitRepository.save(unit);
+    const isEliminated =  await this.unitRepository.softDelete(unit.id);
+
+    if (isEliminated) {
+      throw new HttpException(
+        `La unidad se eliminó correctamente`,
+        HttpStatus.OK,
+      );
+    } 
   }
 }

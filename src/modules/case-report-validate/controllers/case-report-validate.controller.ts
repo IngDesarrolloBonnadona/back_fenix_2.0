@@ -26,7 +26,7 @@ export class CaseReportValidateController {
   }
 
   @Delete('/removeReportValidate/:id')
-  removeReportValidate(@Param('id') id: number) : Promise<CaseReportValidate> {
+  removeReportValidate(@Param('id') id: number) : Promise<any> {
     return this.caseReportValidateService.removeReportValidate(id);
   }
 }

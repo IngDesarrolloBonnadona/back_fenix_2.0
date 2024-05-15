@@ -1,34 +1,46 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { DeviceService } from '../services/device.service';
 import { CreateDeviceDto } from '../dto/create-device.dto';
 import { UpdateDeviceDto } from '../dto/update-device.dto';
+import { Device } from '../entities/device.entity';
 
 @Controller('device')
 export class DeviceController {
   constructor(private readonly deviceService: DeviceService) {}
 
-  @Post()
-  create(@Body() createDeviceDto: CreateDeviceDto) {
-    return this.deviceService.create(createDeviceDto);
+  @Post('/createDevice')
+  createDevice(@Body() createDeviceDto: CreateDeviceDto): Promise<Device> {
+    return this.deviceService.createDevice(createDeviceDto);
   }
 
-  @Get()
-  findAll() {
-    return this.deviceService.findAll();
+  @Get('/listDevice')
+  listDevice(): Promise<Device[]> {
+    return this.deviceService.findAllDevices();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.deviceService.findOne(+id);
+  @Get('/findDevice/:id')
+  findDevice(@Param('id') id: number): Promise<Device> {
+    return this.deviceService.findOneDevice(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateDeviceDto: UpdateDeviceDto) {
-    return this.deviceService.update(+id, updateDeviceDto);
+  @Patch('/updateDevice/:id')
+  updateDevice(
+    @Param('id') id: number,
+    @Body() updateDeviceDto: UpdateDeviceDto,
+  ): Promise<Device> {
+    return this.deviceService.updateDevice(id, updateDeviceDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.deviceService.remove(+id);
+  @Delete('/deleteDevice/:id')
+  deleteDevice(@Param('id') id: number): Promise<any> {
+    return this.deviceService.deleteDevice(id);
   }
 }

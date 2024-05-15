@@ -14,12 +14,12 @@ export class DeviceService {
     private readonly deviceRepository: Repository<DeviceEntity>
   ){}
 
-  async create(createDeviceDto: CreateDeviceDto) {
+  async createDevice(createDeviceDto: CreateDeviceDto) {
     const device = this.deviceRepository.create(createDeviceDto);
     return await this.deviceRepository.save(device);
   }
 
-  async findAll() {
+  async findAllDevices() {
     const devices = await this.deviceRepository.find();
 
     if (!devices) {
@@ -32,7 +32,7 @@ export class DeviceService {
     return devices
   }
 
-  async findOne(id: number) {
+  async findOneDevice(id: number) {
     const device = await this.deviceRepository.findOne({ where: { id } })
 
     if (!device) {
@@ -45,15 +45,8 @@ export class DeviceService {
     return device;
   }
 
-  async update(id: number, updateDeviceDto: UpdateDeviceDto) {
-    const device = await this.findOne(id);
-
-    if (!device) {
-      throw new HttpException(
-        'No se encontró el dispositivo',
-        HttpStatus.NOT_FOUND,
-      );
-    }
+  async updateDevice(id: number, updateDeviceDto: UpdateDeviceDto) {
+    const device = await this.findOneDevice(id);
 
     Object.assign(device, updateDeviceDto)
 
@@ -62,19 +55,16 @@ export class DeviceService {
     return await this.deviceRepository.save(device);
   }
 
-  async remove(id: number) {
-    const device = await this.findOne(id);
+  async deleteDevice(id: number) {
+    const device = await this.findOneDevice(id);
 
-    if (!device) {
+    const isEliminated =  await this.deviceRepository.softDelete(device.id)
+    
+    if (isEliminated) {
       throw new HttpException(
-        'No se encontró el dispositivo',
-        HttpStatus.NOT_FOUND,
+        `El dispositivo #${id} se eliminó correctamente`,
+        HttpStatus.OK,
       );
-    }
-
-    device.deletedAt = new Date();
-    device.dev_status = false;
-
-    return await this.deviceRepository.save(device)
+    } 
   }
 }

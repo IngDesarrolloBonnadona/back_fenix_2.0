@@ -54,7 +54,7 @@ export class CaseReportOriginalController {
   }
 
   @Delete('/deleteReportOriginal/:id')
-  deleteReportOriginal(@Param('id') id: number): Promise<CaseReportOriginal> {
-    return this.CaseReportOriginalService.removeReportOriginal(id);
+  deleteReportOriginal(@Param('id') id: number): Promise<void> {
+    return this.CaseReportOriginalService.deleteReportOriginal(id);
   }
 }

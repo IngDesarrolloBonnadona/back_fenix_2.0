@@ -12,12 +12,12 @@ export class LogService {
     private readonly logRepository: Repository<LogEntity>
   ){}
 
-  async create(createLogDto: CreateLogDto) {
+  async createLog(createLogDto: CreateLogDto) {
     const log = this.logRepository.create(createLogDto);
     return await this.logRepository.save(log)
   }
 
-  async findAll() {
+  async findAllLogs() {
     const logs = await this.logRepository.find({
       relations: {
         caseReportValidate: true,
@@ -33,7 +33,7 @@ export class LogService {
     return logs;
   }
 
-  async findOne(id: number) {
+  async findOneLog(id: number) {
     const log = await this.logRepository.findOne({ where: { id } });
 
     if (!log) {
@@ -46,15 +46,8 @@ export class LogService {
     return log;
   }
 
-  async update(id: number, updateLogDto: UpdateLogDto) {
-    const log = await this.findOne(id);
-
-    if (!log) {
-      throw new HttpException(
-        'No se encontró el log.',
-        HttpStatus.NOT_FOUND,
-      );
-    }
+  async updateLog(id: number, updateLogDto: UpdateLogDto) {
+    const log = await this.findOneLog(id);
     
     Object.assign(log, updateLogDto)
 
@@ -63,19 +56,16 @@ export class LogService {
     return await this.logRepository.save(log);
   }
 
-  async remove(id: number) {
-    const log = await this.findOne(id);
+  async deleteLog(id: number) {
+    const log = await this.findOneLog(id);
 
-    if (!log) {
+    const isEliminated = await this.logRepository.softDelete(log.id);
+
+    if (isEliminated) {
       throw new HttpException(
-        'No se encontró el log.',
-        HttpStatus.NOT_FOUND,
+        `El log #${id} se eliminó correctamente`,
+        HttpStatus.OK,
       );
-    }
-
-    log.deletedAt = new Date();
-    log.log_status = false;
-
-    return await this.logRepository.save(log);
+    }   
   }
 }

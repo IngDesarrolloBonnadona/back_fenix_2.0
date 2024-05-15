@@ -14,12 +14,12 @@ export class MedicineService {
     private readonly medicineRepository: Repository<MedicineEntity> 
   ){}
 
-  async create(createMedicineDto: CreateMedicineDto) {
+  async createMedicine(createMedicineDto: CreateMedicineDto) {
     const medicine = this.medicineRepository.create(createMedicineDto);
     return await this.medicineRepository.save(medicine);
   }
 
-  async findAll() {
+  async findAllMedicines() {
     const medicines = await this.medicineRepository.find()
 
     if (!medicines) {
@@ -32,7 +32,7 @@ export class MedicineService {
     return medicines;
   }
 
-  async findOne(id: number) {
+  async findOneMedicine(id: number) {
     const medicine = await this.medicineRepository.findOne({ where: { id } })
 
     if (!medicine) {
@@ -45,15 +45,8 @@ export class MedicineService {
     return medicine;
   }
 
-  async update(id: number, updateMedicineDto: UpdateMedicineDto) {
-    const medicine = await this.findOne(id);
-
-    if (!medicine) {
-      throw new HttpException(
-        'No se encontró el medicamento',
-        HttpStatus.NOT_FOUND,
-      );
-    }
+  async updateMedicine(id: number, updateMedicineDto: UpdateMedicineDto) {
+    const medicine = await this.findOneMedicine(id);
 
     Object.assign(medicine, updateMedicineDto)
 
@@ -62,19 +55,16 @@ export class MedicineService {
     return await this.medicineRepository.save(medicine);
   }
 
-  async remove(id: number) {
-    const medicine = await this.findOne(id);
+  async deleteMedicine(id: number) {
+    const medicine = await this.findOneMedicine(id);
 
-    if (!medicine) {
+    const isEliminated = await this.medicineRepository.softDelete(medicine.id)
+
+    if (isEliminated) {
       throw new HttpException(
-        'No se encontró el medicamento',
-        HttpStatus.NOT_FOUND,
+        `El medicamento #${id} se eliminó correctamente`,
+        HttpStatus.OK,
       );
-    }
-
-    medicine.deletedAt = new Date();
-    medicine.med_status = false;
-
-    return await this.medicineRepository.save(medicine)
+    } 
   }
 }

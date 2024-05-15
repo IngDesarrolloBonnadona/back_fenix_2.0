@@ -2,33 +2,34 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { LogService } from '../services/log.service';
 import { CreateLogDto } from '../dto/create-log.dto';
 import { UpdateLogDto } from '../dto/update-log.dto';
+import { Log } from '../entities/log.entity';
 
 @Controller('log')
 export class LogController {
   constructor(private readonly logService: LogService) {}
 
-  @Post()
-  create(@Body() createLogDto: CreateLogDto) {
-    return this.logService.create(createLogDto);
+  @Post('/createLog')
+  createLog(@Body() createLogDto: CreateLogDto): Promise<Log> {
+    return this.logService.createLog(createLogDto);
   }
 
-  @Get()
-  findAll() {
-    return this.logService.findAll();
+  @Get('/listLogs')
+  listLogs(): Promise<Log[]> {
+    return this.logService.findAllLogs();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.logService.findOne(+id);
+  @Get('/findOneLog/:id')
+  findOneLog(@Param('id') id: number): Promise<Log> {
+    return this.logService.findOneLog(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateLogDto: UpdateLogDto) {
-    return this.logService.update(+id, updateLogDto);
+  @Patch('/updateLog/:id')
+  updateLog(@Param('id') id: number, @Body() updateLogDto: UpdateLogDto): Promise<Log> {
+    return this.logService.updateLog(id, updateLogDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.logService.remove(+id);
+  @Delete('/deleteLog/:id')
+  deleteLog(@Param('id') id: number): Promise<void> {
+    return this.logService.deleteLog(id);
   }
 }

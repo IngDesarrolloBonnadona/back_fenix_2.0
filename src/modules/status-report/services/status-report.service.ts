@@ -12,12 +12,12 @@ export class StatusReportService {
     private readonly statusReportRepository: Repository<StatusReportEntity>
   ){}
 
-  async create(createStatusReportDto: CreateStatusReportDto) {
+  async createStatusReport(createStatusReportDto: CreateStatusReportDto) {
     const statusReport = this.statusReportRepository.create(createStatusReportDto);
     return await this.statusReportRepository.save(statusReport);
   }
 
-  async findAll() {
+  async findAllStatusReports() {
     const statusReports = await this.statusReportRepository.find({
       relations: {
         movementReport: true,
@@ -35,7 +35,7 @@ export class StatusReportService {
     return statusReports
   }
 
-  async findOne(id: number) {
+  async findOneStatusReport(id: number) {
     const statusReport = await this.statusReportRepository.findOne({ where: { id } });
 
     if (!statusReport) {
@@ -48,15 +48,8 @@ export class StatusReportService {
     return statusReport
   }
 
-  async update(id: number, updateStatusReportDto: UpdateStatusReportDto) {
-    const statusReport = await this.findOne(id);
-
-    if (!statusReport) {
-      throw new HttpException(
-        'No se encontró el estado de reporte',
-        HttpStatus.NOT_FOUND,
-      );
-    }
+  async updateStatusReport(id: number, updateStatusReportDto: UpdateStatusReportDto) {
+    const statusReport = await this.findOneStatusReport(id);
 
     Object.assign(statusReport, updateStatusReportDto)
 
@@ -65,19 +58,16 @@ export class StatusReportService {
     return await this.statusReportRepository.save(statusReport);
   }
 
-  async remove(id: number) {
-    const statusReport = await this.findOne(id);
+  async deleteStatusReport(id: number) {
+    const statusReport = await this.findOneStatusReport(id);
 
-    if (!statusReport) {
+    const isEliminated = await this.statusReportRepository.softDelete(statusReport.id);
+
+    if (isEliminated) {
       throw new HttpException(
-        'No se encontró el estado de reporte',
-        HttpStatus.NOT_FOUND,
+        `El estado del reporte #${id} se eliminó correctamente`,
+        HttpStatus.OK,
       );
-    }
-
-    statusReport.deletedAt = new Date();
-    statusReport.erep_estado = false;
-
-    return await this.statusReportRepository.save(statusReport);
+    }  
   }
 }

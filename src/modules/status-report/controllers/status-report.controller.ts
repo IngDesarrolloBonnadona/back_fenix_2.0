@@ -2,35 +2,35 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { StatusReportService } from '../services/status-report.service';
 import { CreateStatusReportDto } from '../dto/create-status-report.dto';
 import { UpdateStatusReportDto } from '../dto/update-status-report.dto';
+import { StatusReport } from '../entities/status-report.entity';
 
 @Controller('status-report')
 export class StatusReportController {
   constructor(private readonly statusReportService: StatusReportService) {}
 
-  @Post()
-  create(@Body() createStatusReportDto: CreateStatusReportDto) {
-    return this.statusReportService.create(createStatusReportDto);
+  @Post('/createStatusReport')
+  createStatusReport(@Body() createStatusReportDto: CreateStatusReportDto): Promise<StatusReport> {
+    return this.statusReportService.createStatusReport(createStatusReportDto);
   }
 
-  @Get()
-  findAll() {
-    return this.statusReportService.findAll(
-      
+  @Get('/listStatusReports')
+  listStatusReports(): Promise<StatusReport[]> {
+    return this.statusReportService.findAllStatusReports(
     );
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.statusReportService.findOne(+id);
+  @Get('/findOneStatusReport/:id')
+  findOneStatusReport(@Param('id') id: number): Promise<StatusReport> {
+    return this.statusReportService.findOneStatusReport(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateStatusReportDto: UpdateStatusReportDto) {
-    return this.statusReportService.update(+id, updateStatusReportDto);
+  @Patch('/updateStatusReport/:id')
+  updateStatusReport(@Param('id') id: number, @Body() updateStatusReportDto: UpdateStatusReportDto): Promise<StatusReport> {
+    return this.statusReportService.updateStatusReport(id, updateStatusReportDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.statusReportService.remove(+id);
+  @Delete('/deleteStatusReport/:id')
+  deleteStatusReport(@Param('id') id: number): Promise<void> {
+    return this.statusReportService.deleteStatusReport(id);
   }
 }

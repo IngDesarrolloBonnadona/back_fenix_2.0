@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestj
 import { CreateCaseTypeDto } from '../dto/create-case-type.dto';
 import { UpdateCaseTypeDto } from '../dto/update-case-type.dto';
 import { Repository } from 'typeorm';
-import { CaseType as CaseTypeEntity } from './case-type.entity';
+import { CaseType as CaseTypeEntity } from '../entities/case-type.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
