@@ -217,17 +217,12 @@ export class CaseReportOriginalService {
   ) {
     const caseReportsOriginal = await this.findOne(id);
 
-    // if (!CaseReportOriginal) {
-    //   throw new NotFoundException();
-    // }
-
     if (!caseReportsOriginal) {
       throw new HttpException(
         'No se encontró el caso.',
         HttpStatus.NOT_FOUND,
       );
     }
-    
 
     Object.assign(caseReportsOriginal, UpdateCaseReportOriginalDto);
 
