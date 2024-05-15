@@ -15,6 +15,8 @@ import { ValidateCaseReportOriginalDto } from '../dto/validate-case-report-origi
 import { CaseReportValidateService } from 'src/modules/case-report-validate/services/case-report-validate.service';
 import { CreateStatusReportDto } from 'src/modules/status-report/dto/create-status-report.dto';
 import { CreateLogDto } from 'src/modules/log/dto/create-log.dto';
+import { StatusReport as StatusReportEntity } from 'src/modules/status-report/entities/status-report.entity';
+import { Log as LogEntity } from 'src/modules/log/entities/log.entity';
 
 @Injectable()
 export class CaseReportOriginalService {
@@ -109,13 +111,13 @@ export class CaseReportOriginalService {
         )
       }
 
-      const statusReport = new CreateStatusReportDto()
+      const statusReport = new StatusReportEntity()
       statusReport.sta_r_originalcase_id_fk = caseReportOriginal.id;
       statusReport.sta_r_movement_id_fk = movementReportFound.id
 
       await queryRunner.manager.save(statusReport)
 
-      const log = new CreateLogDto()
+      const log = new LogEntity()
       log.log_validatedcase_id_fk = caseReportValidate.id;
       log.log_user_id_fk = caseReportOriginal.ori_cr_reporter_id_fk;
       log.log_action = logReports.LOG_CREATION;

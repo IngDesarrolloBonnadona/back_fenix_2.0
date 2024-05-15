@@ -10,7 +10,7 @@ export class CreateStatusReportDto {
     sta_r_movement_id_fk: number;
 
     @IsString()
-    @IsNotEmpty()
+    @IsOptional()
     sta_r_name: string;
 
     @IsString()

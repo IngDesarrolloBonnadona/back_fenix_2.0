@@ -8,7 +8,6 @@ import { Medicine } from '../medicine/entities/medicine.entity';
 import { Device } from '../device/entities/device.entity';
 import { StatusReport } from '../status-report/entities/status-report.entity';
 import { MovementReport } from '../movement-report/entities/movement-report.entity';
-import { CaseReportValidateService } from '../case-report-validate/services/case-report-validate.service';
 import { CaseReportValidateModule } from '../case-report-validate/case-report-validate.module';
 
 @Module({
@@ -18,10 +17,10 @@ import { CaseReportValidateModule } from '../case-report-validate/case-report-va
       CaseReportValidate,
       Medicine,
       Device,
-      StatusReport,
       MovementReport
     ]),
-    CaseReportValidateModule
+    CaseReportValidateModule,
+    
   ],
   controllers: [CaseReportOriginalController],
   providers: [CaseReportOriginalService],
