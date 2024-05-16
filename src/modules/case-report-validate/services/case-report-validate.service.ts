@@ -89,14 +89,15 @@ const caseReportValidate = await this.caseReportValidateRepository.findOne({ whe
 
   async removeReportValidate(id: number) {
     const caseReportValidate = await this.findOneReportValidate(id);
+    const result = await this.caseReportValidateRepository.softDelete(caseReportValidate.id)
 
-    const isEliminated = this.caseReportValidateRepository.softDelete(caseReportValidate.id)
-
-    if (isEliminated) {
+    if (result.affected === 0) {
       throw new HttpException(
-        `El caso #${id} se eliminó correctamente`,
-        HttpStatus.OK,
+        `No se pudo eliminar el reporte validado`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     } 
+
+    return { message: `El caso validado #${id} se eliminó correctamente`}
   }
 }

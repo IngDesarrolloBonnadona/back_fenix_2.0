@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus } from '@nestjs/common';
 import { LogService } from '../services/log.service';
 import { CreateLogDto } from '../dto/create-log.dto';
 import { UpdateLogDto } from '../dto/update-log.dto';
@@ -29,7 +29,11 @@ export class LogController {
   }
 
   @Delete('/deleteLog/:id')
-  deleteLog(@Param('id') id: number): Promise<void> {
-    return this.logService.deleteLog(id);
+  async deleteLog(@Param('id') id: number): Promise<{ message: string }> {
+    try {
+      return await this.logService.deleteLog(id);
+    } catch (error) {
+      throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }

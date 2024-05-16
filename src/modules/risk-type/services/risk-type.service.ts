@@ -12,12 +12,12 @@ export class RiskTypeService {
     private readonly riskTypeRepository: Repository<RiskTypeEntity>,
   ) {}
 
-  async create(createRiskTypeDto: CreateRiskTypeDto) {
+  async createRiskType(createRiskTypeDto: CreateRiskTypeDto) {
     const riskType = this.riskTypeRepository.create(createRiskTypeDto);
     return await this.riskTypeRepository.save(riskType);
   }
 
-  async findAll() {
+  async findAllRiskTypes() {
     const riskTypes = await this.riskTypeRepository.find({
       relations: {
         caseReportOriginal: true,
@@ -34,7 +34,7 @@ export class RiskTypeService {
     return riskTypes
   }
 
-  async findOne(id: number) {
+  async findOneRiskType(id: number) {
     const riskType = await this.riskTypeRepository.findOne({ where: { id } });
 
     if (!riskType) {
@@ -47,15 +47,8 @@ export class RiskTypeService {
     return riskType
   }
 
-  async update(id: number, updateRiskTypeDto: UpdateRiskTypeDto) {
-    const riskType = await this.findOne(id);
-
-    if (!riskType) {
-      throw new HttpException(
-        'No se encontró el tipo de riesgo',
-        HttpStatus.NOT_FOUND,
-      );
-    }
+  async updateRiskType(id: number, updateRiskTypeDto: UpdateRiskTypeDto) {
+    const riskType = await this.findOneRiskType(id);
 
     Object.assign(riskType, updateRiskTypeDto);
 
@@ -63,19 +56,16 @@ export class RiskTypeService {
     return await this.riskTypeRepository.save(riskType);
   }
 
-  async remove(id: number) {
-    const riskType = await this.findOne(id);
+  async deleteRiskType(id: number) {
+    const riskType = await this.findOneRiskType(id);
+    const result = await this.riskTypeRepository.softDelete(riskType.id);
 
-    if (!riskType) {
+    if (result.affected === 0) {
       throw new HttpException(
-        'No se encontró el tipo de riesgo',
-        HttpStatus.NOT_FOUND,
+        `No se pudo eliminar el tipo de riesgo.`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
-    }
-
-    riskType.deletedAt = new Date()
-    riskType.ris_t_status = false;
-
-    return await this.riskTypeRepository.save(riskType);
+    }  
+    return { message: `El tipo de riesgo se eliminó correctamente` };
   }
 }

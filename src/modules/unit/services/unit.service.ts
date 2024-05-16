@@ -12,12 +12,12 @@ export class UnitService {
     private readonly unitRepository: Repository<UnitEntity>
   ){}
 
-  async create(createUnitDto: CreateUnitDto) {
+  async createUnit(createUnitDto: CreateUnitDto) {
     const unit = this.unitRepository.create(createUnitDto);
     return await this.unitRepository.save(unit);
   }
 
-  async findAll() {
+  async findAllUnits() {
     const units = await this.unitRepository.find({
       relations: {
         service: true,
@@ -35,7 +35,7 @@ export class UnitService {
     return units
   }
 
-  async findOne(id: number) {
+  async findOneUnit(id: number) {
     const unit = await this.unitRepository.findOne({ where: { id } });
 
     if (!unit) {
@@ -48,15 +48,8 @@ export class UnitService {
     return unit
   }
 
-  async update(id: number, updateUnitDto: UpdateUnitDto) {
-    const unit = await this.findOne(id);
-
-    if (!unit) {
-      throw new HttpException(
-        'No se encontró la unidad.',
-        HttpStatus.NOT_FOUND,
-      );
-    }
+  async updateUnit(id: number, updateUnitDto: UpdateUnitDto) {
+    const unit = await this.findOneUnit(id);
 
     Object.assign(unit, updateUnitDto)
 
@@ -65,16 +58,16 @@ export class UnitService {
     return await this.unitRepository.save(unit);
   }
 
-  async remove(id: number) {
-    const unit = await this.findOne(id);
-    
-    const isEliminated =  await this.unitRepository.softDelete(unit.id);
+  async deleteUnit(id: number) {
+    const unit = await this.findOneUnit(id);
+    const result =  await this.unitRepository.softDelete(unit.id);
 
-    if (isEliminated) {
+    if (result.affected === 0) {
       throw new HttpException(
-        `La unidad se eliminó correctamente`,
-        HttpStatus.OK,
+        `No se pudo eliminar la unidad.`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     } 
+    return { message: `La unidad se eliminó correctamente` }
   }
 }

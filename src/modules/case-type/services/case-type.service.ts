@@ -13,12 +13,12 @@ export class CaseTypeService {
     Repository<CaseTypeEntity>){
   }
 
-  async create(createCaseTypeDto: CreateCaseTypeDto) {
+  async createCaseType(createCaseTypeDto: CreateCaseTypeDto) {
     const caseType = this.caseTypeRepository.create(createCaseTypeDto);
     return await this.caseTypeRepository.save(caseType);
   }
 
-  async findAll() {
+  async findAllCaseTypes() {
     const caseTypes = await this.caseTypeRepository.find({
       relations: {
         eventType: true,
@@ -36,7 +36,7 @@ export class CaseTypeService {
     return caseTypes
   }
 
-  async findOne(id: number) {
+  async findOneCaseType(id: number) {
     const caseType = await this.caseTypeRepository.findOne({ where: { id } });
 
     if (!caseType) {
@@ -49,15 +49,8 @@ export class CaseTypeService {
     return caseType
   }
 
-  async update(id: number, updateCaseTypeDto: UpdateCaseTypeDto) {
-    const caseType = await this.findOne(id);
-
-    if (!caseType) {
-      throw new HttpException(
-        'No se encontró el tipo de caso',
-        HttpStatus.NOT_FOUND,
-      );
-    }
+  async updateCaseType(id: number, updateCaseTypeDto: UpdateCaseTypeDto) {
+    const caseType = await this.findOneCaseType(id);
 
     Object.assign(caseType, updateCaseTypeDto);
 
@@ -66,19 +59,16 @@ export class CaseTypeService {
     return await this.caseTypeRepository.save(caseType);
   }
 
-  async remove(id: number) {
-    const caseType = await this.findOne(id);
-
-    if (!caseType) {
+  async deleteCaseType(id: number) {
+    const caseType = await this.findOneCaseType(id);
+    const result = await this.caseTypeRepository.softDelete(caseType.id);
+    
+    if (result.affected === 0) {
       throw new HttpException(
-        'No se encontró el tipo de caso',
-        HttpStatus.NOT_FOUND,
+        `No se pudo eliminar el tipo de caso`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
-    }
-
-    caseType.deletedAt = new Date();
-    caseType.cas_t_status = false;
-
-    return await this.caseTypeRepository.save(caseType);
+    } 
+    return { message: `El tipo de caso se eliminó correctamente`}
   }
 }

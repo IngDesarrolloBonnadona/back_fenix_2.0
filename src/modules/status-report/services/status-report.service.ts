@@ -60,14 +60,14 @@ export class StatusReportService {
 
   async deleteStatusReport(id: number) {
     const statusReport = await this.findOneStatusReport(id);
+    const result = await this.statusReportRepository.softDelete(statusReport.id);
 
-    const isEliminated = await this.statusReportRepository.softDelete(statusReport.id);
-
-    if (isEliminated) {
+    if (result.affected === 0) {
       throw new HttpException(
-        `El estado del reporte #${id} se eliminó correctamente`,
-        HttpStatus.OK,
+        `No se pudo eliminar el estado del reporte.`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }  
+    return { message: `El estado del reporte se eliminó correctamente`}
   }
 }

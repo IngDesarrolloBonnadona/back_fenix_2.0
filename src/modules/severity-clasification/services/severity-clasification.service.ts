@@ -12,12 +12,12 @@ export class SeverityClasificationService {
     private readonly severityClasifRepository: Repository<SeverityClasifEntity>,
   ) {}
 
-  async create(createSeverityClasificationDto: CreateSeverityClasificationDto) {
+  async createSeverityClasification(createSeverityClasificationDto: CreateSeverityClasificationDto) {
     const severityClasif = this.severityClasifRepository.create(createSeverityClasificationDto);
     return await this.severityClasifRepository.save(severityClasif);
   }
 
-  async findAll() {
+  async findAllSeverityClasifications() {
     const severityClasifs = await this.severityClasifRepository.find({
       relations: {
         caseReportOriginal: true
@@ -34,7 +34,7 @@ export class SeverityClasificationService {
     return severityClasifs
   }
 
-  async findOne(id: number) {
+  async findOneSeverityClasification(id: number) {
     const severityClasif = await this.severityClasifRepository.findOne({ where: { id } });
 
     if (!severityClasif) {
@@ -47,15 +47,8 @@ export class SeverityClasificationService {
     return severityClasif
   }
 
-  async update(id: number, updateSeverityClasificationDto: UpdateSeverityClasificationDto) {
-    const severityClasif = await this.findOne(id);
-
-    if (!severityClasif) {
-      throw new HttpException(
-        'No se encontró la clasificacion de severidad',
-        HttpStatus.NOT_FOUND,
-      );
-    }
+  async updateSeverityClasification(id: number, updateSeverityClasificationDto: UpdateSeverityClasificationDto) {
+    const severityClasif = await this.findOneSeverityClasification(id);
 
     Object.assign(severityClasif, updateSeverityClasificationDto)
 
@@ -64,19 +57,16 @@ export class SeverityClasificationService {
     return await this.severityClasifRepository.save(severityClasif);
   }
 
-  async remove(id: number) {
-    const severityClasif = await this.findOne(id);
+  async deleteSeverityClasification(id: number) {
+    const severityClasif = await this.findOneSeverityClasification(id);
+    const result = await this.severityClasifRepository.softDelete(severityClasif.id);
 
-    if (!severityClasif) {
+    if (result.affected === 0) {
       throw new HttpException(
-        'No se encontró la clasificacion de severidad',
-        HttpStatus.NOT_FOUND,
+        `No se pudo eliminar la clasificacion de severidad.`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
-    }
-
-    severityClasif.deletedAt = new Date();
-    severityClasif.sev_c_status = false;
-
-    return await this.severityClasifRepository.save(severityClasif);
+    }  
+    return { message: `La clasificacion de severidad se eliminó correctamente.`}
   }
 }

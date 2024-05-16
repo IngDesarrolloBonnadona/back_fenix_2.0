@@ -1,34 +1,39 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus } from '@nestjs/common';
 import { SubOriginService } from '../services/sub-origin.service';
 import { CreateSubOriginDto } from '../dto/create-sub-origin.dto';
 import { UpdateSubOriginDto } from '../dto/update-sub-origin.dto';
+import { SubOrigin } from '../entities/sub-origin.entity';
 
 @Controller('sub-origin')
 export class SubOriginController {
   constructor(private readonly subOriginService: SubOriginService) {}
 
-  @Post()
-  create(@Body() createSubOriginDto: CreateSubOriginDto) {
-    return this.subOriginService.create(createSubOriginDto);
+  @Post('/createSubOrigin')
+  createSubOrigin(@Body() createSubOriginDto: CreateSubOriginDto): Promise<SubOrigin> {
+    return this.subOriginService.createSubOrigin(createSubOriginDto);
   }
 
-  @Get()
-  findAll() {
-    return this.subOriginService.findAll();
+  @Get('/listSubOrigins')
+  listSubOrigins(): Promise<SubOrigin[]> {
+    return this.subOriginService.findAllSubOrigins();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.subOriginService.findOne(+id);
+  @Get('/findSubOrigin/:id')
+  findSubOrigin(@Param('id') id: number): Promise<SubOrigin> {
+    return this.subOriginService.findOneSubOrigin(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSubOriginDto: UpdateSubOriginDto) {
-    return this.subOriginService.update(+id, updateSubOriginDto);
+  @Patch('/updateSubOrigin/:id')
+  updateSubOrigin(@Param('id') id: number, @Body() updateSubOriginDto: UpdateSubOriginDto): Promise<SubOrigin> {
+    return this.subOriginService.updateSubOrigin(id, updateSubOriginDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.subOriginService.remove(+id);
+  @Delete('/deleteSubOrigin/:id')
+  deleteSubOrigin(@Param('id') id: number): Promise<{ message: string }> {
+    try {
+      return this.subOriginService.deleteSubOrigin(id);
+    } catch (error) {
+      throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }

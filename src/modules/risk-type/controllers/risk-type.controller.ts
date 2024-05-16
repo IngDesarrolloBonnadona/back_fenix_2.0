@@ -1,34 +1,39 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus } from '@nestjs/common';
 import { RiskTypeService } from '../services/risk-type.service';
 import { CreateRiskTypeDto } from '../dto/create-risk-type.dto';
 import { UpdateRiskTypeDto } from '../dto/update-risk-type.dto';
+import { RiskType } from '../entities/risk-type.entity';
 
 @Controller('risk-type')
 export class RiskTypeController {
   constructor(private readonly riskTypeService: RiskTypeService) {}
 
-  @Post()
-  create(@Body() createRiskTypeDto: CreateRiskTypeDto) {
-    return this.riskTypeService.create(createRiskTypeDto);
+  @Post('/createRisktype')
+  createRisktype(@Body() createRiskTypeDto: CreateRiskTypeDto): Promise<RiskType> {
+    return this.riskTypeService.createRiskType(createRiskTypeDto);
   }
 
-  @Get()
-  findAll() {
-    return this.riskTypeService.findAll();
+  @Get('/listRisktypes')
+  listRisktypes(): Promise<RiskType[]> {
+    return this.riskTypeService.findAllRiskTypes();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.riskTypeService.findOne(+id);
+  @Get('/findRisktype/:id')
+  findRisktype(@Param('id') id: number): Promise<RiskType> {
+    return this.riskTypeService.findOneRiskType(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRiskTypeDto: UpdateRiskTypeDto) {
-    return this.riskTypeService.update(+id, updateRiskTypeDto);
+  @Patch('/updateRisktype/:id')
+  updateRisktype(@Param('id') id: number, @Body() updateRiskTypeDto: UpdateRiskTypeDto): Promise<RiskType> {
+    return this.riskTypeService.updateRiskType(id, updateRiskTypeDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.riskTypeService.remove(+id);
+  @Delete('/deleteRisktype/:id')
+  async deleteRisktype(@Param('id') id: number): Promise<{ message: string }> {
+    try {
+      return await this.riskTypeService.deleteRiskType(id);
+    } catch (error) {
+      throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }

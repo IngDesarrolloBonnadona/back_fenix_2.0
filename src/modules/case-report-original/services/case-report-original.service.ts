@@ -215,14 +215,15 @@ export class CaseReportOriginalService {
 
   async deleteReportOriginal(id: number) {
     const caseReportsOriginal = await this.findOneReportOriginal(id);
+    const result = await this.caseReportOriginalRepository.softDelete(caseReportsOriginal.id);
 
-    const isEliminated = await this.caseReportOriginalRepository.softDelete(caseReportsOriginal.id);
-
-    if (isEliminated) {
+    if (result.affected === 0) {
       throw new HttpException(
-        `El caso #${id} se eliminó correctamente`,
-        HttpStatus.OK,
+        `No se pudo eliminar el caso #${id}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     } 
+
+    return { message: `El caso original #${id} se eliminó correctamente`}
   }
 }

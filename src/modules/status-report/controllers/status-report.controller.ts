@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus } from '@nestjs/common';
 import { StatusReportService } from '../services/status-report.service';
 import { CreateStatusReportDto } from '../dto/create-status-report.dto';
 import { UpdateStatusReportDto } from '../dto/update-status-report.dto';
@@ -30,7 +30,11 @@ export class StatusReportController {
   }
 
   @Delete('/deleteStatusReport/:id')
-  deleteStatusReport(@Param('id') id: number): Promise<void> {
-    return this.statusReportService.deleteStatusReport(id);
+  async deleteStatusReport(@Param('id') id: number): Promise<{ message: string }> {
+    try {
+      return await this.statusReportService.deleteStatusReport(id);
+    } catch (error) {
+      throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }

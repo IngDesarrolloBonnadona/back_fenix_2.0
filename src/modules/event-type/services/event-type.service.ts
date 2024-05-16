@@ -12,12 +12,12 @@ export class EventTypeService {
     private readonly eventTypeRepository: Repository<EventTypeEntity>
   ){}
 
-  async create(createEventTypeDto: CreateEventTypeDto) {
+  async createEventType(createEventTypeDto: CreateEventTypeDto) {
     const eventType = this.eventTypeRepository.create(createEventTypeDto);
     return await this.eventTypeRepository.save(eventType);
   }
 
-  async findAll() {
+  async findAllEventTypes() {
     const eventTypes = await this.eventTypeRepository.find({
       relations: {
         event: true,
@@ -35,7 +35,7 @@ export class EventTypeService {
     return eventTypes
   }
 
-  async findOne(id: number) {
+  async findOneEventType(id: number) {
     const eventType = await this.eventTypeRepository.findOne({ where: { id } });
 
     if (!eventType) {
@@ -48,15 +48,8 @@ export class EventTypeService {
     return eventType
   }
 
-  async update(id: number, updateEventTypeDto: UpdateEventTypeDto) {
-    const eventType = await this.findOne(id);
-
-    if (!eventType) {
-      throw new HttpException(
-        'No se encontró el tipo de reporte.',
-        HttpStatus.NOT_FOUND,
-      );
-    }
+  async updateEventType(id: number, updateEventTypeDto: UpdateEventTypeDto) {
+    const eventType = await this.findOneEventType(id);
 
     Object.assign(eventType, updateEventTypeDto)
 
@@ -65,19 +58,17 @@ export class EventTypeService {
     return await this.eventTypeRepository.save(eventType);
   }
 
-  async remove(id: number) {
-    const eventType = await this.findOne(id);
+  async deleteEventType(id: number) {
+    const eventType = await this.findOneEventType(id);
 
-    if (!eventType) {
-      throw new HttpException(
-        'No se encontró el tipo de reporte.',
-        HttpStatus.NOT_FOUND,
-      );
-    }
-
-    eventType.deletedAt = new Date()
-    eventType.eve_t_status = false
+    const result = await this.eventTypeRepository.softDelete(eventType.id);
     
-    return await this.eventTypeRepository.save(eventType);
+    if (result.affected === 0) {
+      throw new HttpException(
+        `No se pudo eliminar el tipo de evento.`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }  
+    return { message: `El tipo de evento se eliminó correctamente`}
   }
 }

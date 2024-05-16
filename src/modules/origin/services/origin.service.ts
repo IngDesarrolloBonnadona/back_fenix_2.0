@@ -12,12 +12,12 @@ export class OriginService {
     private readonly originRepository: Repository<OriginEntity>,
   ){}
 
-  async create(createOriginDto: CreateOriginDto) {
+  async createOrigin(createOriginDto: CreateOriginDto) {
     const origin = this.originRepository.create(createOriginDto);
     return await this.originRepository.save(origin);
   }
 
-  async findAll() {
+  async findAllOrigins() {
     const origins = await this.originRepository.find({
       relations: {
         subOrigins: true,
@@ -35,7 +35,7 @@ export class OriginService {
     return origins
   }
 
-  async findOne(id: number) {
+  async findOneOrigin(id: number) {
     const origin = await this.originRepository.findOne({ where: { id } });
 
     if (!origin) {
@@ -48,8 +48,8 @@ export class OriginService {
     return origin;
   }
 
-  async update(id: number, updateOriginDto: UpdateOriginDto) {
-    const origin = await this.findOne(id);
+  async updateOrigin(id: number, updateOriginDto: UpdateOriginDto) {
+    const origin = await this.findOneOrigin(id);
 
     if (!origin) {
       throw new HttpException(
@@ -65,19 +65,16 @@ export class OriginService {
     return await this.originRepository.save(origin);
   }
 
-  async remove(id: number) {
-    const origin = await this.findOne(id);
+  async deleteOrigin(id: number) {
+    const origin = await this.findOneOrigin(id);
+    const result = await this.originRepository.softDelete(origin.id);
 
-    if (!origin) {
+    if (result.affected === 0) {
       throw new HttpException(
-        'No se encontró la fuente',
-        HttpStatus.NOT_FOUND,
+        `No se pudo eliminar el origen`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
-    }
-
-    origin.deletedAt = new Date(),
-    origin.orig_status = false;
-
-    return await this.originRepository.save(origin);
+    }  
+    return { message: `El origen se eliminó correctamente`}
   }
 }

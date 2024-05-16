@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus } from '@nestjs/common';
 import { MedicineService } from '../services/medicine.service';
 import { CreateMedicineDto } from '../dto/create-medicine.dto';
 import { UpdateMedicineDto } from '../dto/update-medicine.dto';
@@ -29,7 +29,11 @@ export class MedicineController {
   }
 
   @Delete('/DeleteMedicine/:id')
-  DeleteMedicine(@Param('id') id: number): Promise<any> {
-    return this.medicineService.deleteMedicine(id);
+  async DeleteMedicine(@Param('id') id: number): Promise<{ message: string }> {
+    try {
+      return await this.medicineService.deleteMedicine(id);
+    } catch (error) {
+      throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }

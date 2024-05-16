@@ -12,12 +12,12 @@ export class SubOriginService {
     private readonly subOriginRepository: Repository<SubOriginEntity>,
   ){}
 
-  async create(createSubOriginDto: CreateSubOriginDto) {
+  async createSubOrigin(createSubOriginDto: CreateSubOriginDto) {
     const subOrigin = this.subOriginRepository.create(createSubOriginDto);
     return await this.subOriginRepository.save(subOrigin);
   }
 
-  async findAll() {
+  async findAllSubOrigins() {
     const subOrigins = await this.subOriginRepository.find({
       relations: {
         origin: true,
@@ -35,7 +35,7 @@ export class SubOriginService {
     return subOrigins
   }
 
-  async findOne(id: number) {
+  async findOneSubOrigin(id: number) {
     const subOrigin = await this.subOriginRepository.findOne({ where: { id } });
 
     if (!subOrigin) {
@@ -48,15 +48,8 @@ export class SubOriginService {
     return subOrigin
   }
 
-  async update(id: number, updateSubOriginDto: UpdateSubOriginDto) {
-    const subOrigin = await this.findOne(id);
-
-    if (!subOrigin) {
-      throw new HttpException(
-        'No se encontró el subfuente',
-        HttpStatus.NOT_FOUND,
-      );
-    };
+  async updateSubOrigin(id: number, updateSubOriginDto: UpdateSubOriginDto) {
+    const subOrigin = await this.findOneSubOrigin(id);
 
     Object.assign(subOrigin, updateSubOriginDto)
 
@@ -65,19 +58,16 @@ export class SubOriginService {
     return await this.subOriginRepository.save(subOrigin);
   }
 
-  async remove(id: number) {
-    const subOrigin = await this.findOne(id);
+  async deleteSubOrigin(id: number) {
+    const subOrigin = await this.findOneSubOrigin(id);
+    const result = await this.subOriginRepository.softDelete(subOrigin.id);
 
-    if (!subOrigin) {
+    if (result.affected === 0) {
       throw new HttpException(
-        'No se encontró el subfuente',
-        HttpStatus.NOT_FOUND,
+        `No se pudo eliminar el suborigen.`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
-    };
-
-    subOrigin.deletedAt = new Date();
-    subOrigin.sub_o_status = false
-
-    return await this.subOriginRepository.save(subOrigin);
+    }  
+    return {message: `El suborigen se eliminó correctamente`}
   }
 }

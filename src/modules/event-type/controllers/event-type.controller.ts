@@ -1,34 +1,39 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus } from '@nestjs/common';
 import { EventTypeService } from '../services/event-type.service';
 import { CreateEventTypeDto } from '../dto/create-event-type.dto';
 import { UpdateEventTypeDto } from '../dto/update-event-type.dto';
+import { EventType } from '../entities/event-type.entity';
 
 @Controller('event-type')
 export class EventTypeController {
   constructor(private readonly eventTypeService: EventTypeService) {}
 
-  @Post()
-  create(@Body() createEventTypeDto: CreateEventTypeDto) {
-    return this.eventTypeService.create(createEventTypeDto);
+  @Post('/createEventType')
+  createEventType(@Body() createEventTypeDto: CreateEventTypeDto): Promise<EventType> {
+    return this.eventTypeService.createEventType(createEventTypeDto);
   }
 
-  @Get()
-  findAll() {
-    return this.eventTypeService.findAll();
+  @Get('/listEventTypes')
+  listEventTypes(): Promise<EventType[]> {
+    return this.eventTypeService.findAllEventTypes();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.eventTypeService.findOne(+id);
+  @Get('/findEventType/:id')
+  findEventType(@Param('id') id: number): Promise<EventType> {
+    return this.eventTypeService.findOneEventType(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateEventTypeDto: UpdateEventTypeDto) {
-    return this.eventTypeService.update(+id, updateEventTypeDto);
+  @Patch('/updateEventType/:id')
+  updateEventType(@Param('id') id: number, @Body() updateEventTypeDto: UpdateEventTypeDto): Promise<EventType> {
+    return this.eventTypeService.updateEventType(id, updateEventTypeDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.eventTypeService.remove(+id);
+  @Delete('/deleteEventType/:id')
+  async deleteEventType(@Param('id') id: number): Promise<{ message: string }> {
+    try {
+      return await this.eventTypeService.deleteEventType(id);
+    } catch (error) {
+      throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }

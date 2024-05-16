@@ -57,14 +57,14 @@ export class MedicineService {
 
   async deleteMedicine(id: number) {
     const medicine = await this.findOneMedicine(id);
+    const result = await this.medicineRepository.softDelete(medicine.id)
 
-    const isEliminated = await this.medicineRepository.softDelete(medicine.id)
-
-    if (isEliminated) {
+    if (result.affected === 0) {
       throw new HttpException(
-        `El medicamento #${id} se eliminó correctamente`,
-        HttpStatus.OK,
+        `No se pudo eliminar el medicamento.`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     } 
+    return { message: `El medicamento se eliminó correctamente`}
   }
 }

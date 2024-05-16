@@ -12,12 +12,12 @@ export class ServiceService {
     private readonly serviceRepository: Repository<ServiceEntity>
   ){}
 
-  async create(createServiceDto: CreateServiceDto) {
+  async createService(createServiceDto: CreateServiceDto) {
     const service = this.serviceRepository.create(createServiceDto);
     return await this.serviceRepository.save(service);
   }
 
-  async findAll() {
+  async findAllServices() {
     const services = await this.serviceRepository.find({
       relations: {
         unit: true,
@@ -31,11 +31,10 @@ export class ServiceService {
         HttpStatus.NOT_FOUND,
       );
     }
-
     return services
   }
 
-  async findOne(id: number) {
+  async findOneService(id: number) {
     const service = await this.serviceRepository.findOne({ where: { id } });
 
     if (!service) {
@@ -44,12 +43,11 @@ export class ServiceService {
         HttpStatus.NOT_FOUND,
       );
     }
-    
     return service
   }
 
-  async update(id: number, updateServiceDto: UpdateServiceDto) {
-    const service = await this.findOne(id);
+  async updateService(id: number, updateServiceDto: UpdateServiceDto) {
+    const service = await this.findOneService(id);
 
     if (!service) {
       throw new HttpException(
@@ -62,19 +60,16 @@ export class ServiceService {
     return this.serviceRepository.save(service);
   }
 
-  async remove(id: number) {
-    const service = await this.findOne(id);
+  async deleteService(id: number) {
+    const service = await this.findOneService(id);
+    const result = await this.serviceRepository.softDelete(service.id);
 
-    if (!service) {
+    if (result.affected === 0) {
       throw new HttpException(
-        'No se encontró el servicio',
-        HttpStatus.NOT_FOUND,
+        `No se pudo eliminar el servicio.`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
-    }
-
-    service.deletedAt = new Date()
-    service.serv_status = false
-
-    return this.serviceRepository.save(service);
+    }  
+    return { message: `El servicio se eliminó correctamente` }
   }
 }

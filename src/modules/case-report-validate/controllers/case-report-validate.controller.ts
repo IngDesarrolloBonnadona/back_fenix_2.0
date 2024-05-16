@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus } from '@nestjs/common';
 import { CaseReportValidateService } from '../services/case-report-validate.service';
 import { UpdateCaseReportValidateDto } from '../dto/update-case-report-validate.dto';
 import { CaseReportValidate } from '../entities/case-report-validate.entity';
@@ -26,7 +26,11 @@ export class CaseReportValidateController {
   }
 
   @Delete('/removeReportValidate/:id')
-  removeReportValidate(@Param('id') id: number) : Promise<any> {
-    return this.caseReportValidateService.removeReportValidate(id);
+  async removeReportValidate(@Param('id') id: number): Promise<{ message: string }> {
+    try {
+      return await this.caseReportValidateService.removeReportValidate(id);      
+    } catch (error) {
+      throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }

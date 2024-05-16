@@ -12,12 +12,12 @@ export class MovementReportService {
     private readonly movementReportRepository: Repository<MovementReportEntity>
   ){}
 
-  async create(createMovementReportDto: CreateMovementReportDto) {
+  async createMovementReport(createMovementReportDto: CreateMovementReportDto) {
     const movementReport = this.movementReportRepository.create(createMovementReportDto);
     return await this.movementReportRepository.save(movementReport);
   }
 
-  async findAll() {
+  async findAllMovementReports() {
     const movementReports = await this.movementReportRepository.find({
       relations: {
         statusReport: true
@@ -34,7 +34,7 @@ export class MovementReportService {
     return movementReports
   }
 
-  async findOne(id: number) {
+  async findOneMovementReport(id: number) {
     const movementReport = await this.movementReportRepository.findOne({ where: { id } });
 
     if (!movementReport) {
@@ -47,15 +47,8 @@ export class MovementReportService {
     return movementReport
   }
 
-  async update(id: number, updateMovementReportDto: UpdateMovementReportDto) {
-    const movementReport = await this.findOne(id);
-
-    if (!movementReport) {
-      throw new HttpException(
-        'No se encontró el movimiento de reporte.',
-        HttpStatus.NOT_FOUND,
-      );
-    }
+  async updateMovementReport(id: number, updateMovementReportDto: UpdateMovementReportDto) {
+    const movementReport = await this.findOneMovementReport(id);
 
     Object.assign(movementReport, updateMovementReportDto)
 
@@ -64,19 +57,16 @@ export class MovementReportService {
     return await this.movementReportRepository.save(movementReport);
   }
 
-  async remove(id: number) {
-    const movementReport = await this.findOne(id);
-
-    if (!movementReport) {
-      throw new HttpException(
-        'No se encontró el movimiento de reporte.',
-        HttpStatus.NOT_FOUND,
-      );
-    }
-
-    movementReport.deletedAt = new Date();
-    movementReport.m_r_status = false;
+  async deleteMovementReport(id: number) {
+    const movementReport = await this.findOneMovementReport(id);
+    const result = await this.movementReportRepository.softDelete(movementReport.id);
     
-    return await this.movementReportRepository.save(movementReport);
+    if (result.affected === 0) {
+      throw new HttpException(
+        `No se pudo eliminar el movimiento de reporte.`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    } 
+    return { message: `El movimiento de reporte se eliminó correctamente`}
   }
 }

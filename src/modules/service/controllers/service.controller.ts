@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus } from '@nestjs/common';
 import { ServiceService } from '../services/service.service';
 import { CreateServiceDto } from '../dto/create-service.dto';
 import { UpdateServiceDto } from '../dto/update-service.dto';
@@ -7,28 +7,32 @@ import { UpdateServiceDto } from '../dto/update-service.dto';
 export class ServiceController {
   constructor(private readonly serviceService: ServiceService) {}
 
-  @Post()
-  create(@Body() createServiceDto: CreateServiceDto) {
-    return this.serviceService.create(createServiceDto);
+  @Post('/createService')
+  createService(@Body() createServiceDto: CreateServiceDto) {
+    return this.serviceService.createService(createServiceDto);
   }
 
-  @Get()
-  findAll() {
-    return this.serviceService.findAll();
+  @Get('/listServices')
+  listServices() {
+    return this.serviceService.findAllServices();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.serviceService.findOne(+id);
+  @Get('/findService/:id')
+  findService(@Param('id') id: number) {
+    return this.serviceService.findOneService(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateServiceDto: UpdateServiceDto) {
-    return this.serviceService.update(+id, updateServiceDto);
+  @Patch('/updateService/:id')
+  updateService(@Param('id') id: number, @Body() updateServiceDto: UpdateServiceDto) {
+    return this.serviceService.updateService(id, updateServiceDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.serviceService.remove(+id);
+  @Delete('/deleteService/:id')
+  async deleteService(@Param('id') id: number): Promise<{ message: string }> {
+    try {
+      return await this.serviceService.deleteService(id);
+    } catch (error) {
+      throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }

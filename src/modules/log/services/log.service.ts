@@ -58,14 +58,14 @@ export class LogService {
 
   async deleteLog(id: number) {
     const log = await this.findOneLog(id);
+    const result = await this.logRepository.softDelete(log.id);
 
-    const isEliminated = await this.logRepository.softDelete(log.id);
-
-    if (isEliminated) {
+    if (result.affected === 0) {
       throw new HttpException(
-        `El log #${id} se eliminó correctamente`,
-        HttpStatus.OK,
+        `No se pudo eliminar el log`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }   
+    return { message: `El log se eliminó correctamente`}
   }
 }

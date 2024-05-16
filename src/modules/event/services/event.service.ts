@@ -1,8 +1,8 @@
 import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
-import { CreateEventDto } from './dto/create-event.dto';
-import { UpdateEventDto } from './dto/update-event.dto';
+import { CreateEventDto } from '../dto/create-event.dto';
+import { UpdateEventDto } from '../dto/update-event.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Event as EventEntity} from './entities/event.entity';
+import { Event as EventEntity} from '../entities/event.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -12,12 +12,12 @@ export class EventService {
     private readonly eventRepository: Repository<EventEntity>
   ){}
 
-  async create(createEventDto: CreateEventDto) {
+  async createEvent(createEventDto: CreateEventDto) {
     const event = this.eventRepository.create(createEventDto);
     return await this.eventRepository.save(event);
   }
 
-  async findAll() {
+  async findAllEvents() {
     const events = await this.eventRepository.find({
       relations: {
         eventType: true,
@@ -35,7 +35,7 @@ export class EventService {
     return events
   }
 
-  async findOne(id: number) {
+  async findOneEvent(id: number) {
     const event = await this.eventRepository.findOne({ where: { id } });
     
     if (!event) {
@@ -48,15 +48,8 @@ export class EventService {
     return event
   }
 
-  async update(id: number, updateEventDto: UpdateEventDto) {
-    const event = await this.findOne(id);
-
-    if (!event) {
-      throw new HttpException(
-        'No se encontró el evento.',
-        HttpStatus.NOT_FOUND,
-      );
-    }
+  async updateEvent(id: number, updateEventDto: UpdateEventDto) {
+    const event = await this.findOneEvent(id);
 
     Object.assign(event, updateEventDto)
 
@@ -65,19 +58,17 @@ export class EventService {
     return await this.eventRepository.save(event);
   }
 
-  async remove(id: number) {
-    const event = await this.findOne(id);
-
-    if (!event) {
+  async deleteEvent(id: number) {
+    const event = await this.findOneEvent(id);
+    const result = await this.eventRepository.softDelete(event.id);
+    
+    if (result.affected === 0) {
       throw new HttpException(
-        'No se encontró el evento.',
-        HttpStatus.NOT_FOUND,
+        `No se pudo eliminar el el evento`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
-    }
+    }  
 
-    event.deletedAt = new Date();
-    event.eve_status = false;
-
-    return await this.eventRepository.save(event);
+    return { message: `El evento se eliminó correctamente`}
   }
 }

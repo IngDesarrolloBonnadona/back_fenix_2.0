@@ -6,6 +6,8 @@ import {
   Patch,
   Param,
   Delete,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { DeviceService } from '../services/device.service';
 import { CreateDeviceDto } from '../dto/create-device.dto';
@@ -40,7 +42,11 @@ export class DeviceController {
   }
 
   @Delete('/deleteDevice/:id')
-  deleteDevice(@Param('id') id: number): Promise<any> {
-    return this.deviceService.deleteDevice(id);
+  async deleteDevice(@Param('id') id: number): Promise<{ message: string }> {
+    try {
+      return await this.deviceService.deleteDevice(id);
+    } catch (error) {
+      throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
+    } 
   }
 }

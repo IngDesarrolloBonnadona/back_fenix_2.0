@@ -57,14 +57,14 @@ export class DeviceService {
 
   async deleteDevice(id: number) {
     const device = await this.findOneDevice(id);
-
-    const isEliminated =  await this.deviceRepository.softDelete(device.id)
+    const result = await this.deviceRepository.softDelete(device.id)
     
-    if (isEliminated) {
+    if (result.affected === 0) {
       throw new HttpException(
-        `El dispositivo #${id} se eliminó correctamente`,
-        HttpStatus.OK,
+        `No se pudo eliminar el dispositivo`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     } 
+    return { message: `El dispositivo se eliminó correctamente` };
   }
 }

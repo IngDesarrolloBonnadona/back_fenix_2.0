@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, HttpException, HttpStatus } from '@nestjs/common';
 import { CaseReportOriginalService } from '../services/case-report-original.service';
 import { UpdateCaseReportOriginalDto } from '../dto/update-case-report-original.dto';
 import { Request } from 'express';
@@ -33,28 +33,32 @@ export class CaseReportOriginalController {
   }
 
   @Get('/listReportsOriginal')
-  listReportsOriginal(): Promise<CaseReportOriginal[]> {
-    return this.CaseReportOriginalService.findAllReportsOriginal();
+  async listReportsOriginal(): Promise<CaseReportOriginal[]> {
+    return await this.CaseReportOriginalService.findAllReportsOriginal();
   }
 
   @Get('/findReportOriginal/:id')
-  findReportOriginal(@Param('id') id: number): Promise<CaseReportOriginal> {
-    return this.CaseReportOriginalService.findOneReportOriginal(id);
+  async findReportOriginal(@Param('id') id: number): Promise<CaseReportOriginal> {
+    return await this.CaseReportOriginalService.findOneReportOriginal(id);
   }
 
   @Patch('/updateReportOriginal/:id')
-  updateReportOriginal(
+  async updateReportOriginal(
     @Param('id') id: number,
     @Body() UpdateCaseReportOriginalDto: UpdateCaseReportOriginalDto,
   ): Promise<CaseReportOriginal> {
-    return this.CaseReportOriginalService.updateReportOriginal(
+    return await this.CaseReportOriginalService.updateReportOriginal(
       id,
       UpdateCaseReportOriginalDto,
     );
   }
 
   @Delete('/deleteReportOriginal/:id')
-  deleteReportOriginal(@Param('id') id: number): Promise<void> {
-    return this.CaseReportOriginalService.deleteReportOriginal(id);
+  async deleteReportOriginal(@Param('id') id: number): Promise<{ message: string }> {
+    try {
+      return await this.CaseReportOriginalService.deleteReportOriginal(id);
+    } catch (error) {
+      throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }
