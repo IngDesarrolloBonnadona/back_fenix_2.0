@@ -68,6 +68,6 @@ export class StatusReportService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }  
-    return { message: `El estado del reporte se eliminó correctamente`}
+    return { message: `¡Datos eliminados correctamente!`}
   }
 }

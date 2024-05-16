@@ -180,7 +180,7 @@ export class CaseReportOriginalService {
   }
 
   async findOneReportOriginal(id: number) {
-    const caseReportsOriginal = await this.caseReportOriginalRepository.findOne({ where: { id } });
+    const caseReportsOriginal = await this.caseReportOriginalRepository.findOneBy({ id });
 
     if (!caseReportsOriginal) {
       throw new HttpException(
@@ -197,13 +197,6 @@ export class CaseReportOriginalService {
     UpdateCaseReportOriginalDto: UpdateCaseReportOriginalDto,
   ) {
     const caseReportsOriginal = await this.findOneReportOriginal(id);
-
-    if (!caseReportsOriginal) {
-      throw new HttpException(
-        'No se encontró el caso.',
-        HttpStatus.NOT_FOUND,
-      );
-    }
 
     Object.assign(caseReportsOriginal, UpdateCaseReportOriginalDto);
 
@@ -222,6 +215,6 @@ export class CaseReportOriginalService {
       );
     } 
 
-    return { message: `El caso original #${id} se eliminó correctamente`}
+    return { message: `¡Datos eliminados correctamente!`}
   }
 }

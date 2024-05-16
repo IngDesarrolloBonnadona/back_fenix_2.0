@@ -75,6 +75,6 @@ export class OriginService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }  
-    return { message: `El origen se eliminó correctamente`}
+    return { message: `¡Datos eliminados correctamente!`}
   }
 }

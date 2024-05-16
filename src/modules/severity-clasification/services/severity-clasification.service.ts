@@ -67,6 +67,6 @@ export class SeverityClasificationService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }  
-    return { message: `La clasificacion de severidad se eliminó correctamente.`}
+    return { message: `¡Datos eliminados correctamente!`}
   }
 }

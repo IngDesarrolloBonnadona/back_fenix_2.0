@@ -66,6 +66,6 @@ export class LogService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }   
-    return { message: `El log se eliminó correctamente`}
+    return { message: `¡Datos eliminados correctamente!`}
   }
 }

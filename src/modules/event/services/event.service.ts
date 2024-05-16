@@ -69,6 +69,6 @@ export class EventService {
       );
     }  
 
-    return { message: `El evento se eliminó correctamente`}
+    return { message: `¡Datos eliminados correctamente!`}
   }
 }

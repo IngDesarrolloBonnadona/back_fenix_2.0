@@ -66,6 +66,6 @@ export class RiskTypeService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }  
-    return { message: `El tipo de riesgo se eliminó correctamente` };
+    return { message: `¡Datos eliminados correctamente!` };
   }
 }

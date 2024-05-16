@@ -98,6 +98,6 @@ const caseReportValidate = await this.caseReportValidateRepository.findOne({ whe
       );
     } 
 
-    return { message: `El caso validado #${id} se eliminó correctamente`}
+    return { message: `¡Datos eliminados correctamente!`}
   }
 }

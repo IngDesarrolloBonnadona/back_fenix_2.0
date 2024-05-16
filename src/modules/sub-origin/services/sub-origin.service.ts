@@ -68,6 +68,6 @@ export class SubOriginService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }  
-    return {message: `El suborigen se eliminó correctamente`}
+    return {message: `¡Datos eliminados correctamente!`}
   }
 }

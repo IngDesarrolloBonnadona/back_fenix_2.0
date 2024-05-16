@@ -65,6 +65,6 @@ export class DeviceService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     } 
-    return { message: `El dispositivo se eliminó correctamente` };
+    return { message: `¡Datos eliminados correctamente!` };
   }
 }

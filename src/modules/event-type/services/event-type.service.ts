@@ -69,6 +69,6 @@ export class EventTypeService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }  
-    return { message: `El tipo de evento se eliminó correctamente`}
+    return { message: `¡Datos eliminados correctamente!`}
   }
 }
