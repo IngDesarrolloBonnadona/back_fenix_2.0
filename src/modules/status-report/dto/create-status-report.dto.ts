@@ -9,11 +9,11 @@ export class CreateStatusReportDto {
     @IsNotEmpty()
     sta_r_movement_id_fk: number;
 
-    @IsString()
-    @IsOptional()
-    sta_r_name: string;
+    // @IsString()
+    // @IsOptional()
+    // sta_r_name: string;
 
-    @IsString()
-    @IsOptional()
-    sta_r_description: string;
+    // @IsString()
+    // @IsOptional()
+    // sta_r_description: string;
 }

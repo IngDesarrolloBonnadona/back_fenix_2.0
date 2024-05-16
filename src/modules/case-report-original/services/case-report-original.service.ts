@@ -13,8 +13,6 @@ import { movementReport } from '../enums/movement-report.enum';
 import { logReports } from 'src/enums/logs.enum';
 import { ValidateCaseReportOriginalDto } from '../dto/validate-case-report-original.dto';
 import { CaseReportValidateService } from 'src/modules/case-report-validate/services/case-report-validate.service';
-import { CreateStatusReportDto } from 'src/modules/status-report/dto/create-status-report.dto';
-import { CreateLogDto } from 'src/modules/log/dto/create-log.dto';
 import { StatusReport as StatusReportEntity } from 'src/modules/status-report/entities/status-report.entity';
 import { Log as LogEntity } from 'src/modules/log/entities/log.entity';
 
@@ -218,7 +216,7 @@ export class CaseReportOriginalService {
     const result = await this.caseReportOriginalRepository.softDelete(caseReportsOriginal.id);
 
     if (result.affected === 0) {
-      throw new HttpException(
+      return new HttpException(
         `No se pudo eliminar el caso #${id}`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
