@@ -1,6 +1,11 @@
+import { IsNotEmpty, IsOptional, IsString } from "@nestjs/class-validator";
+
 export class CreateSubOriginDto {
-    sub_o_origin_id_FK: number
+    @IsNotEmpty()
+    @IsString()
     sub_o_name: string;
+
+    @IsOptional()
+    @IsString()
     sub_o_description: string;
-    sub_o_status: boolean;
 }
