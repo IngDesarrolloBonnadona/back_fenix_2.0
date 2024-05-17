@@ -1,7 +1,10 @@
-import { IsNotEmpty, IsOptional, IsString } from "@nestjs/class-validator";
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from "@nestjs/class-validator";
 
 export class CreateUnitDto {
-    // unit_service_id_FK: number
+    // @IsNumber()
+    @IsNotEmpty()
+    unit_service_id_FK: number
+
     @IsNotEmpty()
     @IsString()
     unit_name: string;

@@ -1,8 +1,15 @@
-import { IsNotEmpty, IsString } from "@nestjs/class-validator";
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from "@nestjs/class-validator";
 
 export class CreateEventTypeDto {
-    // eve_t_casetype_id_FK: number;
+    // @IsNumber()
+    @IsNotEmpty()
+    eve_t_casetype_id_FK: number;
+
     @IsNotEmpty()
     @IsString()
     eve_t_name: string;
+
+    @IsOptional()
+    @IsString()
+    eve_t_description: string
 }

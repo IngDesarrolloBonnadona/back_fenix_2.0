@@ -10,7 +10,7 @@ export class CreateMovementReportDto {
     @IsString()
     mov_r_description: string;
 
+    // @IsNumber()
     @IsNotEmpty()
-    @IsNumber()
     mov_r_time: number;
 }

@@ -13,10 +13,10 @@ export class MovementReport {
     mov_r_description: string;
 
     @Column()
-    m_r_time: number;
+    mov_r_time: number;
 
     @Column({ default: true })
-    m_r_status: boolean;
+    mov_r_status: boolean;
 
     @CreateDateColumn()
     createdAt: Date;

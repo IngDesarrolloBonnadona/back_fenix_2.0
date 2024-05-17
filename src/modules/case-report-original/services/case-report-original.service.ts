@@ -98,7 +98,7 @@ export class CaseReportOriginalService {
       const movementReportFound = await this.movementReportRepository.findOne({
         where: {
           mov_r_name : movementReport.REPORT_CREATION,
-          m_r_status : true
+          mov_r_status : true
         }
       })
 

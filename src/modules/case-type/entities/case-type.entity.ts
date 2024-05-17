@@ -7,7 +7,7 @@ export class CaseType {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ type: 'varchar', unique: true })
+    @Column({ type: 'varchar' })
     cas_t_name: string;
 
     @Column({ type: 'text', nullable: true })
