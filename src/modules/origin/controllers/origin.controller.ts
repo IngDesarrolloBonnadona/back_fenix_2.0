@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus, Put } from '@nestjs/common';
 import { OriginService } from '../services/origin.service';
 import { CreateOriginDto } from '../dto/create-origin.dto';
 import { UpdateOriginDto } from '../dto/update-origin.dto';
@@ -25,8 +25,8 @@ export class OriginController {
     return this.originService.findOneOrigin(id);
   }
 
-  @Patch('/updateOrigin/:id')
-  updateOrigin(@Param('id') id: number, @Body() updateOriginDto: UpdateOriginDto): Promise<Origin> {
+  @Put('/updateOrigin/:id')
+  updateOrigin(@Param('id') id: number, @Body() updateOriginDto: UpdateOriginDto): Promise<HttpException> {
     return this.originService.updateOrigin(id, updateOriginDto);
   }
 

@@ -50,12 +50,19 @@ export class EventTypeService {
 
   async updateEventType(id: number, updateEventTypeDto: UpdateEventTypeDto) {
     const eventType = await this.findOneEventType(id);
-
-    Object.assign(eventType, updateEventTypeDto)
-
-    eventType.updateAt= new Date();
+    const result = await this.eventTypeRepository.update(eventType.id, updateEventTypeDto);
     
-    return await this.eventTypeRepository.save(eventType);
+    if (result.affected === 0) {
+      return new HttpException(
+        `No se pudo actualizar el tipo de suceso`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    } 
+    
+    return new HttpException(
+      `¡Datos actualizados correctamente!`,
+      HttpStatus.ACCEPTED,
+    ); 
   }
 
   async deleteEventType(id: number) {

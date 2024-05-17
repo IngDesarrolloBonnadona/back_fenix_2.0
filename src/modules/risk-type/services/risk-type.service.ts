@@ -49,11 +49,19 @@ export class RiskTypeService {
 
   async updateRiskType(id: number, updateRiskTypeDto: UpdateRiskTypeDto) {
     const riskType = await this.findOneRiskType(id);
+    const result = await this.riskTypeRepository.update(riskType.id, updateRiskTypeDto);
+    
+    if (result.affected === 0) {
+      return new HttpException(
+        `No se pudo actualizar el tipo de riesgo`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    } 
 
-    Object.assign(riskType, updateRiskTypeDto);
-
-    riskType.updateAt = new Date();
-    return await this.riskTypeRepository.save(riskType);
+    return new HttpException(
+      `¡Datos actualizados correctamente!`,
+      HttpStatus.ACCEPTED,
+    );
   }
 
   async deleteRiskType(id: number) {

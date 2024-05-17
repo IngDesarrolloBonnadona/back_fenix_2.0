@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus, Put } from '@nestjs/common';
 import { CaseReportValidateService } from '../services/case-report-validate.service';
 import { UpdateCaseReportValidateDto } from '../dto/update-case-report-validate.dto';
 import { CaseReportValidate } from '../entities/case-report-validate.entity';
@@ -19,11 +19,11 @@ export class CaseReportValidateController {
     return this.caseReportValidateService.findOneReportValidate(id);
   }
 
-  @Patch('/updateReportValidate/:id')
+  @Put('/updateReportValidate/:id')
   updateReportValidate(
     @Param('id') id: number, 
     @Body() updateCaseReportValidateDto: UpdateCaseReportValidateDto
-  ) : Promise<CaseReportValidate> {
+  ) : Promise<HttpException> {
     return this.caseReportValidateService.updateReportValidate(id, updateCaseReportValidateDto);
   }
 

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus, Put } from '@nestjs/common';
 import { RiskLevelService } from '../services/risk-level.service';
 import { CreateRiskLevelDto } from '../dto/create-risk-level.dto';
 import { UpdateRiskLevelDto } from '../dto/update-risk-level.dto';
@@ -25,8 +25,8 @@ export class RiskLevelController {
     return this.riskLevelService.findOneRiskLevel(id);
   }
 
-  @Patch('/updateRiskLevel/:id')
-  updateRiskLevel(@Param('id') id: number, @Body() updateRiskLevelDto: UpdateRiskLevelDto): Promise<RiskLevel> {
+  @Put('/updateRiskLevel/:id')
+  updateRiskLevel(@Param('id') id: number, @Body() updateRiskLevelDto: UpdateRiskLevelDto): Promise<HttpException> {
     return this.riskLevelService.updateRiskLevel(id, updateRiskLevelDto);
   }
 

@@ -47,12 +47,19 @@ export class MedicineService {
 
   async updateMedicine(id: number, updateMedicineDto: UpdateMedicineDto) {
     const medicine = await this.findOneMedicine(id);
-
-    Object.assign(medicine, updateMedicineDto)
-
-    medicine.updateAt = new Date();
+    const result = await this.medicineRepository.update(medicine.id, updateMedicineDto); 
     
-    return await this.medicineRepository.save(medicine);
+    if (result.affected === 0) {
+      return new HttpException(
+        `No se pudo actualizar el medicamento`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    } 
+
+    return new HttpException(
+      `¡Datos actualizados correctamente!`,
+      HttpStatus.ACCEPTED,
+    ); 
   }
 
   async deleteMedicine(id: number) {

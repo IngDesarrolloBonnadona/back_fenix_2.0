@@ -6,6 +6,8 @@ import {
   Patch,
   Param,
   Delete,
+  Put,
+  HttpException,
 } from '@nestjs/common';
 import { DeviceService } from '../services/device.service';
 import { CreateDeviceDto } from '../dto/create-device.dto';
@@ -33,11 +35,11 @@ export class DeviceController {
     return this.deviceService.findOneDevice(id);
   }
 
-  @Patch('/updateDevice/:id')
+  @Put('/updateDevice/:id')
   updateDevice(
     @Param('id') id: number,
     @Body() updateDeviceDto: UpdateDeviceDto,
-  ): Promise<Device> {
+  ): Promise<HttpException> {
     return this.deviceService.updateDevice(id, updateDeviceDto);
   }
 

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus, Put } from '@nestjs/common';
 import { EventService } from '../services/event.service';
 import { CreateEventDto } from '../dto/create-event.dto';
 import { UpdateEventDto } from '../dto/update-event.dto';
@@ -25,8 +25,8 @@ export class EventController {
     return this.eventService.findOneEvent(id);
   }
 
-  @Patch('/updateEvent/:id')
-  updateEvent(@Param('id') id: number, @Body() updateEventDto: UpdateEventDto): Promise<Event> {
+  @Put('/updateEvent/:id')
+  updateEvent(@Param('id') id: number, @Body() updateEventDto: UpdateEventDto): Promise<HttpException> {
     return this.eventService.updateEvent(id, updateEventDto);
   }
 

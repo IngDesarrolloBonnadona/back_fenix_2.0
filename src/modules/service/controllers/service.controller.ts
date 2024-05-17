@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus, Put } from '@nestjs/common';
 import { ServiceService } from '../services/service.service';
 import { CreateServiceDto } from '../dto/create-service.dto';
 import { UpdateServiceDto } from '../dto/update-service.dto';
@@ -24,8 +24,8 @@ export class ServiceController {
     return this.serviceService.findOneService(id);
   }
 
-  @Patch('/updateService/:id')
-  updateService(@Param('id') id: number, @Body() updateServiceDto: UpdateServiceDto) {
+  @Put('/updateService/:id')
+  updateService(@Param('id') id: number, @Body() updateServiceDto: UpdateServiceDto): Promise<HttpException> {
     return this.serviceService.updateService(id, updateServiceDto);
   }
 

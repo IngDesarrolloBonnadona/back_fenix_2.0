@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus, Put } from '@nestjs/common';
 import { EventTypeService } from '../services/event-type.service';
 import { CreateEventTypeDto } from '../dto/create-event-type.dto';
 import { UpdateEventTypeDto } from '../dto/update-event-type.dto';
@@ -25,8 +25,8 @@ export class EventTypeController {
     return this.eventTypeService.findOneEventType(id);
   }
 
-  @Patch('/updateEventType/:id')
-  updateEventType(@Param('id') id: number, @Body() updateEventTypeDto: UpdateEventTypeDto): Promise<EventType> {
+  @Put('/updateEventType/:id')
+  updateEventType(@Param('id') id: number, @Body() updateEventTypeDto: UpdateEventTypeDto): Promise<HttpException> {
     return this.eventTypeService.updateEventType(id, updateEventTypeDto);
   }
 

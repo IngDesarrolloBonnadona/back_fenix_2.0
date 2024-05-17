@@ -50,12 +50,19 @@ export class SubOriginService {
 
   async updateSubOrigin(id: number, updateSubOriginDto: UpdateSubOriginDto) {
     const subOrigin = await this.findOneSubOrigin(id);
-
-    Object.assign(subOrigin, updateSubOriginDto)
-
-    subOrigin.updateAt = new Date();
+    const result = await this.subOriginRepository.update(subOrigin.id, updateSubOriginDto);
     
-    return await this.subOriginRepository.save(subOrigin);
+    if (result.affected === 0) {
+      return new HttpException(
+        `No se pudo actualizar el sub fuente`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    } 
+    
+    return new HttpException(
+      `¡Datos actualizados correctamente!`,
+      HttpStatus.ACCEPTED,
+    ); 
   }
 
   async deleteSubOrigin(id: number) {

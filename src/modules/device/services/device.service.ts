@@ -47,12 +47,19 @@ export class DeviceService {
 
   async updateDevice(id: number, updateDeviceDto: UpdateDeviceDto) {
     const device = await this.findOneDevice(id);
-
-    Object.assign(device, updateDeviceDto)
-
-    device.updateAt = new Date();
+    const result = await this.deviceRepository.update(device.id, updateDeviceDto);
     
-    return await this.deviceRepository.save(device);
+    if (result.affected === 0) {
+      return new HttpException(
+        `No se pudo actualizar el dispositivo`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }  
+
+    return new HttpException(
+      `¡Datos actualizados correctamente!`,
+      HttpStatus.ACCEPTED,
+    );
   }
 
   async deleteDevice(id: number) {

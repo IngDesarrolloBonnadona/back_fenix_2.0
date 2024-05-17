@@ -50,12 +50,19 @@ export class EventService {
 
   async updateEvent(id: number, updateEventDto: UpdateEventDto) {
     const event = await this.findOneEvent(id);
-
-    Object.assign(event, updateEventDto)
-
-    event.updateAt = new Date();
+    const result = await this.eventRepository.update(event.id, updateEventDto);
     
-    return await this.eventRepository.save(event);
+    if (result.affected === 0) {
+      return new HttpException(
+        `No se pudo actualizar el suceso`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }  
+
+    return new HttpException(
+      `¡Datos actualizados correctamente!`,
+      HttpStatus.ACCEPTED,
+    );
   }
 
   async deleteEvent(id: number) {

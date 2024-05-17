@@ -48,12 +48,19 @@ export class LogService {
 
   async updateLog(id: number, updateLogDto: UpdateLogDto) {
     const log = await this.findOneLog(id);
+    const result = await this.logRepository.update(log.id, updateLogDto);
+
+    if (result.affected === 0) {
+      return new HttpException(
+        `No se pudo actualizar el log`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
     
-    Object.assign(log, updateLogDto)
-
-    log.updateAt = new Date();
-
-    return await this.logRepository.save(log);
+    return new HttpException(
+      `¡Datos actualizados correctamente!`,
+      HttpStatus.ACCEPTED,
+    ); 
   }
 
   async deleteLog(id: number) {

@@ -49,12 +49,19 @@ export class MovementReportService {
 
   async updateMovementReport(id: number, updateMovementReportDto: UpdateMovementReportDto) {
     const movementReport = await this.findOneMovementReport(id);
+    const result = await this.movementReportRepository.update(movementReport.id, updateMovementReportDto);
 
-    Object.assign(movementReport, updateMovementReportDto)
+    if (result.affected === 0) {
+      return new HttpException(
+        `No se pudo actualizar el movimiento de reporte`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }  
 
-    movementReport.updateAt = new Date();
-
-    return await this.movementReportRepository.save(movementReport);
+    return new HttpException(
+      `¡Datos actualizados correctamente!`,
+      HttpStatus.ACCEPTED,
+    );
   }
 
   async deleteMovementReport(id: number) {

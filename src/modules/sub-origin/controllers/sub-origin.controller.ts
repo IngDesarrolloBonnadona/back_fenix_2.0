@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus, Put } from '@nestjs/common';
 import { SubOriginService } from '../services/sub-origin.service';
 import { CreateSubOriginDto } from '../dto/create-sub-origin.dto';
 import { UpdateSubOriginDto } from '../dto/update-sub-origin.dto';
@@ -25,8 +25,8 @@ export class SubOriginController {
     return this.subOriginService.findOneSubOrigin(id);
   }
 
-  @Patch('/updateSubOrigin/:id')
-  updateSubOrigin(@Param('id') id: number, @Body() updateSubOriginDto: UpdateSubOriginDto): Promise<SubOrigin> {
+  @Put('/updateSubOrigin/:id')
+  updateSubOrigin(@Param('id') id: number, @Body() updateSubOriginDto: UpdateSubOriginDto): Promise<HttpException> {
     return this.subOriginService.updateSubOrigin(id, updateSubOriginDto);
   }
 

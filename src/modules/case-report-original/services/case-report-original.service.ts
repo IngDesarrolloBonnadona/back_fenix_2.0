@@ -197,11 +197,19 @@ export class CaseReportOriginalService {
     UpdateCaseReportOriginalDto: UpdateCaseReportOriginalDto,
   ) {
     const caseReportsOriginal = await this.findOneReportOriginal(id);
+    const result = await this.caseReportOriginalRepository.update(caseReportsOriginal.id, UpdateCaseReportOriginalDto);
+    
+    if (result.affected === 0) {
+      return new HttpException(
+        `No se pudo actualizar el caso original #${caseReportsOriginal.id}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }  
 
-    Object.assign(caseReportsOriginal, UpdateCaseReportOriginalDto);
-
-    caseReportsOriginal.updateAt = new Date();
-    return await this.caseReportOriginalRepository.save(caseReportsOriginal);
+    return new HttpException(
+      `¡Datos actualizados correctamente!`,
+      HttpStatus.ACCEPTED,
+    );
   }
 
   async deleteReportOriginal(id: number) {

@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus, Put } from '@nestjs/common';
 import { CaseTypeService } from '../services/case-type.service';
 import { CreateCaseTypeDto } from '../dto/create-case-type.dto';
 import { UpdateCaseTypeDto } from '../dto/update-case-type.dto';
 import { CaseType } from '../entities/case-type.entity';
 import { ApiTags } from '@nestjs/swagger';
+import { UpdateResult } from 'typeorm';
 
 @ApiTags('case-type')
 @Controller('case-type')
@@ -25,13 +26,13 @@ export class CaseTypeController {
     return this.caseTypeService.findOneCaseType(id);
   }
 
-  @Patch('/updateCaseType/:id')
-  updateCaseType(@Param('id') id: number, @Body() updateCaseTypeDto: UpdateCaseTypeDto): Promise<CaseType> {
-    return this.caseTypeService.updateCaseType(id, updateCaseTypeDto);
+  @Put('/updateCaseType/:id')
+  async updateCaseType(@Param('id') id: number, @Body() updateCaseTypeDto: UpdateCaseTypeDto): Promise<HttpException> {
+    return await this.caseTypeService.updateCaseType(id, updateCaseTypeDto);
   }
 
   @Delete('/deleteCaseType/:id')
-  async deleteCaseType(@Param('id') id: number): Promise<{ message: string }> {
+  async deleteCaseType(@Param('id') id: number): Promise<HttpException> {
     return await this.caseTypeService.deleteCaseType(id);
 
   }

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus, Put } from '@nestjs/common';
 import { MedicineService } from '../services/medicine.service';
 import { CreateMedicineDto } from '../dto/create-medicine.dto';
 import { UpdateMedicineDto } from '../dto/update-medicine.dto';
@@ -25,8 +25,8 @@ export class MedicineController {
     return this.medicineService.findOneMedicine(id);
   }
 
-  @Patch('/updateMedicine/:id')
-  updateMedicine(@Param('id') id: number, @Body() updateMedicineDto: UpdateMedicineDto): Promise<Medicine> {
+  @Put('/updateMedicine/:id')
+  updateMedicine(@Param('id') id: number, @Body() updateMedicineDto: UpdateMedicineDto): Promise<HttpException> {
     return this.medicineService.updateMedicine(+id, updateMedicineDto);
   }
 

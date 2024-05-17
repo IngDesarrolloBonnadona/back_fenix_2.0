@@ -49,12 +49,19 @@ export class RiskLevelService {
 
   async updateRiskLevel(id: number, updateRiskLevelDto: UpdateRiskLevelDto) {
     const riskLevel = await this.findOneRiskLevel(id);
-
-    Object.assign(riskLevel, updateRiskLevelDto)
-
-    riskLevel.updateAt = new Date();
+    const result = await this.riskLevelRepository.update(riskLevel.id, updateRiskLevelDto);
     
-    return await this.riskLevelRepository.save(riskLevel);
+    if (result.affected === 0) {
+      return new HttpException(
+        `No se pudo actualizar el nivel de riesgo`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    } 
+
+    return new HttpException(
+      `¡Datos actualizados correctamente!`,
+      HttpStatus.ACCEPTED,
+    ); 
   }
 
   async deleteRiskLevel(id: number) {

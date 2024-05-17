@@ -8,6 +8,7 @@ import {
   Delete,
   HttpException,
   HttpStatus,
+  Put,
 } from '@nestjs/common';
 import { SeverityClasificationService } from '../services/severity-clasification.service';
 import { CreateSeverityClasificationDto } from '../dto/create-severity-clasification.dto';
@@ -41,11 +42,11 @@ export class SeverityClasificationController {
     return this.severityClasificationService.findOneSeverityClasification(id);
   }
 
-  @Patch('/updateSeverityClasification/:id')
+  @Put('/updateSeverityClasification/:id')
   updateSeverityClasification(
     @Param('id') id: number,
     @Body() updateSeverityClasificationDto: UpdateSeverityClasificationDto,
-  ): Promise<SeverityClasification> {
+  ): Promise<HttpException> {
     return this.severityClasificationService.updateSeverityClasification(
       id,
       updateSeverityClasificationDto,

@@ -48,16 +48,19 @@ export class ServiceService {
 
   async updateService(id: number, updateServiceDto: UpdateServiceDto) {
     const service = await this.findOneService(id);
-
-    if (!service) {
-      throw new HttpException(
-        'No se encontró el servicio',
-        HttpStatus.NOT_FOUND,
+    const result = await this.serviceRepository.update(service.id, updateServiceDto);
+    
+    if (result.affected === 0) {
+      return new HttpException(
+        `No se pudo actualizar el servicio`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
-    }
+    }  
 
-    Object.assign(service, updateServiceDto)
-    return this.serviceRepository.save(service);
+    return new HttpException(
+      `¡Datos actualizados correctamente!`,
+      HttpStatus.ACCEPTED,
+    );
   }
 
   async deleteService(id: number) {

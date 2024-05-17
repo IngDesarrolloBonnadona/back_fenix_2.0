@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus, Put } from '@nestjs/common';
 import { MovementReportService } from '../services/movement-report.service';
 import { CreateMovementReportDto } from '../dto/create-movement-report.dto';
 import { UpdateMovementReportDto } from '../dto/update-movement-report.dto';
@@ -25,8 +25,8 @@ export class MovementReportController {
     return this.movementReportService.findOneMovementReport(id);
   }
 
-  @Patch('/updateMovementReport/:id')
-  updateMovementReport(@Param('id') id: number, @Body() updateMovementReportDto: UpdateMovementReportDto): Promise<MovementReport> {
+  @Put('/updateMovementReport/:id')
+  updateMovementReport(@Param('id') id: number, @Body() updateMovementReportDto: UpdateMovementReportDto): Promise<HttpException> {
     return this.movementReportService.updateMovementReport(id, updateMovementReportDto);
   }
 

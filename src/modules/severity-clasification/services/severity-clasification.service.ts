@@ -49,12 +49,19 @@ export class SeverityClasificationService {
 
   async updateSeverityClasification(id: number, updateSeverityClasificationDto: UpdateSeverityClasificationDto) {
     const severityClasif = await this.findOneSeverityClasification(id);
-
-    Object.assign(severityClasif, updateSeverityClasificationDto)
-
-    severityClasif.updateAt = new Date();
+    const result = await this.severityClasifRepository.update(severityClasif.id, updateSeverityClasificationDto);
     
-    return await this.severityClasifRepository.save(severityClasif);
+    if (result.affected === 0) {
+      return new HttpException(
+        `No se pudo actualizar la clasificacion de severidad`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }  
+
+    return new HttpException(
+      `¡Datos actualizados correctamente!`,
+      HttpStatus.ACCEPTED,
+    );
   }
 
   async deleteSeverityClasification(id: number) {

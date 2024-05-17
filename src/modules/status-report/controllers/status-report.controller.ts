@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus, Put } from '@nestjs/common';
 import { StatusReportService } from '../services/status-report.service';
 import { CreateStatusReportDto } from '../dto/create-status-report.dto';
 import { UpdateStatusReportDto } from '../dto/update-status-report.dto';
@@ -26,8 +26,8 @@ export class StatusReportController {
     return this.statusReportService.findOneStatusReport(id);
   }
 
-  @Patch('/updateStatusReport/:id')
-  updateStatusReport(@Param('id') id: number, @Body() updateStatusReportDto: UpdateStatusReportDto): Promise<StatusReport> {
+  @Put('/updateStatusReport/:id')
+  updateStatusReport(@Param('id') id: number, @Body() updateStatusReportDto: UpdateStatusReportDto): Promise<HttpException> {
     return this.statusReportService.updateStatusReport(id, updateStatusReportDto);
   }
 

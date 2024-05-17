@@ -50,19 +50,19 @@ export class OriginService {
 
   async updateOrigin(id: number, updateOriginDto: UpdateOriginDto) {
     const origin = await this.findOneOrigin(id);
+    const result = await this.originRepository.update(origin.id, updateOriginDto);
 
-    if (!origin) {
-      throw new HttpException(
-        'No se encontró la fuente',
-        HttpStatus.NOT_FOUND,
+    if (result.affected === 0) {
+      return new HttpException(
+        `No se pudo actualizar la fuente`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
-    }
+    } 
 
-    Object.assign(origin, updateOriginDto)
-
-    origin.updateAt = new Date();
-
-    return await this.originRepository.save(origin);
+    return new HttpException(
+      `¡Datos actualizados correctamente!`,
+      HttpStatus.ACCEPTED,
+    ); 
   }
 
   async deleteOrigin(id: number) {

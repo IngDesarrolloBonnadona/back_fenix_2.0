@@ -49,14 +49,31 @@ export class CaseTypeService {
     return caseType
   }
 
+  // async updateCaseType(id: number, updateCaseTypeDto: UpdateCaseTypeDto) {
+  //   const caseType = await this.findOneCaseType(id);
+
+  //   Object.assign(caseType, updateCaseTypeDto);
+
+  //   caseType.updateAt = new Date();
+
+  //   return await this.caseTypeRepository.save(caseType);
+  // }
+
   async updateCaseType(id: number, updateCaseTypeDto: UpdateCaseTypeDto) {
     const caseType = await this.findOneCaseType(id);
+    const result = await this.caseTypeRepository.update(caseType.id, updateCaseTypeDto);
 
-    Object.assign(caseType, updateCaseTypeDto);
+    if (result.affected === 0) {
+      return new HttpException(
+        `No se pudo actualizar el tipo de caso`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    } 
 
-    caseType.updateAt = new Date();
-
-    return await this.caseTypeRepository.save(caseType);
+    return new HttpException(
+      `¡Datos actualizados correctamente!`,
+      HttpStatus.ACCEPTED,
+    );
   }
 
   async deleteCaseType(id: number) {

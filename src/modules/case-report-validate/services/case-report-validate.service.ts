@@ -70,21 +70,19 @@ const caseReportValidate = await this.caseReportValidateRepository.findOne({ whe
 
   async updateReportValidate(id: number, updateCaseReportValidateDto: UpdateCaseReportValidateDto) {
     const caseReportValidate = await this.findOneReportValidate(id);
-
-    // Valida si existe
-    if (!caseReportValidate) {
-      throw new HttpException(
-        'No se encontró el reporte validado',
-        HttpStatus.NOT_FOUND,
-      );
-    }
-
-    // Actualiza los campos con los valores proporcionados
-    Object.assign(caseReportValidate, updateCaseReportValidateDto)
-
-    caseReportValidate.updateAt = new Date();
+    const result = await this.caseReportValidateRepository.update(caseReportValidate.id, updateCaseReportValidateDto);
     
-    return this.caseReportValidateRepository.save(caseReportValidate);
+    if (result.affected === 0) {
+      return new HttpException(
+        `No se pudo actualizar caso validado ${caseReportValidate.id}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    } 
+
+    return new HttpException(
+      `¡Datos actualizados correctamente!`,
+      HttpStatus.ACCEPTED,
+    );
   }
 
   async removeReportValidate(id: number) {

@@ -50,12 +50,19 @@ export class UnitService {
 
   async updateUnit(id: number, updateUnitDto: UpdateUnitDto) {
     const unit = await this.findOneUnit(id);
-
-    Object.assign(unit, updateUnitDto)
-
-    unit.updateAt = new Date();
+    const result = await this.unitRepository.update(unit.id, updateUnitDto);
     
-    return await this.unitRepository.save(unit);
+    if (result.affected === 0) {
+      return new HttpException(
+        `No se pudo actualizar la unidad`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }  
+
+    return new HttpException(
+      `¡Datos actualizados correctamente!`,
+      HttpStatus.ACCEPTED,
+    );
   }
 
   async deleteUnit(id: number) {

@@ -50,12 +50,19 @@ export class StatusReportService {
 
   async updateStatusReport(id: number, updateStatusReportDto: UpdateStatusReportDto) {
     const statusReport = await this.findOneStatusReport(id);
-
-    Object.assign(statusReport, updateStatusReportDto)
-
-    statusReport.updateAt = new Date();
+    const result = await this.statusReportRepository.update(statusReport.id, updateStatusReportDto);
     
-    return await this.statusReportRepository.save(statusReport);
+    if (result.affected === 0) {
+      return new HttpException(
+        `No se pudo actualizar el estado del reporte`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    } 
+    
+    return new HttpException(
+      `¡Datos actualizados correctamente!`,
+      HttpStatus.ACCEPTED,
+    ); 
   }
 
   async deleteStatusReport(id: number) {

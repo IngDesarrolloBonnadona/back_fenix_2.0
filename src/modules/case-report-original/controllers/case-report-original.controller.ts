@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, HttpException, HttpStatus, Put } from '@nestjs/common';
 import { CaseReportOriginalService } from '../services/case-report-original.service';
 import { UpdateCaseReportOriginalDto } from '../dto/update-case-report-original.dto';
 import { Request } from 'express';
@@ -41,11 +41,11 @@ export class CaseReportOriginalController {
     return await this.CaseReportOriginalService.findOneReportOriginal(id);
   }
 
-  @Patch('/updateReportOriginal/:id')
+  @Put('/updateReportOriginal/:id')
   async updateReportOriginal(
     @Param('id') id: number,
     @Body() UpdateCaseReportOriginalDto: UpdateCaseReportOriginalDto,
-  ): Promise<CaseReportOriginal> {
+  ): Promise<HttpException> {
     return await this.CaseReportOriginalService.updateReportOriginal(
       id,
       UpdateCaseReportOriginalDto,
@@ -53,7 +53,7 @@ export class CaseReportOriginalController {
   }
 
   @Delete('/deleteReportOriginal/:id')
-  async deleteReportOriginal(@Param('id') id: number): Promise<{ message: string }> {
+  async deleteReportOriginal(@Param('id') id: number): Promise<HttpException> {
     return await this.CaseReportOriginalService.deleteReportOriginal(id);
   }
 }
