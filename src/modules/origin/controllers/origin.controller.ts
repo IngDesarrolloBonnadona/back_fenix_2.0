@@ -3,7 +3,9 @@ import { OriginService } from '../services/origin.service';
 import { CreateOriginDto } from '../dto/create-origin.dto';
 import { UpdateOriginDto } from '../dto/update-origin.dto';
 import { Origin } from '../entities/origin.entity';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('origin')
 @Controller('origin')
 export class OriginController {
   constructor(private readonly originService: OriginService) {}

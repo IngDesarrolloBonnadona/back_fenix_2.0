@@ -3,7 +3,9 @@ import { SubOriginService } from '../services/sub-origin.service';
 import { CreateSubOriginDto } from '../dto/create-sub-origin.dto';
 import { UpdateSubOriginDto } from '../dto/update-sub-origin.dto';
 import { SubOrigin } from '../entities/sub-origin.entity';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('sub-origin')
 @Controller('sub-origin')
 export class SubOriginController {
   constructor(private readonly subOriginService: SubOriginService) {}

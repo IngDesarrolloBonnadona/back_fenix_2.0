@@ -3,7 +3,9 @@ import { MovementReportService } from '../services/movement-report.service';
 import { CreateMovementReportDto } from '../dto/create-movement-report.dto';
 import { UpdateMovementReportDto } from '../dto/update-movement-report.dto';
 import { MovementReport } from '../entities/movement-report.entity';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('movement-report')
 @Controller('movement-report')
 export class MovementReportController {
   constructor(private readonly movementReportService: MovementReportService) {}

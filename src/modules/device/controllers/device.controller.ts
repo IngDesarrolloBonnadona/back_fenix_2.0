@@ -6,14 +6,14 @@ import {
   Patch,
   Param,
   Delete,
-  HttpException,
-  HttpStatus,
 } from '@nestjs/common';
 import { DeviceService } from '../services/device.service';
 import { CreateDeviceDto } from '../dto/create-device.dto';
 import { UpdateDeviceDto } from '../dto/update-device.dto';
 import { Device } from '../entities/device.entity';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('device')
 @Controller('device')
 export class DeviceController {
   constructor(private readonly deviceService: DeviceService) {}

@@ -3,7 +3,9 @@ import { RiskTypeService } from '../services/risk-type.service';
 import { CreateRiskTypeDto } from '../dto/create-risk-type.dto';
 import { UpdateRiskTypeDto } from '../dto/update-risk-type.dto';
 import { RiskType } from '../entities/risk-type.entity';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('risk-type')
 @Controller('risk-type')
 export class RiskTypeController {
   constructor(private readonly riskTypeService: RiskTypeService) {}

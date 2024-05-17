@@ -3,7 +3,9 @@ import { StatusReportService } from '../services/status-report.service';
 import { CreateStatusReportDto } from '../dto/create-status-report.dto';
 import { UpdateStatusReportDto } from '../dto/update-status-report.dto';
 import { StatusReport } from '../entities/status-report.entity';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('status-report')
 @Controller('status-report')
 export class StatusReportController {
   constructor(private readonly statusReportService: StatusReportService) {}

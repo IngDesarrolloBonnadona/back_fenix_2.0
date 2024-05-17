@@ -3,7 +3,9 @@ import { EventTypeService } from '../services/event-type.service';
 import { CreateEventTypeDto } from '../dto/create-event-type.dto';
 import { UpdateEventTypeDto } from '../dto/update-event-type.dto';
 import { EventType } from '../entities/event-type.entity';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('event-type')
 @Controller('event-type')
 export class EventTypeController {
   constructor(private readonly eventTypeService: EventTypeService) {}

@@ -3,7 +3,9 @@ import { RiskLevelService } from '../services/risk-level.service';
 import { CreateRiskLevelDto } from '../dto/create-risk-level.dto';
 import { UpdateRiskLevelDto } from '../dto/update-risk-level.dto';
 import { RiskLevel } from '../entities/risk-level.entity';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('risk-level')
 @Controller('risk-level')
 export class RiskLevelController {
   constructor(private readonly riskLevelService: RiskLevelService) {}

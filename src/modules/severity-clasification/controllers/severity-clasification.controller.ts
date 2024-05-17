@@ -13,7 +13,9 @@ import { SeverityClasificationService } from '../services/severity-clasification
 import { CreateSeverityClasificationDto } from '../dto/create-severity-clasification.dto';
 import { UpdateSeverityClasificationDto } from '../dto/update-severity-clasification.dto';
 import { SeverityClasification } from '../entities/severity-clasification.entity';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('severity-clasification')
 @Controller('severity-clasification')
 export class SeverityClasificationController {
   constructor(

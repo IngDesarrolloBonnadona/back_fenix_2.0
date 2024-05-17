@@ -3,7 +3,9 @@ import { LogService } from '../services/log.service';
 import { CreateLogDto } from '../dto/create-log.dto';
 import { UpdateLogDto } from '../dto/update-log.dto';
 import { Log } from '../entities/log.entity';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('log')
 @Controller('log')
 export class LogController {
   constructor(private readonly logService: LogService) {}

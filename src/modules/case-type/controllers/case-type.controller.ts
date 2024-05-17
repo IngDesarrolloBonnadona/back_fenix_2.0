@@ -3,7 +3,9 @@ import { CaseTypeService } from '../services/case-type.service';
 import { CreateCaseTypeDto } from '../dto/create-case-type.dto';
 import { UpdateCaseTypeDto } from '../dto/update-case-type.dto';
 import { CaseType } from '../entities/case-type.entity';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('case-type')
 @Controller('case-type')
 export class CaseTypeController {
   constructor(private readonly caseTypeService: CaseTypeService) {}

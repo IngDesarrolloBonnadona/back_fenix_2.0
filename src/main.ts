@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger, ValidationPipe } from '@nestjs/common';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 async function bootstrap() {
   const logger = new Logger();
@@ -13,6 +14,14 @@ async function bootstrap() {
       transform: true // Transforma los objetos a sus tipos esperados
     })
   )
+
+  const config = new DocumentBuilder()
+    .setTitle('FENIX 2.0')
+    .setDescription('The FENIX API description')
+    .setVersion('2.0')
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
 
   const port = +process.env.TYPEORM_PORT_RUN || 10000
   await app.listen(port);

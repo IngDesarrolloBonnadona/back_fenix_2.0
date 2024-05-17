@@ -3,10 +3,9 @@ import { CaseReportOriginalService } from '../services/case-report-original.serv
 import { UpdateCaseReportOriginalDto } from '../dto/update-case-report-original.dto';
 import { Request } from 'express';
 import { CaseReportOriginal } from '../entities/case-report-original.entity';
-import { CreateCaseReportOriginalDto } from '../dto/create-case-report-original.dto';
-import { ValidateCaseReportOriginalDto } from '../dto/validate-case-report-original.dto';
+import { ApiTags } from '@nestjs/swagger';
 
-
+@ApiTags('case-report-original')
 @Controller('case-report-original')
 export class CaseReportOriginalController {
   constructor(
