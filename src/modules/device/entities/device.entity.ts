@@ -10,7 +10,7 @@ export class Device {
     dev_case_id_fk: number
 
     @Column()
-    dev_code: number
+    dev_code: string
 
     @Column({ type: 'varchar' })
     dev_name: string;

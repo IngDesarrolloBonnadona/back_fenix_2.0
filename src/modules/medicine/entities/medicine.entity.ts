@@ -10,7 +10,7 @@ export class Medicine {
     med_case_id_fk: number
 
     @Column()
-    med_code: number
+    med_code: string
 
     @Column({ type: 'varchar' })
     med_name: string;

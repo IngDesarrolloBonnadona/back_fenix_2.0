@@ -10,9 +10,9 @@ export class CreateDeviceDto {
     @IsNotEmpty()
     dev_name: string;
 
-    // @IsNumber()
+    @IsString()
     @IsNotEmpty()
-    dev_code: number
+    dev_code: string
 
     @IsOptional()
     @IsNotEmpty()

@@ -11,9 +11,9 @@ export class CreateMedicineDto {
     @IsNotEmpty()
     med_name: string;
 
-    @IsNumber()
+    @IsString()
     @IsNotEmpty()
-    med_code: number
+    med_code: string
 
     @IsOptional()
     @IsString()
