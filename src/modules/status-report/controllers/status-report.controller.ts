@@ -31,10 +31,6 @@ export class StatusReportController {
 
   @Delete('/deleteStatusReport/:id')
   async deleteStatusReport(@Param('id') id: number): Promise<{ message: string }> {
-    try {
-      return await this.statusReportService.deleteStatusReport(id);
-    } catch (error) {
-      throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+    return await this.statusReportService.deleteStatusReport(id);
   }
 }

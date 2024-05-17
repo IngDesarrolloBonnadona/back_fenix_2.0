@@ -64,11 +64,15 @@ export class CaseTypeService {
     const result = await this.caseTypeRepository.softDelete(caseType.id);
     
     if (result.affected === 0) {
-      throw new HttpException(
+      return new HttpException(
         `No se pudo eliminar el tipo de caso`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     } 
-    return { message: `¡Datos eliminados correctamente!`}
+
+    return new HttpException(
+      `¡Datos eliminados correctamente!`,
+      HttpStatus.ACCEPTED,
+    );
   }
 }

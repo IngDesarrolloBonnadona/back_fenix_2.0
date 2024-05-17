@@ -29,10 +29,6 @@ export class ServiceController {
 
   @Delete('/deleteService/:id')
   async deleteService(@Param('id') id: number): Promise<{ message: string }> {
-    try {
-      return await this.serviceService.deleteService(id);
-    } catch (error) {
-      throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+    return await this.serviceService.deleteService(id);
   }
 }

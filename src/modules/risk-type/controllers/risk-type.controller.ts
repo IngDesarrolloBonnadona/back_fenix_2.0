@@ -30,10 +30,6 @@ export class RiskTypeController {
 
   @Delete('/deleteRisktype/:id')
   async deleteRisktype(@Param('id') id: number): Promise<{ message: string }> {
-    try {
-      return await this.riskTypeService.deleteRiskType(id);
-    } catch (error) {
-      throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+    return await this.riskTypeService.deleteRiskType(id);
   }
 }

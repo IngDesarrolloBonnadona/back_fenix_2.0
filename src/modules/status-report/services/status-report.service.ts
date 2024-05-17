@@ -63,11 +63,14 @@ export class StatusReportService {
     const result = await this.statusReportRepository.softDelete(statusReport.id);
 
     if (result.affected === 0) {
-      throw new HttpException(
+      return new HttpException(
         `No se pudo eliminar el estado del reporte.`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }  
-    return { message: `¡Datos eliminados correctamente!`}
+    return new HttpException(
+      `¡Datos eliminados correctamente!`,
+      HttpStatus.ACCEPTED,
+    );
   }
 }

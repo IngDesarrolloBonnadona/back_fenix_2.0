@@ -62,11 +62,14 @@ export class RiskLevelService {
     const result = await this.riskLevelRepository.softDelete(riskLevel.id);
 
     if (result.affected === 0) {
-      throw new HttpException(
+      return new HttpException(
         `No se pudo eliminar el nivel de riesgo`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     } 
-    return { message: `¡Datos eliminados correctamente!`};
+    return new HttpException(
+      `¡Datos eliminados correctamente!`,
+      HttpStatus.ACCEPTED,
+    );
   }
 }

@@ -92,12 +92,15 @@ const caseReportValidate = await this.caseReportValidateRepository.findOne({ whe
     const result = await this.caseReportValidateRepository.softDelete(caseReportValidate.id)
 
     if (result.affected === 0) {
-      throw new HttpException(
+      return new HttpException(
         `No se pudo eliminar el reporte validado`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     } 
 
-    return { message: `¡Datos eliminados correctamente!`}
+    return new HttpException(
+      `¡Datos eliminados correctamente!`,
+      HttpStatus.ACCEPTED,
+    );
   }
 }

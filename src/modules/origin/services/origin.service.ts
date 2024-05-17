@@ -70,11 +70,14 @@ export class OriginService {
     const result = await this.originRepository.softDelete(origin.id);
 
     if (result.affected === 0) {
-      throw new HttpException(
+      return new HttpException(
         `No se pudo eliminar el origen`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }  
-    return { message: `¡Datos eliminados correctamente!`}
+    return new HttpException(
+      `¡Datos eliminados correctamente!`,
+      HttpStatus.ACCEPTED,
+    );
   }
 }

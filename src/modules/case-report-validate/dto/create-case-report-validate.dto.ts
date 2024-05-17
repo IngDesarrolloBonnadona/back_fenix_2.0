@@ -1,9 +1,17 @@
 import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString } from "@nestjs/class-validator";
 
 export class CreateCaseReportValidateDto {
-    // val_cr_reporter_id_fk: number;
-    // val_cr_origin_id_fk: number;
-    // val_cr_suborigin_id_fk: number;
+    @IsNumber()
+    @IsNotEmpty()
+    val_cr_reporter_id_fk: number;
+
+    @IsNumber()
+    @IsNotEmpty()
+    val_cr_origin_id_fk: number;
+
+    @IsNumber()
+    @IsNotEmpty()
+    val_cr_suborigin_id_fk: number;
 
     @IsNumber()
     @IsNotEmpty()

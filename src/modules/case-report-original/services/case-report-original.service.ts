@@ -215,6 +215,9 @@ export class CaseReportOriginalService {
       );
     } 
 
-    return { message: `¡Datos eliminados correctamente!`}
+    return new HttpException(
+      `¡Datos eliminados correctamente!`,
+      HttpStatus.ACCEPTED,
+    );
   }
 }

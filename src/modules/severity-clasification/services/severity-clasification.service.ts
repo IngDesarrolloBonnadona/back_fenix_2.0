@@ -62,11 +62,14 @@ export class SeverityClasificationService {
     const result = await this.severityClasifRepository.softDelete(severityClasif.id);
 
     if (result.affected === 0) {
-      throw new HttpException(
+      return new HttpException(
         `No se pudo eliminar la clasificacion de severidad.`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }  
-    return { message: `¡Datos eliminados correctamente!`}
+    return new HttpException(
+      `¡Datos eliminados correctamente!`,
+      HttpStatus.ACCEPTED,
+    );
   }
 }

@@ -65,11 +65,14 @@ export class ServiceService {
     const result = await this.serviceRepository.softDelete(service.id);
 
     if (result.affected === 0) {
-      throw new HttpException(
+      return new HttpException(
         `No se pudo eliminar el servicio.`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }  
-    return { message: `¡Datos eliminados correctamente!` }
+    return new HttpException(
+      `¡Datos eliminados correctamente!`,
+      HttpStatus.ACCEPTED,
+    );
   }
 }

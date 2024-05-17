@@ -30,10 +30,6 @@ export class MovementReportController {
 
   @Delete('/deleteMovementReport/:id')
   async deleteMovementReport(@Param('id') id: number): Promise<{ message: string }> {
-    try {
-      return await this.movementReportService.deleteMovementReport(id);
-    } catch (error) {
-      throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+    return await this.movementReportService.deleteMovementReport(id);
   }
 }

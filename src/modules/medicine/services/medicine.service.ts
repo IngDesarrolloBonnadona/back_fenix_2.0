@@ -60,11 +60,14 @@ export class MedicineService {
     const result = await this.medicineRepository.softDelete(medicine.id)
 
     if (result.affected === 0) {
-      throw new HttpException(
+      return new HttpException(
         `No se pudo eliminar el medicamento.`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     } 
-    return { message: `¡Datos eliminados correctamente!`}
+    return new HttpException(
+      `¡Datos eliminados correctamente!`,
+      HttpStatus.ACCEPTED,
+    );
   }
 }

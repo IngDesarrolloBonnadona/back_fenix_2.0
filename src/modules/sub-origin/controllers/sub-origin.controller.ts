@@ -30,10 +30,6 @@ export class SubOriginController {
 
   @Delete('/deleteSubOrigin/:id')
   deleteSubOrigin(@Param('id') id: number): Promise<{ message: string }> {
-    try {
-      return this.subOriginService.deleteSubOrigin(id);
-    } catch (error) {
-      throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+    return this.subOriginService.deleteSubOrigin(id);
   }
 }

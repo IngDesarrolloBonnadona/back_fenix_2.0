@@ -63,12 +63,15 @@ export class EventService {
     const result = await this.eventRepository.softDelete(event.id);
     
     if (result.affected === 0) {
-      throw new HttpException(
+      return new HttpException(
         `No se pudo eliminar el el evento`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }  
 
-    return { message: `¡Datos eliminados correctamente!`}
+    return new HttpException(
+      `¡Datos eliminados correctamente!`,
+      HttpStatus.ACCEPTED,
+    );
   }
 }

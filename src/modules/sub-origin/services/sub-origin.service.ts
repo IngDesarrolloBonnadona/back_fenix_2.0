@@ -63,11 +63,14 @@ export class SubOriginService {
     const result = await this.subOriginRepository.softDelete(subOrigin.id);
 
     if (result.affected === 0) {
-      throw new HttpException(
+      return new HttpException(
         `No se pudo eliminar el suborigen.`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }  
-    return {message: `¡Datos eliminados correctamente!`}
+    return new HttpException(
+      `¡Datos eliminados correctamente!`,
+      HttpStatus.ACCEPTED,
+    );
   }
 }

@@ -62,11 +62,14 @@ export class MovementReportService {
     const result = await this.movementReportRepository.softDelete(movementReport.id);
     
     if (result.affected === 0) {
-      throw new HttpException(
+      return new HttpException(
         `No se pudo eliminar el movimiento de reporte.`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     } 
-    return { message: `¡Datos eliminados correctamente!`}
+    return new HttpException(
+      `¡Datos eliminados correctamente!`,
+      HttpStatus.ACCEPTED,
+    );
   }
 }

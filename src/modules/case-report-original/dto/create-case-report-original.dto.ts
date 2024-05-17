@@ -2,9 +2,17 @@ import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString,  } from "@nestjs
 
 export class CreateCaseReportOriginalDto {
 
-    // ori_cr_reporter_id_fk: number;
-    // ori_cr_origin_id_fk: number;
-    // ori_cr_suborigin_id_fk: number;
+    @IsNumber()
+    @IsNotEmpty()
+    ori_cr_reporter_id_fk: number;
+
+    @IsNumber()
+    @IsNotEmpty()
+    ori_cr_origin_id_fk: number;
+
+    @IsNumber()
+    @IsNotEmpty()
+    ori_cr_suborigin_id_fk: number;
 
     @IsNumber()
     @IsNotEmpty()

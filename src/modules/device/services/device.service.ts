@@ -60,11 +60,15 @@ export class DeviceService {
     const result = await this.deviceRepository.softDelete(device.id)
     
     if (result.affected === 0) {
-      throw new HttpException(
+      return new HttpException(
         `No se pudo eliminar el dispositivo`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     } 
-    return { message: `¡Datos eliminados correctamente!` };
+
+    return new HttpException(
+      `¡Datos eliminados correctamente!`,
+      HttpStatus.ACCEPTED,
+    );
   }
 }

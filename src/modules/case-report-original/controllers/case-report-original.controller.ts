@@ -55,10 +55,6 @@ export class CaseReportOriginalController {
 
   @Delete('/deleteReportOriginal/:id')
   async deleteReportOriginal(@Param('id') id: number): Promise<{ message: string }> {
-    try {
-      return await this.CaseReportOriginalService.deleteReportOriginal(id);
-    } catch (error) {
-      throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+    return await this.CaseReportOriginalService.deleteReportOriginal(id);
   }
 }

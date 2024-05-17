@@ -61,11 +61,14 @@ export class LogService {
     const result = await this.logRepository.softDelete(log.id);
 
     if (result.affected === 0) {
-      throw new HttpException(
+      return new HttpException(
         `No se pudo eliminar el log`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }   
-    return { message: `¡Datos eliminados correctamente!`}
+    return new HttpException(
+      `¡Datos eliminados correctamente!`,
+      HttpStatus.ACCEPTED,
+    );
   }
 }
