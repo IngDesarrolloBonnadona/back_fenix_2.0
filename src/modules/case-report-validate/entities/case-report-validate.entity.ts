@@ -4,64 +4,59 @@ import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToO
 
 @Entity()
 export class CaseReportValidate {
-    // @PrimaryGeneratedColumn("uuid")
-    // id: number
-
-    // @Column()
-    // rcval_id: number
 
     @PrimaryGeneratedColumn()
     id: number
     
-    @Column()
+    @Column({ nullable: true })
     val_cr_originalcase_id_fk: number
     
-    @Column()
+    @Column({ nullable: true })
     val_cr_casetype_id_fk: number
     
-    @Column()
+    @Column({ nullable: true })
     val_cr_patient_id_fk: number;
     
-    @Column()
+    @Column({ nullable: true })
     val_cr_reporter_id_fk: number;
     
-    @Column()
+    @Column({ nullable: true })
     val_cr_eventtype_id_fk: number;
 
-    @Column()
+    @Column({ nullable: true })
     val_cr_service_id_fk: number;
 
-    @Column()
+    @Column({ nullable: true })
     val_cr_event_id_fk: number;
 
-    @Column({ nullable: true })
+    @Column({ nullable: true }) //
     val_cr_risktype_id_fk: number;
     
-    @Column({ nullable: true })
+    @Column({ nullable: true }) //
     val_cr_severityclasif_id_fk: number;
     
-    @Column()
+    @Column({ nullable: true })
     val_cr_origin_id_fk: number;
     
-    @Column()
+    @Column({ nullable: true })
     val_cr_suborigin_id_fk: number;
     
-    @Column({ nullable: true })
+    @Column({ nullable: true }) //
     val_cr_risklevel_id_fk: number;
 
-    @Column()
+    @Column({ nullable: true })
     val_cr_unit_id_fk: number;
     
-    @Column({ type: 'varchar', nullable: true })
+    @Column({ type: 'varchar', nullable: true }) //
     val_cr_description: string;
     
-    @Column({ type: 'varchar', nullable: true })
+    @Column({ type: 'varchar', nullable: true }) //
     val_cr_inmediateaction: string;
     
-    @Column({ nullable: true })
+    @Column({ nullable: true }) //
     val_cr_materializedrisk: boolean;
     
-    @Column({ nullable: true })
+    @Column({ nullable: true }) //
     val_cr_associatedpatient: boolean;
     
     @Column({ default: false })

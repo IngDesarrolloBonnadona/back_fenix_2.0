@@ -9,6 +9,7 @@ import { Device } from '../device/entities/device.entity';
 import { StatusReport } from '../status-report/entities/status-report.entity';
 import { MovementReport } from '../movement-report/entities/movement-report.entity';
 import { CaseReportValidateModule } from '../case-report-validate/case-report-validate.module';
+import { CaseType } from '../case-type/entities/case-type.entity';
 
 @Module({
   imports: [
@@ -17,7 +18,8 @@ import { CaseReportValidateModule } from '../case-report-validate/case-report-va
       CaseReportValidate,
       Medicine,
       Device,
-      MovementReport
+      MovementReport,
+      CaseType
     ]),
     CaseReportValidateModule,
     

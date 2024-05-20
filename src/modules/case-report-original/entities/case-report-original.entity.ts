@@ -19,52 +19,52 @@ export class CaseReportOriginal {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column()
+    @Column({ nullable: true })
     ori_cr_casetype_id_fk: number
 
-    @Column()
+    @Column({ nullable: true })
     ori_cr_patient_id_fk: number;
     
-    @Column()
+    @Column({ nullable: true })
     ori_cr_reporter_id_fk: number;
 
-    @Column()
+    @Column({ nullable: true })
     ori_cr_eventtype_id_fk: number;
 
-    @Column()
+    @Column({ nullable: true })
     ori_cr_service_id_fk: number;
 
-    @Column()
+    @Column({ nullable: true })
     ori_cr_event_id_fk: number;
 
-    @Column({ nullable: true })
+    @Column({ nullable: true }) //
     ori_cr_risktype_id_fk: number;
     
-    @Column({ nullable: true })
+    @Column({ nullable: true }) //
     ori_cr_severityclasif_id_fk: number;
     
-    @Column()
+    @Column({ nullable: true })
     ori_cr_origin_id_fk: number;
     
-    @Column()
+    @Column({ nullable: true })
     ori_cr_suborigin_id_fk: number;
     
-    @Column({ nullable: true })
+    @Column({ nullable: true }) //
     ori_cr_risklevel_id_fk: number;
 
-    @Column()
+    @Column({ nullable: true })
     ori_cr_unit_id_fk: number;
     
     @Column({ type: 'varchar' })
     ori_cr_description: string;
     
-    @Column({ type: 'varchar', nullable: true })
+    @Column({ type: 'varchar', nullable: true }) //
     ori_cr_inmediateaction: string;
     
-    @Column({ nullable: true })
+    @Column({ nullable: true }) //
     ori_cr_materializedrisk: boolean;
     
-    @Column({ nullable: true })
+    @Column({ nullable: true }) //
     ori_cr_associatedpatient: boolean;
     
     @Column({ default: true })
