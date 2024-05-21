@@ -24,12 +24,14 @@ export class CaseReportOriginalController {
     const clientIp = req['clientIp'];
 
     return await this.CaseReportOriginalService.createReportOriginal(
-          createCaseReportOriginal,
-          createMedicine,
-          createDevice,
-          clientIp,
-        );
+      createCaseReportOriginal,
+      createMedicine,
+      createDevice,
+      clientIp,
+    );
   }
+
+
 
   @Get('/listReportsOriginal')
   async listReportsOriginal(): Promise<CaseReportOriginal[]> {

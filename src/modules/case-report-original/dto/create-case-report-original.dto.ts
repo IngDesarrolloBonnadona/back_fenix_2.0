@@ -2,7 +2,7 @@ import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString,  } from "@nestjs
 
 export class CreateCaseReportOriginalDto {
 
-    @IsNumber()
+    // @IsNumber()
     @IsNotEmpty()
     ori_cr_reporter_id_fk: number;
 
@@ -36,33 +36,33 @@ export class CreateCaseReportOriginalDto {
     
     // @IsNumber()
     @IsOptional()
-    ori_cr_risktype_id_fk: number; 
+    ori_cr_risktype_id_fk: number; //
     
     // @IsNumber()
     @IsOptional()
-    ori_cr_severityclasif_id_fk: number; 
+    ori_cr_severityclasif_id_fk: number; //
     
     // @IsNumber()
     @IsOptional()
-    ori_cr_risklevel_id_fk: number; 
+    ori_cr_risklevel_id_fk: number; //
     
     // @IsNumber()
-    @IsNotEmpty()
+    @IsOptional()
     ori_cr_unit_id_fk: number;
 
-    @IsNotEmpty()
     @IsString()
+    @IsOptional()
     ori_cr_description: string;
 
     @IsOptional()
     @IsString()
-    ori_cr_inmediateaction: string;
+    ori_cr_inmediateaction: string;//
 
     @IsBoolean()
     @IsOptional()
-    ori_cr_materializedrisk: boolean;
+    ori_cr_materializedrisk: boolean;//
 
     @IsBoolean()
     @IsOptional()
-    ori_cr_associatedpatient: boolean;
+    ori_cr_associatedpatient: boolean;//
 }

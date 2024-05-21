@@ -15,12 +15,6 @@ import { ValidateCaseReportOriginalDto } from '../dto/validate-case-report-origi
 import { CaseReportValidateService } from 'src/modules/case-report-validate/services/case-report-validate.service';
 import { StatusReport as StatusReportEntity } from 'src/modules/status-report/entities/status-report.entity';
 import { Log as LogEntity } from 'src/modules/log/entities/log.entity';
-import { CreateOriRiskReportDto } from '../dto/create-ori-risk-report.dto';
-import { CreateOriAdverseEventReportDto } from '../dto/create-ori-adverse-event-report.dto';
-import { CreateOriIncidentReportDto } from '../dto/create-ori-incident-report.dto';
-import { CreateOriIndicatingUnsafeCareReportDto } from '../dto/create-ori-indicating-unsafe-care-report.dto';
-import { CreateOriComplicationsReportDto } from '../dto/create-ori-complications-report.dto';
-import { CaseType as CaseTypeEntity } from 'src/modules/case-type/entities/case-type.entity';
 
 @Injectable()
 export class CaseReportOriginalService {
@@ -33,8 +27,6 @@ export class CaseReportOriginalService {
     private readonly deviceRepository: Repository<DeviceEntity>,
     @InjectRepository(MovementReportEntity)
     private readonly movementReportRepository: Repository<MovementReportEntity>,
-    @InjectRepository(CaseTypeEntity)
-    private readonly caseTypeRepository: Repository<CaseTypeEntity>,
     private readonly caseReportValidateService: CaseReportValidateService,
     private dataSource: DataSource,
   ) {}
@@ -72,10 +64,6 @@ export class CaseReportOriginalService {
     await queryRunner.startTransaction();
 
     try {
-      const listCaseType = await this.caseTypeRepository.find()
-
-
-
       const caseReportOriginal = this.caseReportOriginalRepository.create(createCaseReportOriginal)
       await queryRunner.manager.save(caseReportOriginal)
 

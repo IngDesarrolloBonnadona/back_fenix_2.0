@@ -2,56 +2,73 @@ import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString,  } from "@nestjs
 
 export class CreateOriComplicationsReportDto {
 
-    // // @IsNumber()
-    // @IsNotEmpty()
-    // ori_ccr_casetype_id_fk: number
+    // @IsNumber()
+    @IsNotEmpty()
+    ori_cr_casetype_id_fk: number
 
-    // // @IsNumber()
-    // @IsNotEmpty()
-    // ori_ccr_reporter_id_fk: number;
+    // @IsNumber()
+    @IsNotEmpty()
+    ori_cr_reporter_id_fk: number;
 
-    // // @IsNumber()
-    // @IsNotEmpty()
-    // ori_ccr_origin_id_fk: number;
+    // @IsNumber()
+    @IsNotEmpty()
+    ori_cr_origin_id_fk: number;
     
-    // // @IsNumber()
-    // @IsNotEmpty()
-    // ori_ccr_suborigin_id_fk: number;
+    // @IsNumber()
+    @IsNotEmpty()
+    ori_cr_suborigin_id_fk: number;
 
-    // // @IsNumber()
-    // @IsNotEmpty()
-    // ori_ccr_service_id_fk: number;
+    // @IsNumber()
+    @IsNotEmpty()
+    ori_cr_service_id_fk: number;
       
-    // // @IsNumber()
-    // @IsNotEmpty()
-    // ori_ccr_unit_id_fk: number;
+    // @IsNumber()
+    @IsNotEmpty()
+    ori_cr_unit_id_fk: number;
 
-    // // @IsNumber()
-    // @IsNotEmpty()
-    // ori_ccr_patient_id_fk: number;
+    // @IsNumber()
+    @IsNotEmpty()
+    ori_cr_patient_id_fk: number;
    
-    // // @IsNumber()
-    // @IsNotEmpty()
-    // ori_ccr_severityclasif_id_fk: number; 
+    // @IsNumber()
+    @IsNotEmpty()
+    ori_cr_severityclasif_id_fk: number; 
     
-    // // @IsNumber()
-    // @IsNotEmpty()
-    // ori_ccr_eventtype_id_fk: number;
+    // @IsNumber()
+    @IsNotEmpty()
+    ori_cr_eventtype_id_fk: number;
 
-    // // @IsNumber()
-    // @IsNotEmpty()
-    // ori_ccr_event_id_fk: number;
+    // @IsNumber()
+    @IsNotEmpty()
+    ori_cr_event_id_fk: number;
 
-    // // @IsNumber()
-    // @IsNotEmpty()
-    // ori_ccr_risklevel_id_fk: number; 
+    // @IsNumber()
+    @IsNotEmpty()
+    ori_cr_risklevel_id_fk: number; 
   
     @IsNotEmpty()
     @IsString()
-    ori_ccr_description: string;
+    ori_cr_description: string;
 
     @IsOptional()
     @IsString()
-    ori_ccr_inmediateaction: string;
+    ori_cr_inmediateaction: string;
 
+    // constructor(data?: any) {
+    //     if (data) {
+    //         this.ori_cr_casetype_id_fk = data.ori_cr_casetype_id_fk;
+    //         this.ori_cr_reporter_id_fk = data.ori_cr_reporter_id_fk;
+    //         this.ori_cr_origin_id_fk = data.ori_cr_origin_id_fk;
+    //         this.ori_cr_suborigin_id_fk = data.ori_cr_suborigin_id_fk;
+    //         this.ori_cr_service_id_fk = data.ori_cr_service_id_fk;
+    //         this.ori_cr_unit_id_fk = data.ori_cr_unit_id_fk;
+    //         this.ori_cr_patient_id_fk = data.ori_cr_patient_id_fk;
+    //         this.ori_cr_severityclasif_id_fk = data.ori_cr_severityclasif_id_fk;
+    //         this.ori_cr_eventtype_id_fk = data.ori_cr_eventtype_id_fk;
+    //         this.ori_cr_event_id_fk = data.ori_cr_event_id_fk;
+    //         this.ori_cr_risklevel_id_fk = data.ori_cr_risklevel_id_fk;
+    //         this.ori_cr_description = data.ori_cr_description;
+    //         this.ori_cr_inmediateaction = data.ori_cr_inmediateaction;
+    //     }
+    // }
 }
