@@ -4,6 +4,10 @@ export class CreateCaseReportOriginalDto {
 
     // @IsNumber()
     @IsNotEmpty()
+    ori_cr_casetype_id_fk: number
+
+    // @IsNumber()
+    @IsNotEmpty()
     ori_cr_reporter_id_fk: number;
 
     // @IsNumber()
@@ -17,10 +21,6 @@ export class CreateCaseReportOriginalDto {
     // @IsNumber()
     @IsNotEmpty()
     ori_cr_patient_id_fk: number;
-
-    // @IsNumber()
-    @IsNotEmpty()
-    ori_cr_casetype_id_fk: number
 
     // @IsNumber()
     @IsNotEmpty()

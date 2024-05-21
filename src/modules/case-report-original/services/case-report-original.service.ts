@@ -9,12 +9,24 @@ import { Device as DeviceEntity } from '../../device/entities/device.entity';
 import { CreateMedicineDto } from '../../medicine/dto/create-medicine.dto';
 import { CreateDeviceDto } from '../../device/dto/create-device.dto';
 import { MovementReport as MovementReportEntity } from '../../movement-report/entities/movement-report.entity';
-import { movementReport } from '../enums/movement-report.enum';
+import { movementReport } from '../utils/enums/movement-report.enum';
 import { logReports } from 'src/enums/logs.enum';
 import { ValidateCaseReportOriginalDto } from '../dto/validate-case-report-original.dto';
 import { CaseReportValidateService } from 'src/modules/case-report-validate/services/case-report-validate.service';
 import { StatusReport as StatusReportEntity } from 'src/modules/status-report/entities/status-report.entity';
 import { Log as LogEntity } from 'src/modules/log/entities/log.entity';
+import { CreateOriRiskReportDto } from '../dto/create-ori-risk-report.dto';
+import { CreateOriAdverseEventReportDto } from '../dto/create-ori-adverse-event-report.dto';
+import { CreateOriComplicationsReportDto } from '../dto/create-ori-complications-report.dto';
+import { CreateOriIncidentReportDto } from '../dto/create-ori-incident-report.dto';
+import { CreateOriIndicatingUnsafeCareReportDto } from '../dto/create-ori-indicating-unsafe-care-report.dto';
+
+type CreateReportDto = //Discriminador que define los Dto
+    CreateOriAdverseEventReportDto
+  | CreateOriComplicationsReportDto
+  | CreateOriIncidentReportDto
+  | CreateOriIndicatingUnsafeCareReportDto
+  | CreateOriRiskReportDto;
 
 @Injectable()
 export class CaseReportOriginalService {
@@ -53,7 +65,8 @@ export class CaseReportOriginalService {
   }
 
   async createReportOriginal(
-    createCaseReportOriginal: CreateCaseReportOriginalDto,
+    // createCaseReportOriginal: CreateCaseReportOriginalDto,
+    createReportDto: CreateReportDto,
     createMedicine: CreateMedicineDto[],
     createDevice: CreateDeviceDto[],
     clientIp: string,
@@ -64,9 +77,36 @@ export class CaseReportOriginalService {
     await queryRunner.startTransaction();
 
     try {
-      const caseReportOriginal = this.caseReportOriginalRepository.create(createCaseReportOriginal)
+      let caseReportOriginal 
+
+      switch (createReportDto.ori_cr_casetype_id_fk) {
+        case 1:
+          caseReportOriginal = this.caseReportOriginalRepository.create(createReportDto as CreateOriRiskReportDto)
+          break;
+        case 2:
+          caseReportOriginal = this.caseReportOriginalRepository.create(createReportDto as CreateOriAdverseEventReportDto)
+          break;
+        case 3:
+          caseReportOriginal = this.caseReportOriginalRepository.create(createReportDto as CreateOriIncidentReportDto)
+          break;
+        case 4:
+          caseReportOriginal = this.caseReportOriginalRepository.create(createReportDto as CreateOriIndicatingUnsafeCareReportDto)
+          break;
+        case 5:
+          caseReportOriginal = this.caseReportOriginalRepository.create(createReportDto as CreateOriComplicationsReportDto)
+          break;
+        default:
+          throw new HttpException(
+            'Tipo de caso no reconocido.',
+            HttpStatus.BAD_REQUEST,
+          )
+        }
+      
+      // const caseReportOriginal = this.caseReportOriginalRepository.create(createReportDto)
+
       await queryRunner.manager.save(caseReportOriginal)
 
+      console.log(caseReportOriginal)
       const caseReportValidate = await this.caseReportValidateService.createReportValidateTransaction(queryRunner, caseReportOriginal)
 
       const hasMedicine = createMedicine && createMedicine.length > 0;

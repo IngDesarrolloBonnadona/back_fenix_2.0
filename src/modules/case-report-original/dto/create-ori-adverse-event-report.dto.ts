@@ -53,5 +53,4 @@ export class CreateOriAdverseEventReportDto {
     @IsOptional()
     @IsString()
     ori_cr_inmediateaction: string;
-
 }

@@ -21,7 +21,8 @@ export class CaseReportOriginalController {
   @Post('/createReportOriginal')
   async createReportOriginal(@Body() data: any, @Req() req: Request) : Promise<any>{
     const { createCaseReportOriginal, createMedicine, createDevice } = data;
-    const clientIp = req['clientIp'];
+    // const clientIp = req['clientIp'];
+    const clientIp = req.ip;
 
     return await this.CaseReportOriginalService.createReportOriginal(
       createCaseReportOriginal,
@@ -30,8 +31,6 @@ export class CaseReportOriginalController {
       clientIp,
     );
   }
-
-
 
   @Get('/listReportsOriginal')
   async listReportsOriginal(): Promise<CaseReportOriginal[]> {
