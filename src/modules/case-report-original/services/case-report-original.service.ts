@@ -1,13 +1,10 @@
 import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
-import { CreateCaseReportOriginalDto } from '../dto/create-case-report-original.dto';
 import { UpdateCaseReportOriginalDto } from '../dto/update-case-report-original.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CaseReportOriginal as CaseReportOriginalEntity } from '../entities/case-report-original.entity';
 import { DataSource, Repository } from 'typeorm';
 import { Medicine as MedicineEntity } from '../../medicine/entities/medicine.entity';
 import { Device as DeviceEntity } from '../../device/entities/device.entity';
-import { CreateMedicineDto } from '../../medicine/dto/create-medicine.dto';
-import { CreateDeviceDto } from '../../device/dto/create-device.dto';
 import { MovementReport as MovementReportEntity } from '../../movement-report/entities/movement-report.entity';
 import { movementReport } from '../utils/enums/movement-report.enum';
 import { logReports } from 'src/enums/logs.enum';
@@ -20,8 +17,10 @@ import { CreateOriAdverseEventReportDto } from '../dto/create-ori-adverse-event-
 import { CreateOriComplicationsReportDto } from '../dto/create-ori-complications-report.dto';
 import { CreateOriIncidentReportDto } from '../dto/create-ori-incident-report.dto';
 import { CreateOriIndicatingUnsafeCareReportDto } from '../dto/create-ori-indicating-unsafe-care-report.dto';
+import { validate } from 'class-validator';
+import { plainToInstance } from 'class-transformer';
 
-type CreateReportDto = //Discriminador que define los Dto
+export type CreateReportDto = //Discriminador que define los Dto
     CreateOriAdverseEventReportDto
   | CreateOriComplicationsReportDto
   | CreateOriIncidentReportDto
@@ -65,35 +64,68 @@ export class CaseReportOriginalService {
   }
 
   async createReportOriginal(
-    // createCaseReportOriginal: CreateCaseReportOriginalDto,
-    createReportDto: CreateReportDto,
-    createMedicine: CreateMedicineDto[],
-    createDevice: CreateDeviceDto[],
+    createReportDto: any,
     clientIp: string,
   ) : Promise<any> {
+
+    let dtoInstance : any;
+
+    switch (createReportDto.ori_cr_casetype_id_fk) {
+      case 1:
+        dtoInstance = plainToInstance(CreateOriRiskReportDto, createReportDto);
+        break
+      case 2:
+        dtoInstance = plainToInstance(CreateOriAdverseEventReportDto, createReportDto);
+        break;
+      case 3:
+        dtoInstance = plainToInstance(CreateOriIncidentReportDto, createReportDto);
+        break;
+      case 4:
+        dtoInstance = plainToInstance(CreateOriIndicatingUnsafeCareReportDto, createReportDto);
+        break;
+      case 5:
+        dtoInstance = plainToInstance(CreateOriComplicationsReportDto, createReportDto);
+        break;
+      default:
+        throw new HttpException('Tipo de caso no reconocido.', HttpStatus.BAD_REQUEST);
+    }
+
+    const errors = await validate(dtoInstance);
+
+    if (errors.length > 0) {
+      throw new HttpException(
+        `Validación fallida: ${errors.map(error => error.toString()).join(', ')}`,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
 
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
     try {
-      let caseReportOriginal 
-
+      let caseReportOriginal : CaseReportOriginalEntity
+      console.log("createReportDto-service:",createReportDto)
       switch (createReportDto.ori_cr_casetype_id_fk) {
         case 1:
           caseReportOriginal = this.caseReportOriginalRepository.create(createReportDto as CreateOriRiskReportDto)
+          console.log('Llegó aquí CreateOriRiskReportDto')
           break;
         case 2:
           caseReportOriginal = this.caseReportOriginalRepository.create(createReportDto as CreateOriAdverseEventReportDto)
+          console.log('Llegó aquí CreateOriAdverseEventReportDto')
           break;
         case 3:
           caseReportOriginal = this.caseReportOriginalRepository.create(createReportDto as CreateOriIncidentReportDto)
+          console.log('Llegó aquí CreateOriIncidentReportDto')
           break;
         case 4:
           caseReportOriginal = this.caseReportOriginalRepository.create(createReportDto as CreateOriIndicatingUnsafeCareReportDto)
+          console.log('Llegó aquí CreateOriIndicatingUnsafeCareReportDto')
           break;
         case 5:
           caseReportOriginal = this.caseReportOriginalRepository.create(createReportDto as CreateOriComplicationsReportDto)
+          console.log('Llegó aquí CreateOriComplicationsReportDto')
           break;
         default:
           throw new HttpException(
@@ -101,18 +133,15 @@ export class CaseReportOriginalService {
             HttpStatus.BAD_REQUEST,
           )
         }
-      
-      // const caseReportOriginal = this.caseReportOriginalRepository.create(createReportDto)
 
       await queryRunner.manager.save(caseReportOriginal)
 
-      console.log(caseReportOriginal)
       const caseReportValidate = await this.caseReportValidateService.createReportValidateTransaction(queryRunner, caseReportOriginal)
 
-      const hasMedicine = createMedicine && createMedicine.length > 0;
+      const hasMedicine = createReportDto.medicines && createReportDto.medicines.length > 0;
       
       if(hasMedicine) {
-        for (const medicine of createMedicine) {
+        for (const medicine of createReportDto.medicines) {
           const med = this.medicineRepository.create({
             ...medicine,
             med_case_id_fk: caseReportOriginal.id
@@ -122,10 +151,10 @@ export class CaseReportOriginalService {
         }
       }
       
-      const hasDevice = createDevice && createDevice.length > 0;
+      const hasDevice = createReportDto.devices && createReportDto.devices.length > 0; 
 
       if(hasDevice) {
-        for (const device of createDevice) {
+        for (const device of createReportDto.devices) {
           const dev = this.deviceRepository.create({
             ...device,
             dev_case_id_fk: caseReportOriginal.id
@@ -168,8 +197,8 @@ export class CaseReportOriginalService {
       const reportData = {
         caseReportOriginal,
         caseReportValidate,
-        createdMedicine: createMedicine,
-        createdDevice: createDevice,
+        createdMedicine: createReportDto.medicines,
+        createdDevice: createReportDto.devices,
         statusReport,
         log,
       }

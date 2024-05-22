@@ -1,4 +1,8 @@
 import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString,  } from "@nestjs/class-validator";
+import { Type } from "class-transformer";
+import { IsArray, ValidateNested } from "class-validator";
+import { CreateDeviceDto } from "src/modules/device/dto/create-device.dto";
+import { CreateMedicineDto } from "src/modules/medicine/dto/create-medicine.dto";
 
 export class CreateOriRiskReportDto {
     // @IsNumber()
@@ -52,4 +56,16 @@ export class CreateOriRiskReportDto {
     @IsBoolean()
     @IsNotEmpty()
     ori_cr_associatedpatient: boolean;
+
+    @IsOptional()
+    @IsArray()
+    @ValidateNested({ each: true })
+    @Type(() => CreateMedicineDto)
+    medicines: CreateMedicineDto[]
+
+    @IsOptional()
+    @IsArray()
+    @ValidateNested({ each: true })
+    @Type(() => CreateDeviceDto)
+    devices: CreateDeviceDto[];
 }

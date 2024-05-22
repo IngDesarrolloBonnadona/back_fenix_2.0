@@ -1,5 +1,5 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req, HttpException, HttpStatus, Put } from '@nestjs/common';
-import { CaseReportOriginalService } from '../services/case-report-original.service';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, HttpException, Put, UsePipes, ValidationPipe } from '@nestjs/common';
+import { CaseReportOriginalService, CreateReportDto } from '../services/case-report-original.service';
 import { UpdateCaseReportOriginalDto } from '../dto/update-case-report-original.dto';
 import { Request } from 'express';
 import { CaseReportOriginal } from '../entities/case-report-original.entity';
@@ -19,15 +19,13 @@ export class CaseReportOriginalController {
   } 
   
   @Post('/createReportOriginal')
-  async createReportOriginal(@Body() data: any, @Req() req: Request) : Promise<any>{
-    const { createCaseReportOriginal, createMedicine, createDevice } = data;
-    // const clientIp = req['clientIp'];
+  async createReportOriginal(
+    @Body() createReportDto: CreateReportDto, 
+    @Req() req: Request
+  ) : Promise<any>{
     const clientIp = req.ip;
-
     return await this.CaseReportOriginalService.createReportOriginal(
-      createCaseReportOriginal,
-      createMedicine,
-      createDevice,
+      createReportDto,
       clientIp,
     );
   }
