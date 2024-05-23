@@ -11,8 +11,24 @@ import { HttpStatus } from '@nestjs/common';
 export class MedicineService {
   constructor(
     @InjectRepository(MedicineEntity)
-    private readonly medicineRepository: Repository<MedicineEntity> 
-  ){}
+    private readonly medicineRepository: Repository<MedicineEntity>,
+  ) {}
+
+  async createMedicineTransaction(
+    medicines: CreateMedicineDto[],
+    caseId: number,
+    queryRunner: any,
+  ) {
+
+    for (const medicine of medicines) {
+      const med = this.medicineRepository.create({
+        ...medicine,
+        med_case_id_fk: caseId,
+      });
+
+      await queryRunner.manager.save(med);
+    }
+  }
 
   async createMedicine(createMedicineDto: CreateMedicineDto) {
     const medicine = this.medicineRepository.create(createMedicineDto);
@@ -20,7 +36,7 @@ export class MedicineService {
   }
 
   async findAllMedicines() {
-    const medicines = await this.medicineRepository.find()
+    const medicines = await this.medicineRepository.find();
 
     if (!medicines) {
       throw new HttpException(
@@ -33,7 +49,7 @@ export class MedicineService {
   }
 
   async findOneMedicine(id: number) {
-    const medicine = await this.medicineRepository.findOne({ where: { id } })
+    const medicine = await this.medicineRepository.findOne({ where: { id } });
 
     if (!medicine) {
       throw new HttpException(
@@ -47,31 +63,34 @@ export class MedicineService {
 
   async updateMedicine(id: number, updateMedicineDto: UpdateMedicineDto) {
     const medicine = await this.findOneMedicine(id);
-    const result = await this.medicineRepository.update(medicine.id, updateMedicineDto); 
-    
+    const result = await this.medicineRepository.update(
+      medicine.id,
+      updateMedicineDto,
+    );
+
     if (result.affected === 0) {
       return new HttpException(
         `No se pudo actualizar el medicamento`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
-    } 
+    }
 
     return new HttpException(
       `¡Datos actualizados correctamente!`,
       HttpStatus.ACCEPTED,
-    ); 
+    );
   }
 
   async deleteMedicine(id: number) {
     const medicine = await this.findOneMedicine(id);
-    const result = await this.medicineRepository.softDelete(medicine.id)
+    const result = await this.medicineRepository.softDelete(medicine.id);
 
     if (result.affected === 0) {
       return new HttpException(
         `No se pudo eliminar el medicamento.`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
-    } 
+    }
     return new HttpException(
       `¡Datos eliminados correctamente!`,
       HttpStatus.ACCEPTED,

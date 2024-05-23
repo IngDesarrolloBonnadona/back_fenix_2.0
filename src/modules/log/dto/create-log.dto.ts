@@ -1,7 +1,7 @@
 import { IsNotEmpty, IsNumber, IsString } from "@nestjs/class-validator";
 
 export class CreateLogDto {
-    // @IsNumber()
+    @IsNumber()
     @IsNotEmpty()
     log_validatedcase_id_fk: number;
 

@@ -1,7 +1,7 @@
 import { IsNotEmpty, IsNumber, IsOptional, IsString } from "@nestjs/class-validator";
 
 export class CreateEventTypeDto {
-    // @IsNumber()
+    @IsNumber()
     @IsNotEmpty()
     eve_t_casetype_id_FK: number;
 

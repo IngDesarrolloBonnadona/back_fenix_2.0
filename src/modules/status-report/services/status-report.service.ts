@@ -4,13 +4,43 @@ import { UpdateStatusReportDto } from '../dto/update-status-report.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { StatusReport as StatusReportEntity } from '../entities/status-report.entity';
 import { Repository } from 'typeorm';
+import { MovementReport as MovementReportEntity} from 'src/modules/movement-report/entities/movement-report.entity';
+import { movementReport } from 'src/modules/case-report-original/utils/enums/movement-report.enum';
 
 @Injectable()
 export class StatusReportService {
   constructor(
     @InjectRepository(StatusReportEntity)
-    private readonly statusReportRepository: Repository<StatusReportEntity>
+    private readonly statusReportRepository: Repository<StatusReportEntity>,
+    @InjectRepository(MovementReportEntity)
+    private readonly movementReportRepository: Repository<MovementReportEntity>
   ){}
+
+  async createStatusReportTransaction(
+    queryRunner: any,
+    caseReportOriginalId: any
+  ) {
+    const movementReportFound = await this.movementReportRepository.findOne({
+      where: {
+        mov_r_name : movementReport.REPORT_CREATION,
+        mov_r_status : true
+      }
+    })
+
+    if (!movementReportFound) {
+      throw new HttpException(
+        `El movimiento ${movementReport.REPORT_CREATION} no existe.`,
+        HttpStatus.NOT_FOUND
+      )
+    }
+
+    const statusReport = this.statusReportRepository.create({
+    sta_r_originalcase_id_fk: caseReportOriginalId,
+    sta_r_movement_id_fk: movementReportFound.id
+  })
+
+    return await queryRunner.manager.save(statusReport)
+  }
 
   async createStatusReport(createStatusReportDto: CreateStatusReportDto) {
     const statusReport = this.statusReportRepository.create(createStatusReportDto);

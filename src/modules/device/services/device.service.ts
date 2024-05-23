@@ -14,6 +14,22 @@ export class DeviceService {
     private readonly deviceRepository: Repository<DeviceEntity>
   ){}
 
+  async createDeviceTransation(
+    devices: CreateDeviceDto[],
+    caseId: number,
+    queryRunner: any,
+  ) {
+    
+    for (const device of devices) {
+      const dev = this.deviceRepository.create({
+        ...device,
+        dev_case_id_fk: caseId,
+      });
+
+      await queryRunner.manager.save(dev);
+    }
+  }
+
   async createDevice(createDeviceDto: CreateDeviceDto) {
     const device = this.deviceRepository.create(createDeviceDto);
     return await this.deviceRepository.save(device);

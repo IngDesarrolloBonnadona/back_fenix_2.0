@@ -1,51 +1,51 @@
-import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { UpdateCaseReportOriginalDto } from '../dto/update-case-report-original.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CaseReportOriginal as CaseReportOriginalEntity } from '../entities/case-report-original.entity';
 import { DataSource, Repository } from 'typeorm';
 import { Medicine as MedicineEntity } from '../../medicine/entities/medicine.entity';
 import { Device as DeviceEntity } from '../../device/entities/device.entity';
-import { MovementReport as MovementReportEntity } from '../../movement-report/entities/movement-report.entity';
-import { movementReport } from '../utils/enums/movement-report.enum';
 import { logReports } from 'src/enums/logs.enum';
 import { ValidateCaseReportOriginalDto } from '../dto/validate-case-report-original.dto';
 import { CaseReportValidateService } from 'src/modules/case-report-validate/services/case-report-validate.service';
-import { StatusReport as StatusReportEntity } from 'src/modules/status-report/entities/status-report.entity';
 import { Log as LogEntity } from 'src/modules/log/entities/log.entity';
 import { CreateOriRiskReportDto } from '../dto/create-ori-risk-report.dto';
 import { CreateOriAdverseEventReportDto } from '../dto/create-ori-adverse-event-report.dto';
 import { CreateOriComplicationsReportDto } from '../dto/create-ori-complications-report.dto';
 import { CreateOriIncidentReportDto } from '../dto/create-ori-incident-report.dto';
 import { CreateOriIndicatingUnsafeCareReportDto } from '../dto/create-ori-indicating-unsafe-care-report.dto';
-import { validate } from 'class-validator';
-import { plainToInstance } from 'class-transformer';
-
-export type CreateReportDto = //Discriminador que define los Dto
-    CreateOriAdverseEventReportDto
-  | CreateOriComplicationsReportDto
-  | CreateOriIncidentReportDto
-  | CreateOriIndicatingUnsafeCareReportDto
-  | CreateOriRiskReportDto;
+import { dtoValidator } from '../utils/helpers/dto-validator.helper';
+import { CaseType as CaseTypeEntity } from 'src/modules/case-type/entities/case-type.entity';
+import { caseTypeReport } from '../utils/enums/caseType-report.enum';
+import { StatusReportService } from 'src/modules/status-report/services/status-report.service';
+import { LogService } from 'src/modules/log/services/log.service';
+import { MedicineService } from 'src/modules/medicine/services/medicine.service';
+import { DeviceService } from 'src/modules/device/services/device.service';
 
 @Injectable()
 export class CaseReportOriginalService {
   constructor(
     @InjectRepository(CaseReportOriginalEntity)
     private readonly caseReportOriginalRepository: Repository<CaseReportOriginalEntity>,
-    @InjectRepository(MedicineEntity)
-    private readonly medicineRepository: Repository<MedicineEntity>,
-    @InjectRepository(DeviceEntity)
-    private readonly deviceRepository: Repository<DeviceEntity>,
-    @InjectRepository(MovementReportEntity)
-    private readonly movementReportRepository: Repository<MovementReportEntity>,
+    @InjectRepository(CaseTypeEntity)
+    private readonly caseTypeRepository: Repository<CaseTypeEntity>,
+
     private readonly caseReportValidateService: CaseReportValidateService,
+    private readonly statusReportService: StatusReportService,
+    private readonly logService: LogService,
+    private readonly medicineService: MedicineService,
+    private readonly deviceService: DeviceService,
     private dataSource: DataSource,
   ) {}
 
-  async validateReports (
+  async validateReports(
     validateCaseReportOriginal: ValidateCaseReportOriginalDto,
-  ) : Promise<any> {
-
+  ): Promise<any> {
     const similarReport = await this.caseReportOriginalRepository.find({
       where: {
         ori_cr_casetype_id_fk: validateCaseReportOriginal.ori_cr_casetype_id_fk,
@@ -55,143 +55,123 @@ export class CaseReportOriginalService {
         ori_cr_eventtype_id_fk: validateCaseReportOriginal.ori_cr_eventtype_id_fk,
       },
     });
-    
+
     if (similarReport.length > 0) {
-      return { message: 'Existen casos similares encontrados', data: similarReport }
+      return {
+        message: 'Existen casos similares encontrados',
+        data: similarReport,
+      };
     } else {
-      return { message: 'No existen casos similares'}
+      return { message: 'No existen casos similares' };
     }
   }
 
   async createReportOriginal(
     createReportDto: any,
     clientIp: string,
-  ) : Promise<any> {
-
-    let dtoInstance : any;
-
-    switch (createReportDto.ori_cr_casetype_id_fk) {
-      case 1:
-        dtoInstance = plainToInstance(CreateOriRiskReportDto, createReportDto);
-        break
-      case 2:
-        dtoInstance = plainToInstance(CreateOriAdverseEventReportDto, createReportDto);
-        break;
-      case 3:
-        dtoInstance = plainToInstance(CreateOriIncidentReportDto, createReportDto);
-        break;
-      case 4:
-        dtoInstance = plainToInstance(CreateOriIndicatingUnsafeCareReportDto, createReportDto);
-        break;
-      case 5:
-        dtoInstance = plainToInstance(CreateOriComplicationsReportDto, createReportDto);
-        break;
-      default:
-        throw new HttpException('Tipo de caso no reconocido.', HttpStatus.BAD_REQUEST);
-    }
-
-    const errors = await validate(dtoInstance);
-
-    if (errors.length > 0) {
-      throw new HttpException(
-        `Validación fallida: ${errors.map(error => error.toString()).join(', ')}`,
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+  ): Promise<any> {
+    await dtoValidator(createReportDto);
 
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
     try {
-      let caseReportOriginal : CaseReportOriginalEntity
-      console.log("createReportDto-service:",createReportDto)
-      switch (createReportDto.ori_cr_casetype_id_fk) {
-        case 1:
-          caseReportOriginal = this.caseReportOriginalRepository.create(createReportDto as CreateOriRiskReportDto)
-          console.log('Llegó aquí CreateOriRiskReportDto')
+      const caseTypeFound = await this.caseTypeRepository.findOne({
+        where: {
+          id: createReportDto.ori_cr_casetype_id_fk,
+        },
+      });
+
+      if (!caseTypeFound) {
+        throw new HttpException(
+          `El tipo de caso no existe no existe.`,
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      let caseReportOriginal: any;
+
+      switch (caseTypeFound.cas_t_name) {
+        case caseTypeReport.RISK:
+          caseReportOriginal = this.caseReportOriginalRepository.create(
+            createReportDto as CreateOriRiskReportDto,
+          );
+          console.log('Llegó aquí CreateOriRiskReportDto');
           break;
-        case 2:
-          caseReportOriginal = this.caseReportOriginalRepository.create(createReportDto as CreateOriAdverseEventReportDto)
-          console.log('Llegó aquí CreateOriAdverseEventReportDto')
+        case caseTypeReport.ADVERSE_EVENT:
+          caseReportOriginal = this.caseReportOriginalRepository.create(
+            createReportDto as CreateOriAdverseEventReportDto,
+          );
+          console.log('Llegó aquí CreateOriAdverseEventReportDto');
           break;
-        case 3:
-          caseReportOriginal = this.caseReportOriginalRepository.create(createReportDto as CreateOriIncidentReportDto)
-          console.log('Llegó aquí CreateOriIncidentReportDto')
+        case caseTypeReport.INCIDENT:
+          caseReportOriginal = this.caseReportOriginalRepository.create(
+            createReportDto as CreateOriIncidentReportDto,
+          );
+          console.log('Llegó aquí CreateOriIncidentReportDto');
           break;
-        case 4:
-          caseReportOriginal = this.caseReportOriginalRepository.create(createReportDto as CreateOriIndicatingUnsafeCareReportDto)
-          console.log('Llegó aquí CreateOriIndicatingUnsafeCareReportDto')
+        case caseTypeReport.INDICATING_UNSAFE_CARE:
+          caseReportOriginal = this.caseReportOriginalRepository.create(
+            createReportDto as CreateOriIndicatingUnsafeCareReportDto,
+          );
+          console.log('Llegó aquí CreateOriIndicatingUnsafeCareReportDto');
           break;
-        case 5:
-          caseReportOriginal = this.caseReportOriginalRepository.create(createReportDto as CreateOriComplicationsReportDto)
-          console.log('Llegó aquí CreateOriComplicationsReportDto')
+        case caseTypeReport.COMPLICATIONS:
+          caseReportOriginal = this.caseReportOriginalRepository.create(
+            createReportDto as CreateOriComplicationsReportDto,
+          );
+          console.log('Llegó aquí CreateOriComplicationsReportDto');
           break;
+          // agregar un tipo de caso nuevo
         default:
           throw new HttpException(
             'Tipo de caso no reconocido.',
             HttpStatus.BAD_REQUEST,
-          )
-        }
-
-      await queryRunner.manager.save(caseReportOriginal)
-
-      const caseReportValidate = await this.caseReportValidateService.createReportValidateTransaction(queryRunner, caseReportOriginal)
-
-      const hasMedicine = createReportDto.medicines && createReportDto.medicines.length > 0;
-      
-      if(hasMedicine) {
-        for (const medicine of createReportDto.medicines) {
-          const med = this.medicineRepository.create({
-            ...medicine,
-            med_case_id_fk: caseReportOriginal.id
-          });
-
-          await queryRunner.manager.save(med)
-        }
+          );
       }
-      
-      const hasDevice = createReportDto.devices && createReportDto.devices.length > 0; 
 
-      if(hasDevice) {
-        for (const device of createReportDto.devices) {
-          const dev = this.deviceRepository.create({
-            ...device,
-            dev_case_id_fk: caseReportOriginal.id
-          })
+      await queryRunner.manager.save(caseReportOriginal);
 
-          await queryRunner.manager.save(dev)
-        }
-      }
-      
-      const movementReportFound = await this.movementReportRepository.findOne({
-        where: {
-          mov_r_name : movementReport.REPORT_CREATION,
-          mov_r_status : true
-        }
-      })
+      const caseReportValidate = await this.caseReportValidateService.createReportValidateTransaction(
+          queryRunner,
+          caseReportOriginal,
+        );
 
-      if (!movementReportFound) {
-        throw new HttpException(
-          `El movimiento ${movementReport.REPORT_CREATION} no existe.`,
-          HttpStatus.NOT_FOUND
+      const hasMedicine =
+        createReportDto.medicines && createReportDto.medicines.length > 0;
+
+      if (hasMedicine) {
+        await this.medicineService.createMedicineTransaction(
+          createReportDto.medicines,
+          caseReportOriginal.id,
+          queryRunner,
         )
       }
 
-      const statusReport = new StatusReportEntity()
-      statusReport.sta_r_originalcase_id_fk = caseReportOriginal.id;
-      statusReport.sta_r_movement_id_fk = movementReportFound.id
+      const hasDevice = 
+        createReportDto.devices && createReportDto.devices.length > 0;
 
-      await queryRunner.manager.save(statusReport)
+      if (hasDevice) {
+        await this.deviceService.createDeviceTransation(
+          createReportDto.devices,
+          caseReportOriginal.id,
+          queryRunner,
+        )
+      }
 
-      const log = new LogEntity()
-      log.log_validatedcase_id_fk = caseReportValidate.id;
-      log.log_user_id_fk = caseReportOriginal.ori_cr_reporter_id_fk;
-      log.log_action = logReports.LOG_CREATION;
-      log.log_ip = clientIp
+      const statusReport = await this.statusReportService.createStatusReportTransaction(
+          queryRunner,
+          caseReportOriginal.id,
+        );
 
-      await queryRunner.manager.save(log)   
-        
+      const log = await this.logService.createLogTransaction(
+        queryRunner,
+        caseReportValidate.id,
+        caseReportOriginal.ori_cr_reporter_id_fk,
+        clientIp
+      )
+
       await queryRunner.commitTransaction();
 
       const reportData = {
@@ -201,18 +181,20 @@ export class CaseReportOriginalService {
         createdDevice: createReportDto.devices,
         statusReport,
         log,
-      }
+      };
 
-      return { message: `Reporte #${reportData.caseReportOriginal.id} se creó satisfactoriamente.`, data: reportData };
+      return {
+        message: `Reporte #${reportData.caseReportOriginal.id} se creó satisfactoriamente.`,
+        data: reportData,
+      };
     } catch (error) {
       await queryRunner.rollbackTransaction();
 
       throw new HttpException(
         `Un error a ocurrido: ${error.message}`,
-        HttpStatus.INTERNAL_SERVER_ERROR
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
-
-    } finally{
+    } finally {
       await queryRunner.release();
     }
   }
@@ -235,7 +217,6 @@ export class CaseReportOriginalService {
         service: true,
         unit: true,
       },
-      
     });
 
     if (!caseReportsOriginal) {
@@ -245,11 +226,12 @@ export class CaseReportOriginalService {
       );
     }
 
-    return caseReportsOriginal
+    return caseReportsOriginal;
   }
 
   async findOneReportOriginal(id: number) {
-    const caseReportsOriginal = await this.caseReportOriginalRepository.findOneBy({ id });
+    const caseReportsOriginal =
+      await this.caseReportOriginalRepository.findOneBy({ id });
 
     if (!caseReportsOriginal) {
       throw new HttpException(
@@ -258,7 +240,7 @@ export class CaseReportOriginalService {
       );
     }
 
-    return caseReportsOriginal
+    return caseReportsOriginal;
   }
 
   async updateReportOriginal(
@@ -266,14 +248,17 @@ export class CaseReportOriginalService {
     UpdateCaseReportOriginalDto: UpdateCaseReportOriginalDto,
   ) {
     const caseReportsOriginal = await this.findOneReportOriginal(id);
-    const result = await this.caseReportOriginalRepository.update(caseReportsOriginal.id, UpdateCaseReportOriginalDto);
-    
+    const result = await this.caseReportOriginalRepository.update(
+      caseReportsOriginal.id,
+      UpdateCaseReportOriginalDto,
+    );
+
     if (result.affected === 0) {
       return new HttpException(
         `No se pudo actualizar el caso original #${caseReportsOriginal.id}`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
-    }  
+    }
 
     return new HttpException(
       `¡Datos actualizados correctamente!`,
@@ -283,14 +268,16 @@ export class CaseReportOriginalService {
 
   async deleteReportOriginal(id: number) {
     const caseReportsOriginal = await this.findOneReportOriginal(id);
-    const result = await this.caseReportOriginalRepository.softDelete(caseReportsOriginal.id);
+    const result = await this.caseReportOriginalRepository.softDelete(
+      caseReportsOriginal.id,
+    );
 
     if (result.affected === 0) {
       return new HttpException(
         `No se pudo eliminar el caso #${id}`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
-    } 
+    }
 
     return new HttpException(
       `¡Datos eliminados correctamente!`,

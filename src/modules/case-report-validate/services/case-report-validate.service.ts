@@ -15,6 +15,14 @@ export class CaseReportValidateService {
   async createReportValidateTransaction(
     queryRunner: any,
     caseReportOriginal: any): Promise<CaseReportValidateEntity> {
+
+      // const caseReportValidateDto = new CreateCaseReportValidateDto()
+
+      // const caseReportValidate = this.caseReportValidateRepository.create({
+      //   ...caseReportValidateDto,
+      //   val_cr_originalcase_id_fk : caseReportOriginal.id
+      // })
+
     const caseReportValidate = this.caseReportValidateRepository.create({
       val_cr_originalcase_id_fk : caseReportOriginal.id,
       val_cr_casetype_id_fk : caseReportOriginal.ori_cr_casetype_id_fk,

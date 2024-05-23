@@ -1,9 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req, HttpException, Put, UsePipes, ValidationPipe } from '@nestjs/common';
-import { CaseReportOriginalService, CreateReportDto } from '../services/case-report-original.service';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, HttpException, Put, } from '@nestjs/common';
+import { CaseReportOriginalService } from '../services/case-report-original.service';
+import { CreateReportDto } from '../utils/helpers/dto-validator.helper';
 import { UpdateCaseReportOriginalDto } from '../dto/update-case-report-original.dto';
 import { Request } from 'express';
 import { CaseReportOriginal } from '../entities/case-report-original.entity';
 import { ApiTags } from '@nestjs/swagger';
+import { ValidateCaseReportOriginalDto } from '../dto/validate-case-report-original.dto';
 
 @ApiTags('case-report-original')
 @Controller('case-report-original')
@@ -13,8 +15,8 @@ export class CaseReportOriginalController {
   ) {}
 
   @Post('/validateReports')
-  async validateReportsExistence( @Body() data: any ) : Promise<any>{
-    const { validateCaseReportOriginal } = data
+  async validateReportsExistence( @Body() validateCaseReportOriginal: ValidateCaseReportOriginalDto ) : Promise<any>{
+    // const { validateCaseReportOriginal } = data
     return await this.CaseReportOriginalService.validateReports(validateCaseReportOriginal);
   } 
   
