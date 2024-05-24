@@ -2,30 +2,20 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
-  NotFoundException,
 } from '@nestjs/common';
 import { UpdateCaseReportOriginalDto } from '../dto/update-case-report-original.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CaseReportOriginal as CaseReportOriginalEntity } from '../entities/case-report-original.entity';
 import { DataSource, Repository } from 'typeorm';
-import { Medicine as MedicineEntity } from '../../medicine/entities/medicine.entity';
-import { Device as DeviceEntity } from '../../device/entities/device.entity';
-import { logReports } from 'src/enums/logs.enum';
 import { ValidateCaseReportOriginalDto } from '../dto/validate-case-report-original.dto';
 import { CaseReportValidateService } from 'src/modules/case-report-validate/services/case-report-validate.service';
-import { Log as LogEntity } from 'src/modules/log/entities/log.entity';
-import { CreateOriRiskReportDto } from '../dto/create-ori-risk-report.dto';
-import { CreateOriAdverseEventReportDto } from '../dto/create-ori-adverse-event-report.dto';
-import { CreateOriComplicationsReportDto } from '../dto/create-ori-complications-report.dto';
-import { CreateOriIncidentReportDto } from '../dto/create-ori-incident-report.dto';
-import { CreateOriIndicatingUnsafeCareReportDto } from '../dto/create-ori-indicating-unsafe-care-report.dto';
 import { dtoValidator } from '../utils/helpers/dto-validator.helper';
 import { CaseType as CaseTypeEntity } from 'src/modules/case-type/entities/case-type.entity';
-import { caseTypeReport } from '../utils/enums/caseType-report.enum';
 import { StatusReportService } from 'src/modules/status-report/services/status-report.service';
 import { LogService } from 'src/modules/log/services/log.service';
 import { MedicineService } from 'src/modules/medicine/services/medicine.service';
 import { DeviceService } from 'src/modules/device/services/device.service';
+import { reportCreatorDictionary } from '../utils/helpers/report-creator.helper';
 
 @Injectable()
 export class CaseReportOriginalService {
@@ -85,51 +75,22 @@ export class CaseReportOriginalService {
 
       if (!caseTypeFound) {
         throw new HttpException(
-          `El tipo de caso no existe no existe.`,
+          `El tipo de caso no existe.`,
           HttpStatus.NOT_FOUND,
         );
       }
 
-      let caseReportOriginal: any;
+      const dtoClass = reportCreatorDictionary[caseTypeFound.cas_t_name];
+      console.log("dtoClass:",dtoClass)
 
-      switch (caseTypeFound.cas_t_name) {
-        case caseTypeReport.RISK:
-          caseReportOriginal = this.caseReportOriginalRepository.create(
-            createReportDto as CreateOriRiskReportDto,
-          );
-          console.log('Llegó aquí CreateOriRiskReportDto');
-          break;
-        case caseTypeReport.ADVERSE_EVENT:
-          caseReportOriginal = this.caseReportOriginalRepository.create(
-            createReportDto as CreateOriAdverseEventReportDto,
-          );
-          console.log('Llegó aquí CreateOriAdverseEventReportDto');
-          break;
-        case caseTypeReport.INCIDENT:
-          caseReportOriginal = this.caseReportOriginalRepository.create(
-            createReportDto as CreateOriIncidentReportDto,
-          );
-          console.log('Llegó aquí CreateOriIncidentReportDto');
-          break;
-        case caseTypeReport.INDICATING_UNSAFE_CARE:
-          caseReportOriginal = this.caseReportOriginalRepository.create(
-            createReportDto as CreateOriIndicatingUnsafeCareReportDto,
-          );
-          console.log('Llegó aquí CreateOriIndicatingUnsafeCareReportDto');
-          break;
-        case caseTypeReport.COMPLICATIONS:
-          caseReportOriginal = this.caseReportOriginalRepository.create(
-            createReportDto as CreateOriComplicationsReportDto,
-          );
-          console.log('Llegó aquí CreateOriComplicationsReportDto');
-          break;
-          // agregar un tipo de caso nuevo
-        default:
-          throw new HttpException(
-            'Tipo de caso no reconocido.',
-            HttpStatus.BAD_REQUEST,
-          );
+      if (!dtoClass) {
+        throw new HttpException(
+          'Tipo de caso no reconocido.', 
+          HttpStatus.BAD_REQUEST);
       }
+
+      const caseReportOriginal = new CaseReportOriginalEntity();
+      Object.assign(caseReportOriginal, createReportDto)
 
       await queryRunner.manager.save(caseReportOriginal);
 

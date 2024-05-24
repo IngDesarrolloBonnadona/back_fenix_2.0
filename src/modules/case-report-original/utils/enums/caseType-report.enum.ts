@@ -4,4 +4,5 @@ export enum caseTypeReport {
     INCIDENT = 'Incidente',
     INDICATING_UNSAFE_CARE = 'Indicio de Atención Insegura',
     COMPLICATIONS = 'Complicaciones'
+    // agregar un tipo de caso nuevo
 };
