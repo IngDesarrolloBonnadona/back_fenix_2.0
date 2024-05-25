@@ -182,7 +182,7 @@ export class CaseReportOriginalService {
 
     if (!caseReportsOriginal) {
       throw new HttpException(
-        'No hay reportes creados actualmente.',
+        'No hay reportes para mostrar.',
         HttpStatus.NOT_FOUND,
       );
     }
