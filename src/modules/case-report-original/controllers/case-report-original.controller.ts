@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req, HttpException, Put, Query, } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, HttpException, Put, } from '@nestjs/common';
 import { CaseReportOriginalService } from '../services/case-report-original.service';
 import { CreateReportDto } from '../utils/helpers/dto-validator.helper';
 import { UpdateCaseReportOriginalDto } from '../dto/update-case-report-original.dto';
@@ -16,7 +16,6 @@ export class CaseReportOriginalController {
 
   @Post('/validateReports')
   async validateReportsExistence( @Body() validateCaseReportOriginal: ValidateCaseReportOriginalDto ) : Promise<any>{
-    // const { validateCaseReportOriginal } = data
     return await this.CaseReportOriginalService.validateReports(validateCaseReportOriginal);
   } 
   
@@ -29,23 +28,6 @@ export class CaseReportOriginalController {
     return await this.CaseReportOriginalService.createReportOriginal(
       createReportDto,
       clientIp,
-    );
-  }
-
-  @Get('/ResumeReportsOriginal')
-  async ResumeReportsOriginal(
-    @Query('creationDate') creationDate?: string,
-    @Query('id') id?: number,
-    @Query('patientId') patientId?: number,
-    @Query('caseTypeId') caseTypeId?: number,
-  ): Promise<CaseReportOriginal[]> {
-    const creationDateObj = creationDate ? new Date(creationDate) : undefined;
-
-    return await this.CaseReportOriginalService.ResumeReportsOriginal(
-      creationDateObj,
-      id,
-      patientId,
-      caseTypeId,
     );
   }
 
