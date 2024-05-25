@@ -67,23 +67,7 @@ export class CaseReportValidateService {
     }
 
     const caseReportsValidate = await this.caseReportValidateRepository.find({
-      where,
-      // relations: {
-      //   caseReportValidate: true,
-      //   medicine: true,
-      //   device: true,
-      //   statusReport: true,
-      //   caseType: true,
-      //   riskType: true,
-      //   severityClasification: true,
-      //   origin: true,
-      //   subOrigin: true,
-      //   riskLevel: true,
-      //   event: true,
-      //   eventType: true,
-      //   service: true,
-      //   unit: true,
-      // },
+      where
     });
 
     if (!caseReportsValidate || caseReportsValidate.length === 0) {

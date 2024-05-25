@@ -13,11 +13,11 @@ export class StatusReport {
     @Column()
     sta_r_movement_id_fk: number;
 
-    @Column({ type: 'varchar', nullable: true })
-    sta_r_name: string;
+    // @Column({ type: 'varchar', nullable: true })
+    // sta_r_name: string;
 
-    @Column({ type: 'varchar', nullable: true })
-    sta_r_description: string;
+    // @Column({ type: 'varchar', nullable: true })
+    // sta_r_description: string;
 
     @Column({ default: true })
     erep_estado: boolean;
