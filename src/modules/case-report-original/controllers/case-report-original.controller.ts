@@ -31,7 +31,7 @@ export class CaseReportOriginalController {
     );
   }
 
-  @Get('/SummaryReportsOriginal')
+  @Get('/summaryReportsOriginal')
   async SummaryReportsOriginal(
     @Query('creationDate') creationDate?: string,
     @Query('id') id?: number,
