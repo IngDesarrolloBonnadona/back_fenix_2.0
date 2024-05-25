@@ -3,7 +3,7 @@ import { CreateCaseReportValidateDto } from '../dto/create-case-report-validate.
 import { UpdateCaseReportValidateDto } from '../dto/update-case-report-validate.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CaseReportValidate as CaseReportValidateEntity } from '../entities/case-report-validate.entity';
-import { Repository } from 'typeorm';
+import { Between, FindOptionsWhere, Repository } from 'typeorm';
 
 @Injectable()
 export class CaseReportValidateService {
@@ -14,15 +14,8 @@ export class CaseReportValidateService {
 
   async createReportValidateTransaction(
     queryRunner: any,
-    caseReportOriginal: any): Promise<CaseReportValidateEntity> {
-
-      // const caseReportValidateDto = new CreateCaseReportValidateDto()
-
-      // const caseReportValidate = this.caseReportValidateRepository.create({
-      //   ...caseReportValidateDto,
-      //   val_cr_originalcase_id_fk : caseReportOriginal.id
-      // })
-
+    caseReportOriginal: any):
+    Promise<CaseReportValidateEntity> {
     const caseReportValidate = this.caseReportValidateRepository.create({
       val_cr_previous_id: 0,
       val_cr_originalcase_id_fk : caseReportOriginal.id,
@@ -44,6 +37,63 @@ export class CaseReportValidateService {
       val_cr_associatedpatient : caseReportOriginal.ori_cr_associatedpatient,
     })
     return await queryRunner.manager.save(caseReportValidate)
+  }
+
+  async SummaryReportsValidate(
+    creationDate?: Date,
+    id?: number,
+    patientId?: number,
+    caseTypeId?: number,
+  ) : Promise<CaseReportValidateEntity[]> {
+    const where: FindOptionsWhere<CaseReportValidateEntity> = {};
+
+    if (creationDate) {
+      const nextDay = new Date(creationDate);
+      nextDay.setDate(creationDate.getDate() + 1);
+
+      where.createdAt = Between(creationDate, nextDay);
+    }
+  
+    if (id) {
+      where.id = id;
+    }
+
+    if (patientId) {
+      where.val_cr_patient_id_fk = patientId;
+    }
+
+    if (caseTypeId){
+      where.val_cr_casetype_id_fk = caseTypeId;
+    }
+
+    const caseReportsValidate = await this.caseReportValidateRepository.find({
+      where,
+      // relations: {
+      //   caseReportValidate: true,
+      //   medicine: true,
+      //   device: true,
+      //   statusReport: true,
+      //   caseType: true,
+      //   riskType: true,
+      //   severityClasification: true,
+      //   origin: true,
+      //   subOrigin: true,
+      //   riskLevel: true,
+      //   event: true,
+      //   eventType: true,
+      //   service: true,
+      //   unit: true,
+      // },
+    });
+
+    if (!caseReportsValidate || caseReportsValidate.length === 0) {
+      throw new HttpException(
+        'No hay reportes para mostrar.',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return caseReportsValidate;
   }
 
   async findAllReportsValidate() {

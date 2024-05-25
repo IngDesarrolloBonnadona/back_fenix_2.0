@@ -31,23 +31,6 @@ export class CaseReportOriginalController {
     );
   }
 
-  @Get('/summaryReportsOriginal')
-  async SummaryReportsOriginal(
-    @Query('creationDate') creationDate?: string,
-    @Query('id') id?: number,
-    @Query('patientId') patientId?: number,
-    @Query('caseTypeId') caseTypeId?: number,
-  ): Promise<CaseReportOriginal[]> {
-    const creationDateObj = creationDate ? new Date(creationDate) : undefined;
-
-    return await this.CaseReportOriginalService.SummaryReportsOriginal(
-      creationDateObj,
-      id,
-      patientId,
-      caseTypeId,
-    );
-  }
-
   @Get('/listReportsOriginal')
   async listReportsOriginal(): Promise<CaseReportOriginal[]> {
     return await this.CaseReportOriginalService.findAllReportsOriginal();

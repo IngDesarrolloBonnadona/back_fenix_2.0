@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus, Put, Query } from '@nestjs/common';
 import { CaseReportValidateService } from '../services/case-report-validate.service';
 import { UpdateCaseReportValidateDto } from '../dto/update-case-report-validate.dto';
 import { CaseReportValidate } from '../entities/case-report-validate.entity';
@@ -8,6 +8,23 @@ import { ApiTags } from '@nestjs/swagger';
 @Controller('case-report-validate')
 export class CaseReportValidateController {
   constructor(private readonly caseReportValidateService: CaseReportValidateService) {}
+
+  @Get('/summaryReportsValidate')
+  async SummaryReportsValidate(
+    @Query('creationDate') creationDate?: string,
+    @Query('id') id?: number,
+    @Query('patientId') patientId?: number,
+    @Query('caseTypeId') caseTypeId?: number,
+  ): Promise<CaseReportValidate[]> {
+    const creationDateObj = creationDate ? new Date(creationDate) : undefined;
+
+    return await this.caseReportValidateService.SummaryReportsValidate(
+      creationDateObj,
+      id,
+      patientId,
+      caseTypeId,
+    );
+  }
 
   @Get('/listReportsValidate')
   listReportsValidate() : Promise<CaseReportValidate[]> {

@@ -160,63 +160,6 @@ export class CaseReportOriginalService {
     }
   }
 
-  async SummaryReportsOriginal(
-    creationDate?: Date,
-    id?: number,
-    patientId?: number,
-    caseTypeId?: number,
-  ) : Promise<CaseReportOriginalEntity[]> {
-    const where: FindOptionsWhere<CaseReportOriginalEntity> = {};
-
-    if (creationDate) {
-      const nextDay = new Date(creationDate);
-      nextDay.setDate(creationDate.getDate() + 1);
-
-      where.createdAt = Between(creationDate, nextDay);
-    }
-  
-    if (id) {
-      where.id = id;
-    }
-
-    if (patientId) {
-      where.ori_cr_patient_id_fk = patientId;
-    }
-
-    if (caseTypeId){
-      where.ori_cr_casetype_id_fk = caseTypeId;
-    }
-
-    const caseReportsOriginal = await this.caseReportOriginalRepository.find({
-      where,
-      relations: {
-        caseReportValidate: true,
-        medicine: true,
-        device: true,
-        statusReport: true,
-        caseType: true,
-        riskType: true,
-        severityClasification: true,
-        origin: true,
-        subOrigin: true,
-        riskLevel: true,
-        event: true,
-        eventType: true,
-        service: true,
-        unit: true,
-      },
-    });
-
-    if (!caseReportsOriginal || caseReportsOriginal.length === 0) {
-      throw new HttpException(
-        'No hay reportes para mostrar.',
-        HttpStatus.NOT_FOUND,
-      );
-    }
-
-    return caseReportsOriginal;
-  }
-
   async findAllReportsOriginal() {
     const caseReportsOriginal = await this.caseReportOriginalRepository.find({
       relations: {
