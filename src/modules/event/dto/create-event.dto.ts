@@ -1,6 +1,16 @@
+import { IsNotEmpty, IsString } from "@nestjs/class-validator";
+import { IsOptional } from "class-validator";
+
 export class CreateEventDto {
-    suc_id_tipo_suceso_FK: number;
-    suc_nombre: string;
-    suc_descripcion: string;
-    suc_estado: boolean;
+
+    @IsNotEmpty()
+    eve_eventtype_id_FK: number;
+
+    @IsNotEmpty()
+    @IsString()
+    eve_name: string;
+
+    @IsOptional()
+    @IsString()
+    eve_description: string;
 }

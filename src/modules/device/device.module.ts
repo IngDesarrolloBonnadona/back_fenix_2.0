@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { DeviceService } from './device.service';
-import { DeviceController } from './device.controller';
+import { DeviceService } from './services/device.service';
+import { DeviceController } from './controllers/device.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Device } from './entities/device.entity';
 
@@ -10,5 +10,6 @@ import { Device } from './entities/device.entity';
   ],
   controllers: [DeviceController],
   providers: [DeviceService],
+  exports: [DeviceService],
 })
 export class DeviceModule {}

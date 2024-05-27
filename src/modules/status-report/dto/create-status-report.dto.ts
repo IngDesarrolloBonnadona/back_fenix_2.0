@@ -1,6 +1,19 @@
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from "@nestjs/class-validator";
+
 export class CreateStatusReportDto {
-    erep_id_caso_original_FK: number;
-    erep_id_movimiento_reporte_FK: number;
-    erep_descripcion: string;
-    terep_estado: boolean;
+    @IsNumber()
+    @IsNotEmpty()
+    sta_r_originalcase_id_fk: number;
+
+    @IsNumber()
+    @IsNotEmpty()
+    sta_r_movement_id_fk: number;
+
+    @IsString()
+    @IsOptional()
+    sta_r_description: string;
+
+    @IsString()
+    @IsOptional()
+    sta_r_name: string;
 }

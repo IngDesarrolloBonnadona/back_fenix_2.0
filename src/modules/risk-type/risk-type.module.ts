@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { RiskTypeService } from './risk-type.service';
-import { RiskTypeController } from './risk-type.controller';
+import { RiskTypeService } from './services/risk-type.service';
+import { RiskTypeController } from './controllers/risk-type.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RiskType } from './entities/risk-type.entity';
 

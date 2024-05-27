@@ -1,25 +1,28 @@
 import { CaseReportOriginal } from "src/modules/case-report-original/entities/case-report-original.entity";
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
-@Entity({ name: 'ClasificacionesSeveridad'})
+@Entity()
 export class SeverityClasification {
     @PrimaryGeneratedColumn()
     id: number;
 
     @Column({ type: 'varchar' })
-    csev_nombre: string;
+    sev_c_name: string;
 
     @Column({ type: 'varchar', nullable: true })
-    csev_descripcion: string;
+    sev_c_description: string;
 
     @Column({ default: true })
-    csev_estado: boolean;
+    sev_c_status: boolean;
 
-    @Column({ default: () => 'CURRENT_TIMESTAMP' })
-    csev_fecha_creacion: Date;
+    @CreateDateColumn()
+    createdAt: Date;
 
-    @Column({ default: () => 'CURRENT_TIMESTAMP' })
-    csev_fecha_actualizacion: Date;
+    @UpdateDateColumn()
+    updateAt: Date;
+
+    @DeleteDateColumn()
+    deletedAt : Date;
 
     @OneToMany(() => CaseReportOriginal, (caseReportOriginal) => caseReportOriginal.severityClasification)
     caseReportOriginal: CaseReportOriginal[];

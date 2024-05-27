@@ -1,26 +1,29 @@
 import { CaseReportOriginal } from "src/modules/case-report-original/entities/case-report-original.entity";
 import { EventType } from "src/modules/event-type/entities/event-type.entity";
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
-@Entity({ name: 'TiposCaso'})
+@Entity()
 export class CaseType {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ type: 'varchar', unique: true })
-    tcas_nombre: string;
+    @Column({ type: 'varchar' })
+    cas_t_name: string;
 
     @Column({ type: 'text', nullable: true })
-    tcas_descripcion: string;
+    cas_t_description: string;
 
     @Column({ type: 'boolean', default: true })
-    tcas_estado: boolean;
+    cas_t_status: boolean;
 
-    @Column({ default: () => 'CURRENT_TIMESTAMP' })
-    tcas_fecha_creacion: Date;
+    @CreateDateColumn()
+    createdAt: Date;
 
-    @Column({ default: () => 'CURRENT_TIMESTAMP' })
-    tcas_fecha_actualizacion: Date;
+    @UpdateDateColumn()
+    updateAt: Date;
+
+    @DeleteDateColumn()
+    deletedAt: Date;
 
     @OneToMany(() => EventType, (eventType) => eventType.caseType)
     eventType: EventType[];

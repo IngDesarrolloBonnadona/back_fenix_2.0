@@ -1,6 +1,21 @@
+import { IsNotEmpty, IsNumber, IsString } from "@nestjs/class-validator";
+import { IsOptional } from "class-validator";
+
 export class CreateMedicineDto {
-    med_id_caso_FK: number
-    med_nombre: string;
-    med_descripcion: string;
-    med_estado: boolean;
+
+    @IsNumber()
+    @IsNotEmpty()
+    med_case_id_fk: number
+
+    @IsString()
+    @IsNotEmpty()
+    med_name: string;
+
+    @IsString()
+    @IsNotEmpty()
+    med_code: string
+
+    @IsOptional()
+    @IsString()
+    med_description: string;
 }

@@ -1,9 +1,7 @@
-import { Module } from '@nestjs/common';
-// import { ConfigModule, ConfigService } from '@nestjs/config';
+import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CaseReportOriginalModule } from './modules/case-report-original/case-report-original.module';
 import { CaseTypeModule } from './modules/case-type/case-type.module';
-import { join } from 'path';
 import { RiskTypeModule } from './modules/risk-type/risk-type.module';
 import { SeverityClasificationModule } from './modules/severity-clasification/severity-clasification.module';
 import { OriginModule } from './modules/origin/origin.module';
@@ -18,6 +16,8 @@ import { UnitModule } from './modules/unit/unit.module';
 import { CaseReportValidateModule } from './modules/case-report-validate/case-report-validate.module';
 import { StatusReportModule } from './modules/status-report/status-report.module';
 import { MovementReportModule } from './modules/movement-report/movement-report.module';
+import { IpClientMiddleware } from './middlewares/ip-client.middleware';
+import { LogModule } from './modules/log/log.module';
 
 require('dotenv').config();
 
@@ -50,8 +50,16 @@ require('dotenv').config();
     CaseReportValidateModule,
     StatusReportModule,
     MovementReportModule,
+    LogModule,
   ],
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(IpClientMiddleware).forRoutes({
+      path: '*',
+      method: RequestMethod.ALL
+    })
+  }
+}

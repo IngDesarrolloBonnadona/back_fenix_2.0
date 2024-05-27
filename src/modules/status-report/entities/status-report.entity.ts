@@ -1,38 +1,41 @@
 import { CaseReportOriginal } from "src/modules/case-report-original/entities/case-report-original.entity";
 import { MovementReport } from "src/modules/movement-report/entities/movement-report.entity";
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
-@Entity({ name: 'EstadosReporte' })
+@Entity()
 export class StatusReport {
     @PrimaryGeneratedColumn()
     id: number;
     
     @Column()
-    erep_id_caso_original_FK: number;
+    sta_r_originalcase_id_fk: number;
     
     @Column()
-    erep_id_movimiento_reporte_FK: number;
+    sta_r_movement_id_fk: number;
 
-    @Column({ type: 'varchar', nullable: true })
-    erep_nombre: string;
+    // @Column({ type: 'varchar', nullable: true })
+    // sta_r_name: string;
 
-    @Column({ type: 'varchar', nullable: true })
-    erep_descripcion: string;
+    // @Column({ type: 'varchar', nullable: true })
+    // sta_r_description: string;
 
     @Column({ default: true })
     erep_estado: boolean;
 
-    @Column({ default: () => 'CURRENT_TIMESTAMP' })
-    erep_fecha_creacion: Date;
+    @CreateDateColumn()
+    createdAt: Date;
 
-    @Column({ default: () => 'CURRENT_TIMESTAMP' })
-    erep_fecha_actualizacion: Date;
+    @UpdateDateColumn()
+    updateAt: Date;
+
+    @DeleteDateColumn()
+    deletedAt: Date
 
     @ManyToOne(() => MovementReport, (movementReport) => movementReport.statusReport)
-    @JoinColumn({ name: 'erep_id_movimiento_reporte_FK'})
+    @JoinColumn({ name: 'sta_r_movement_id_fk'})
     movementReport: MovementReport
 
     @ManyToOne(() => CaseReportOriginal, (caseReportOriginal) => caseReportOriginal.statusReport)
-    @JoinColumn({ name: 'erep_id_caso_original_FK'})
+    @JoinColumn({ name: 'sta_r_originalcase_id_fk'})
     caseReportOriginal: CaseReportOriginal
 }

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { CaseTypeService } from './case-type.service';
-import { CaseTypeController } from './case-type.controller';
+import { CaseTypeService } from './services/case-type.service';
+import { CaseTypeController } from './controllers/case-type.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CaseType } from './entities/case-type.entity';
 

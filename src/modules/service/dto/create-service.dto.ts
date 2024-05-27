@@ -1,5 +1,11 @@
+import { IsNotEmpty, IsOptional, IsString } from "@nestjs/class-validator";
+
 export class CreateServiceDto {
-    serv_nombre: string;
-    serv_descripcion: string;
-    serv_estado: boolean;
+    @IsNotEmpty()
+    @IsString()
+    serv_name: string;
+
+    @IsOptional()
+    @IsString()
+    serv_description: string;
 }

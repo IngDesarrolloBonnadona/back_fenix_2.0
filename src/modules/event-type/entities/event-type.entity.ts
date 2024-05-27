@@ -1,36 +1,39 @@
 import { CaseReportOriginal } from "src/modules/case-report-original/entities/case-report-original.entity";
 import { CaseType } from "src/modules/case-type/entities/case-type.entity";
 import { Event } from "src/modules/event/entities/event.entity";
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
-@Entity({ name: 'TiposSuceso'})
+@Entity()
 export class EventType {
     @PrimaryGeneratedColumn()
     id: number;
     
     @Column()
-    tsuc_id_tipo_caso_FK: number;
+    eve_t_casetype_id_FK: number;
     
     @Column({ type: 'varchar' })
-    tsuc_nombre: string;
+    eve_t_name: string;
 
     @Column({ type: 'varchar', nullable: true })
-    tsuc_descripcion: string;
+    eve_t_description: string;
 
     @Column({ default: true })
-    tsuc_estado: boolean;
+    eve_t_status: boolean;
 
-    @Column({ default: () => 'CURRENT_TIMESTAMP' })
-    tsuc_fecha_creacion: Date;
+    @CreateDateColumn()
+    createdAt: Date;
 
-    @Column({ default: () => 'CURRENT_TIMESTAMP' })
-    tsuc_fecha_actualizacion: Date;
+    @UpdateDateColumn()
+    updateAt: Date;
+
+    @DeleteDateColumn()
+    deletedAt: Date;
 
     @OneToMany(() => Event, (event) => event.eventType)
     event: Event[];
 
     @ManyToOne(() => CaseType, (caseType) => caseType.eventType)
-    @JoinColumn({ name: 'tsuc_id_tipo_caso_FK'})
+    @JoinColumn({ name: 'eve_t_casetype_id_FK'})
     caseType: CaseType
 
     @OneToMany(() => CaseReportOriginal, (caseReportOriginal) => caseReportOriginal.eventType)

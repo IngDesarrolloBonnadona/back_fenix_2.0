@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { SeverityClasificationService } from './severity-clasification.service';
-import { SeverityClasificationController } from './severity-clasification.controller';
+import { SeverityClasificationService } from './services/severity-clasification.service';
+import { SeverityClasificationController } from './controllers/severity-clasification.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SeverityClasification } from './entities/severity-clasification.entity';
 

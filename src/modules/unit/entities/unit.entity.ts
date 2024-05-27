@@ -1,32 +1,35 @@
 import { CaseReportOriginal } from "src/modules/case-report-original/entities/case-report-original.entity";
 import { Service } from "src/modules/service/entities/service.entity";
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
-@Entity({ name: 'Unidades'})
+@Entity()
 export class Unit {
     @PrimaryGeneratedColumn()
     id: number;
 
     @Column()
-    unid_id_servicio_FK: number
+    unit_service_id_FK: number
 
     @Column({ type: 'varchar' })
-    unid_nombre: string;
+    unit_name: string;
 
     @Column({ type: 'varchar', nullable: true })
-    unid_descripcion: string;
+    unit_description: string;
 
     @Column({ default: true })
-    unid_estado: boolean;
+    unit_status: boolean;
 
-    @Column({ default: () => 'CURRENT_TIMESTAMP' })
-    unid_fecha_creacion: Date;
+    @CreateDateColumn()
+    createdAt: Date;
 
-    @Column({ default: () => 'CURRENT_TIMESTAMP' })
-    unid_fecha_actualizacion: Date;
+    @UpdateDateColumn()
+    updateAt: Date;
+
+    @DeleteDateColumn()
+    deletedAt: Date;
 
     @ManyToOne(() => Service, (service) => service.unit)
-    @JoinColumn({ name: 'unid_id_servicio_FK'})
+    @JoinColumn({ name: 'unit_service_id_FK'})
     service: Service
 
     @OneToMany(() => CaseReportOriginal, (caseReportOriginal) => caseReportOriginal.unit)

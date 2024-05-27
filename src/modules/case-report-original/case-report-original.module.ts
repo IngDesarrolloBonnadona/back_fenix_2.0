@@ -1,24 +1,27 @@
 import { Module } from '@nestjs/common';
-import { CaseReportOriginalService } from './case-report-original.service';
-import { CaseReportOriginalController } from './case-report-original.controller';
+import { CaseReportOriginalService } from './services/case-report-original.service';
+import { CaseReportOriginalController } from './controllers/case-report-original.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CaseReportOriginal } from './entities/case-report-original.entity';
-import { CaseReportValidate } from '../case-report-validate/entities/case-report-validate.entity';
-import { Medicine } from '../medicine/entities/medicine.entity';
 import { Device } from '../device/entities/device.entity';
-import { StatusReport } from '../status-report/entities/status-report.entity';
-import { MovementReport } from '../movement-report/entities/movement-report.entity';
+import { CaseReportValidateModule } from '../case-report-validate/case-report-validate.module';
+import { CaseType } from '../case-type/entities/case-type.entity';
+import { StatusReportModule } from '../status-report/status-report.module';
+import { LogModule } from '../log/log.module';
+import { MedicineModule } from '../medicine/medicine.module';
+import { DeviceModule } from '../device/device.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       CaseReportOriginal, 
-      CaseReportValidate,
-      Medicine,
-      Device,
-      StatusReport,
-      MovementReport
+      CaseType,
     ]),
+    CaseReportValidateModule,
+    StatusReportModule,
+    LogModule,
+    MedicineModule,
+    DeviceModule
   ],
   controllers: [CaseReportOriginalController],
   providers: [CaseReportOriginalService],
