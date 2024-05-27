@@ -14,7 +14,7 @@ export class CaseReportOriginalController {
     private readonly CaseReportOriginalService: CaseReportOriginalService,
   ) {}
 
-  @Post('/validateReports')
+  @Post('/validateReportsExistence')
   async validateReportsExistence( @Body() validateCaseReportOriginal: ValidateCaseReportOriginalDto ) : Promise<any>{
     return await this.CaseReportOriginalService.validateReports(validateCaseReportOriginal);
   } 
