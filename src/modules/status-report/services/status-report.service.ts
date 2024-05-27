@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { StatusReport as StatusReportEntity } from '../entities/status-report.entity';
 import { Repository } from 'typeorm';
 import { MovementReport as MovementReportEntity} from 'src/modules/movement-report/entities/movement-report.entity';
-import { movementReport } from 'src/modules/case-report-original/utils/enums/movement-report.enum';
+import { movementReport } from 'src/enums/movement-report.enum';
 
 @Injectable()
 export class StatusReportService {
