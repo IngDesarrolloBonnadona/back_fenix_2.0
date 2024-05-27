@@ -1,8 +1,7 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req, HttpException, Put, Query, } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, HttpException, Put, Ip, } from '@nestjs/common';
 import { CaseReportOriginalService } from '../services/case-report-original.service';
 import { CreateReportOriDto } from '../utils/helpers/ori-dto-validator.helper';
 import { UpdateCaseReportOriginalDto } from '../dto/update-case-report-original.dto';
-import { Request } from 'express';
 import { CaseReportOriginal } from '../entities/case-report-original.entity';
 import { ApiTags } from '@nestjs/swagger';
 import { ValidateCaseReportOriginalDto } from '../dto/validate-case-report-original.dto';
@@ -22,9 +21,10 @@ export class CaseReportOriginalController {
   @Post('/createReportOriginal')
   async createReportOriginal(
     @Body() createReportOriDto: CreateReportOriDto, 
-    @Req() req: Request
+    @Ip() clientIp: string
+    // @Req() req: Request
   ) : Promise<any>{
-    const clientIp = req.ip;
+    // const clientIp = req.ip;
     return await this.CaseReportOriginalService.createReportOriginal(
       createReportOriDto,
       clientIp,
