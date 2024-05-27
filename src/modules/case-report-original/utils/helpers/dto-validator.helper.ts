@@ -7,15 +7,15 @@ import { CreateOriRiskReportDto } from "../../dto/create-ori-risk-report.dto";
 import { HttpException, HttpStatus } from "@nestjs/common";
 import { validate } from "class-validator";
 
-export type CreateReportOriDto = //Discriminador que define los Dto
+export type CreateReportDto = //Discriminador que define los Dto
     CreateOriAdverseEventReportDto
   | CreateOriComplicationsReportDto
   | CreateOriIncidentReportDto
   | CreateOriIndicatingUnsafeCareReportDto
   | CreateOriRiskReportDto;
 
-export async function dtoOriValidator(createReportDto: any): Promise<CreateReportOriDto> {
-    let dtoInstance: CreateReportOriDto;
+export async function dtoValidator(createReportDto: any): Promise<CreateReportDto> {
+    let dtoInstance: CreateReportDto;
 
     switch (createReportDto.ori_cr_casetype_id_fk) {
         case 1:
