@@ -9,13 +9,13 @@ import { CaseReportOriginal as CaseReportOriginalEntity } from '../entities/case
 import { DataSource, Repository } from 'typeorm';
 import { ValidateCaseReportOriginalDto } from '../dto/validate-case-report-original.dto';
 import { CaseReportValidateService } from 'src/modules/case-report-validate/services/case-report-validate.service';
-import { dtoValidator } from '../utils/helpers/dto-validator.helper';
+import { OriDtoValidator } from '../utils/helpers/ori-dto-validator.helper';
 import { CaseType as CaseTypeEntity } from 'src/modules/case-type/entities/case-type.entity';
 import { StatusReportService } from 'src/modules/status-report/services/status-report.service';
 import { LogService } from 'src/modules/log/services/log.service';
 import { MedicineService } from 'src/modules/medicine/services/medicine.service';
 import { DeviceService } from 'src/modules/device/services/device.service';
-import { reportCreatorDictionary } from '../utils/helpers/report-creator.helper';
+import { reportCreatorOriDictionary } from '../utils/helpers/report-ori-creator.helper';
 
 @Injectable()
 export class CaseReportOriginalService {
@@ -57,10 +57,10 @@ export class CaseReportOriginalService {
   }
 
   async createReportOriginal(
-    createReportDto: any,
+    createReportOriDto: any,
     clientIp: string,
   ): Promise<any> {
-    await dtoValidator(createReportDto);
+    await OriDtoValidator(createReportOriDto);
 
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -69,7 +69,7 @@ export class CaseReportOriginalService {
     try {
       const caseTypeFound = await this.caseTypeRepository.findOne({
         where: {
-          id: createReportDto.ori_cr_casetype_id_fk,
+          id: createReportOriDto.ori_cr_casetype_id_fk,
         },
       });
 
@@ -80,7 +80,7 @@ export class CaseReportOriginalService {
         );
       }
 
-      const dtoClass = reportCreatorDictionary[caseTypeFound.cas_t_name];
+      const dtoClass = reportCreatorOriDictionary[caseTypeFound.cas_t_name];
       console.log("dtoClass:",dtoClass)
 
       if (!dtoClass) {
@@ -90,7 +90,7 @@ export class CaseReportOriginalService {
       }
 
       const caseReportOriginal = new CaseReportOriginalEntity();
-      Object.assign(caseReportOriginal, createReportDto)
+      Object.assign(caseReportOriginal, createReportOriDto)
 
       await queryRunner.manager.save(caseReportOriginal);
 
@@ -100,22 +100,22 @@ export class CaseReportOriginalService {
         );
 
       const hasMedicine =
-        createReportDto.medicines && createReportDto.medicines.length > 0;
+        createReportOriDto.medicines && createReportOriDto.medicines.length > 0;
 
       if (hasMedicine) {
         await this.medicineService.createMedicineTransaction(
-          createReportDto.medicines,
+          createReportOriDto.medicines,
           caseReportOriginal.id,
           queryRunner,
         )
       }
 
       const hasDevice = 
-        createReportDto.devices && createReportDto.devices.length > 0;
+        createReportOriDto.devices && createReportOriDto.devices.length > 0;
 
       if (hasDevice) {
         await this.deviceService.createDeviceTransation(
-          createReportDto.devices,
+          createReportOriDto.devices,
           caseReportOriginal.id,
           queryRunner,
         )
@@ -138,8 +138,8 @@ export class CaseReportOriginalService {
       const reportData = {
         caseReportOriginal,
         caseReportValidate,
-        createdMedicine: createReportDto.medicines,
-        createdDevice: createReportDto.devices,
+        createdMedicine: createReportOriDto.medicines,
+        createdDevice: createReportOriDto.devices,
         statusReport,
         log,
       };
