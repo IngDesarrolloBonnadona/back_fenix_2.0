@@ -6,16 +6,16 @@ import {
 import { UpdateCaseReportOriginalDto } from '../dto/update-case-report-original.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CaseReportOriginal as CaseReportOriginalEntity } from '../entities/case-report-original.entity';
-import { Between, DataSource, FindOptionsWhere, Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { ValidateCaseReportOriginalDto } from '../dto/validate-case-report-original.dto';
 import { CaseReportValidateService } from 'src/modules/case-report-validate/services/case-report-validate.service';
-import { dtoValidator } from '../utils/helpers/dto-validator.helper';
+import { dtoOriValidator } from '../utils/helpers/dto-validator-ori.helper';
 import { CaseType as CaseTypeEntity } from 'src/modules/case-type/entities/case-type.entity';
 import { StatusReportService } from 'src/modules/status-report/services/status-report.service';
 import { LogService } from 'src/modules/log/services/log.service';
 import { MedicineService } from 'src/modules/medicine/services/medicine.service';
 import { DeviceService } from 'src/modules/device/services/device.service';
-import { reportCreatorDictionary } from '../utils/helpers/report-creator.helper';
+import { reportOriCreatorDictionary } from '../utils/helpers/report-ori-creator.helper';
 
 @Injectable()
 export class CaseReportOriginalService {
@@ -60,7 +60,7 @@ export class CaseReportOriginalService {
     createReportDto: any,
     clientIp: string,
   ): Promise<any> {
-    await dtoValidator(createReportDto);
+    await dtoOriValidator(createReportDto);
 
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -80,7 +80,7 @@ export class CaseReportOriginalService {
         );
       }
 
-      const dtoClass = reportCreatorDictionary[caseTypeFound.cas_t_name];
+      const dtoClass = reportOriCreatorDictionary[caseTypeFound.cas_t_name];
       console.log("dtoClass:",dtoClass)
 
       if (!dtoClass) {
