@@ -5,7 +5,7 @@ import { CreateOriIndicatingUnsafeCareReportDto } from "../../dto/create-ori-ind
 import { CreateOriRiskReportDto } from "../../dto/create-ori-risk-report.dto";
 import { caseTypeReport } from "../enums/caseType-report.enum";
 
-export const reportCreatorDictionary = {
+export const reportOriCreatorDictionary = {
     [caseTypeReport.RISK]: CreateOriRiskReportDto,
     [caseTypeReport.ADVERSE_EVENT]: CreateOriAdverseEventReportDto,
     [caseTypeReport.INCIDENT]: CreateOriIncidentReportDto,
