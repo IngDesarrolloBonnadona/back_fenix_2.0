@@ -11,7 +11,7 @@ export class CaseReportValidate {
     @Column({ nullable: true })
     val_cr_previous_id: number
     
-    @Column({ nullable: true })
+    @Column({ type: 'uuid', nullable: true })
     val_cr_originalcase_id_fk: string
     
     @Column({ nullable: true })

@@ -6,7 +6,7 @@ export class Log {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
+    @Column({ type: 'uuid' })
     log_validatedcase_id_fk: string;
 
     @Column()

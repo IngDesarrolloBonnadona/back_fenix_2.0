@@ -7,7 +7,7 @@ export class StatusReport {
     @PrimaryGeneratedColumn()
     id: number;
     
-    @Column()
+    @Column({ type: 'uuid' })
     sta_r_originalcase_id_fk: string;
     
     @Column()

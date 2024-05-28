@@ -6,7 +6,7 @@ export class Device {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
+    @Column({ type: 'uuid' })
     dev_case_id_fk: string
 
     @Column()
