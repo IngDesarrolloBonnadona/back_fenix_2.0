@@ -19,7 +19,7 @@ export class StatusReportService {
 
   async createStatusReportTransaction(
     queryRunner: QueryRunner,
-    caseReportOriginalId: any
+    caseReportOriginalId: string
   ) {
     const movementReportFound = await this.movementReportRepository.findOne({
       where: {

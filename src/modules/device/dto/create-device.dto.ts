@@ -1,11 +1,7 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsNotEmpty, IsOptional, IsString, IsUUID } from "class-validator";
 
 
 export class CreateDeviceDto {
-    @IsNumber()
-    @IsNotEmpty()
-    dev_case_id_fk: string
-
     @IsString()
     @IsNotEmpty()
     dev_name: string;

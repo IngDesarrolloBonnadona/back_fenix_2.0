@@ -1,11 +1,6 @@
-import { IsNotEmpty, IsNumber, IsString, IsOptional } from "class-validator";
+import { IsNotEmpty, IsString, IsOptional, IsUUID } from "class-validator";
 
 export class CreateMedicineDto {
-
-    @IsNumber()
-    @IsNotEmpty()
-    med_case_id_fk: string
-
     @IsString()
     @IsNotEmpty()
     med_name: string;

@@ -1,4 +1,4 @@
-import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID } from "class-validator";
 
 export class CreateCaseReportValidateDto {
     @IsNumber()
@@ -17,7 +17,7 @@ export class CreateCaseReportValidateDto {
     @IsNotEmpty()
     val_cr_suborigin_id_fk: number;
 
-    @IsNumber()
+    @IsUUID()
     @IsNotEmpty()
     val_cr_originalcase_id_fk: string
     

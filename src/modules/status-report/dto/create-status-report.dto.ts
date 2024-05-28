@@ -1,7 +1,7 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID } from "class-validator";
 
 export class CreateStatusReportDto {
-    @IsNumber()
+    @IsUUID()
     @IsNotEmpty()
     sta_r_originalcase_id_fk: string;
 
