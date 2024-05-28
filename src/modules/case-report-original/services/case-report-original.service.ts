@@ -17,6 +17,7 @@ import { MedicineService } from 'src/modules/medicine/services/medicine.service'
 import { DeviceService } from 'src/modules/device/services/device.service';
 import { reportCreatorOriDictionary } from '../utils/helpers/report-ori-creator.helper';
 import { logReports } from 'src/enums/logs.enum';
+import { generateFilingNumber } from '../utils/helpers/generate_filing_number.helper';
 
 @Injectable()
 export class CaseReportOriginalService {
@@ -90,9 +91,12 @@ export class CaseReportOriginalService {
           HttpStatus.BAD_REQUEST);
       }
 
+      const filingNumber = await generateFilingNumber(this.caseReportOriginalRepository);
+
       const caseReportOriginal = new CaseReportOriginalEntity();
       Object.assign(caseReportOriginal, createReportOriDto)
-
+      caseReportOriginal.ori_cr_filingnumber = filingNumber;
+      
       await queryRunner.manager.save(caseReportOriginal);
 
       const caseReportValidate = await this.caseReportValidateService.createReportValidateTransaction(
