@@ -13,9 +13,12 @@ export class CaseReportValidate {
     
     @Column({ type: 'uuid', nullable: true })
     val_cr_originalcase_id_fk: string
-    
+
     @Column({ nullable: true })
     val_cr_casetype_id_fk: number
+    
+    @Column({ type: 'varchar', nullable: true })
+    val_cr_filingnumber: string
     
     @Column({ nullable: true })
     val_cr_patient_id_fk: number;

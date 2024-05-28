@@ -19,6 +19,7 @@ export class CaseReportValidateService {
     const caseReportValidate = this.caseReportValidateRepository.create({
       val_cr_previous_id: 0,
       val_cr_originalcase_id_fk : caseReportOriginal.id,
+      val_cr_filingnumber : caseReportOriginal.ori_cr_filingnumber,
       val_cr_casetype_id_fk : caseReportOriginal.ori_cr_casetype_id_fk,
       val_cr_patient_id_fk : caseReportOriginal.ori_cr_patient_id_fk,
       val_cr_reporter_id_fk : caseReportOriginal.ori_cr_reporter_id_fk,
