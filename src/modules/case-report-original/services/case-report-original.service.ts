@@ -16,6 +16,7 @@ import { LogService } from 'src/modules/log/services/log.service';
 import { MedicineService } from 'src/modules/medicine/services/medicine.service';
 import { DeviceService } from 'src/modules/device/services/device.service';
 import { reportCreatorOriDictionary } from '../utils/helpers/report-ori-creator.helper';
+import { logReports } from 'src/enums/logs.enum';
 
 @Injectable()
 export class CaseReportOriginalService {
@@ -130,7 +131,8 @@ export class CaseReportOriginalService {
         queryRunner,
         caseReportValidate.id,
         caseReportOriginal.ori_cr_reporter_id_fk,
-        clientIp
+        clientIp,
+        logReports.LOG_CREATION
       )
 
       await queryRunner.commitTransaction();
