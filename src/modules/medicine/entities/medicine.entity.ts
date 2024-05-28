@@ -7,7 +7,7 @@ export class Medicine {
     id: number;
 
     @Column()
-    med_case_id_fk: number
+    med_case_id_fk: string
 
     @Column()
     med_code: string

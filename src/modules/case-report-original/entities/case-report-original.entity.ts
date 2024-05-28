@@ -16,8 +16,8 @@ import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToO
 
 @Entity()
 export class CaseReportOriginal {
-    @PrimaryGeneratedColumn()
-    id: number
+    @PrimaryGeneratedColumn('uuid')
+    id: string
 
     @Column({ nullable: true })
     ori_cr_casetype_id_fk: number

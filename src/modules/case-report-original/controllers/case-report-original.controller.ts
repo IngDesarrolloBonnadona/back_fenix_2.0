@@ -37,13 +37,13 @@ export class CaseReportOriginalController {
   }
 
   @Get('/findReportOriginal/:id')
-  async findReportOriginal(@Param('id') id: number): Promise<CaseReportOriginal> {
+  async findReportOriginal(@Param('id') id: string): Promise<CaseReportOriginal> {
     return await this.CaseReportOriginalService.findOneReportOriginal(id);
   }
 
   @Put('/updateReportOriginal/:id')
   async updateReportOriginal(
-    @Param('id') id: number,
+    @Param('id') id: string,
     @Body() UpdateCaseReportOriginalDto: UpdateCaseReportOriginalDto,
   ): Promise<HttpException> {
     return await this.CaseReportOriginalService.updateReportOriginal(
@@ -53,7 +53,7 @@ export class CaseReportOriginalController {
   }
 
   @Delete('/deleteReportOriginal/:id')
-  async deleteReportOriginal(@Param('id') id: number): Promise<HttpException> {
+  async deleteReportOriginal(@Param('id') id: string): Promise<HttpException> {
     return await this.CaseReportOriginalService.deleteReportOriginal(id);
   }
 }

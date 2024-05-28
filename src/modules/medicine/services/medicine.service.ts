@@ -16,7 +16,7 @@ export class MedicineService {
 
   async createMedicineTransaction(
     medicines: CreateMedicineDto[],
-    caseId: number,
+    caseId: string,
     queryRunner: any,
   ) {
 

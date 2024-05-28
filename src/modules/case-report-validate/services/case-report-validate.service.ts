@@ -41,7 +41,7 @@ export class CaseReportValidateService {
 
   async SummaryReportsValidate(
     creationDate?: Date,
-    id?: number,
+    id?: string,
     patientId?: number,
     caseTypeId?: number,
   ) : Promise<CaseReportValidateEntity[]> {
@@ -98,7 +98,7 @@ export class CaseReportValidateService {
     return caseReportValidates
   }
 
-  async findOneReportValidate(id: number) {
+  async findOneReportValidate(id: string) {
 const caseReportValidate = await this.caseReportValidateRepository.findOne({ where: { id } });
 
     if (!caseReportValidate) {
@@ -111,7 +111,7 @@ const caseReportValidate = await this.caseReportValidateRepository.findOne({ whe
     return caseReportValidate
   }
 
-  async updateReportValidate(id: number, updateCaseReportValidateDto: UpdateCaseReportValidateDto) {
+  async updateReportValidate(id: string, updateCaseReportValidateDto: UpdateCaseReportValidateDto) {
     const caseReportValidate = await this.findOneReportValidate(id);
     const result = await this.caseReportValidateRepository.update(caseReportValidate.id, updateCaseReportValidateDto);
     
@@ -128,7 +128,7 @@ const caseReportValidate = await this.caseReportValidateRepository.findOne({ whe
     );
   }
 
-  async removeReportValidate(id: number) {
+  async removeReportValidate(id: string) {
     const caseReportValidate = await this.findOneReportValidate(id);
     const result = await this.caseReportValidateRepository.softDelete(caseReportValidate.id)
 

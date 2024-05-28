@@ -3,7 +3,7 @@ import { IsNotEmpty, IsNumber, IsOptional, IsString } from "@nestjs/class-valida
 export class CreateStatusReportDto {
     @IsNumber()
     @IsNotEmpty()
-    sta_r_originalcase_id_fk: number;
+    sta_r_originalcase_id_fk: string;
 
     @IsNumber()
     @IsNotEmpty()

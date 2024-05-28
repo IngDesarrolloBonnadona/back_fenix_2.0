@@ -94,7 +94,7 @@ export class CaseReportOriginalService {
       Object.assign(caseReportOriginal, createReportOriDto)
 
       await queryRunner.manager.save(caseReportOriginal);
-
+      console.log(caseReportOriginal)
       const caseReportValidate = await this.caseReportValidateService.createReportValidateTransaction(
           queryRunner,
           caseReportOriginal,
@@ -192,7 +192,7 @@ export class CaseReportOriginalService {
     return caseReportsOriginal;
   }
 
-  async findOneReportOriginal(id: number) {
+  async findOneReportOriginal(id: string) {
     const caseReportsOriginal =
       await this.caseReportOriginalRepository.findOneBy({ id });
 
@@ -207,7 +207,7 @@ export class CaseReportOriginalService {
   }
 
   async updateReportOriginal(
-    id: number,
+    id: string,
     UpdateCaseReportOriginalDto: UpdateCaseReportOriginalDto,
   ) {
     const caseReportsOriginal = await this.findOneReportOriginal(id);
@@ -229,7 +229,7 @@ export class CaseReportOriginalService {
     );
   }
 
-  async deleteReportOriginal(id: number) {
+  async deleteReportOriginal(id: string) {
     const caseReportsOriginal = await this.findOneReportOriginal(id);
     const result = await this.caseReportOriginalRepository.softDelete(
       caseReportsOriginal.id,

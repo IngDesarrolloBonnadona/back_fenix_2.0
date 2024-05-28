@@ -8,16 +8,10 @@ export class StatusReport {
     id: number;
     
     @Column()
-    sta_r_originalcase_id_fk: number;
+    sta_r_originalcase_id_fk: string;
     
     @Column()
     sta_r_movement_id_fk: number;
-
-    // @Column({ type: 'varchar', nullable: true })
-    // sta_r_name: string;
-
-    // @Column({ type: 'varchar', nullable: true })
-    // sta_r_description: string;
 
     @Column({ default: true })
     erep_estado: boolean;

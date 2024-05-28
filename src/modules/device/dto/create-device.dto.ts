@@ -4,7 +4,7 @@ import { IsNotEmpty, IsNumber, IsOptional, IsString } from "@nestjs/class-valida
 export class CreateDeviceDto {
     @IsNumber()
     @IsNotEmpty()
-    dev_case_id_fk: number
+    dev_case_id_fk: string
 
     @IsString()
     @IsNotEmpty()

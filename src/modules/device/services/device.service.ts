@@ -16,7 +16,7 @@ export class DeviceService {
 
   async createDeviceTransation(
     devices: CreateDeviceDto[],
-    caseId: number,
+    caseId: string,
     queryRunner: any,
   ) {
     

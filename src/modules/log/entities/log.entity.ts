@@ -7,7 +7,7 @@ export class Log {
     id: number;
 
     @Column()
-    log_validatedcase_id_fk: number;
+    log_validatedcase_id_fk: string;
 
     @Column()
     log_user_id_fk: number;

@@ -5,7 +5,7 @@ export class CreateMedicineDto {
 
     @IsNumber()
     @IsNotEmpty()
-    med_case_id_fk: number
+    med_case_id_fk: string
 
     @IsString()
     @IsNotEmpty()

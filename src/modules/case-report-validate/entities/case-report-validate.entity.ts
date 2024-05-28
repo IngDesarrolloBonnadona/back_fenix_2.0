@@ -5,14 +5,14 @@ import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToO
 @Entity()
 export class CaseReportValidate {
 
-    @PrimaryGeneratedColumn()
-    id: number
+    @PrimaryGeneratedColumn('uuid')
+    id: string
 
     @Column({ nullable: true })
     val_cr_previous_id: number
     
     @Column({ nullable: true })
-    val_cr_originalcase_id_fk: number
+    val_cr_originalcase_id_fk: string
     
     @Column({ nullable: true })
     val_cr_casetype_id_fk: number

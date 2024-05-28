@@ -7,7 +7,7 @@ export class Device {
     id: number;
 
     @Column()
-    dev_case_id_fk: number
+    dev_case_id_fk: string
 
     @Column()
     dev_code: string
