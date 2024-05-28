@@ -3,7 +3,7 @@ import { CreateLogDto } from '../dto/create-log.dto';
 import { UpdateLogDto } from '../dto/update-log.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Log as LogEntity } from '../entities/log.entity';
-import { Repository } from 'typeorm';
+import { QueryRunner, Repository } from 'typeorm';
 
 @Injectable()
 export class LogService {
@@ -13,7 +13,7 @@ export class LogService {
   ) {}
 
   async createLogTransaction(
-    queryRunner: any,
+    queryRunner: QueryRunner,
     caseReportValidateId: string,
     reporterId: number,
     clientIp: string,

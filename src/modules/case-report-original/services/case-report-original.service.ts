@@ -94,7 +94,7 @@ export class CaseReportOriginalService {
       Object.assign(caseReportOriginal, createReportOriDto)
 
       await queryRunner.manager.save(caseReportOriginal);
-      console.log(caseReportOriginal)
+
       const caseReportValidate = await this.caseReportValidateService.createReportValidateTransaction(
           queryRunner,
           caseReportOriginal,
@@ -147,7 +147,7 @@ export class CaseReportOriginalService {
       };
 
       return {
-        message: `Reporte #${reportData.caseReportOriginal.id} se creó satisfactoriamente.`,
+        message: `Reporte se creó satisfactoriamente.`,
         data: reportData,
       };
     } catch (error) {

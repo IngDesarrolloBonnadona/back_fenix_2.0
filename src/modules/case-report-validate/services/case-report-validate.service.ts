@@ -3,7 +3,7 @@ import { CreateCaseReportValidateDto } from '../dto/create-case-report-validate.
 import { UpdateCaseReportValidateDto } from '../dto/update-case-report-validate.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CaseReportValidate as CaseReportValidateEntity } from '../entities/case-report-validate.entity';
-import { Between, FindOptionsWhere, Repository } from 'typeorm';
+import { Between, FindOptionsWhere, QueryRunner, Repository } from 'typeorm';
 
 @Injectable()
 export class CaseReportValidateService {
@@ -13,7 +13,7 @@ export class CaseReportValidateService {
   ){}
 
   async createReportValidateTransaction(
-    queryRunner: any,
+    queryRunner: QueryRunner,
     caseReportOriginal: any):
     Promise<CaseReportValidateEntity> {
     const caseReportValidate = this.caseReportValidateRepository.create({
