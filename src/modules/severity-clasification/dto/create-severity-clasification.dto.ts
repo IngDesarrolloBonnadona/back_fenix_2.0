@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional, IsString } from "@nestjs/class-validator";
+import { IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 export class CreateSeverityClasificationDto {
     @IsNotEmpty()

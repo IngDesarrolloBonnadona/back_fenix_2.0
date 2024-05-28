@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, } from "@nestjs/class-validator";
+import { IsNotEmpty, IsNumber, } from "class-validator";
 
 export class ValidateCaseReportOriginalDto {
     @IsNumber()
