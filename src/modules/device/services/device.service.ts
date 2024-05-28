@@ -3,7 +3,7 @@ import { CreateDeviceDto } from '../dto/create-device.dto';
 import { UpdateDeviceDto } from '../dto/update-device.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Device as DeviceEntity } from '../entities/device.entity';
-import { Repository } from 'typeorm';
+import { QueryRunner, Repository } from 'typeorm';
 import { HttpException } from '@nestjs/common';
 import { HttpStatus } from '@nestjs/common';
 
@@ -16,8 +16,8 @@ export class DeviceService {
 
   async createDeviceTransation(
     devices: CreateDeviceDto[],
-    caseId: number,
-    queryRunner: any,
+    caseId: string,
+    queryRunner: QueryRunner,
   ) {
     
     for (const device of devices) {

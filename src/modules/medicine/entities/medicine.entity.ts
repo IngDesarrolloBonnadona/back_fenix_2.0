@@ -6,8 +6,8 @@ export class Medicine {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
-    med_case_id_fk: number
+    @Column({ type: 'uuid' })
+    med_case_id_fk: string
 
     @Column()
     med_code: string

@@ -3,7 +3,8 @@ import { CreateCaseReportValidateDto } from '../dto/create-case-report-validate.
 import { UpdateCaseReportValidateDto } from '../dto/update-case-report-validate.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CaseReportValidate as CaseReportValidateEntity } from '../entities/case-report-validate.entity';
-import { Between, FindOptionsWhere, Repository } from 'typeorm';
+import { Between, FindOptionsWhere, QueryRunner, Repository } from 'typeorm';
+import { CreateCaseReportOriginalDto } from 'src/modules/case-report-original/dto/create-case-report-original.dto';
 
 @Injectable()
 export class CaseReportValidateService {
@@ -13,12 +14,14 @@ export class CaseReportValidateService {
   ){}
 
   async createReportValidateTransaction(
-    queryRunner: any,
-    caseReportOriginal: any):
+    queryRunner: QueryRunner,
+    caseReportOriginal: CreateCaseReportOriginalDto,
+    caseReportOriginalId: string):
     Promise<CaseReportValidateEntity> {
     const caseReportValidate = this.caseReportValidateRepository.create({
       val_cr_previous_id: 0,
-      val_cr_originalcase_id_fk : caseReportOriginal.id,
+      val_cr_originalcase_id_fk : caseReportOriginalId,
+      val_cr_filingnumber : caseReportOriginal.ori_cr_filingnumber,
       val_cr_casetype_id_fk : caseReportOriginal.ori_cr_casetype_id_fk,
       val_cr_patient_id_fk : caseReportOriginal.ori_cr_patient_id_fk,
       val_cr_reporter_id_fk : caseReportOriginal.ori_cr_reporter_id_fk,
@@ -36,12 +39,13 @@ export class CaseReportValidateService {
       val_cr_materializedrisk : caseReportOriginal.ori_cr_materializedrisk,
       val_cr_associatedpatient : caseReportOriginal.ori_cr_associatedpatient,
     })
-    return await queryRunner.manager.save(caseReportValidate)
+    return await queryRunner.manager.save(caseReportValidate) //temporal
   }
+
 
   async SummaryReportsValidate(
     creationDate?: Date,
-    id?: number,
+    id?: string,
     patientId?: number,
     caseTypeId?: number,
   ) : Promise<CaseReportValidateEntity[]> {
@@ -98,7 +102,7 @@ export class CaseReportValidateService {
     return caseReportValidates
   }
 
-  async findOneReportValidate(id: number) {
+  async findOneReportValidate(id: string) {
 const caseReportValidate = await this.caseReportValidateRepository.findOne({ where: { id } });
 
     if (!caseReportValidate) {
@@ -111,7 +115,7 @@ const caseReportValidate = await this.caseReportValidateRepository.findOne({ whe
     return caseReportValidate
   }
 
-  async updateReportValidate(id: number, updateCaseReportValidateDto: UpdateCaseReportValidateDto) {
+  async updateReportValidate(id: string, updateCaseReportValidateDto: UpdateCaseReportValidateDto) {
     const caseReportValidate = await this.findOneReportValidate(id);
     const result = await this.caseReportValidateRepository.update(caseReportValidate.id, updateCaseReportValidateDto);
     
@@ -128,7 +132,7 @@ const caseReportValidate = await this.caseReportValidateRepository.findOne({ whe
     );
   }
 
-  async removeReportValidate(id: number) {
+  async removeReportValidate(id: string) {
     const caseReportValidate = await this.findOneReportValidate(id);
     const result = await this.caseReportValidateRepository.softDelete(caseReportValidate.id)
 

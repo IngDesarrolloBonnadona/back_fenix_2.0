@@ -1,6 +1,5 @@
-import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString,  } from "@nestjs/class-validator";
+import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, IsArray, ValidateNested, IsUUID } from "class-validator";
 import { Type } from "class-transformer";
-import { IsArray, ValidateNested } from "class-validator";
 import { CreateDeviceDto } from "src/modules/device/dto/create-device.dto";
 import { CreateMedicineDto } from "src/modules/medicine/dto/create-medicine.dto";
 
@@ -8,6 +7,10 @@ export class CreateValRiskReportDto {
     @IsNumber()
     @IsNotEmpty()
     val_cr_casetype_id_fk: number
+
+    @IsUUID()
+    @IsNotEmpty()
+    val_cr_originalcase_id_fk: string
 
     @IsNumber()
     @IsNotEmpty()

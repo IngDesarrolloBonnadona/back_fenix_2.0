@@ -1,11 +1,7 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from "@nestjs/class-validator";
+import { IsNotEmpty, IsOptional, IsString, IsUUID } from "class-validator";
 
 
 export class CreateDeviceDto {
-    @IsNumber()
-    @IsNotEmpty()
-    dev_case_id_fk: number
-
     @IsString()
     @IsNotEmpty()
     dev_name: string;

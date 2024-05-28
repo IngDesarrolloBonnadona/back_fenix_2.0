@@ -16,11 +16,14 @@ import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToO
 
 @Entity()
 export class CaseReportOriginal {
-    @PrimaryGeneratedColumn()
-    id: number
+    @PrimaryGeneratedColumn('uuid')
+    id: string
 
     @Column({ nullable: true })
     ori_cr_casetype_id_fk: number
+
+    @Column({ type: 'varchar', nullable: true })
+    ori_cr_filingnumber: string
 
     @Column({ nullable: true })
     ori_cr_patient_id_fk: number;
@@ -55,7 +58,7 @@ export class CaseReportOriginal {
     @Column({ nullable: true })
     ori_cr_unit_id_fk: number;
     
-    @Column({ type: 'varchar' })
+    @Column({ type: 'varchar', nullable: true })
     ori_cr_description: string;
     
     @Column({ type: 'varchar', nullable: true }) //

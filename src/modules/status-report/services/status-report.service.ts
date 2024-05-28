@@ -3,9 +3,10 @@ import { CreateStatusReportDto } from '../dto/create-status-report.dto';
 import { UpdateStatusReportDto } from '../dto/update-status-report.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { StatusReport as StatusReportEntity } from '../entities/status-report.entity';
-import { Repository } from 'typeorm';
+import { QueryRunner, Repository } from 'typeorm';
 import { MovementReport as MovementReportEntity} from 'src/modules/movement-report/entities/movement-report.entity';
 import { movementReport } from 'src/enums/movement-report.enum';
+import { Query } from 'typeorm/driver/Query';
 
 @Injectable()
 export class StatusReportService {
@@ -17,8 +18,8 @@ export class StatusReportService {
   ){}
 
   async createStatusReportTransaction(
-    queryRunner: any,
-    caseReportOriginalId: any
+    queryRunner: QueryRunner,
+    caseReportOriginalId: string
   ) {
     const movementReportFound = await this.movementReportRepository.findOne({
       where: {

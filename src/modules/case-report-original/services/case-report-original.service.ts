@@ -16,6 +16,8 @@ import { LogService } from 'src/modules/log/services/log.service';
 import { MedicineService } from 'src/modules/medicine/services/medicine.service';
 import { DeviceService } from 'src/modules/device/services/device.service';
 import { reportCreatorOriDictionary } from '../utils/helpers/report-ori-creator.helper';
+import { logReports } from 'src/enums/logs.enum';
+import { generateFilingNumber } from '../utils/helpers/generate_filing_number.helper';
 
 @Injectable()
 export class CaseReportOriginalService {
@@ -89,14 +91,18 @@ export class CaseReportOriginalService {
           HttpStatus.BAD_REQUEST);
       }
 
+      const filingNumber = await generateFilingNumber(this.caseReportOriginalRepository);
+
       const caseReportOriginal = new CaseReportOriginalEntity();
       Object.assign(caseReportOriginal, createReportOriDto)
-
+      caseReportOriginal.ori_cr_filingnumber = filingNumber;
+      
       await queryRunner.manager.save(caseReportOriginal);
 
       const caseReportValidate = await this.caseReportValidateService.createReportValidateTransaction(
           queryRunner,
           caseReportOriginal,
+          caseReportOriginal.id,
         );
 
       const hasMedicine =
@@ -130,10 +136,11 @@ export class CaseReportOriginalService {
         queryRunner,
         caseReportValidate.id,
         caseReportOriginal.ori_cr_reporter_id_fk,
-        clientIp
+        clientIp,
+        logReports.LOG_CREATION
       )
 
-      await queryRunner.commitTransaction();
+      await queryRunner.commitTransaction(); // registro
 
       const reportData = {
         caseReportOriginal,
@@ -145,7 +152,7 @@ export class CaseReportOriginalService {
       };
 
       return {
-        message: `Reporte #${reportData.caseReportOriginal.id} se creó satisfactoriamente.`,
+        message: `Reporte ${caseReportOriginal.ori_cr_filingnumber} se creó satisfactoriamente.`,
         data: reportData,
       };
     } catch (error) {
@@ -190,7 +197,7 @@ export class CaseReportOriginalService {
     return caseReportsOriginal;
   }
 
-  async findOneReportOriginal(id: number) {
+  async findOneReportOriginal(id: string) {
     const caseReportsOriginal =
       await this.caseReportOriginalRepository.findOneBy({ id });
 
@@ -205,7 +212,7 @@ export class CaseReportOriginalService {
   }
 
   async updateReportOriginal(
-    id: number,
+    id: string,
     UpdateCaseReportOriginalDto: UpdateCaseReportOriginalDto,
   ) {
     const caseReportsOriginal = await this.findOneReportOriginal(id);
@@ -227,7 +234,7 @@ export class CaseReportOriginalService {
     );
   }
 
-  async deleteReportOriginal(id: number) {
+  async deleteReportOriginal(id: string) {
     const caseReportsOriginal = await this.findOneReportOriginal(id);
     const result = await this.caseReportOriginalRepository.softDelete(
       caseReportsOriginal.id,

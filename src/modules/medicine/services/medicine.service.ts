@@ -3,7 +3,7 @@ import { CreateMedicineDto } from '../dto/create-medicine.dto';
 import { UpdateMedicineDto } from '../dto/update-medicine.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Medicine as MedicineEntity } from '../entities/medicine.entity';
-import { Repository } from 'typeorm';
+import { QueryRunner, Repository } from 'typeorm';
 import { HttpException } from '@nestjs/common';
 import { HttpStatus } from '@nestjs/common';
 
@@ -16,8 +16,8 @@ export class MedicineService {
 
   async createMedicineTransaction(
     medicines: CreateMedicineDto[],
-    caseId: number,
-    queryRunner: any,
+    caseId: string,
+    queryRunner: QueryRunner,
   ) {
 
     for (const medicine of medicines) {

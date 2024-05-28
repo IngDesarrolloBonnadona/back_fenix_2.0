@@ -1,10 +1,14 @@
-import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString,  } from "@nestjs/class-validator";
+import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString,  } from "class-validator";
 
 export class CreateCaseReportOriginalDto {
 
     @IsNumber()
     @IsNotEmpty()
     ori_cr_casetype_id_fk: number
+
+    @IsNotEmpty()
+    @IsString()
+    ori_cr_filingnumber: string
 
     @IsNumber()
     @IsNotEmpty()
@@ -47,7 +51,7 @@ export class CreateCaseReportOriginalDto {
     ori_cr_risklevel_id_fk: number; //
     
     @IsNumber()
-    @IsOptional()
+    @IsNotEmpty()
     ori_cr_unit_id_fk: number;
 
     @IsString()

@@ -6,8 +6,8 @@ export class Log {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
-    log_validatedcase_id_fk: number;
+    @Column({ type: 'uuid' })
+    log_validatedcase_id_fk: string;
 
     @Column()
     log_user_id_fk: number;

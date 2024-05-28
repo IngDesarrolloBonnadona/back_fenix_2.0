@@ -12,7 +12,7 @@ export class CaseReportValidateController {
   @Get('/summaryReportsValidate')
   async SummaryReportsValidate(
     @Query('creationDate') creationDate?: string,
-    @Query('id') id?: number,
+    @Query('id') id?: string,
     @Query('patientId') patientId?: number,
     @Query('caseTypeId') caseTypeId?: number,
   ): Promise<CaseReportValidate[]> {
@@ -32,20 +32,20 @@ export class CaseReportValidateController {
   }
 
   @Get('/listReportValidate/:id')
-  findReportValidate(@Param('id') id: number) : Promise<CaseReportValidate> {
+  findReportValidate(@Param('id') id: string) : Promise<CaseReportValidate> {
     return this.caseReportValidateService.findOneReportValidate(id);
   }
 
   @Put('/updateReportValidate/:id')
   updateReportValidate(
-    @Param('id') id: number, 
+    @Param('id') id: string, 
     @Body() updateCaseReportValidateDto: UpdateCaseReportValidateDto
   ) : Promise<HttpException> {
     return this.caseReportValidateService.updateReportValidate(id, updateCaseReportValidateDto);
   }
 
   @Delete('/removeReportValidate/:id')
-  async removeReportValidate(@Param('id') id: number): Promise<{ message: string }> {
+  async removeReportValidate(@Param('id') id: string): Promise<{ message: string }> {
       return await this.caseReportValidateService.removeReportValidate(id);      
   }
 }
