@@ -6,6 +6,10 @@ export class CreateCaseReportOriginalDto {
     @IsNotEmpty()
     ori_cr_casetype_id_fk: number
 
+    @IsNotEmpty()
+    @IsString()
+    ori_cr_filingnumber: string
+
     @IsNumber()
     @IsNotEmpty()
     ori_cr_reporter_id_fk: number;
@@ -47,7 +51,7 @@ export class CreateCaseReportOriginalDto {
     ori_cr_risklevel_id_fk: number; //
     
     @IsNumber()
-    @IsOptional()
+    @IsNotEmpty()
     ori_cr_unit_id_fk: number;
 
     @IsString()
