@@ -4,6 +4,7 @@ import { UpdateCaseReportValidateDto } from '../dto/update-case-report-validate.
 import { InjectRepository } from '@nestjs/typeorm';
 import { CaseReportValidate as CaseReportValidateEntity } from '../entities/case-report-validate.entity';
 import { Between, FindOptionsWhere, QueryRunner, Repository } from 'typeorm';
+import { CreateCaseReportOriginalDto } from 'src/modules/case-report-original/dto/create-case-report-original.dto';
 
 @Injectable()
 export class CaseReportValidateService {
@@ -14,11 +15,12 @@ export class CaseReportValidateService {
 
   async createReportValidateTransaction(
     queryRunner: QueryRunner,
-    caseReportOriginal: any):
+    caseReportOriginal: CreateCaseReportOriginalDto,
+    caseReportOriginalId: string):
     Promise<CaseReportValidateEntity> {
     const caseReportValidate = this.caseReportValidateRepository.create({
       val_cr_previous_id: 0,
-      val_cr_originalcase_id_fk : caseReportOriginal.id,
+      val_cr_originalcase_id_fk : caseReportOriginalId,
       val_cr_filingnumber : caseReportOriginal.ori_cr_filingnumber,
       val_cr_casetype_id_fk : caseReportOriginal.ori_cr_casetype_id_fk,
       val_cr_patient_id_fk : caseReportOriginal.ori_cr_patient_id_fk,
@@ -37,8 +39,9 @@ export class CaseReportValidateService {
       val_cr_materializedrisk : caseReportOriginal.ori_cr_materializedrisk,
       val_cr_associatedpatient : caseReportOriginal.ori_cr_associatedpatient,
     })
-    return await queryRunner.manager.save(caseReportValidate)
+    return await queryRunner.manager.save(caseReportValidate) //temporal
   }
+
 
   async SummaryReportsValidate(
     creationDate?: Date,

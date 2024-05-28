@@ -102,6 +102,7 @@ export class CaseReportOriginalService {
       const caseReportValidate = await this.caseReportValidateService.createReportValidateTransaction(
           queryRunner,
           caseReportOriginal,
+          caseReportOriginal.id,
         );
 
       const hasMedicine =
@@ -139,7 +140,7 @@ export class CaseReportOriginalService {
         logReports.LOG_CREATION
       )
 
-      await queryRunner.commitTransaction();
+      await queryRunner.commitTransaction(); // registro
 
       const reportData = {
         caseReportOriginal,
@@ -151,7 +152,7 @@ export class CaseReportOriginalService {
       };
 
       return {
-        message: `Reporte se creó satisfactoriamente.`,
+        message: `Reporte ${caseReportOriginal.ori_cr_filingnumber} se creó satisfactoriamente.`,
         data: reportData,
       };
     } catch (error) {
