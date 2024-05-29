@@ -94,13 +94,14 @@ export class CaseReportValidateService {
 
       const reportValidated = await this.caseReportValidateRepository.findOne({
         where: {
-          id: reportId
+          id: reportId,
+          val_cr_validated: false
         }
       });
 
       if (!reportValidated) {
         throw new HttpException(
-          `El reporte no existe.`,
+          `El reporte no existe o ya fue validado.`,
           HttpStatus.NOT_FOUND,
         )
       }
