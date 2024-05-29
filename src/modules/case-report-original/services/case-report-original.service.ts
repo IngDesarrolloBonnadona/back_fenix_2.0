@@ -7,7 +7,6 @@ import { UpdateCaseReportOriginalDto } from '../dto/update-case-report-original.
 import { InjectRepository } from '@nestjs/typeorm';
 import { CaseReportOriginal as CaseReportOriginalEntity } from '../entities/case-report-original.entity';
 import { DataSource, Repository } from 'typeorm';
-import { ValidateCaseReportOriginalDto } from '../dto/validate-case-report-original.dto';
 import { CaseReportValidateService } from 'src/modules/case-report-validate/services/case-report-validate.service';
 import { OriDtoValidator } from '../utils/helpers/ori-dto-validator.helper';
 import { CaseType as CaseTypeEntity } from 'src/modules/case-type/entities/case-type.entity';
@@ -34,29 +33,6 @@ export class CaseReportOriginalService {
     private readonly deviceService: DeviceService,
     private dataSource: DataSource,
   ) {}
-
-  async validateReports(
-    validateCaseReportOriginal: ValidateCaseReportOriginalDto,
-  ): Promise<any> {
-    const similarReport = await this.caseReportOriginalRepository.find({
-      where: {
-        ori_cr_casetype_id_fk: validateCaseReportOriginal.ori_cr_casetype_id_fk,
-        ori_cr_unit_id_fk: validateCaseReportOriginal.ori_cr_unit_id_fk,
-        ori_cr_patient_id_fk: validateCaseReportOriginal.ori_cr_patient_id_fk,
-        ori_cr_event_id_fk: validateCaseReportOriginal.ori_cr_event_id_fk,
-        ori_cr_eventtype_id_fk: validateCaseReportOriginal.ori_cr_eventtype_id_fk,
-      },
-    });
-
-    if (similarReport.length > 0) {
-      return {
-        message: 'Existen casos similares encontrados',
-        data: similarReport,
-      };
-    } else {
-      return { message: 'No existen casos similares' };
-    }
-  }
 
   async createReportOriginal(
     createReportOriDto: any,

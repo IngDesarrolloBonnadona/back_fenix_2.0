@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CaseReportValidate as CaseReportValidateEntity } from '../entities/case-report-validate.entity';
 import { Between, FindOptionsWhere, QueryRunner, Repository } from 'typeorm';
 import { CreateCaseReportOriginalDto } from 'src/modules/case-report-original/dto/create-case-report-original.dto';
+import { FindSimilarCaseReportValidateDto } from '../dto/find-similar-case-report-validate';
 
 @Injectable()
 export class CaseReportValidateService {
@@ -12,6 +13,30 @@ export class CaseReportValidateService {
     @InjectRepository(CaseReportValidateEntity)
     private readonly caseReportValidateRepository: Repository<CaseReportValidateEntity>
   ){}
+
+  async findSimilarCaseReportsValidate(
+    similarCaseReportValidate: FindSimilarCaseReportValidateDto
+  ) {
+    const similarReport = await this.caseReportValidateRepository.find({
+      where: {
+        val_cr_casetype_id_fk: similarCaseReportValidate.val_cr_casetype_id_fk,
+        val_cr_unit_id_fk: similarCaseReportValidate.val_cr_unit_id_fk,
+        val_cr_patient_id_fk: similarCaseReportValidate.val_cr_patient_id_fk,
+        val_cr_event_id_fk: similarCaseReportValidate.val_cr_event_id_fk,
+        val_cr_eventtype_id_fk: similarCaseReportValidate.val_cr_eventtype_id_fk,
+        val_cr_validated: false
+      }
+    });
+
+    if (similarReport.length > 0) {
+      return {
+        message: `¡Extisten ${similarReport.length} casos similares!`,
+        data: similarReport
+      };
+    } else {
+      return { message: '¡No existen casos similares!'}
+    }
+  }
 
   async createReportValidateTransaction(
     queryRunner: QueryRunner,
