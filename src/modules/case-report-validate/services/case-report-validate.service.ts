@@ -3,15 +3,35 @@ import { CreateCaseReportValidateDto } from '../dto/create-case-report-validate.
 import { UpdateCaseReportValidateDto } from '../dto/update-case-report-validate.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CaseReportValidate as CaseReportValidateEntity } from '../entities/case-report-validate.entity';
-import { Between, FindOptionsWhere, QueryRunner, Repository } from 'typeorm';
+import { Between, DataSource, FindOptionsWhere, QueryRunner, Repository } from 'typeorm';
 import { CreateCaseReportOriginalDto } from 'src/modules/case-report-original/dto/create-case-report-original.dto';
 import { FindSimilarCaseReportValidateDto } from '../dto/find-similar-case-report-validate';
+import { ValDtoValidator } from '../helper/val-dto-validator.helper';
+import { CaseType as CaseTypeEntity } from 'src/modules/case-type/entities/case-type.entity';
+import { reportCreatorValDictionary } from '../helper/report-val-creator.helper';
+import { MedicineService } from 'src/modules/medicine/services/medicine.service';
+import { DeviceService } from 'src/modules/device/services/device.service';
+import { MovementReport as MovementReportEntity } from 'src/modules/movement-report/entities/movement-report.entity';
+import { movementReport } from 'src/enums/movement-report.enum';
+import { StatusReportService } from 'src/modules/status-report/services/status-report.service';
+import { LogService } from 'src/modules/log/services/log.service';
+import { logReports } from 'src/enums/logs.enum';
 
 @Injectable()
 export class CaseReportValidateService {
   constructor(
     @InjectRepository(CaseReportValidateEntity)
-    private readonly caseReportValidateRepository: Repository<CaseReportValidateEntity>
+    private readonly caseReportValidateRepository: Repository<CaseReportValidateEntity>,
+    @InjectRepository(CaseTypeEntity)
+    private readonly caseTypeRepository: Repository<CaseTypeEntity>,
+    @InjectRepository(MovementReportEntity)
+    private readonly movementReportRepository: Repository<MovementReportEntity>,
+
+    private readonly medicineService: MedicineService,
+    private readonly deviceService: DeviceService,
+    private readonly statusReportService: StatusReportService,
+    private readonly logService: LogService,
+    private dataSource: DataSource
   ){}
 
   async findSimilarCaseReportsValidate(
@@ -38,12 +58,153 @@ export class CaseReportValidateService {
     }
   }
 
+  async createReportValidate(
+    createReportValDto: any,
+    clientIp: string,
+    reportId: string
+  ): Promise<any> {
+    await ValDtoValidator(createReportValDto, this.caseTypeRepository);
+
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      const caseTypeFound = await this.caseTypeRepository.findOne({
+        where: {
+          id: createReportValDto.val_cr_casetype_id_fk
+        }
+      });
+
+      if (!caseTypeFound) {
+        throw new HttpException(
+          `El tipo de caso no existe.`,
+          HttpStatus.NOT_FOUND,
+        )
+      }
+
+      const dtoClass = reportCreatorValDictionary[caseTypeFound.cas_t_name];
+      console.log("dtoClass:",dtoClass)
+
+      if (!dtoClass) {
+        throw new HttpException(
+          'Tipo de caso no reconocido.', 
+          HttpStatus.BAD_REQUEST);
+      }
+
+      const reportValidated = await this.caseReportValidateRepository.findOne({
+        where: {
+          id: reportId
+        }
+      });
+
+      if (!reportValidated) {
+        throw new HttpException(
+          `El reporte no existe.`,
+          HttpStatus.NOT_FOUND,
+        )
+      }
+
+      if (reportValidated) {
+        reportValidated.val_cr_validated = true
+
+        await queryRunner.manager.save(reportValidated);
+      }
+      
+      const consecutive = createReportValDto.val_cr_consecutive_id + 1
+      const previous = createReportValDto.val_cr_previous_id + 1
+
+      const caseReportValidate = new CaseReportValidateEntity();
+      Object.assign(caseReportValidate, createReportValDto)
+      caseReportValidate.val_cr_consecutive_id = consecutive;
+      caseReportValidate.val_cr_previous_id = previous;
+
+      await queryRunner.manager.save(caseReportValidate);
+
+      const hasMedicine =
+        createReportValDto.medicines && createReportValDto.medicines.length > 0;
+
+      if (hasMedicine) {
+        await this.medicineService.createMedicineTransaction(
+          createReportValDto.medicines,
+          caseReportValidate.val_cr_originalcase_id_fk,
+          queryRunner,
+        )
+      }
+
+      const hasDevice = 
+      createReportValDto.devices && createReportValDto.devices.length > 0;
+
+      if (hasDevice) {
+        await this.deviceService.createDeviceTransation(
+          createReportValDto.devices,
+          caseReportValidate.val_cr_originalcase_id_fk,
+          queryRunner,
+        )
+      }
+
+      const movementReportFound = await this.movementReportRepository.findOne({
+        where: {
+          mov_r_name: movementReport.VALIDATION,
+          mov_r_status: true,
+        },
+      });
+
+      if (!movementReportFound) {
+        throw new HttpException(
+          `El movimiento ${movementReport.VALIDATION} no existe.`,
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      const statusReport =
+        await this.statusReportService.createStatusReportTransaction(
+          queryRunner,
+          caseReportValidate.val_cr_originalcase_id_fk,
+          movementReportFound.id,
+        );
+
+        const log = await this.logService.createLogTransaction(
+          queryRunner,
+          caseReportValidate.id,
+          caseReportValidate.val_cr_reporter_id_fk,
+          clientIp,
+          logReports.LOG_VALIDATION
+        );
+
+        await queryRunner.commitTransaction();
+
+        const reportData = {
+          caseReportValidate,
+          createdMedicine: createReportValDto.medicines,
+          createdDevice: createReportValDto.devices,
+          statusReport,
+          log
+        }
+
+        return {
+          message: `Reporte ${caseReportValidate.val_cr_filingnumber} se validó satisfactoriamente.`,
+          data: reportData,
+        };
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+
+      throw new HttpException(
+        `Un error a ocurrido: ${error.message}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
   async createReportValidateTransaction(
     queryRunner: QueryRunner,
     caseReportOriginal: CreateCaseReportOriginalDto,
     caseReportOriginalId: string):
     Promise<CaseReportValidateEntity> {
     const caseReportValidate = this.caseReportValidateRepository.create({
+      val_cr_consecutive_id: 1,
       val_cr_previous_id: 0,
       val_cr_originalcase_id_fk : caseReportOriginalId,
       val_cr_filingnumber : caseReportOriginal.ori_cr_filingnumber,

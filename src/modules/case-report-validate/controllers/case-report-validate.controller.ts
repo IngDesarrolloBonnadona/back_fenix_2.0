@@ -10,12 +10,14 @@ import {
   HttpStatus,
   Put,
   Query,
+  Ip,
 } from '@nestjs/common';
 import { CaseReportValidateService } from '../services/case-report-validate.service';
 import { UpdateCaseReportValidateDto } from '../dto/update-case-report-validate.dto';
 import { CaseReportValidate } from '../entities/case-report-validate.entity';
 import { ApiTags } from '@nestjs/swagger';
 import { FindSimilarCaseReportValidateDto } from '../dto/find-similar-case-report-validate';
+import { CreateReportValDto } from '../helper/val-dto-validator.helper';
 
 @ApiTags('case-report-validate')
 @Controller('case-report-validate')
@@ -30,6 +32,19 @@ export class CaseReportValidateController {
   ) {
     return await this.caseReportValidateService.findSimilarCaseReportsValidate(
       similarCaseReportValidate,
+    );
+  }
+
+  @Post('/createReportValidate/:reportId')
+  async createReportValidate(
+    @Body() createReportValDto: CreateReportValDto,
+    @Ip() clientIp: string,
+    @Param('reportId') reportId: string
+  ): Promise<any> {
+    return await this.caseReportValidateService.createReportValidate(
+      createReportValDto,
+      clientIp,
+      reportId
     );
   }
 
