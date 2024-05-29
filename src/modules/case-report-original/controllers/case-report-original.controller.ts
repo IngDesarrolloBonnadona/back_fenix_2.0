@@ -4,7 +4,6 @@ import { CreateReportOriDto } from '../utils/helpers/ori-dto-validator.helper';
 import { UpdateCaseReportOriginalDto } from '../dto/update-case-report-original.dto';
 import { CaseReportOriginal } from '../entities/case-report-original.entity';
 import { ApiTags } from '@nestjs/swagger';
-import { ValidateCaseReportOriginalDto } from '../dto/validate-case-report-original.dto';
 
 @ApiTags('case-report-original')
 @Controller('case-report-original')
@@ -12,11 +11,6 @@ export class CaseReportOriginalController {
   constructor(
     private readonly CaseReportOriginalService: CaseReportOriginalService,
   ) {}
-
-  @Post('/validateReportsExistence')
-  async validateReportsExistence( @Body() validateCaseReportOriginal: ValidateCaseReportOriginalDto ) : Promise<any>{
-    return await this.CaseReportOriginalService.validateReports(validateCaseReportOriginal);
-  } 
   
   @Post('/createReportOriginal')
   async createReportOriginal(
