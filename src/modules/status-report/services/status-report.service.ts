@@ -5,8 +5,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { StatusReport as StatusReportEntity } from '../entities/status-report.entity';
 import { QueryRunner, Repository } from 'typeorm';
 import { MovementReport as MovementReportEntity} from 'src/modules/movement-report/entities/movement-report.entity';
-import { movementReport } from 'src/enums/movement-report.enum';
-import { Query } from 'typeorm/driver/Query';
 
 @Injectable()
 export class StatusReportService {
@@ -19,25 +17,13 @@ export class StatusReportService {
 
   async createStatusReportTransaction(
     queryRunner: QueryRunner,
-    caseReportOriginalId: string
+    caseReportOriginalId: string,
+    movementReportFoundId: number
   ) {
-    const movementReportFound = await this.movementReportRepository.findOne({
-      where: {
-        mov_r_name : movementReport.REPORT_CREATION,
-        mov_r_status : true
-      }
-    })
-
-    if (!movementReportFound) {
-      throw new HttpException(
-        `El movimiento ${movementReport.REPORT_CREATION} no existe.`,
-        HttpStatus.NOT_FOUND
-      )
-    }
 
     const statusReport = this.statusReportRepository.create({
     sta_r_originalcase_id_fk: caseReportOriginalId,
-    sta_r_movement_id_fk: movementReportFound.id
+    sta_r_movement_id_fk: movementReportFoundId
   })
 
     return await queryRunner.manager.save(statusReport)
