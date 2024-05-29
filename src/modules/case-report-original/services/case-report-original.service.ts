@@ -1,8 +1,4 @@
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UpdateCaseReportOriginalDto } from '../dto/update-case-report-original.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CaseReportOriginal as CaseReportOriginalEntity } from '../entities/case-report-original.entity';
@@ -17,6 +13,8 @@ import { DeviceService } from 'src/modules/device/services/device.service';
 import { reportCreatorOriDictionary } from '../utils/helpers/report-ori-creator.helper';
 import { logReports } from 'src/enums/logs.enum';
 import { generateFilingNumber } from '../utils/helpers/generate_filing_number.helper';
+import { MovementReport as MovementReportEntity } from 'src/modules/movement-report/entities/movement-report.entity';
+import { movementReport } from 'src/enums/movement-report.enum';
 
 @Injectable()
 export class CaseReportOriginalService {
@@ -25,6 +23,8 @@ export class CaseReportOriginalService {
     private readonly caseReportOriginalRepository: Repository<CaseReportOriginalEntity>,
     @InjectRepository(CaseTypeEntity)
     private readonly caseTypeRepository: Repository<CaseTypeEntity>,
+    @InjectRepository(MovementReportEntity)
+    private readonly movementReportRepository: Repository<MovementReportEntity>,
 
     private readonly caseReportValidateService: CaseReportValidateService,
     private readonly statusReportService: StatusReportService,
@@ -59,23 +59,27 @@ export class CaseReportOriginalService {
       }
 
       const dtoClass = reportCreatorOriDictionary[caseTypeFound.cas_t_name];
-      console.log("dtoClass:",dtoClass)
+      console.log('dtoClass:', dtoClass);
 
       if (!dtoClass) {
         throw new HttpException(
-          'Tipo de caso no reconocido.', 
-          HttpStatus.BAD_REQUEST);
+          'Tipo de caso no reconocido.',
+          HttpStatus.BAD_REQUEST,
+        );
       }
 
-      const filingNumber = await generateFilingNumber(this.caseReportOriginalRepository);
+      const filingNumber = await generateFilingNumber(
+        this.caseReportOriginalRepository,
+      );
 
       const caseReportOriginal = new CaseReportOriginalEntity();
-      Object.assign(caseReportOriginal, createReportOriDto)
+      Object.assign(caseReportOriginal, createReportOriDto);
       caseReportOriginal.ori_cr_filingnumber = filingNumber;
-      
+
       await queryRunner.manager.save(caseReportOriginal);
 
-      const caseReportValidate = await this.caseReportValidateService.createReportValidateTransaction(
+      const caseReportValidate =
+        await this.caseReportValidateService.createReportValidateTransaction(
           queryRunner,
           caseReportOriginal,
           caseReportOriginal.id,
@@ -89,10 +93,10 @@ export class CaseReportOriginalService {
           createReportOriDto.medicines,
           caseReportOriginal.id,
           queryRunner,
-        )
+        );
       }
 
-      const hasDevice = 
+      const hasDevice =
         createReportOriDto.devices && createReportOriDto.devices.length > 0;
 
       if (hasDevice) {
@@ -100,12 +104,28 @@ export class CaseReportOriginalService {
           createReportOriDto.devices,
           caseReportOriginal.id,
           queryRunner,
-        )
+        );
       }
 
-      const statusReport = await this.statusReportService.createStatusReportTransaction(
+      const movementReportFound = await this.movementReportRepository.findOne({
+        where: {
+          mov_r_name: movementReport.REPORT_CREATION,
+          mov_r_status: true,
+        },
+      });
+
+      if (!movementReportFound) {
+        throw new HttpException(
+          `El movimiento ${movementReport.REPORT_CREATION} no existe.`,
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      const statusReport =
+        await this.statusReportService.createStatusReportTransaction(
           queryRunner,
           caseReportOriginal.id,
+          movementReportFound.id,
         );
 
       const log = await this.logService.createLogTransaction(
@@ -113,8 +133,8 @@ export class CaseReportOriginalService {
         caseReportValidate.id,
         caseReportOriginal.ori_cr_reporter_id_fk,
         clientIp,
-        logReports.LOG_CREATION
-      )
+        logReports.LOG_CREATION,
+      );
 
       await queryRunner.commitTransaction(); // registro
 
