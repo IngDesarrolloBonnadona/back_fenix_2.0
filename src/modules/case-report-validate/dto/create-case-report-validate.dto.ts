@@ -3,6 +3,10 @@ import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID } from "c
 export class CreateCaseReportValidateDto {
     @IsNumber()
     @IsNotEmpty()
+    val_cr_consecutive_id: number
+
+    @IsNumber()
+    @IsNotEmpty()
     val_cr_previous_id: number
 
     @IsNumber()

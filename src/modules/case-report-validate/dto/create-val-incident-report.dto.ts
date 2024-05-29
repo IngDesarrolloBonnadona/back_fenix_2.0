@@ -5,6 +5,13 @@ import { CreateDeviceDto } from "src/modules/device/dto/create-device.dto";
 import { CreateMedicineDto } from "src/modules/medicine/dto/create-medicine.dto";
 
 export class CreateValIncidentReportDto {
+    @IsNumber()
+    @IsNotEmpty()
+    val_cr_consecutive_id: number
+
+    @IsNumber()
+    @IsNotEmpty()
+    val_cr_previous_id: number
 
     @IsNumber()
     @IsNotEmpty()
@@ -13,10 +20,6 @@ export class CreateValIncidentReportDto {
     @IsUUID()
     @IsNotEmpty()
     val_cr_originalcase_id_fk: string
-
-    @IsNumber()
-    @IsNotEmpty()
-    val_cr_previous_id: number
 
     @IsNumber()
     @IsNotEmpty()

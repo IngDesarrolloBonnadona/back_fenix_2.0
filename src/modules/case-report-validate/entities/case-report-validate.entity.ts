@@ -9,6 +9,9 @@ export class CaseReportValidate {
     id: string
 
     @Column({ nullable: true })
+    val_cr_consecutive_id: number
+
+    @Column({ nullable: true })
     val_cr_previous_id: number
     
     @Column({ type: 'uuid', nullable: true })
