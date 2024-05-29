@@ -70,7 +70,7 @@ export class CaseReportValidateService {
 
   async SummaryReportsValidate(
     creationDate?: Date,
-    id?: string,
+    filingNumber?: string,
     patientId?: number,
     caseTypeId?: number,
   ) : Promise<CaseReportValidateEntity[]> {
@@ -83,8 +83,8 @@ export class CaseReportValidateService {
       where.createdAt = Between(creationDate, nextDay);
     }
   
-    if (id) {
-      where.id = id;
+    if (filingNumber) {
+      where.val_cr_filingnumber = filingNumber;
     }
 
     if (patientId) {
@@ -94,6 +94,8 @@ export class CaseReportValidateService {
     if (caseTypeId){
       where.val_cr_casetype_id_fk = caseTypeId;
     }
+
+    where.val_cr_validated = false;
 
     const caseReportsValidate = await this.caseReportValidateRepository.find({
       where

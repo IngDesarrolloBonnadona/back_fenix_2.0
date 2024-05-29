@@ -36,7 +36,7 @@ export class CaseReportValidateController {
   @Get('/summaryReportsValidate')
   async SummaryReportsValidate(
     @Query('creationDate') creationDate?: string,
-    @Query('id') id?: string,
+    @Query('filingNumber') filingNumber?: string,
     @Query('patientId') patientId?: number,
     @Query('caseTypeId') caseTypeId?: number,
   ): Promise<CaseReportValidate[]> {
@@ -44,7 +44,7 @@ export class CaseReportValidateController {
 
     return await this.caseReportValidateService.SummaryReportsValidate(
       creationDateObj,
-      id,
+      filingNumber,
       patientId,
       caseTypeId,
     );
