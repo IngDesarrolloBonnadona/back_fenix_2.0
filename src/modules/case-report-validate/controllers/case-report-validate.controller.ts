@@ -39,12 +39,12 @@ export class CaseReportValidateController {
   async createReportValidate(
     @Body() createReportValDto: CreateReportValDto,
     @Ip() clientIp: string,
-    @Param('reportId') reportId: string
+    @Param('reportId') reportId: string,
   ): Promise<any> {
     return await this.caseReportValidateService.createReportValidate(
       createReportValDto,
       clientIp,
-      reportId
+      reportId,
     );
   }
 
@@ -86,10 +86,14 @@ export class CaseReportValidateController {
     );
   }
 
-  @Delete('/removeReportValidate/:id')
-  async removeReportValidate(
+  @Delete('/cancelReportValidate/:id')
+  async cancelReportValidate(
     @Param('id') id: string,
-  ): Promise<{ message: string }> {
-    return await this.caseReportValidateService.removeReportValidate(id);
+    @Ip() clientIp: string,
+  ): Promise<Promise<HttpException>> {
+    return await this.caseReportValidateService.cancelReportValidate(
+      id,
+      clientIp,
+    );
   }
 }
