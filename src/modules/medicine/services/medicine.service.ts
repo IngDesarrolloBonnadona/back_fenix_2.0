@@ -19,6 +19,13 @@ export class MedicineService {
     caseId: string,
     queryRunner: QueryRunner,
   ) {
+    const existingMedicines = await this.medicineRepository.find({
+      where: { med_case_id_fk: caseId }
+    })
+
+    if ( existingMedicines.length > 0 ) {
+      await queryRunner.manager.remove(existingMedicines);
+    }
 
     for (const medicine of medicines) {
       const med = this.medicineRepository.create({
