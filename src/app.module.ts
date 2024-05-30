@@ -18,6 +18,7 @@ import { StatusReportModule } from './modules/status-report/status-report.module
 import { MovementReportModule } from './modules/movement-report/movement-report.module';
 import { IpClientMiddleware } from './middlewares/ip-client.middleware';
 import { LogModule } from './modules/log/log.module';
+import { PositionModule } from './modules/position/position.module';
 
 require('dotenv').config();
 
@@ -51,6 +52,7 @@ require('dotenv').config();
     StatusReportModule,
     MovementReportModule,
     LogModule,
+    PositionModule,
   ],
   controllers: [],
   providers: [],
