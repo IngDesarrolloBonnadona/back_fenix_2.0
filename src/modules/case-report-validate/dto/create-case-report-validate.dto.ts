@@ -5,6 +5,10 @@ export class CreateCaseReportValidateDto {
     @IsNotEmpty()
     val_cr_consecutive_id: number
 
+    @IsNotEmpty()
+    @IsString()
+    val_cr_filingnumber: string
+
     @IsNumber()
     @IsNotEmpty()
     val_cr_previous_id: number
