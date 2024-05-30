@@ -19,6 +19,13 @@ export class DeviceService {
     caseId: string,
     queryRunner: QueryRunner,
   ) {
+    const existingDevice = await this.deviceRepository.find({
+      where: { dev_case_id_fk: caseId }
+    })
+
+    if ( existingDevice.length > 0 ) {
+      await queryRunner.manager.remove(existingDevice)
+    }
     
     for (const device of devices) {
       const dev = this.deviceRepository.create({
