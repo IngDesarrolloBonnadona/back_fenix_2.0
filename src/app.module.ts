@@ -19,6 +19,7 @@ import { MovementReportModule } from './modules/movement-report/movement-report.
 import { IpClientMiddleware } from './middlewares/ip-client.middleware';
 import { LogModule } from './modules/log/log.module';
 import { PositionModule } from './modules/position/position.module';
+import { AnalystReporterModule } from './modules/analyst-reporter/analyst-reporter.module';
 
 require('dotenv').config();
 
@@ -53,15 +54,16 @@ require('dotenv').config();
     MovementReportModule,
     LogModule,
     PositionModule,
+    AnalystReporterModule,
   ],
   controllers: [],
   providers: [],
 })
 export class AppModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(IpClientMiddleware).forRoutes({
-      path: '*',
-      method: RequestMethod.ALL
-    })
-  }
+  // configure(consumer: MiddlewareConsumer) {
+  //   consumer.apply(IpClientMiddleware).forRoutes({
+  //     path: '*',
+  //     method: RequestMethod.ALL
+  //   })
+  // }
 }
