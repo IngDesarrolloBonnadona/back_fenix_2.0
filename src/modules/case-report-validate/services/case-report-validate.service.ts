@@ -92,33 +92,35 @@ export class CaseReportValidateService {
           HttpStatus.BAD_REQUEST);
       }
 
-      const reportValidated = await this.caseReportValidateRepository.findOne({
+      const previousReport = await this.caseReportValidateRepository.findOne({
         where: {
           id: reportId,
           val_cr_validated: false
         }
       });
 
-      if (!reportValidated) {
+      if (!previousReport) {
         throw new HttpException(
           `El reporte no existe o ya fue validado.`,
           HttpStatus.NOT_FOUND,
         )
       }
 
-      if (reportValidated) {
-        reportValidated.val_cr_validated = true
+      if (previousReport) {
+        previousReport.val_cr_validated = true
 
-        await queryRunner.manager.save(reportValidated);
+        await queryRunner.manager.save(previousReport);
       }
       
-      const consecutive = createReportValDto.val_cr_consecutive_id + 1
-      const previous = createReportValDto.val_cr_previous_id + 1
+      const consecutiveId = previousReport.val_cr_consecutive_id + 1
+      const previousId = previousReport.val_cr_previous_id + 1
 
       const caseReportValidate = new CaseReportValidateEntity();
       Object.assign(caseReportValidate, createReportValDto)
-      caseReportValidate.val_cr_consecutive_id = consecutive;
-      caseReportValidate.val_cr_previous_id = previous;
+      caseReportValidate.val_cr_filingnumber = previousReport.val_cr_filingnumber;
+      caseReportValidate.val_cr_originalcase_id_fk = previousReport.val_cr_originalcase_id_fk;
+      caseReportValidate.val_cr_consecutive_id = consecutiveId;
+      caseReportValidate.val_cr_previous_id = previousId;
 
       await queryRunner.manager.save(caseReportValidate);
 
