@@ -6,11 +6,14 @@ import {
   Patch,
   Param,
   Delete,
+  HttpException,
+  Put,
 } from '@nestjs/common';
 import { PositionService } from '../services/position.service';
 import { CreatePositionDto } from '../dto/create-position.dto';
 import { UpdatePositionDto } from '../dto/update-position.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { Position } from '../entities/position.entity';
 
 @ApiTags('position')
 @Controller('position')
@@ -18,30 +21,30 @@ export class PositionController {
   constructor(private readonly positionService: PositionService) {}
 
   @Post('/createPosition')
-  create(@Body() createPositionDto: CreatePositionDto) {
+  createPosition(@Body() createPositionDto: CreatePositionDto): Promise<Position> {
     return this.positionService.create(createPositionDto);
   }
 
   @Get('/listPositions')
-  findAll() {
-    return this.positionService.findAll();
+  listPositions(): Promise<Position[]> {
+    return this.positionService.findAllPosition();
   }
 
-  @Get('/findPostition/:id')
-  findOne(@Param('id') id: string) {
-    return this.positionService.findOne(+id);
+  @Get('/findPosition/:id')
+  findPosition(@Param('id') id: number): Promise<Position> {
+    return this.positionService.findOnePosition(id);
   }
 
-  @Patch('/updatePosition/:id')
-  update(
-    @Param('id') id: string,
+  @Put('/updatePosition/:id')
+  updatePosition(
+    @Param('id') id: number,
     @Body() updatePositionDto: UpdatePositionDto,
-  ) {
-    return this.positionService.update(+id, updatePositionDto);
+  ): Promise<HttpException> {
+    return this.positionService.updatePosition(id, updatePositionDto);
   }
 
   @Delete('/deletePosition/:id')
-  remove(@Param('id') id: string) {
-    return this.positionService.remove(+id);
+  async deletePosition(@Param('id') id: number): Promise<HttpException> {
+    return await this.positionService.deletePosition(id);
   }
 }

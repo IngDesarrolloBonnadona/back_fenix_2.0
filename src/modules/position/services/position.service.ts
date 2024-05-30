@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreatePositionDto } from '../dto/create-position.dto';
 import { UpdatePositionDto } from '../dto/update-position.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -11,24 +11,68 @@ export class PositionService {
     @InjectRepository(PositionEntity)
     private readonly positionRepository: Repository<PositionEntity>
   ){}
-  
-  create(createPositionDto: CreatePositionDto) {
-    return 'This action adds a new position';
+
+  async create(createPositionDto: CreatePositionDto) {
+    const position = this.positionRepository.create(createPositionDto)
+    return await this.positionRepository.save(position);
   }
 
-  findAll() {
-    return `This action returns all position`;
+  async findAllPosition() {
+    const positions = await this.positionRepository.find();
+
+    if (!positions) {
+      throw new HttpException(
+        'No se encontró la lista de cargos',
+        HttpStatus.NOT_FOUND,
+      )
+    }
+
+    return positions;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} position`;
+  async findOnePosition(id: number) {
+    const position = await this.positionRepository.findOne({ where: { id }});
+
+    if (!position){
+      throw new HttpException(
+        'No se encontró el cargo',
+        HttpStatus.NOT_FOUND
+      )
+    }
+    return position;
   }
 
-  update(id: number, updatePositionDto: UpdatePositionDto) {
-    return `This action updates a #${id} position`;
+  async updatePosition(id: number, updatePositionDto: UpdatePositionDto) {
+    const position = await this.findOnePosition(id)
+    const result = await this.positionRepository.update(position.id, updatePositionDto);
+
+    if (result.affected === 0) {
+      return new HttpException(
+        `No se pudo actualizar el cargo`,
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
+
+    return new HttpException(
+      `¡Datos actualizados correctamente!`,
+      HttpStatus.ACCEPTED
+    );  
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} position`;
+  async deletePosition(id: number) {
+    const position = await this.findOnePosition(id);
+    const result = await this.positionRepository.softDelete(position.id);
+
+    if (result.affected === 0) {
+      return new HttpException(
+        `No se pudo eliminar el cargo`,
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
+
+    return new HttpException(
+      `¡Datos eliminados correctamente!`,
+      HttpStatus.ACCEPTED
+    ); 
   }
 }
