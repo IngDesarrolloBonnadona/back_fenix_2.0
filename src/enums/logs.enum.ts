@@ -3,5 +3,6 @@ export enum logReports {
     LOG_VALIDATION = 'Validó el caso',
     LOG_ANULATION = 'Anuló el caso',
     LOG_ASSIGNMENT_ANALYST = 'Asignó a nalista',
+    LOG_REASSIGNMENT_ANALYST = 'Reasignó a nalista',
     LOG_ASSIGNMENT_INVESTIGATOR = 'Asignó a investigador',
 };
