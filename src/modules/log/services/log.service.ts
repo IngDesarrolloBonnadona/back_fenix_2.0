@@ -41,7 +41,7 @@ export class LogService {
       },
     });
 
-    if (!logs) {
+    if (!logs || logs.length === 0) {
       throw new HttpException(
         'No se encontró la lista de logs.',
         HttpStatus.NOT_FOUND,

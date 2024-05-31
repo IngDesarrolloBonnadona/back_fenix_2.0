@@ -298,9 +298,9 @@ export class CaseReportValidateService {
       },
     });
 
-    if (!caseReportValidates) {
+    if (!caseReportValidates || caseReportValidates.length === 0) {
       throw new HttpException(
-        'No se encontró la lista de reportes.',
+        'No hay reportes para mostrar.',
         HttpStatus.NOT_FOUND,
       );
     }

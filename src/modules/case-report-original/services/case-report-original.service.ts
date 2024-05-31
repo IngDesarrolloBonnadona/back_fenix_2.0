@@ -183,7 +183,7 @@ export class CaseReportOriginalService {
       },
     });
 
-    if (!caseReportsOriginal) {
+    if (!caseReportsOriginal || caseReportsOriginal.length === 0) {
       throw new HttpException(
         'No hay reportes para mostrar.',
         HttpStatus.NOT_FOUND,
@@ -199,7 +199,7 @@ export class CaseReportOriginalService {
 
     if (!caseReportsOriginal) {
       throw new HttpException(
-        `No se encontró el caso numero #${id}.`,
+        `No se encontró el reporte.`,
         HttpStatus.NOT_FOUND,
       );
     }

@@ -25,7 +25,7 @@ export class ServiceService {
       }
     });
 
-    if (!services) {
+    if (!services || services.length === 0) {
       throw new HttpException(
         'No se encontró la lista de servicios',
         HttpStatus.NOT_FOUND,

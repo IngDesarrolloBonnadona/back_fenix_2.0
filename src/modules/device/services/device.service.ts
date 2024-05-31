@@ -45,7 +45,7 @@ export class DeviceService {
   async findAllDevices() {
     const devices = await this.deviceRepository.find();
 
-    if (!devices) {
+    if (!devices || devices.length === 0) {
       throw new HttpException(
         'No se encontró la lista de dispositivos',
         HttpStatus.NOT_FOUND,

@@ -29,7 +29,7 @@ export class ReportAnalystAssignmentService {
       },
     });
 
-    if (!analystReporters) {
+    if (!analystReporters || analystReporters.length === 0) {
       throw new HttpException(
         'No se encontró la lista de analistas',
         HttpStatus.NOT_FOUND,
