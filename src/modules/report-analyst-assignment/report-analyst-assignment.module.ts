@@ -5,13 +5,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ReportAnalystAssignment } from './entities/report-analyst-assignment.entity';
 import { Position } from '../position/entities/position.entity';
 import { LogModule } from '../log/log.module';
+import { CaseReportValidateModule } from '../case-report-validate/case-report-validate.module';
 
 @Module({
   imports: [TypeOrmModule.forFeature([
     ReportAnalystAssignment,
     Position,
   ]),
-  LogModule
+  LogModule,
+  CaseReportValidateModule,
 ],
   controllers: [ReportAnalystAssignmentController],
   providers: [ReportAnalystAssignmentService],

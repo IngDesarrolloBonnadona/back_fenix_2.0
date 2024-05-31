@@ -7,6 +7,7 @@ import { Repository } from 'typeorm';
 import { Position as PositionEntity } from 'src/modules/position/entities/position.entity';
 import { LogService } from 'src/modules/log/services/log.service';
 import { logReports } from 'src/enums/logs.enum';
+import { CaseReportValidateService } from 'src/modules/case-report-validate/services/case-report-validate.service';
 
 @Injectable()
 export class ReportAnalystAssignmentService {
@@ -16,7 +17,8 @@ export class ReportAnalystAssignmentService {
     @InjectRepository(PositionEntity)
     private readonly positionRepository: Repository<PositionEntity>,
 
-    private readonly logService: LogService
+    private readonly logService: LogService,
+    private readonly caseReportValidateService: CaseReportValidateService
   ) {}
 
   async AssingAnalyst(
@@ -24,17 +26,19 @@ export class ReportAnalystAssignmentService {
     clientIp: string,
     idValidator: number,
   ) {
-    const reportFind = await this.reportAnalystAssignmentRepository.findOne({
+    const reportAssignmentFind = await this.reportAnalystAssignmentRepository.findOne({
       where: {
         ass_ra_validatedcase_id_fk: createAnalystReporterDto.ass_ra_validatedcase_id_fk
       }})
 
-      if (reportFind) {
+      if (reportAssignmentFind) {
         throw new HttpException(
           'El reporte ya tiene un analista asignado',
           HttpStatus.CONFLICT,
         );
       }
+
+    await this.caseReportValidateService.findOneReportValidate(createAnalystReporterDto.ass_ra_validatedcase_id_fk)
 
     const positionFind = await this.positionRepository.findOne({
       where: {
