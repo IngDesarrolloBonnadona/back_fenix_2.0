@@ -16,7 +16,7 @@ export class AnalystReporter {
     @Column()
     ana_r_user_id_fk: number;
 
-    @Column()
+    @Column({ default: true })
     ana_r_status: boolean;
 
     @CreateDateColumn()

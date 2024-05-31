@@ -3,45 +3,47 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
+  Put,
 } from '@nestjs/common';
 import { AnalystReporterService } from '../services/analyst-reporter.service';
 import { CreateAnalystReporterDto } from '../dto/create-analyst-reporter.dto';
 import { UpdateAnalystReporterDto } from '../dto/update-analyst-reporter.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('analyst-reporter')
 @Controller('analyst-reporter')
 export class AnalystReporterController {
   constructor(
     private readonly analystReporterService: AnalystReporterService,
   ) {}
 
-  @Post()
-  create(@Body() createAnalystReporterDto: CreateAnalystReporterDto) {
-    return this.analystReporterService.create(createAnalystReporterDto);
+  @Post('assingAnalystReporter')
+  createAnalystReporter(@Body() createAnalystReporterDto: CreateAnalystReporterDto) {
+    return this.analystReporterService.AssingAnalyst(createAnalystReporterDto);
   }
 
-  @Get()
-  findAll() {
-    return this.analystReporterService.findAll();
+  @Get('listAnalistReporters')
+  listAnalistReporters() {
+    return this.analystReporterService.findAllAnalystReporter();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.analystReporterService.findOne(+id);
+  @Get('findAnalistReporter/:id')
+  findAnalistReporter(@Param('id') id: number) {
+    return this.analystReporterService.findOneAnalystReporter(id);
   }
 
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
+  @Put('updateAnalistReporter/:id')
+  updateAnalistReporter(
+    @Param('id') id: number,
     @Body() updateAnalystReporterDto: UpdateAnalystReporterDto,
   ) {
-    return this.analystReporterService.update(+id, updateAnalystReporterDto);
+    return this.analystReporterService.updateAnalystReporter(id, updateAnalystReporterDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.analystReporterService.remove(+id);
+  @Delete('deleteAnalistReporter/:id')
+  deleteAnalistReporter(@Param('id') id: number) {
+    return this.analystReporterService.deleteAnalystReporter(id);
   }
 }
