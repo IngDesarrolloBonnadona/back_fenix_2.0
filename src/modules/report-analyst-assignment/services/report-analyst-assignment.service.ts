@@ -18,7 +18,7 @@ export class ReportAnalystAssignmentService {
     private readonly positionRepository: Repository<PositionEntity>,
 
     private readonly logService: LogService,
-    private readonly caseReportValidateService: CaseReportValidateService
+    private readonly caseReportValidateService: CaseReportValidateService,
   ) {}
 
   async AssingAnalyst(
@@ -26,31 +26,33 @@ export class ReportAnalystAssignmentService {
     clientIp: string,
     idValidator: number,
   ) {
-    const reportAssignmentFind = await this.reportAnalystAssignmentRepository.findOne({
-      where: {
-        ass_ra_validatedcase_id_fk: createAnalystReporterDto.ass_ra_validatedcase_id_fk
-      }})
+    const reportAssignmentFind =
+      await this.reportAnalystAssignmentRepository.findOne({
+        where: {
+          ass_ra_validatedcase_id_fk:
+            createAnalystReporterDto.ass_ra_validatedcase_id_fk,
+        },
+      });
 
-      if (reportAssignmentFind) {
-        throw new HttpException(
-          'El reporte ya tiene un analista asignado',
-          HttpStatus.CONFLICT,
-        );
-      }
+    if (reportAssignmentFind) {
+      throw new HttpException(
+        'El reporte ya tiene un analista asignado',
+        HttpStatus.CONFLICT,
+      );
+    }
 
-    await this.caseReportValidateService.findOneReportValidate(createAnalystReporterDto.ass_ra_validatedcase_id_fk)
+    await this.caseReportValidateService.findOneReportValidate(
+      createAnalystReporterDto.ass_ra_validatedcase_id_fk,
+    );
 
     const positionFind = await this.positionRepository.findOne({
       where: {
-        id: createAnalystReporterDto.ass_ra_position_id_fk
-      }
-    })
+        id: createAnalystReporterDto.ass_ra_position_id_fk,
+      },
+    });
 
     if (!positionFind) {
-      throw new HttpException(
-        'El cargo no existe.',
-        HttpStatus.NOT_FOUND
-      );
+      throw new HttpException('El cargo no existe.', HttpStatus.NOT_FOUND);
     }
 
     await this.logService.createLog(
@@ -65,11 +67,11 @@ export class ReportAnalystAssignmentService {
     );
 
     const assigned = await this.reportAnalystAssignmentRepository.save(analyst);
-    
-    return assigned
+
+    return assigned;
   }
 
-  async findAllAnalystReporter() {
+  async findAllAssignedAnalysts() {
     const analystReporters = await this.reportAnalystAssignmentRepository.find({
       relations: {
         caseReportValidate: true,
@@ -87,10 +89,11 @@ export class ReportAnalystAssignmentService {
     return analystReporters;
   }
 
-  async findOneAnalystReporter(id: number) {
-    const analystReporter = await this.reportAnalystAssignmentRepository.findOne({
-      where: { id },
-    });
+  async findOneAssignedAnalyst(id: number) {
+    const analystReporter =
+      await this.reportAnalystAssignmentRepository.findOne({
+        where: { id },
+      });
 
     if (!analystReporter) {
       throw new HttpException(
@@ -101,11 +104,11 @@ export class ReportAnalystAssignmentService {
     return analystReporter;
   }
 
-  async updateAnalystReporter(
+  async updateAssignedAnalyst(
     id: number,
     updateAnalystReporterDto: UpdateReportAnalystAssignmentDto,
   ) {
-    const analystReporter = await this.findOneAnalystReporter(id);
+    const analystReporter = await this.findOneAssignedAnalyst(id);
     const result = await this.reportAnalystAssignmentRepository.update(
       analystReporter.id,
       updateAnalystReporterDto,
@@ -124,8 +127,8 @@ export class ReportAnalystAssignmentService {
     );
   }
 
-  async deleteAnalystReporter(id: number) {
-    const analystReporter = await this.findOneAnalystReporter(id);
+  async deleteAssignedAnalyst(id: number) {
+    const analystReporter = await this.findOneAssignedAnalyst(id);
     const result = await this.reportAnalystAssignmentRepository.softDelete(
       analystReporter.id,
     );

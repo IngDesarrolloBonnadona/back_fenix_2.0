@@ -17,45 +17,45 @@ import { ApiTags } from '@nestjs/swagger';
 @Controller('report-analyst-assignment')
 export class ReportAnalystAssignmentController {
   constructor(
-    private readonly analystReporterService: ReportAnalystAssignmentService,
+    private readonly ReportAnalisysAssignmentService: ReportAnalystAssignmentService,
   ) {}
 
   @Post('assingAnalystReporter/:idValidator')
-  createAnalystReporter(
+  createAssingAnalystReporter(
     @Body() createAnalystReporterDto: CreateReportAnalystAssignmentDto,
     @Ip() clientIp: string,
     @Param('idValidator') idValidator: number,
   ) {
-    return this.analystReporterService.AssingAnalyst(
+    return this.ReportAnalisysAssignmentService.AssingAnalyst(
       createAnalystReporterDto,
       clientIp,
       idValidator,
     );
   }
 
-  @Get('listAnalistReporters')
-  listAnalistReporters() {
-    return this.analystReporterService.findAllAnalystReporter();
+  @Get('listAssignedAnalysts')
+  listAssignedAnalysts() {
+    return this.ReportAnalisysAssignmentService.findAllAssignedAnalysts();
   }
 
-  @Get('findAnalistReporter/:id')
-  findAnalistReporter(@Param('id') id: number) {
-    return this.analystReporterService.findOneAnalystReporter(id);
+  @Get('findAssignedAnalyst/:id')
+  findAssignedAnalyst(@Param('id') id: number) {
+    return this.ReportAnalisysAssignmentService.findOneAssignedAnalyst(id);
   }
 
-  @Put('updateAnalistReporter/:id')
-  updateAnalistReporter(
+  @Put('updateAssignedAnalyst/:id')
+  updateAssignedAnalyst(
     @Param('id') id: number,
-    @Body() updateAnalystReporterDto: UpdateReportAnalystAssignmentDto,
+    @Body() updateReportAnalystAssignmentDto: UpdateReportAnalystAssignmentDto,
   ) {
-    return this.analystReporterService.updateAnalystReporter(
+    return this.ReportAnalisysAssignmentService.updateAssignedAnalyst(
       id,
-      updateAnalystReporterDto,
+      updateReportAnalystAssignmentDto,
     );
   }
 
-  @Delete('deleteAnalistReporter/:id')
-  deleteAnalistReporter(@Param('id') id: number) {
-    return this.analystReporterService.deleteAnalystReporter(id);
+  @Delete('deleteAssignedAnalyst/:id')
+  deleteAssignedAnalyst(@Param('id') id: number) {
+    return this.ReportAnalisysAssignmentService.deleteAssignedAnalyst(id);
   }
 }
