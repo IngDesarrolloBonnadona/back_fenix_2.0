@@ -294,7 +294,7 @@ export class CaseReportValidateService {
       relations: {
         caseReportOriginal: true,
         log: true,
-        analystReporter: true,
+        reportAnalystAssignment: true,
       },
     });
 

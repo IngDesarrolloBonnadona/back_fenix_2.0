@@ -1,18 +1,20 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { CreateAnalystReporterDto } from '../dto/create-analyst-reporter.dto';
-import { UpdateAnalystReporterDto } from '../dto/update-analyst-reporter.dto';
+import { CreateReportAnalystAssignmentDto } from '../dto/create-report-analyst-assignment.dto';
+import { UpdateReportAnalystAssignmentDto } from '../dto/update-report-analyst-assignment.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AnalystReporter as AnalystReporterEntity } from '../entities/analyst-reporter.entity';
+import { ReportAnalystAssignment as ReportAnalystAssignmentEntity } from '../entities/report-analyst-assignment.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
-export class AnalystReporterService {
+export class ReportAnalystAssignmentService {
   constructor(
-    @InjectRepository(AnalystReporterEntity)
-    private readonly analystReporterRepository: Repository<AnalystReporterEntity>,
+    @InjectRepository(ReportAnalystAssignmentEntity)
+    private readonly analystReporterRepository: Repository<ReportAnalystAssignmentEntity>,
   ) {}
 
-  async AssingAnalyst(createAnalystReporterDto: CreateAnalystReporterDto) {
+  async AssingAnalyst(
+    createAnalystReporterDto: CreateReportAnalystAssignmentDto,
+  ) {
     const analyst = this.analystReporterRepository.create(
       createAnalystReporterDto,
     );
@@ -23,8 +25,8 @@ export class AnalystReporterService {
     const analystReporters = await this.analystReporterRepository.find({
       relations: {
         caseReportValidate: true,
-        position: true
-      }
+        position: true,
+      },
     });
 
     if (!analystReporters) {
@@ -53,7 +55,7 @@ export class AnalystReporterService {
 
   async updateAnalystReporter(
     id: number,
-    updateAnalystReporterDto: UpdateAnalystReporterDto,
+    updateAnalystReporterDto: UpdateReportAnalystAssignmentDto,
   ) {
     const analystReporter = await this.findOneAnalystReporter(id);
     const result = await this.analystReporterRepository.update(

@@ -7,20 +7,22 @@ import {
   Delete,
   Put,
 } from '@nestjs/common';
-import { AnalystReporterService } from '../services/analyst-reporter.service';
-import { CreateAnalystReporterDto } from '../dto/create-analyst-reporter.dto';
-import { UpdateAnalystReporterDto } from '../dto/update-analyst-reporter.dto';
+import { ReportAnalystAssignmentService } from '../services/report-analyst-assignment.service';
+import { CreateReportAnalystAssignmentDto } from '../dto/create-report-analyst-assignment.dto';
+import { UpdateReportAnalystAssignmentDto } from '../dto/update-report-analyst-assignment.dto';
 import { ApiTags } from '@nestjs/swagger';
 
-@ApiTags('analyst-reporter')
-@Controller('analyst-reporter')
-export class AnalystReporterController {
+@ApiTags('report-analyst-assignment')
+@Controller('report-analyst-assignment')
+export class ReportAnalystAssignmentController {
   constructor(
-    private readonly analystReporterService: AnalystReporterService,
+    private readonly analystReporterService: ReportAnalystAssignmentService,
   ) {}
 
   @Post('assingAnalystReporter')
-  createAnalystReporter(@Body() createAnalystReporterDto: CreateAnalystReporterDto) {
+  createAnalystReporter(
+    @Body() createAnalystReporterDto: CreateReportAnalystAssignmentDto,
+  ) {
     return this.analystReporterService.AssingAnalyst(createAnalystReporterDto);
   }
 
@@ -37,9 +39,12 @@ export class AnalystReporterController {
   @Put('updateAnalistReporter/:id')
   updateAnalistReporter(
     @Param('id') id: number,
-    @Body() updateAnalystReporterDto: UpdateAnalystReporterDto,
+    @Body() updateAnalystReporterDto: UpdateReportAnalystAssignmentDto,
   ) {
-    return this.analystReporterService.updateAnalystReporter(id, updateAnalystReporterDto);
+    return this.analystReporterService.updateAnalystReporter(
+      id,
+      updateAnalystReporterDto,
+    );
   }
 
   @Delete('deleteAnalistReporter/:id')
