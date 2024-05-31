@@ -6,6 +6,7 @@ import {
   Param,
   Delete,
   Put,
+  Ip,
 } from '@nestjs/common';
 import { ReportAnalystAssignmentService } from '../services/report-analyst-assignment.service';
 import { CreateReportAnalystAssignmentDto } from '../dto/create-report-analyst-assignment.dto';
@@ -19,11 +20,17 @@ export class ReportAnalystAssignmentController {
     private readonly analystReporterService: ReportAnalystAssignmentService,
   ) {}
 
-  @Post('assingAnalystReporter')
+  @Post('assingAnalystReporter/:idValidator')
   createAnalystReporter(
     @Body() createAnalystReporterDto: CreateReportAnalystAssignmentDto,
+    @Ip() clientIp: string,
+    @Param('idValidator') idValidator: number,
   ) {
-    return this.analystReporterService.AssingAnalyst(createAnalystReporterDto);
+    return this.analystReporterService.AssingAnalyst(
+      createAnalystReporterDto,
+      clientIp,
+      idValidator,
+    );
   }
 
   @Get('listAnalistReporters')

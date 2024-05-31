@@ -4,18 +4,27 @@ import { UpdateReportAnalystAssignmentDto } from '../dto/update-report-analyst-a
 import { InjectRepository } from '@nestjs/typeorm';
 import { ReportAnalystAssignment as ReportAnalystAssignmentEntity } from '../entities/report-analyst-assignment.entity';
 import { Repository } from 'typeorm';
+import { Position as PositionEntity } from 'src/modules/position/entities/position.entity';
+import { LogService } from 'src/modules/log/services/log.service';
+import { logReports } from 'src/enums/logs.enum';
 
 @Injectable()
 export class ReportAnalystAssignmentService {
   constructor(
     @InjectRepository(ReportAnalystAssignmentEntity)
-    private readonly analystReporterRepository: Repository<ReportAnalystAssignmentEntity>,
+    private readonly reportAnalystAssignmentRepository: Repository<ReportAnalystAssignmentEntity>,
+    @InjectRepository(PositionEntity)
+    private readonly positionRepository: Repository<PositionEntity>,
+
+    private readonly logService: LogService
   ) {}
 
   async AssingAnalyst(
     createAnalystReporterDto: CreateReportAnalystAssignmentDto,
+    clientIp: string,
+    idValidator: number,
   ) {
-    const reportFind = await this.analystReporterRepository.findOne({
+    const reportFind = await this.reportAnalystAssignmentRepository.findOne({
       where: {
         ass_ra_validatedcase_id_fk: createAnalystReporterDto.ass_ra_validatedcase_id_fk
       }})
@@ -27,14 +36,37 @@ export class ReportAnalystAssignmentService {
         );
       }
 
-    const analyst = this.analystReporterRepository.create(
+    const positionFind = await this.positionRepository.findOne({
+      where: {
+        id: createAnalystReporterDto.ass_ra_position_id_fk
+      }
+    })
+
+    if (!positionFind) {
+      throw new HttpException(
+        'El cargo no existe.',
+        HttpStatus.NOT_FOUND
+      );
+    }
+
+    await this.logService.createLog(
+      createAnalystReporterDto.ass_ra_validatedcase_id_fk,
+      idValidator,
+      clientIp,
+      logReports.LOG_ASSIGNMENT_ANALYST,
+    );
+
+    const analyst = this.reportAnalystAssignmentRepository.create(
       createAnalystReporterDto,
     );
-    return await this.analystReporterRepository.save(analyst);
+
+    const assigned = await this.reportAnalystAssignmentRepository.save(analyst);
+    
+    return assigned
   }
 
   async findAllAnalystReporter() {
-    const analystReporters = await this.analystReporterRepository.find({
+    const analystReporters = await this.reportAnalystAssignmentRepository.find({
       relations: {
         caseReportValidate: true,
         position: true,
@@ -52,7 +84,7 @@ export class ReportAnalystAssignmentService {
   }
 
   async findOneAnalystReporter(id: number) {
-    const analystReporter = await this.analystReporterRepository.findOne({
+    const analystReporter = await this.reportAnalystAssignmentRepository.findOne({
       where: { id },
     });
 
@@ -70,7 +102,7 @@ export class ReportAnalystAssignmentService {
     updateAnalystReporterDto: UpdateReportAnalystAssignmentDto,
   ) {
     const analystReporter = await this.findOneAnalystReporter(id);
-    const result = await this.analystReporterRepository.update(
+    const result = await this.reportAnalystAssignmentRepository.update(
       analystReporter.id,
       updateAnalystReporterDto,
     );
@@ -90,7 +122,7 @@ export class ReportAnalystAssignmentService {
 
   async deleteAnalystReporter(id: number) {
     const analystReporter = await this.findOneAnalystReporter(id);
-    const result = await this.analystReporterRepository.softDelete(
+    const result = await this.reportAnalystAssignmentRepository.softDelete(
       analystReporter.id,
     );
 
