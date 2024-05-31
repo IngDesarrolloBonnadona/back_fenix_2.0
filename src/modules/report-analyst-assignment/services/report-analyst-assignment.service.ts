@@ -22,15 +22,14 @@ export class ReportAnalystAssignmentService {
   ) {}
 
   async AssingAnalyst(
-    createAnalystReporterDto: CreateReportAnalystAssignmentDto,
+    createReportAnalystAssignmentDto: CreateReportAnalystAssignmentDto,
     clientIp: string,
     idValidator: number,
   ) {
     const reportAssignmentFind =
       await this.reportAnalystAssignmentRepository.findOne({
         where: {
-          ass_ra_validatedcase_id_fk:
-            createAnalystReporterDto.ass_ra_validatedcase_id_fk,
+          ass_ra_validatedcase_id_fk: createReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
         },
       });
 
@@ -42,12 +41,12 @@ export class ReportAnalystAssignmentService {
     }
 
     await this.caseReportValidateService.findOneReportValidate(
-      createAnalystReporterDto.ass_ra_validatedcase_id_fk,
+      createReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
     );
 
     const positionFind = await this.positionRepository.findOne({
       where: {
-        id: createAnalystReporterDto.ass_ra_position_id_fk,
+        id: createReportAnalystAssignmentDto.ass_ra_position_id_fk,
       },
     });
 
@@ -56,19 +55,73 @@ export class ReportAnalystAssignmentService {
     }
 
     await this.logService.createLog(
-      createAnalystReporterDto.ass_ra_validatedcase_id_fk,
+      createReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
       idValidator,
       clientIp,
       logReports.LOG_ASSIGNMENT_ANALYST,
     );
 
     const analyst = this.reportAnalystAssignmentRepository.create(
-      createAnalystReporterDto,
+      createReportAnalystAssignmentDto,
     );
 
     const assigned = await this.reportAnalystAssignmentRepository.save(analyst);
 
     return assigned;
+  }
+
+  async ReAssingAnalyst(
+    updateReportAnalystAssignmentDto: UpdateReportAnalystAssignmentDto,
+    clientIp: string,
+    idValidator: number,
+  ) {
+    const reportAssignmentFind =
+      await this.reportAnalystAssignmentRepository.findOne({
+        where: {
+          ass_ra_validatedcase_id_fk:
+          updateReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
+        },
+      });
+
+    await this.caseReportValidateService.findOneReportValidate(
+      updateReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
+    );
+
+    const positionFind = await this.positionRepository.findOne({
+      where: {
+        id: updateReportAnalystAssignmentDto.ass_ra_position_id_fk,
+      },
+    });
+
+    if (!positionFind) {
+      throw new HttpException('El cargo no existe.', HttpStatus.NOT_FOUND);
+    }
+
+    if (reportAssignmentFind) {
+      const result = await this.reportAnalystAssignmentRepository.update(
+        reportAssignmentFind.id,
+        updateReportAnalystAssignmentDto
+      );
+
+      if (result.affected === 0) {
+        return new HttpException(
+          `No se pudo reasignar el analista`,
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
+    }
+
+    await this.logService.createLog(
+      updateReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
+      idValidator,
+      clientIp,
+      logReports.LOG_REASSIGNMENT_ANALYST,
+    );
+
+    return new HttpException(
+      `¡Analista reasignado correctamente!`,
+      HttpStatus.ACCEPTED,
+    );
   }
 
   async findAllAssignedAnalysts() {
@@ -106,17 +159,17 @@ export class ReportAnalystAssignmentService {
 
   async updateAssignedAnalyst(
     id: number,
-    updateAnalystReporterDto: UpdateReportAnalystAssignmentDto,
+    updateReportAnalystAssignmentDto: UpdateReportAnalystAssignmentDto,
   ) {
     const analystReporter = await this.findOneAssignedAnalyst(id);
     const result = await this.reportAnalystAssignmentRepository.update(
       analystReporter.id,
-      updateAnalystReporterDto,
+      updateReportAnalystAssignmentDto,
     );
 
     if (result.affected === 0) {
       return new HttpException(
-        `No se pudo actualizar el cargo`,
+        `No se pudo actualizar la asignacion del analista`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }

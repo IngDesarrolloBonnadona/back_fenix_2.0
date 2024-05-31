@@ -20,13 +20,26 @@ export class ReportAnalystAssignmentController {
     private readonly ReportAnalisysAssignmentService: ReportAnalystAssignmentService,
   ) {}
 
-  @Post('assingAnalystReporter/:idValidator')
+  @Post('assingAnalyst/:idValidator')
   createAssingAnalystReporter(
     @Body() createAnalystReporterDto: CreateReportAnalystAssignmentDto,
     @Ip() clientIp: string,
     @Param('idValidator') idValidator: number,
   ) {
     return this.ReportAnalisysAssignmentService.AssingAnalyst(
+      createAnalystReporterDto,
+      clientIp,
+      idValidator,
+    );
+  }
+
+  @Post('reAssingAnalyst/:idValidator')
+  createReAssingAnalystReporter(
+    @Body() createAnalystReporterDto: CreateReportAnalystAssignmentDto,
+    @Ip() clientIp: string,
+    @Param('idValidator') idValidator: number,
+  ) {
+    return this.ReportAnalisysAssignmentService.ReAssingAnalyst(
       createAnalystReporterDto,
       clientIp,
       idValidator,
@@ -43,14 +56,16 @@ export class ReportAnalystAssignmentController {
     return this.ReportAnalisysAssignmentService.findOneAssignedAnalyst(id);
   }
 
-  @Put('updateAssignedAnalyst/:id')
+  @Put('updateAssignedAnalyst/:idValidator')
   updateAssignedAnalyst(
-    @Param('id') id: number,
     @Body() updateReportAnalystAssignmentDto: UpdateReportAnalystAssignmentDto,
+    @Ip() clientIp: string,
+    @Param('idValidator') idValidator: number,
   ) {
-    return this.ReportAnalisysAssignmentService.updateAssignedAnalyst(
-      id,
+    return this.ReportAnalisysAssignmentService.ReAssingAnalyst(
       updateReportAnalystAssignmentDto,
+      clientIp,
+      idValidator,
     );
   }
 
