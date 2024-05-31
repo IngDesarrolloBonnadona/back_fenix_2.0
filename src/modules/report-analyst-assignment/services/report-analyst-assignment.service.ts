@@ -15,6 +15,18 @@ export class ReportAnalystAssignmentService {
   async AssingAnalyst(
     createAnalystReporterDto: CreateReportAnalystAssignmentDto,
   ) {
+    const reportFind = await this.analystReporterRepository.findOne({
+      where: {
+        ass_ra_validatedcase_id_fk: createAnalystReporterDto.ass_ra_validatedcase_id_fk
+      }})
+
+      if (reportFind) {
+        throw new HttpException(
+          'El reporte ya tiene un analista asignado',
+          HttpStatus.CONFLICT,
+        );
+      }
+
     const analyst = this.analystReporterRepository.create(
       createAnalystReporterDto,
     );
