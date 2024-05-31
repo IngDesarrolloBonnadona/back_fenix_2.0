@@ -29,7 +29,19 @@ export class LogService {
     await queryRunner.manager.save(log);
   }
 
-  async createLog(createLogDto: CreateLogDto) {
+  async createLog(
+    caseReportValidateId: string,
+    userId: number,
+    clientIp: string,
+    action: string
+  ) {
+    const createLogDto: CreateLogDto = {
+      log_validatedcase_id_fk: caseReportValidateId,
+      log_user_id_fk: userId,
+      log_ip: clientIp,
+      log_action: action
+    }
+
     const log = this.logRepository.create(createLogDto);
     return await this.logRepository.save(log);
   }
