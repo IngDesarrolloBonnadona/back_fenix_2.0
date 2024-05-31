@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { AnalystReporter } from "src/modules/analyst-reporter/entities/analyst-reporter.entity";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
 export class Position {
@@ -22,4 +23,7 @@ export class Position {
 
     @DeleteDateColumn()
     deletedAt: Date;
+
+    @OneToMany(() => AnalystReporter, (analystReporter) => analystReporter.position)
+    analystReporter: AnalystReporter[]
 }

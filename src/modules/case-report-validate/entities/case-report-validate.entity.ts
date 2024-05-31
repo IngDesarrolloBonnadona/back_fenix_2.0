@@ -1,6 +1,7 @@
+import { AnalystReporter } from "src/modules/analyst-reporter/entities/analyst-reporter.entity";
 import { CaseReportOriginal } from "src/modules/case-report-original/entities/case-report-original.entity";
 import { Log } from "src/modules/log/entities/log.entity";
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
 export class CaseReportValidate {
@@ -89,4 +90,7 @@ export class CaseReportValidate {
 
     @OneToMany(() => Log, (log) => log.caseReportValidate)
     log: Log[]
+
+    @OneToOne(() => AnalystReporter, (analystReporter) => analystReporter.caseReportValidate)
+    analystReporter: AnalystReporter
 }   
