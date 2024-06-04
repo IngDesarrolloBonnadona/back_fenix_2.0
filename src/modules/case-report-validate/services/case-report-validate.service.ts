@@ -245,7 +245,7 @@ export class CaseReportValidateService {
       val_cr_materializedrisk: caseReportOriginal.ori_cr_materializedrisk,
       val_cr_associatedpatient: caseReportOriginal.ori_cr_associatedpatient,
     });
-    return await queryRunner.manager.save(caseReportValidate); //temporal
+    return await queryRunner.manager.save(caseReportValidate);
   }
 
   async SummaryReportsValidate(
