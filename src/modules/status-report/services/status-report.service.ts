@@ -4,15 +4,12 @@ import { UpdateStatusReportDto } from '../dto/update-status-report.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { StatusReport as StatusReportEntity } from '../entities/status-report.entity';
 import { QueryRunner, Repository } from 'typeorm';
-import { MovementReport as MovementReportEntity} from 'src/modules/movement-report/entities/movement-report.entity';
 
 @Injectable()
 export class StatusReportService {
   constructor(
     @InjectRepository(StatusReportEntity)
     private readonly statusReportRepository: Repository<StatusReportEntity>,
-    @InjectRepository(MovementReportEntity)
-    private readonly movementReportRepository: Repository<MovementReportEntity>
   ){}
 
   async createStatusReportTransaction(
@@ -42,7 +39,7 @@ export class StatusReportService {
       }
     })
 
-    if (!statusReports) {
+    if (!statusReports || statusReports.length === 0) {
       throw new HttpException(
         'No se encontró la lista de estado de reportes',
         HttpStatus.NOT_FOUND,

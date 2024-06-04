@@ -2,9 +2,7 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
-  NotFoundException,
 } from '@nestjs/common';
-import { CreateCaseReportValidateDto } from '../dto/create-case-report-validate.dto';
 import { UpdateCaseReportValidateDto } from '../dto/update-case-report-validate.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CaseReportValidate as CaseReportValidateEntity } from '../entities/case-report-validate.entity';
@@ -294,12 +292,13 @@ export class CaseReportValidateService {
       relations: {
         caseReportOriginal: true,
         log: true,
+        reportAnalystAssignment: true,
       },
     });
 
-    if (!caseReportValidates) {
+    if (!caseReportValidates || caseReportValidates.length === 0) {
       throw new HttpException(
-        'No se encontró la lista de reportes.',
+        'No hay reportes para mostrar.',
         HttpStatus.NOT_FOUND,
       );
     }
@@ -349,51 +348,32 @@ export class CaseReportValidateService {
     id: string,
     clientIp: string,
   ) {
-    const queryRunner = this.dataSource.createQueryRunner();
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
+    const caseReportValidate = await this.findOneReportValidate(id);
 
-    try {
-      const caseReportValidate = await this.findOneReportValidate(id);
+    caseReportValidate.val_cr_status = false;
+    await this.caseReportValidateRepository.save(caseReportValidate);
 
-      caseReportValidate.val_cr_status = false;
-      await queryRunner.manager.save(caseReportValidate);
+    const result = await this.caseReportValidateRepository.softDelete(
+      caseReportValidate.id,
+    );
 
-      const result = await queryRunner.manager.softDelete(
-        CaseReportValidateEntity,
-        caseReportValidate.id,
-      );
-
-      if (result.affected === 0) {
-        return new HttpException(
-          `No se pudo anular el reporte.`,
-          HttpStatus.INTERNAL_SERVER_ERROR,
-        );
-      }
-
-      await this.logService.createLogTransaction(
-        queryRunner,
-        caseReportValidate.id,
-        caseReportValidate.val_cr_reporter_id_fk,
-        clientIp,
-        logReports.LOG_ANULATION,
-      );
-
-      await queryRunner.commitTransaction();
-
+    if (result.affected === 0) {
       return new HttpException(
-        `¡Datos anulados correctamente!`,
-        HttpStatus.ACCEPTED,
-      );
-    } catch (error) {
-      await queryRunner.rollbackTransaction();
-
-      throw new HttpException(
-        `Un error ha ocurrido: ${error.message}`,
+        `No se pudo anular el reporte.`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
-    } finally {
-      await queryRunner.release();
     }
+
+    await this.logService.createLog(
+      caseReportValidate.id,
+      caseReportValidate.val_cr_reporter_id_fk,
+      clientIp,
+      logReports.LOG_ANULATION,
+    );
+
+    return new HttpException(
+      `¡Datos anulados correctamente!`,
+      HttpStatus.ACCEPTED,
+    );
   }
 }

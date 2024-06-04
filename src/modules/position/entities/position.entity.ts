@@ -1,25 +1,40 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { ReportAnalystAssignment } from 'src/modules/report-analyst-assignment/entities/report-analyst-assignment.entity';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class Position {
-    @PrimaryGeneratedColumn()
-    id: number
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column({ type: 'varchar' })
-    pos_name: string
+  @Column({ type: 'varchar' })
+  pos_name: string;
 
-    @Column({ type: 'boolean', default: true })
-    pos_enabled: boolean
+  @Column({ type: 'boolean', default: true })
+  pos_enabled: boolean;
 
-    @Column({ type: 'boolean', default: true })
-    pos_status: boolean
+  @Column({ type: 'boolean', default: true })
+  pos_status: boolean;
 
-    @CreateDateColumn()
-    createdAt: Date;
+  @CreateDateColumn()
+  createdAt: Date;
 
-    @UpdateDateColumn()
-    updateAt: Date;
+  @UpdateDateColumn()
+  updateAt: Date;
 
-    @DeleteDateColumn()
-    deletedAt: Date;
+  @DeleteDateColumn()
+  deletedAt: Date;
+
+  @OneToMany(
+    () => ReportAnalystAssignment,
+    (reportAnalystAssignment) => reportAnalystAssignment.position,
+  )
+  reportAnalystAssignment: ReportAnalystAssignment[];
 }

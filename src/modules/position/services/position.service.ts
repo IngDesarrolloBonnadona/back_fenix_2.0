@@ -20,7 +20,7 @@ export class PositionService {
   async findAllPosition() {
     const positions = await this.positionRepository.find();
 
-    if (!positions) {
+    if (!positions || positions.length === 0) {
       throw new HttpException(
         'No se encontró la lista de cargos',
         HttpStatus.NOT_FOUND,

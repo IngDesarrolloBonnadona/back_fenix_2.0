@@ -12,7 +12,12 @@ export class LogController {
 
   @Post('/createLog')
   createLog(@Body() createLogDto: CreateLogDto): Promise<Log> {
-    return this.logService.createLog(createLogDto);
+    return this.logService.createLog(
+      createLogDto.log_validatedcase_id_fk,
+      createLogDto.log_user_id_fk,
+      createLogDto.log_ip,
+      createLogDto.log_action
+    );
   }
 
   @Get('/listLogs')

@@ -25,7 +25,7 @@ export class EventService {
       }
     });
 
-    if (!events) {
+    if (!events || events.length === 0) {
       throw new HttpException(
         'No se encontró la lista de eventos.',
         HttpStatus.NOT_FOUND,

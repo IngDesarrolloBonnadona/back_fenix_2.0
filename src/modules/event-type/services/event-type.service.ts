@@ -26,7 +26,7 @@ export class EventTypeService {
       }
     });
 
-    if (!eventTypes) {
+    if (!eventTypes || eventTypes.length === 0) {
       throw new HttpException(
         'No se encontró la lista de tipo de eventos.',
         HttpStatus.NOT_FOUND,

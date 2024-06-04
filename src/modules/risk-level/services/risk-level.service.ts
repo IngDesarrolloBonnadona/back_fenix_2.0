@@ -24,7 +24,7 @@ export class RiskLevelService {
       }
     });
 
-    if (!riskLevels) {
+    if (!riskLevels || riskLevels.length === 0) {
       throw new HttpException(
         'No se encontró la lista de niveles de riesgo',
         HttpStatus.NOT_FOUND,

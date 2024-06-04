@@ -16,25 +16,25 @@ import { UnitModule } from './modules/unit/unit.module';
 import { CaseReportValidateModule } from './modules/case-report-validate/case-report-validate.module';
 import { StatusReportModule } from './modules/status-report/status-report.module';
 import { MovementReportModule } from './modules/movement-report/movement-report.module';
-import { IpClientMiddleware } from './middlewares/ip-client.middleware';
+// import { IpClientMiddleware } from './middlewares/ip-client.middleware';
 import { LogModule } from './modules/log/log.module';
 import { PositionModule } from './modules/position/position.module';
-import { AnalystReporterModule } from './modules/analyst-reporter/analyst-reporter.module';
+import { ReportAnalystAssignmentModule } from './modules/report-analyst-assignment/report-analyst-assignment.module';
 
 require('dotenv').config();
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
-        type: "postgres",
-        host: process.env.TYPEORM_HOST,
-        port: +process.env.TYPEORM_PORT,
-        username: process.env.TYPEORM_USERNAME,
-        password: process.env.TYPEORM_PASSWORD,
-        database: process.env.TYPEORM_DATABASE,
-        entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        synchronize: true,
-        autoLoadEntities: true
+      type: 'postgres',
+      host: process.env.TYPEORM_HOST,
+      port: +process.env.TYPEORM_PORT,
+      username: process.env.TYPEORM_USERNAME,
+      password: process.env.TYPEORM_PASSWORD,
+      database: process.env.TYPEORM_DATABASE,
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      synchronize: true,
+      autoLoadEntities: true,
     }),
     CaseReportOriginalModule,
     CaseTypeModule,
@@ -54,7 +54,7 @@ require('dotenv').config();
     MovementReportModule,
     LogModule,
     PositionModule,
-    AnalystReporterModule,
+    ReportAnalystAssignmentModule,
   ],
   controllers: [],
   providers: [],

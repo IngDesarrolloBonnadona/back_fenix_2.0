@@ -45,7 +45,7 @@ export class MedicineService {
   async findAllMedicines() {
     const medicines = await this.medicineRepository.find();
 
-    if (!medicines) {
+    if (!medicines || medicines.length === 0) {
       throw new HttpException(
         'No se encontró la lista de medicamentos',
         HttpStatus.NOT_FOUND,

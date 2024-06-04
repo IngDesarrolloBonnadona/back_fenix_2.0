@@ -24,7 +24,7 @@ export class SeverityClasificationService {
       }
     });
 
-    if (!severityClasifs) {
+    if (!severityClasifs || severityClasifs.length === 0) {
       throw new HttpException(
         'No se encontró la lista de clasificaciones de severidad',
         HttpStatus.NOT_FOUND,

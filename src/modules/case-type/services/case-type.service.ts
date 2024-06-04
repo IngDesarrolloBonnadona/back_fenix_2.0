@@ -26,7 +26,7 @@ export class CaseTypeService {
       }
     });
 
-    if (!caseTypes) {
+    if (!caseTypes || caseTypes.length === 0) {
       throw new HttpException(
         'No se encontró la lista de tipos de caso',
         HttpStatus.NOT_FOUND,
@@ -48,16 +48,6 @@ export class CaseTypeService {
 
     return caseType
   }
-
-  // async updateCaseType(id: number, updateCaseTypeDto: UpdateCaseTypeDto) {
-  //   const caseType = await this.findOneCaseType(id);
-
-  //   Object.assign(caseType, updateCaseTypeDto);
-
-  //   caseType.updateAt = new Date();
-
-  //   return await this.caseTypeRepository.save(caseType);
-  // }
 
   async updateCaseType(id: number, updateCaseTypeDto: UpdateCaseTypeDto) {
     const caseType = await this.findOneCaseType(id);
