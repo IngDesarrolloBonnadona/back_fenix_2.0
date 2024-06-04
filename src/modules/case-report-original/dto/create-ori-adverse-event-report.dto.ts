@@ -31,7 +31,43 @@ export class CreateOriAdverseEventReportDto {
 
     @IsNumber()
     @IsNotEmpty()
-    ori_cr_patient_id_fk: number;
+    ori_cr_documentpatient: number;
+
+    @IsString()
+    @IsNotEmpty()
+    ori_cr_doctypepatient: string
+
+    @IsString()
+    @IsNotEmpty()
+    ori_cr_firstnamepatient: string
+
+    @IsString()
+    @IsNotEmpty()
+    ori_cr_secondnamepatient: string
+
+    @IsString()
+    @IsNotEmpty()
+    ori_cr_firstlastnamepatient: string
+
+    @IsString()
+    @IsNotEmpty()
+    ori_cr_secondlastnamepatient: string
+
+    @IsNumber()
+    @IsNotEmpty()
+    ori_cr_agepatient: number
+
+    @IsString()
+    @IsNotEmpty()
+    ori_cr_genderpatient: string
+
+    @IsString()
+    @IsNotEmpty()
+    ori_cr_epspatient: string
+
+    @IsString()
+    @IsNotEmpty()
+    ori_cr_admconsecutivepatient: string
     
     @IsNumber()
     @IsNotEmpty()
