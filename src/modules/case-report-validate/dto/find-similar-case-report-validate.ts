@@ -3,7 +3,7 @@ import { IsNotEmpty, IsNumber } from "class-validator";
 export class FindSimilarCaseReportValidateDto {
     @IsNumber()
     @IsNotEmpty()
-    val_cr_patient_id_fk: number;
+    val_cr_documentpatient: number;
 
     @IsNumber()
     @IsNotEmpty()

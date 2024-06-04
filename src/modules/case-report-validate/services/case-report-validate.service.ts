@@ -1,8 +1,4 @@
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UpdateCaseReportValidateDto } from '../dto/update-case-report-validate.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CaseReportValidate as CaseReportValidateEntity } from '../entities/case-report-validate.entity';
@@ -50,7 +46,7 @@ export class CaseReportValidateService {
       where: {
         val_cr_casetype_id_fk: similarCaseReportValidate.val_cr_casetype_id_fk,
         val_cr_unit_id_fk: similarCaseReportValidate.val_cr_unit_id_fk,
-        val_cr_patient_id_fk: similarCaseReportValidate.val_cr_patient_id_fk,
+        val_cr_documentpatient: similarCaseReportValidate.val_cr_documentpatient,
         val_cr_event_id_fk: similarCaseReportValidate.val_cr_event_id_fk,
         val_cr_eventtype_id_fk:
           similarCaseReportValidate.val_cr_eventtype_id_fk,
@@ -194,7 +190,7 @@ export class CaseReportValidateService {
         caseReportValidate,
         createdMedicine: createReportValDto.medicines,
         createdDevice: createReportValDto.devices,
-        statusReport
+        statusReport,
       };
 
       return {
@@ -224,7 +220,7 @@ export class CaseReportValidateService {
       val_cr_originalcase_id_fk: caseReportOriginalId,
       val_cr_filingnumber: caseReportOriginal.ori_cr_filingnumber,
       val_cr_casetype_id_fk: caseReportOriginal.ori_cr_casetype_id_fk,
-      val_cr_patient_id_fk: caseReportOriginal.ori_cr_documentpatient,
+      val_cr_documentpatient: caseReportOriginal.ori_cr_documentpatient,
       val_cr_reporter_id_fk: caseReportOriginal.ori_cr_reporter_id_fk,
       val_cr_eventtype_id_fk: caseReportOriginal.ori_cr_eventtype_id_fk,
       val_cr_service_id_fk: caseReportOriginal.ori_cr_service_id_fk,
@@ -264,7 +260,7 @@ export class CaseReportValidateService {
     }
 
     if (patientId) {
-      where.val_cr_patient_id_fk = patientId;
+      where.val_cr_documentpatient = patientId;
     }
 
     if (caseTypeId) {
@@ -344,10 +340,7 @@ export class CaseReportValidateService {
     );
   }
 
-  async cancelReportValidate(
-    id: string,
-    clientIp: string,
-  ) {
+  async cancelReportValidate(id: string, clientIp: string) {
     const caseReportValidate = await this.findOneReportValidate(id);
 
     caseReportValidate.val_cr_status = false;
