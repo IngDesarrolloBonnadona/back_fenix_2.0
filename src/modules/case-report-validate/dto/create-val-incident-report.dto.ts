@@ -24,7 +24,7 @@ export class CreateValIncidentReportDto {
 
     @IsNumber()
     @IsNotEmpty()
-    val_cr_documentpatient: number;
+    val_cr_documentpatient: string;
 
     @IsString()
     @IsNotEmpty()
@@ -60,7 +60,7 @@ export class CreateValIncidentReportDto {
 
     @IsString()
     @IsNotEmpty()
-    val_cr_admconsecutivepatient: string
+    val_cr_admconsecutivepatient: number
     
     @IsNumber()
     @IsNotEmpty()

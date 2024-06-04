@@ -35,7 +35,7 @@ export class CaseReportValidate {
   val_cr_filingnumber: string;
 
   @Column({ nullable: true })
-  val_cr_documentpatient: number;
+  val_cr_documentpatient: string;
 
   @Column({ nullable: true })
   val_cr_doctypepatient: string;
@@ -62,7 +62,7 @@ export class CaseReportValidate {
   val_cr_epspatient: string;
 
   @Column({ nullable: true })
-  val_cr_admconsecutivepatient: string;
+  val_cr_admconsecutivepatient: number;
 
   @Column({ nullable: true })
   val_cr_reporter_id_fk: number;

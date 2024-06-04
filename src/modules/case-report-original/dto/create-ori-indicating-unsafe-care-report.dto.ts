@@ -23,7 +23,7 @@ export class CreateOriIndicatingUnsafeCareReportDto {
 
     @IsNumber()
     @IsNotEmpty()
-    ori_cr_documentpatient: number;
+    ori_cr_documentpatient: string;
 
     @IsString()
     @IsNotEmpty()
@@ -59,7 +59,7 @@ export class CreateOriIndicatingUnsafeCareReportDto {
 
     @IsString()
     @IsNotEmpty()
-    ori_cr_admconsecutivepatient: string
+    ori_cr_admconsecutivepatient: number
     
     @IsNumber()
     @IsNotEmpty()

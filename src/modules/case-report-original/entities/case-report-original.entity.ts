@@ -26,7 +26,7 @@ export class CaseReportOriginal {
     ori_cr_filingnumber: string
 
     @Column({ nullable: true })
-    ori_cr_documentpatient: number;
+    ori_cr_documentpatient: string;
 
     @Column({ nullable: true })
     ori_cr_doctypepatient: string
@@ -53,7 +53,7 @@ export class CaseReportOriginal {
     ori_cr_epspatient: string
 
     @Column({ nullable: true })
-    ori_cr_admconsecutivepatient: string
+    ori_cr_admconsecutivepatient: number
     
     @Column({ nullable: true })
     ori_cr_reporter_id_fk: number;

@@ -52,7 +52,7 @@ export class CaseReportValidateController {
   async SummaryReportsValidate(
     @Query('creationDate') creationDate?: string,
     @Query('filingNumber') filingNumber?: string,
-    @Query('patientId') patientId?: number,
+    @Query('patientId') patientId?: string,
     @Query('caseTypeId') caseTypeId?: number,
   ): Promise<CaseReportValidate[]> {
     const creationDateObj = creationDate ? new Date(creationDate) : undefined;

@@ -251,7 +251,7 @@ export class CaseReportValidateService {
   async SummaryReportsValidate(
     creationDate?: Date,
     filingNumber?: string,
-    patientId?: number,
+    patientId?: string,
     caseTypeId?: number,
   ): Promise<CaseReportValidateEntity[]> {
     const where: FindOptionsWhere<CaseReportValidateEntity> = {};

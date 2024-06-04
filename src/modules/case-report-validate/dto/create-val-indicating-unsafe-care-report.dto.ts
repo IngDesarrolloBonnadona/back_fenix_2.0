@@ -23,7 +23,7 @@ export class CreateValIndicatingUnsafeCareReportDto {
 
     @IsNumber()
     @IsNotEmpty()
-    val_cr_documentpatient: number;
+    val_cr_documentpatient: string;
 
     @IsString()
     @IsNotEmpty()
@@ -59,7 +59,7 @@ export class CreateValIndicatingUnsafeCareReportDto {
 
     @IsString()
     @IsNotEmpty()
-    val_cr_admconsecutivepatient: string
+    val_cr_admconsecutivepatient: number
     
     @IsNumber()
     @IsNotEmpty()
