@@ -33,18 +33,18 @@ export class ReportAnalystAssignmentController {
     );
   }
 
-  @Post('reAssingAnalyst/:idValidator')
-  createReAssingAnalystReporter(
-    @Body() createAnalystReporterDto: CreateReportAnalystAssignmentDto,
-    @Ip() clientIp: string,
-    @Param('idValidator') idValidator: number,
-  ) {
-    return this.ReportAnalisysAssignmentService.ReAssingAnalyst(
-      createAnalystReporterDto,
-      clientIp,
-      idValidator,
-    );
-  }
+  // @Post('reAssingAnalyst/:idValidator')
+  // createReAssingAnalystReporter(
+  //   @Body() createAnalystReporterDto: CreateReportAnalystAssignmentDto,
+  //   @Ip() clientIp: string,
+  //   @Param('idValidator') idValidator: number,
+  // ) {
+  //   return this.ReportAnalisysAssignmentService.ReAssingAnalyst(
+  //     createAnalystReporterDto,
+  //     clientIp,
+  //     idValidator,
+  //   );
+  // }
 
   @Get('listAssignedAnalysts')
   listAssignedAnalysts() {
@@ -56,8 +56,8 @@ export class ReportAnalystAssignmentController {
     return this.ReportAnalisysAssignmentService.findOneAssignedAnalyst(id);
   }
 
-  @Put('updateAssignedAnalyst/:idValidator')
-  updateAssignedAnalyst(
+  @Put('updateReAssignedAnalyst/:idValidator')
+  updateReAssignedAnalyst(
     @Body() updateReportAnalystAssignmentDto: UpdateReportAnalystAssignmentDto,
     @Ip() clientIp: string,
     @Param('idValidator') idValidator: number,
