@@ -3,7 +3,7 @@ import { CreateReportAnalystAssignmentDto } from '../dto/create-report-analyst-a
 import { UpdateReportAnalystAssignmentDto } from '../dto/update-report-analyst-assignment.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ReportAnalystAssignment as ReportAnalystAssignmentEntity } from '../entities/report-analyst-assignment.entity';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 import { LogService } from 'src/modules/log/services/log.service';
 import { logReports } from 'src/enums/logs.enum';
 import { CaseReportValidateService } from 'src/modules/case-report-validate/services/case-report-validate.service';
@@ -121,20 +121,28 @@ export class ReportAnalystAssignmentService {
     );
   }
 
-  async findAllAssignedAnalysts() {
+  async findAssignedAnalystsByPosition(
+    positionId?: number
+  ): Promise<ReportAnalystAssignmentEntity[]> {
+    const where: FindOptionsWhere<ReportAnalystAssignmentEntity> = {}
+
+    if(positionId) {
+      where.ass_ra_position_id_fk = positionId;
+    }
+
+    where.ass_ra_status = true;
+
     const analystReporters = await this.reportAnalystAssignmentRepository.find({
+      where,
       relations: {
         caseReportValidate: true,
         position: true,
-      },
-      where: {
-        ass_ra_status: true,
-      },
+      }
     });
 
     if (!analystReporters || analystReporters.length === 0) {
       throw new HttpException(
-        'No se encontró la lista de analistas',
+        '¡No hay reportes asignados para mostrar.!',
         HttpStatus.NOT_FOUND,
       );
     }
@@ -161,7 +169,7 @@ export class ReportAnalystAssignmentService {
     createReportAnalystAssignmentDto: CreateReportAnalystAssignmentDto,
     clientIp: string,
     idAnalyst: number,
-  ) {
+  ): Promise<ReportAnalystAssignmentEntity> {
     const reportAssignmentFind =
       await this.reportAnalystAssignmentRepository.findOne({
         where: {
@@ -187,7 +195,7 @@ export class ReportAnalystAssignmentService {
     );
 
     reportAssignmentFind.ass_ra_status = false;
-    await this.reportAnalystAssignmentRepository.save(reportAssignmentFind)
+    await this.reportAnalystAssignmentRepository.save(reportAssignmentFind);
 
     await this.logService.createLog(
       createReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
