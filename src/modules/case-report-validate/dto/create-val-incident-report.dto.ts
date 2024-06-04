@@ -22,7 +22,7 @@ export class CreateValIncidentReportDto {
     @IsNotEmpty()
     val_cr_suborigin_id_fk: number;
 
-    @IsNumber()
+    @IsString()
     @IsNotEmpty()
     val_cr_documentpatient: string;
 
@@ -58,7 +58,7 @@ export class CreateValIncidentReportDto {
     @IsNotEmpty()
     val_cr_epspatient: string
 
-    @IsString()
+    @IsNumber()
     @IsNotEmpty()
     val_cr_admconsecutivepatient: number
     

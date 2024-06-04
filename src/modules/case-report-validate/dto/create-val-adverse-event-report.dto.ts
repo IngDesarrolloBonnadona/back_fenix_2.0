@@ -29,7 +29,7 @@ export class CreateValAdverseEventReportDto {
     @IsNotEmpty()
     val_cr_unit_id_fk: number;
 
-    @IsNumber()
+    @IsString()
     @IsNotEmpty()
     val_cr_documentpatient: string;
 
@@ -65,7 +65,7 @@ export class CreateValAdverseEventReportDto {
     @IsNotEmpty()
     val_cr_epspatient: string
 
-    @IsString()
+    @IsNumber()
     @IsNotEmpty()
     val_cr_admconsecutivepatient: number
     

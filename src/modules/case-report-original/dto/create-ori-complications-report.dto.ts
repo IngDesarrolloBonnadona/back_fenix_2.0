@@ -29,7 +29,7 @@ export class CreateOriComplicationsReportDto {
     @IsNotEmpty()
     ori_cr_unit_id_fk: number;
 
-    @IsNumber()
+    @IsString()
     @IsNotEmpty()
     ori_cr_documentpatient: string;
 
@@ -65,7 +65,7 @@ export class CreateOriComplicationsReportDto {
     @IsNotEmpty()
     ori_cr_epspatient: string
 
-    @IsString()
+    @IsNumber()
     @IsNotEmpty()
     ori_cr_admconsecutivepatient: number
    
