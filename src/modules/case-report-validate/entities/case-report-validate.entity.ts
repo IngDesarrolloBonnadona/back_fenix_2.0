@@ -35,7 +35,34 @@ export class CaseReportValidate {
   val_cr_filingnumber: string;
 
   @Column({ nullable: true })
-  val_cr_patient_id_fk: number;
+  val_cr_documentpatient: string;
+
+  @Column({ nullable: true })
+  val_cr_doctypepatient: string;
+
+  @Column({ nullable: true })
+  val_cr_firstnamepatient: string;
+
+  @Column({ nullable: true })
+  val_cr_secondnamepatient: string;
+
+  @Column({ nullable: true })
+  val_cr_firstlastnamepatient: string;
+
+  @Column({ nullable: true })
+  val_cr_secondlastnamepatient: string;
+
+  @Column({ nullable: true })
+  val_cr_agepatient: number;
+
+  @Column({ nullable: true })
+  val_cr_genderpatient: string;
+
+  @Column({ nullable: true })
+  val_cr_epspatient: string;
+
+  @Column({ nullable: true })
+  val_cr_admconsecutivepatient: number;
 
   @Column({ nullable: true })
   val_cr_reporter_id_fk: number;

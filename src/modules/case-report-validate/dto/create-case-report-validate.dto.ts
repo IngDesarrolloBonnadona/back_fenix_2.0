@@ -29,9 +29,45 @@ export class CreateCaseReportValidateDto {
     @IsNotEmpty()
     val_cr_originalcase_id_fk: string
     
+    @IsString()
+    @IsNotEmpty()
+    val_cr_documentpatient: string;
+
+    @IsString()
+    @IsNotEmpty()
+    val_cr_doctypepatient: string
+
+    @IsString()
+    @IsNotEmpty()
+    val_cr_firstnamepatient: string
+
+    @IsString()
+    @IsNotEmpty()
+    val_cr_secondnamepatient: string
+
+    @IsString()
+    @IsNotEmpty()
+    val_cr_firstlastnamepatient: string
+
+    @IsString()
+    @IsNotEmpty()
+    val_cr_secondlastnamepatient: string
+
     @IsNumber()
     @IsNotEmpty()
-    val_cr_patient_id_fk: number;
+    val_cr_agepatient: number
+
+    @IsString()
+    @IsNotEmpty()
+    val_cr_genderpatient: string
+
+    @IsString()
+    @IsNotEmpty()
+    val_cr_epspatient: string
+
+    @IsNumber()
+    @IsNotEmpty()
+    val_cr_admconsecutivepatient: number
 
     @IsNumber()
     @IsNotEmpty()
