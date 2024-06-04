@@ -130,10 +130,14 @@ export class CaseReportValidate {
 
   @OneToMany(() => Log, (log) => log.caseReportValidate)
   log: Log[];
+  
+  @OneToMany(() => ReportAnalystAssignment, (reportAnalystAssignment) => reportAnalystAssignment.caseReportValidate)
+  reportAnalystAssignment: ReportAnalystAssignment[]
+  
+  // @OneToOne(
+  //   () => ReportAnalystAssignment,
+  //   (reportAnalystAssignment) => reportAnalystAssignment.caseReportValidate,
+  // )
+  // reportAnalystAssignment: ReportAnalystAssignment;
 
-  @OneToOne(
-    () => ReportAnalystAssignment,
-    (reportAnalystAssignment) => reportAnalystAssignment.caseReportValidate,
-  )
-  reportAnalystAssignment: ReportAnalystAssignment;
 }

@@ -38,14 +38,22 @@ export class ReportAnalystAssignment {
   @DeleteDateColumn()
   deletedAt: Date;
 
-  @OneToOne(
+  @ManyToOne(() => Position, (position) => position.reportAnalystAssignment)
+  @JoinColumn({ name: 'ass_ra_position_id_fk' })
+  position: Position;
+
+  @ManyToOne(
     () => CaseReportValidate,
     (caseReportValidate) => caseReportValidate.reportAnalystAssignment,
   )
   @JoinColumn({ name: 'ass_ra_validatedcase_id_fk' })
   caseReportValidate: CaseReportValidate;
+  
+  // @OneToOne(
+  //   () => CaseReportValidate,
+  //   (caseReportValidate) => caseReportValidate.reportAnalystAssignment,
+  // )
+  // @JoinColumn({ name: 'ass_ra_validatedcase_id_fk' })
+  // caseReportValidate: CaseReportValidate;
 
-  @ManyToOne(() => Position, (position) => position.reportAnalystAssignment)
-  @JoinColumn({ name: 'ass_ra_position_id_fk' })
-  position: Position;
 }

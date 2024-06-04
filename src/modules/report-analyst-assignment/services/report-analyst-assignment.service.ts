@@ -79,6 +79,13 @@ export class ReportAnalystAssignmentService {
         },
       });
 
+    if (!reportAssignmentFind) {
+      throw new HttpException(
+        'No se encontró el reporte asignado a analista',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
     await this.caseReportValidateService.findOneReportValidate(
       updateReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
     );
@@ -154,7 +161,49 @@ export class ReportAnalystAssignmentService {
     createReportAnalystAssignmentDto: CreateReportAnalystAssignmentDto,
     clientIp: string,
     idAnalyst: number,
-  ) {}
+  ) {
+    const reportAssignmentFind =
+      await this.reportAnalystAssignmentRepository.findOne({
+        where: {
+          ass_ra_validatedcase_id_fk:
+            createReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
+          ass_ra_status: true,
+        },
+      });
+
+    if (!reportAssignmentFind) {
+      throw new HttpException(
+        'No se encontró el reporte asignado a analista',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    await this.caseReportValidateService.findOneReportValidate(
+      createReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
+    );
+
+    await this.positionService.findOnePosition(
+      createReportAnalystAssignmentDto.ass_ra_position_id_fk,
+    );
+
+    reportAssignmentFind.ass_ra_status = false;
+    await this.reportAnalystAssignmentRepository.save(reportAssignmentFind)
+
+    await this.logService.createLog(
+      createReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
+      idAnalyst,
+      clientIp,
+      logReports.LOG_REASSIGNMENT_ANALYST,
+    );
+
+    const analyst = this.reportAnalystAssignmentRepository.create(
+      createReportAnalystAssignmentDto,
+    );
+
+    const assigned = await this.reportAnalystAssignmentRepository.save(analyst);
+
+    return assigned;
+  }
 
   async deleteAssignedAnalyst(id: number) {
     const analystReporter = await this.findOneAssignedAnalyst(id);
