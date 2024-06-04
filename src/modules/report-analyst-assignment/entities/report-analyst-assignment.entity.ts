@@ -24,7 +24,7 @@ export class ReportAnalystAssignment {
   ass_ra_position_id_fk: number;
 
   @Column()
-  ass_ra_user_id_fk: number;
+  ass_ra_analyst_id_fk: number;
 
   @Column({ default: true })
   ass_ra_status: boolean;
