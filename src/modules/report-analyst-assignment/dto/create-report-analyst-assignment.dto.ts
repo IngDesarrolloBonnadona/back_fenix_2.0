@@ -11,5 +11,5 @@ export class CreateReportAnalystAssignmentDto {
 
   @IsNotEmpty()
   @IsNumber()
-  ass_ra_user_id_fk: number;
+  ass_ra_analyst_id_fk: number;
 }

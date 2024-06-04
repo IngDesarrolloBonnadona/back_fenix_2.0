@@ -7,11 +7,14 @@ import {
   Delete,
   Put,
   Ip,
+  Query,
+  HttpException,
 } from '@nestjs/common';
 import { ReportAnalystAssignmentService } from '../services/report-analyst-assignment.service';
 import { CreateReportAnalystAssignmentDto } from '../dto/create-report-analyst-assignment.dto';
 import { UpdateReportAnalystAssignmentDto } from '../dto/update-report-analyst-assignment.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { ReportAnalystAssignment } from '../entities/report-analyst-assignment.entity';
 
 @ApiTags('report-analyst-assignment')
 @Controller('report-analyst-assignment')
@@ -25,30 +28,34 @@ export class ReportAnalystAssignmentController {
     @Body() createAnalystReporterDto: CreateReportAnalystAssignmentDto,
     @Ip() clientIp: string,
     @Param('idValidator') idValidator: number,
-  ) {
-    return this.ReportAnalisysAssignmentService.AssingAnalyst(
+  ): Promise<ReportAnalystAssignment> {
+    return this.ReportAnalisysAssignmentService.assingAnalyst(
       createAnalystReporterDto,
       clientIp,
       idValidator,
     );
   }
 
-  // @Post('reAssingAnalyst/:idValidator')
-  // createReAssingAnalystReporter(
-  //   @Body() createAnalystReporterDto: CreateReportAnalystAssignmentDto,
-  //   @Ip() clientIp: string,
-  //   @Param('idValidator') idValidator: number,
-  // ) {
-  //   return this.ReportAnalisysAssignmentService.ReAssingAnalyst(
-  //     createAnalystReporterDto,
-  //     clientIp,
-  //     idValidator,
-  //   );
-  // }
+  @Post('returnCaseBetweenAnalyst/:idAnalyst')
+  createReturnCaseBetweenAnalyst(
+    @Body() createAnalystReporterDto: CreateReportAnalystAssignmentDto,
+    @Ip() clientIp: string,
+    @Param('idAnalyst') idAnalyst: number,
+  ): Promise<ReportAnalystAssignment> {
+    return this.ReportAnalisysAssignmentService.returnCaseBetweenAnalyst(
+      createAnalystReporterDto,
+      clientIp,
+      idAnalyst,
+    );
+  }
 
-  @Get('listAssignedAnalysts')
-  listAssignedAnalysts() {
-    return this.ReportAnalisysAssignmentService.findAllAssignedAnalysts();
+  @Get('listAssignedAnalystsByPosition')
+  async listAssignedAnalystsByPosition(
+    @Query('positionId') positionId?: number
+  ): Promise<ReportAnalystAssignment[]> {
+    return await this.ReportAnalisysAssignmentService.findAssignedAnalystsByPosition(
+      positionId
+    );
   }
 
   @Get('findAssignedAnalyst/:id')
@@ -61,8 +68,8 @@ export class ReportAnalystAssignmentController {
     @Body() updateReportAnalystAssignmentDto: UpdateReportAnalystAssignmentDto,
     @Ip() clientIp: string,
     @Param('idValidator') idValidator: number,
-  ) {
-    return this.ReportAnalisysAssignmentService.ReAssingAnalyst(
+  ): Promise<HttpException> {
+    return this.ReportAnalisysAssignmentService.reAssingAnalyst(
       updateReportAnalystAssignmentDto,
       clientIp,
       idValidator,
