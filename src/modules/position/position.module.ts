@@ -10,5 +10,6 @@ import { Position } from './entities/position.entity';
   ],
   controllers: [PositionController],
   providers: [PositionService],
+  exports: [PositionService]
 })
 export class PositionModule {}

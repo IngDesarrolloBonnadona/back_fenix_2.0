@@ -26,25 +26,25 @@ export class ReportAnalystAssignmentController {
     @Ip() clientIp: string,
     @Param('idValidator') idValidator: number,
   ) {
-    return this.ReportAnalisysAssignmentService.AssingAnalyst(
+    return this.ReportAnalisysAssignmentService.assingAnalyst(
       createAnalystReporterDto,
       clientIp,
       idValidator,
     );
   }
 
-  // @Post('reAssingAnalyst/:idValidator')
-  // createReAssingAnalystReporter(
-  //   @Body() createAnalystReporterDto: CreateReportAnalystAssignmentDto,
-  //   @Ip() clientIp: string,
-  //   @Param('idValidator') idValidator: number,
-  // ) {
-  //   return this.ReportAnalisysAssignmentService.ReAssingAnalyst(
-  //     createAnalystReporterDto,
-  //     clientIp,
-  //     idValidator,
-  //   );
-  // }
+  @Post('returnCaseBetweenAnalyst/:idAnalyst')
+  createReturnCaseBetweenAnalyst(
+    @Body() createAnalystReporterDto: CreateReportAnalystAssignmentDto,
+    @Ip() clientIp: string,
+    @Param('idAnalyst') idAnalyst: number,
+  ) {
+    return this.ReportAnalisysAssignmentService.returnCaseBetweenAnalyst(
+      createAnalystReporterDto,
+      clientIp,
+      idAnalyst,
+    );
+  }
 
   @Get('listAssignedAnalysts')
   listAssignedAnalysts() {
@@ -62,7 +62,7 @@ export class ReportAnalystAssignmentController {
     @Ip() clientIp: string,
     @Param('idValidator') idValidator: number,
   ) {
-    return this.ReportAnalisysAssignmentService.ReAssingAnalyst(
+    return this.ReportAnalisysAssignmentService.reAssingAnalyst(
       updateReportAnalystAssignmentDto,
       clientIp,
       idValidator,

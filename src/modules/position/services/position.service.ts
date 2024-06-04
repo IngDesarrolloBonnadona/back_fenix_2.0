@@ -31,7 +31,7 @@ export class PositionService {
   }
 
   async findOnePosition(id: number) {
-    const position = await this.positionRepository.findOne({ where: { id }});
+    const position = await this.positionRepository.findOne({ where: { id, pos_status: true }});
 
     if (!position){
       throw new HttpException(
