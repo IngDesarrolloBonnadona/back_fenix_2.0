@@ -1,5 +1,5 @@
 import { HttpService as NestHttpService } from "@nestjs/axios";
-import { Injectable,  } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable,  } from "@nestjs/common";
 import { AxiosResponse } from "axios";
 import { firstValueFrom } from "rxjs";
 
@@ -16,6 +16,14 @@ export class HttpResearchersService {
         const headers = {
             'X-Authorization': process.env.X_AUTH_VALUE_RESEARCHER
         };
-        return firstValueFrom(this.httpResearchersService.get(url, { headers }));
+        
+         try {
+             return firstValueFrom(this.httpResearchersService.get(url, { headers }));
+         } catch (error) {
+            throw new HttpException(
+                `No se pudieron recuperar los datos: ${error}`,
+                HttpStatus.INTERNAL_SERVER_ERROR
+            );
+         }
     }
 }
