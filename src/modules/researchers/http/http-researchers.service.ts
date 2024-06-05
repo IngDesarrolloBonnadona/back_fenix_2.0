@@ -14,9 +14,8 @@ export class HttpResearchersService {
     async getResearchersData(): Promise<AxiosResponse<any>> {
         const url = process.env.URL_RESEARCHERS
         const headers = {
-            'X-Autorization': process.env.X_AUTH_VALUE_RESEARCHER
+            'X-Authorization': process.env.X_AUTH_VALUE_RESEARCHER
         };
-        
         return firstValueFrom(this.httpResearchersService.get(url, { headers }));
     }
 }
