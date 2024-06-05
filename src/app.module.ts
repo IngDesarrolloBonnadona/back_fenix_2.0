@@ -20,6 +20,7 @@ import { MovementReportModule } from './modules/movement-report/movement-report.
 import { LogModule } from './modules/log/log.module';
 import { PositionModule } from './modules/position/position.module';
 import { ReportAnalystAssignmentModule } from './modules/report-analyst-assignment/report-analyst-assignment.module';
+import { ResearchersModule } from './modules/researchers/researchers.module';
 
 require('dotenv').config();
 
@@ -55,6 +56,7 @@ require('dotenv').config();
     LogModule,
     PositionModule,
     ReportAnalystAssignmentModule,
+    ResearchersModule,
   ],
   controllers: [],
   providers: [],
