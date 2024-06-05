@@ -10,8 +10,8 @@ export class ResearchersService {
   ) {}
 
   async filterResearchers(resFilter: Partial<FilterResearcherDto>) {
-      const response = await this.httpResearchersService.getResearchersData();
-      const researchers: FilterResearcherDto[] = response.data.data;
+      const result = await this.httpResearchersService.getResearchersData();
+      const researchers: FilterResearcherDto[] = result.data.data;
 
       const filteredResearchers = researchers.filter(research => {
         return (
