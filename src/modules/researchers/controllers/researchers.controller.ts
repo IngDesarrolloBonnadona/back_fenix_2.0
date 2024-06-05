@@ -12,12 +12,11 @@ export class ResearchersController {
   async filterResearchers(
     @Query('empImmediateBoss') empImmediateBoss?: string,
     @Query('empPosition') empPosition?: string
-  ) {
-    const filter: Partial<FilterResearcherDto> = {
-      empImmediateBoss,
-      empPosition
-    };
-
+  ): Promise<FilterResearcherDto[]> {
+    const filter = new FilterResearcherDto();
+      filter.empImmediateBoss = empImmediateBoss;
+      filter.empPosition = empPosition;
+    
     return this.researchersService.filterResearchers(filter);
   }
 }
