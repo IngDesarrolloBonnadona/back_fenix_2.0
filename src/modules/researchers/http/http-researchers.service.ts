@@ -1,5 +1,6 @@
 import { HttpService as NestHttpService } from "@nestjs/axios";
 import { Injectable,  } from "@nestjs/common";
+import { AxiosResponse } from "axios";
 import { firstValueFrom } from "rxjs";
 
 require('dotenv').config();
@@ -10,7 +11,7 @@ export class HttpResearchersService {
         private readonly httpResearchersService: NestHttpService
     ) {}
 
-    async getResearchersData() {
+    async getResearchersData(): Promise<AxiosResponse<any>> {
         const url = process.env.URL_RESEARCHERS
         const headers = {
             'X-Autorization': process.env.X_AUTH_VALUE_RESEARCHER
