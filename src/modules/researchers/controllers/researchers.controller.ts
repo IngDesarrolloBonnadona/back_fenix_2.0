@@ -8,8 +8,8 @@ import { ApiTags } from '@nestjs/swagger';
 export class ResearchersController {
   constructor(private readonly researchersService: ResearchersService) {}
 
-  @Get('filter')
-  async filterResearchers(
+  @Get('filterResearchers')
+  filterResearchers(
     @Query('empImmediateBoss') empImmediateBoss?: string,
     @Query('empPosition') empPosition?: string
   ): Promise<FilterResearcherDto[]> {
