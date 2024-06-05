@@ -23,7 +23,7 @@ export class HttpResearchersService {
       return response;
     } catch (error) {
       throw new HttpException(
-        `No se pudieron recuperar los datos: ${error}`,
+        `Hubo un error al consultar en la base de datos: ${error}`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
