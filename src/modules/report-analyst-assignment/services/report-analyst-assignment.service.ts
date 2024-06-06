@@ -232,26 +232,3 @@ export class ReportAnalystAssignmentService {
     );
   }
 }
-
-// async updateAssignedAnalyst(
-//   id: number,
-//   updateReportAnalystAssignmentDto: UpdateReportAnalystAssignmentDto,
-// ) {
-//   const analystReporter = await this.findOneAssignedAnalyst(id);
-//   const result = await this.reportAnalystAssignmentRepository.update(
-//     analystReporter.id,
-//     updateReportAnalystAssignmentDto,
-//   );
-
-//   if (result.affected === 0) {
-//     return new HttpException(
-//       `No se pudo actualizar la asignacion del analista`,
-//       HttpStatus.INTERNAL_SERVER_ERROR,
-//     );
-//   }
-
-//   return new HttpException(
-//     `¡Datos actualizados correctamente!`,
-//     HttpStatus.ACCEPTED,
-//   );
-// }
