@@ -59,7 +59,7 @@ export class ReportAnalystAssignmentService {
     const analyst = this.reportAnalystAssignmentRepository.create(
       createReportAnalystAssignmentDto,
     );
-    console.log(analyst)
+
     const assigned = await this.reportAnalystAssignmentRepository.save(analyst);
 
     return assigned;
