@@ -15,6 +15,9 @@ export class Position {
   id: number;
 
   @Column({ type: 'varchar' })
+  pos_code_k: string;
+
+  @Column({ type: 'varchar' })
   pos_name: string;
 
   @Column({ type: 'boolean', default: true })
