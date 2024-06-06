@@ -1,10 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PatientDto } from '../dto/patient.dto';
-import { HttPatientService } from '../http/http-patient.service';
+import { HttpPatientService } from '../http/http-patient.service';
 
 @Injectable()
 export class PatientService {
-  constructor(private readonly httpPatientService: HttPatientService) {}
+  constructor(private readonly httpPatientService: HttpPatientService) {}
 
   async getPatient(idNumber: string, idType: string) {
     const response = await this.httpPatientService.getPatientData(
