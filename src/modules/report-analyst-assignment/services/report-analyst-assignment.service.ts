@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { CreateReportAnalystAssignmentDto } from '../dto/create-report-analyst-assignment.dto';
+import { ReportAnalystAssignmentDto } from '../dto/analyst-assignment.dto';
 import { UpdateReportAnalystAssignmentDto } from '../dto/update-report-analyst-assignment.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ReportAnalystAssignment as ReportAnalystAssignmentEntity } from '../entities/report-analyst-assignment.entity';
@@ -21,7 +21,7 @@ export class ReportAnalystAssignmentService {
   ) {}
 
   async assingAnalyst(
-    createReportAnalystAssignmentDto: CreateReportAnalystAssignmentDto,
+    createReportAnalystAssignmentDto: ReportAnalystAssignmentDto,
     clientIp: string,
     idValidator: number,
   ) {
@@ -122,11 +122,11 @@ export class ReportAnalystAssignmentService {
   }
 
   async findAssignedAnalystsByPosition(
-    positionId?: number
+    positionId?: number,
   ): Promise<ReportAnalystAssignmentEntity[]> {
-    const where: FindOptionsWhere<ReportAnalystAssignmentEntity> = {}
+    const where: FindOptionsWhere<ReportAnalystAssignmentEntity> = {};
 
-    if(positionId) {
+    if (positionId) {
       where.ass_ra_position_id_fk = positionId;
     }
 
@@ -137,7 +137,7 @@ export class ReportAnalystAssignmentService {
       relations: {
         caseReportValidate: true,
         position: true,
-      }
+      },
     });
 
     if (!analystReporters || analystReporters.length === 0) {
@@ -166,7 +166,7 @@ export class ReportAnalystAssignmentService {
   }
 
   async returnCaseBetweenAnalyst(
-    createReportAnalystAssignmentDto: CreateReportAnalystAssignmentDto,
+    createReportAnalystAssignmentDto: ReportAnalystAssignmentDto,
     clientIp: string,
     idAnalyst: number,
   ): Promise<ReportAnalystAssignmentEntity> {

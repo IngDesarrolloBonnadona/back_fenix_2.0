@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
-export class CreateReportAnalystAssignmentDto {
+export class ReportAnalystAssignmentDto {
   @IsNotEmpty()
   @IsString()
   ass_ra_validatedcase_id_fk: string;
