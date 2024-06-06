@@ -30,43 +30,43 @@ export class CreateValRiskReportDto {
     val_cr_unit_id_fk: number;
 
     @IsString()
-    @IsNotEmpty()
+    // @IsNotEmpty()
     val_cr_documentpatient: string;
 
     @IsString()
-    @IsNotEmpty()
+    // @IsNotEmpty()
     val_cr_doctypepatient: string
 
     @IsString()
-    @IsNotEmpty()
+    // @IsNotEmpty()
     val_cr_firstnamepatient: string
 
     @IsString()
-    @IsNotEmpty()
+    // @IsNotEmpty()
     val_cr_secondnamepatient: string
 
     @IsString()
-    @IsNotEmpty()
+    // @IsNotEmpty()
     val_cr_firstlastnamepatient: string
 
     @IsString()
-    @IsNotEmpty()
+    // @IsNotEmpty()
     val_cr_secondlastnamepatient: string
 
     @IsNumber()
-    @IsNotEmpty()
+    // @IsNotEmpty()
     val_cr_agepatient: number
 
     @IsString()
-    @IsNotEmpty()
+    // @IsNotEmpty()
     val_cr_genderpatient: string
 
     @IsString()
-    @IsNotEmpty()
+    // @IsNotEmpty()
     val_cr_epspatient: string
 
     @IsNumber()
-    @IsNotEmpty()
+    // @IsNotEmpty()
     val_cr_admconsecutivepatient: number
 
     @IsNumber()
