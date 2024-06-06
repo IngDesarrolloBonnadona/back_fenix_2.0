@@ -18,7 +18,7 @@ export class PositionService {
   }
 
   async findAllPosition() {
-    const positions = await this.positionRepository.find();
+    const positions = await this.positionRepository.find({ where: { pos_enabled: true } });
 
     if (!positions || positions.length === 0) {
       throw new HttpException(
