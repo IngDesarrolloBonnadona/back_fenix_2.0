@@ -94,7 +94,7 @@ export class CaseReportOriginal {
     @Column({ nullable: true }) //
     ori_cr_materializedrisk: boolean;
     
-    @Column({ nullable: true }) //
+    @Column({ default: true }) //
     ori_cr_associatedpatient: boolean;
     
     @Column({ default: true })

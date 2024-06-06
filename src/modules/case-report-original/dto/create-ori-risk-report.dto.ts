@@ -29,43 +29,43 @@ export class CreateOriRiskReportDto {
     ori_cr_unit_id_fk: number;
 
     @IsString()
-    // @IsNotEmpty()
+    @IsOptional()
     ori_cr_documentpatient: string;
 
     @IsString()
-    // @IsNotEmpty()
+    @IsOptional()
     ori_cr_doctypepatient: string
 
     @IsString()
-    // @IsNotEmpty()
+    @IsOptional()
     ori_cr_firstnamepatient: string
 
     @IsString()
-    // @IsNotEmpty()
+    @IsOptional()
     ori_cr_secondnamepatient: string
 
     @IsString()
-    // @IsNotEmpty()
+    @IsOptional()
     ori_cr_firstlastnamepatient: string
 
     @IsString()
-    // @IsNotEmpty()
+    @IsOptional()
     ori_cr_secondlastnamepatient: string
 
     @IsNumber()
-    // @IsNotEmpty()
+    @IsOptional()
     ori_cr_agepatient: number
 
     @IsString()
-    // @IsNotEmpty()
+    @IsOptional()
     ori_cr_genderpatient: string
 
     @IsString()
-    // @IsNotEmpty()
+    @IsOptional()
     ori_cr_epspatient: string
 
     @IsNumber()
-    // @IsNotEmpty()
+    @IsOptional()
     ori_cr_admconsecutivepatient: number
 
     @IsNumber()
