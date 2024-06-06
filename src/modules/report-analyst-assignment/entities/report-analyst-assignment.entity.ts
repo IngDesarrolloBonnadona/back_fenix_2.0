@@ -48,12 +48,4 @@ export class ReportAnalystAssignment {
   )
   @JoinColumn({ name: 'ass_ra_validatedcase_id_fk' })
   caseReportValidate: CaseReportValidate;
-  
-  // @OneToOne(
-  //   () => CaseReportValidate,
-  //   (caseReportValidate) => caseReportValidate.reportAnalystAssignment,
-  // )
-  // @JoinColumn({ name: 'ass_ra_validatedcase_id_fk' })
-  // caseReportValidate: CaseReportValidate;
-
 }
