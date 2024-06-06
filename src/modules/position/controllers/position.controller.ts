@@ -21,8 +21,10 @@ export class PositionController {
   constructor(private readonly positionService: PositionService) {}
 
   @Post('/createPosition')
-  createPosition(@Body() createPositionDto: CreatePositionDto): Promise<Position> {
-    return this.positionService.create(createPositionDto);
+  createPosition(
+    @Body() createPositionDto: CreatePositionDto,
+  ): Promise<Position> {
+    return this.positionService.createPosition(createPositionDto);
   }
 
   @Get('/listPositions')

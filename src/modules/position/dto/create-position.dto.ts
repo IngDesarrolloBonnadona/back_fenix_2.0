@@ -7,5 +7,9 @@ export class CreatePositionDto {
 
     @IsNotEmpty()
     @IsString()
-    pos_code_k: string
+    pos_code_k: number
+
+    @IsNotEmpty()
+    @IsString()
+    pos_level: number
 }

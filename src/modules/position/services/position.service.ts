@@ -9,54 +9,62 @@ import { Repository } from 'typeorm';
 export class PositionService {
   constructor(
     @InjectRepository(PositionEntity)
-    private readonly positionRepository: Repository<PositionEntity>
-  ){}
+    private readonly positionRepository: Repository<PositionEntity>,
+  ) {}
 
-  async create(createPositionDto: CreatePositionDto) {
-    const position = this.positionRepository.create(createPositionDto)
+  async createPosition(createPositionDto: CreatePositionDto) {
+    const position = this.positionRepository.create(createPositionDto);
     return await this.positionRepository.save(position);
   }
 
+  async synchronizePositions() {
+    
+  }
+  
   async findAllPosition() {
-    const positions = await this.positionRepository.find({ where: { pos_enabled: true } });
+    const positions = await this.positionRepository.find({
+      where: { pos_enabled: true },
+    });
 
     if (!positions || positions.length === 0) {
       throw new HttpException(
         'No se encontró la lista de cargos',
         HttpStatus.NOT_FOUND,
-      )
+      );
     }
 
     return positions;
   }
 
   async findOnePosition(id: number) {
-    const position = await this.positionRepository.findOne({ where: { id, pos_enabled: true }});
+    const position = await this.positionRepository.findOne({
+      where: { id, pos_enabled: true },
+    });
 
-    if (!position){
-      throw new HttpException(
-        'No se encontró el cargo',
-        HttpStatus.NOT_FOUND
-      )
+    if (!position) {
+      throw new HttpException('No se encontró el cargo', HttpStatus.NOT_FOUND);
     }
     return position;
   }
 
   async updatePosition(id: number, updatePositionDto: UpdatePositionDto) {
-    const position = await this.findOnePosition(id)
-    const result = await this.positionRepository.update(position.id, updatePositionDto);
+    const position = await this.findOnePosition(id);
+    const result = await this.positionRepository.update(
+      position.id,
+      updatePositionDto,
+    );
 
     if (result.affected === 0) {
       return new HttpException(
         `No se pudo actualizar el cargo`,
-        HttpStatus.INTERNAL_SERVER_ERROR
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
 
     return new HttpException(
       `¡Datos actualizados correctamente!`,
-      HttpStatus.ACCEPTED
-    );  
+      HttpStatus.ACCEPTED,
+    );
   }
 
   async deletePosition(id: number) {
@@ -66,13 +74,13 @@ export class PositionService {
     if (result.affected === 0) {
       return new HttpException(
         `No se pudo eliminar el cargo`,
-        HttpStatus.INTERNAL_SERVER_ERROR
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
 
     return new HttpException(
       `¡Datos eliminados correctamente!`,
-      HttpStatus.ACCEPTED
-    ); 
+      HttpStatus.ACCEPTED,
+    );
   }
 }

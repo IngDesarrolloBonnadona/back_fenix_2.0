@@ -14,8 +14,8 @@ export class Position {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar' })
-  pos_code_k: string;
+  @Column()
+  pos_code_k: number;
 
   @Column({ type: 'varchar' })
   pos_name: string;
