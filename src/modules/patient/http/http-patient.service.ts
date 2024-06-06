@@ -6,7 +6,7 @@ import { firstValueFrom } from 'rxjs';
 require('dotenv').config();
 
 @Injectable()
-export class HttPatientService {
+export class HttpPatientService {
   constructor(private readonly httpPatientService: NestHttpService) {}
 
   async getPatientData(

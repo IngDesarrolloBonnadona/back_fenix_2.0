@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { PatientService } from '../services/patient.service';
 import { PatientDto } from '../dto/patient.dto';
 import { ApiTags } from '@nestjs/swagger';
@@ -8,8 +8,9 @@ import { ApiTags } from '@nestjs/swagger';
 export class PatientController {
   constructor(private readonly patientService: PatientService) {}
 
-  @Get('/infoPatient/:idNumber/:idType')
-  infoPatient(@Param() { idNumber, idType }: PatientDto) {
+  @Post('/infoPatient/')
+  infoPatient(@Body() patientDto: PatientDto) {
+    const { idNumber, idType } = patientDto;
     return this.patientService.getPatient(idNumber, idType);
   }
 }
