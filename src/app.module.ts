@@ -64,10 +64,4 @@ require('dotenv').config();
   providers: [],
 })
 export class AppModule {
-  // configure(consumer: MiddlewareConsumer) {
-  //   consumer.apply(IpClientMiddleware).forRoutes({
-  //     path: '*',
-  //     method: RequestMethod.ALL
-  //   })
-  // }
 }
