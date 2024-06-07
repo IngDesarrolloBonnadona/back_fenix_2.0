@@ -22,6 +22,21 @@ export class PositionService {
 
   async synchronizePositions() {
     const externalData = await this.httpPositionService.getPositionData();
+
+    if (!Array.isArray(externalData.data.data)) {
+      throw new HttpException(
+        'La estructura de los datos externos no es la esperada.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    if (externalData.data.data.length === 0) {
+      throw new HttpException(
+        'No se encontraron datos de cargos',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
     const existsPosition = await this.positionRepository.find();
 
     const newPositions = externalData.data.data.filter((externalPosition) => {
