@@ -24,7 +24,7 @@ export class ReportAnalystAssignment {
   ass_ra_position_id_fk: number;
 
   @Column()
-  ass_ra_analyst_id_fk: number;
+  ass_ra_documentanalyst: number;
 
   @Column({ default: true })
   ass_ra_status: boolean;
@@ -48,12 +48,4 @@ export class ReportAnalystAssignment {
   )
   @JoinColumn({ name: 'ass_ra_validatedcase_id_fk' })
   caseReportValidate: CaseReportValidate;
-  
-  // @OneToOne(
-  //   () => CaseReportValidate,
-  //   (caseReportValidate) => caseReportValidate.reportAnalystAssignment,
-  // )
-  // @JoinColumn({ name: 'ass_ra_validatedcase_id_fk' })
-  // caseReportValidate: CaseReportValidate;
-
 }

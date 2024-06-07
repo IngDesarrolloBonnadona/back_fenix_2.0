@@ -103,7 +103,7 @@ export class CaseReportValidate {
   @Column({ nullable: true }) //
   val_cr_materializedrisk: boolean;
 
-  @Column({ nullable: true }) //
+  @Column({ default: true }) //
   val_cr_associatedpatient: boolean;
 
   @Column({ default: false })
@@ -133,11 +133,4 @@ export class CaseReportValidate {
   
   @OneToMany(() => ReportAnalystAssignment, (reportAnalystAssignment) => reportAnalystAssignment.caseReportValidate)
   reportAnalystAssignment: ReportAnalystAssignment[]
-  
-  // @OneToOne(
-  //   () => ReportAnalystAssignment,
-  //   (reportAnalystAssignment) => reportAnalystAssignment.caseReportValidate,
-  // )
-  // reportAnalystAssignment: ReportAnalystAssignment;
-
 }

@@ -11,9 +11,9 @@ export class PatientService {
       idNumber,
       idType,
     );
-    const patient = response.data;
+    const patient = response.data.data;
 
-    if (patient.data.length === 0) {
+    if (patient.length === 0) {
       throw new HttpException(
         'No se encontraron datos del paciente.',
         HttpStatus.NOT_FOUND,

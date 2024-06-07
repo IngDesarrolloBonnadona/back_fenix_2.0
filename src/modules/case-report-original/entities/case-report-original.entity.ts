@@ -25,31 +25,31 @@ export class CaseReportOriginal {
     @Column({ type: 'varchar', nullable: true })
     ori_cr_filingnumber: string
 
-    @Column({ nullable: true })
+    @Column({ type: 'varchar', nullable: true })
     ori_cr_documentpatient: string;
 
-    @Column({ nullable: true })
+    @Column({ type: 'varchar', nullable: true })
     ori_cr_doctypepatient: string
 
-    @Column({ nullable: true })
+    @Column({ type: 'varchar', nullable: true })
     ori_cr_firstnamepatient: string
 
-    @Column({ nullable: true })
+    @Column({ type: 'varchar', nullable: true })
     ori_cr_secondnamepatient: string
 
-    @Column({ nullable: true })
+    @Column({ type: 'varchar', nullable: true })
     ori_cr_firstlastnamepatient: string
 
-    @Column({ nullable: true })
+    @Column({ type: 'varchar', nullable: true })
     ori_cr_secondlastnamepatient: string
 
     @Column({ nullable: true })
     ori_cr_agepatient: number
 
-    @Column({ nullable: true })
+    @Column({ type: 'varchar', nullable: true })
     ori_cr_genderpatient: string
 
-    @Column({ nullable: true })
+    @Column({ type: 'varchar', nullable: true })
     ori_cr_epspatient: string
 
     @Column({ nullable: true })
@@ -94,7 +94,7 @@ export class CaseReportOriginal {
     @Column({ nullable: true }) //
     ori_cr_materializedrisk: boolean;
     
-    @Column({ nullable: true }) //
+    @Column({ default: true }) //
     ori_cr_associatedpatient: boolean;
     
     @Column({ default: true })

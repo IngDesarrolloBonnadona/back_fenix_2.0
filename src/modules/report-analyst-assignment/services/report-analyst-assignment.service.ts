@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { CreateReportAnalystAssignmentDto } from '../dto/create-report-analyst-assignment.dto';
+import { ReportAnalystAssignmentDto } from '../dto/analyst-assignment.dto';
 import { UpdateReportAnalystAssignmentDto } from '../dto/update-report-analyst-assignment.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ReportAnalystAssignment as ReportAnalystAssignmentEntity } from '../entities/report-analyst-assignment.entity';
@@ -8,6 +8,7 @@ import { LogService } from 'src/modules/log/services/log.service';
 import { logReports } from 'src/enums/logs.enum';
 import { CaseReportValidateService } from 'src/modules/case-report-validate/services/case-report-validate.service';
 import { PositionService } from 'src/modules/position/services/position.service';
+import { HttpPositionService } from 'src/modules/position/http/http-position.service';
 
 @Injectable()
 export class ReportAnalystAssignmentService {
@@ -18,10 +19,32 @@ export class ReportAnalystAssignmentService {
     private readonly logService: LogService,
     private readonly caseReportValidateService: CaseReportValidateService,
     private readonly positionService: PositionService,
+    private readonly httpPositionService: HttpPositionService,
   ) {}
 
+  async findOneAnalyst(code?: number) {
+    const externalData = await this.httpPositionService.getPositionData(code);
+    const analyst = externalData.data.data;
+
+    if (!Array.isArray(analyst)) {
+      throw new HttpException(
+        'La estructura de los datos externos no es la esperada.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    if (analyst.length === 0) {
+      throw new HttpException(
+        'No se encontraron datos de analistas',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return analyst;
+  }
+
   async assingAnalyst(
-    createReportAnalystAssignmentDto: CreateReportAnalystAssignmentDto,
+    createReportAnalystAssignmentDto: ReportAnalystAssignmentDto,
     clientIp: string,
     idValidator: number,
   ) {
@@ -122,11 +145,11 @@ export class ReportAnalystAssignmentService {
   }
 
   async findAssignedAnalystsByPosition(
-    positionId?: number
+    positionId?: number,
   ): Promise<ReportAnalystAssignmentEntity[]> {
-    const where: FindOptionsWhere<ReportAnalystAssignmentEntity> = {}
+    const where: FindOptionsWhere<ReportAnalystAssignmentEntity> = {};
 
-    if(positionId) {
+    if (positionId) {
       where.ass_ra_position_id_fk = positionId;
     }
 
@@ -137,7 +160,7 @@ export class ReportAnalystAssignmentService {
       relations: {
         caseReportValidate: true,
         position: true,
-      }
+      },
     });
 
     if (!analystReporters || analystReporters.length === 0) {
@@ -166,7 +189,7 @@ export class ReportAnalystAssignmentService {
   }
 
   async returnCaseBetweenAnalyst(
-    createReportAnalystAssignmentDto: CreateReportAnalystAssignmentDto,
+    createReportAnalystAssignmentDto: ReportAnalystAssignmentDto,
     clientIp: string,
     idAnalyst: number,
   ): Promise<ReportAnalystAssignmentEntity> {
@@ -232,26 +255,3 @@ export class ReportAnalystAssignmentService {
     );
   }
 }
-
-// async updateAssignedAnalyst(
-//   id: number,
-//   updateReportAnalystAssignmentDto: UpdateReportAnalystAssignmentDto,
-// ) {
-//   const analystReporter = await this.findOneAssignedAnalyst(id);
-//   const result = await this.reportAnalystAssignmentRepository.update(
-//     analystReporter.id,
-//     updateReportAnalystAssignmentDto,
-//   );
-
-//   if (result.affected === 0) {
-//     return new HttpException(
-//       `No se pudo actualizar la asignacion del analista`,
-//       HttpStatus.INTERNAL_SERVER_ERROR,
-//     );
-//   }
-
-//   return new HttpException(
-//     `¡Datos actualizados correctamente!`,
-//     HttpStatus.ACCEPTED,
-//   );
-// }

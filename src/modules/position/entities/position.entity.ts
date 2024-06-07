@@ -14,8 +14,14 @@ export class Position {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column()
+  pos_code_k: number;
+
   @Column({ type: 'varchar' })
   pos_name: string;
+
+  @Column()
+  pos_level: number;
 
   @Column({ type: 'boolean', default: true })
   pos_enabled: boolean;
