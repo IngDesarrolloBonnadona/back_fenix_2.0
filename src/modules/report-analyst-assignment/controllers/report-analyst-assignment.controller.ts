@@ -63,6 +63,11 @@ export class ReportAnalystAssignmentController {
     return this.ReportAnalisysAssignmentService.findOneAssignedAnalyst(id);
   }
 
+  @Get('findInfoAnalyst/:code')
+  findInfoAnalyst(@Param('code') code?: number) {
+    return this.ReportAnalisysAssignmentService.findOneAnalyst(code)
+  }
+
   @Put('updateReAssignedAnalyst/:idValidator')
   updateReAssignedAnalyst(
     @Body() updateReportAnalystAssignmentDto: UpdateReportAnalystAssignmentDto,
