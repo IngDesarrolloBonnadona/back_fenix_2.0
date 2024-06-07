@@ -8,6 +8,7 @@ import { LogService } from 'src/modules/log/services/log.service';
 import { logReports } from 'src/enums/logs.enum';
 import { CaseReportValidateService } from 'src/modules/case-report-validate/services/case-report-validate.service';
 import { PositionService } from 'src/modules/position/services/position.service';
+import { HttpPositionService } from 'src/modules/position/http/http-position.service';
 
 @Injectable()
 export class ReportAnalystAssignmentService {
@@ -18,7 +19,29 @@ export class ReportAnalystAssignmentService {
     private readonly logService: LogService,
     private readonly caseReportValidateService: CaseReportValidateService,
     private readonly positionService: PositionService,
+    private readonly httpPositionService: HttpPositionService,
   ) {}
+
+  async findOneAnalyst(code?: number) {
+    const externalData = await this.httpPositionService.getPositionData(code);
+    const analyst = externalData.data.data;
+
+    if (!Array.isArray(analyst)) {
+      throw new HttpException(
+        'La estructura de los datos externos no es la esperada.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    if (analyst.length === 0) {
+      throw new HttpException(
+        'No se encontraron datos de analistas',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return analyst;
+  }
 
   async assingAnalyst(
     createReportAnalystAssignmentDto: ReportAnalystAssignmentDto,
