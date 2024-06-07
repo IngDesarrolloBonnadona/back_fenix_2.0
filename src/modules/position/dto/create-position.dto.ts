@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 
 export class CreatePositionDto {
     @IsNotEmpty()
@@ -6,10 +6,10 @@ export class CreatePositionDto {
     pos_name: string
 
     @IsNotEmpty()
-    @IsString()
+    @IsNumber()
     pos_code_k: number
 
     @IsNotEmpty()
-    @IsString()
+    @IsNumber()
     pos_level: number
 }

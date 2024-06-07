@@ -4,12 +4,15 @@ import { UpdatePositionDto } from '../dto/update-position.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Position as PositionEntity } from '../entities/position.entity';
 import { Repository } from 'typeorm';
+import { HttpPositionService } from '../http/http-position.service';
 
 @Injectable()
 export class PositionService {
   constructor(
     @InjectRepository(PositionEntity)
     private readonly positionRepository: Repository<PositionEntity>,
+
+    private readonly httpPositionService: HttpPositionService,
   ) {}
 
   async createPosition(createPositionDto: CreatePositionDto) {
@@ -18,9 +21,31 @@ export class PositionService {
   }
 
   async synchronizePositions() {
-    
+    const externalData = await this.httpPositionService.getPositionData();
+    const existsPosition = await this.positionRepository.find();
+
+    const newPositions = externalData.data.filter((externalPosition) => {
+      return !existsPosition.some(
+        (position) => position.pos_code_k === externalPosition.position_code_k,
+      );
+    });
+
+    const createPosition: CreatePositionDto[] = newPositions.map(
+      (position) => ({
+        pos_code_k: position.position_code_k,
+        pos_name: position.position_description,
+        pos_level: position.position_level,
+      }),
+    );
+
+    for (const pos of createPosition) {
+      const newPosition = this.positionRepository.create(pos);
+      await this.positionRepository.save(newPosition);
+    }
+
+    return createPosition.length;
   }
-  
+
   async findAllPosition() {
     const positions = await this.positionRepository.find({
       where: { pos_enabled: true },
