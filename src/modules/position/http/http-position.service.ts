@@ -8,9 +8,14 @@ require('dotenv').config();
 export class HttpPositionService {
   constructor(private readonly httpPositionService: NestHttpService) {}
 
-  async getPositionData() {
+  async getPositionData(code?: number) {
     try {
-      const url = process.env.URL_POSITIONS;
+      let url = process.env.URL_POSITIONS;
+
+      if (code) {
+        url = `${url}/${code}`;
+      }
+
       const response = firstValueFrom(
         this.httpPositionService.get(url, {
           headers: {
@@ -18,6 +23,7 @@ export class HttpPositionService {
           },
         }),
       );
+
       return response;
     } catch (error) {
       throw new HttpException(
