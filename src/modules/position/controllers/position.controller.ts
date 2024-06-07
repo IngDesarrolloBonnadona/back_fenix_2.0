@@ -27,6 +27,11 @@ export class PositionController {
     return this.positionService.createPosition(createPositionDto);
   }
 
+  @Post('/synchronizePositions')
+  syncronizePositions() {
+    return this.positionService.synchronizePositions();
+  }
+
   @Get('/listPositions')
   listPositions(): Promise<Position[]> {
     return this.positionService.findAllPosition();
