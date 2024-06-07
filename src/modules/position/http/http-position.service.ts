@@ -18,7 +18,6 @@ export class HttpPositionService {
           },
         }),
       );
-      console.log(response)
       return response;
     } catch (error) {
       throw new HttpException(

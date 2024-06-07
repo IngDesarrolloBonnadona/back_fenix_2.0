@@ -24,7 +24,7 @@ export class PositionService {
     const externalData = await this.httpPositionService.getPositionData();
     const existsPosition = await this.positionRepository.find();
 
-    const newPositions = externalData.data.filter((externalPosition) => {
+    const newPositions = externalData.data.data.filter((externalPosition) => {
       return !existsPosition.some(
         (position) => position.pos_code_k === externalPosition.position_code_k,
       );
