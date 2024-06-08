@@ -70,7 +70,7 @@ export class SynergyService {
 
     if (result.affected === 0) {
       return new HttpException(
-        `No se pudo eliminar el el reporte en sinergia.`,
+        `No se pudo eliminar el reporte en sinergia.`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }

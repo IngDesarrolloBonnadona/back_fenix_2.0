@@ -19,6 +19,9 @@ export class Synergy {
   syn_validatedcase_id_fk: string;
 
   @Column()
+  syn_programmingcounter: number
+
+  @Column()
   syn_reschedulingdate: Date;
 
   @Column()
