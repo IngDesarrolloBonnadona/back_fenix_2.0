@@ -22,6 +22,7 @@ import { PositionModule } from './modules/position/position.module';
 import { ReportAnalystAssignmentModule } from './modules/report-analyst-assignment/report-analyst-assignment.module';
 import { ResearchersModule } from './modules/researchers/researchers.module';
 import { PatientModule } from './modules/patient/patient.module';
+import { SynergyModule } from './modules/synergy/synergy.module';
 
 require('dotenv').config();
 
@@ -59,6 +60,7 @@ require('dotenv').config();
     ReportAnalystAssignmentModule,
     ResearchersModule,
     PatientModule,
+    SynergyModule,
   ],
   controllers: [],
   providers: [],
