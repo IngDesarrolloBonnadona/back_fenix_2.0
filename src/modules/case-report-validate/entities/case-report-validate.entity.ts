@@ -13,6 +13,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Synergy } from 'src/modules/synergy/entities/synergy.entity';
 
 @Entity()
 export class CaseReportValidate {
@@ -133,4 +134,7 @@ export class CaseReportValidate {
   
   @OneToMany(() => ReportAnalystAssignment, (reportAnalystAssignment) => reportAnalystAssignment.caseReportValidate)
   reportAnalystAssignment: ReportAnalystAssignment[]
+
+  @OneToMany(() => Synergy, (synergy) => synergy.caseReportValidate)
+  synergy: Synergy[];
 }
