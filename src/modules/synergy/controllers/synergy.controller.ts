@@ -9,26 +9,26 @@ export class SynergyController {
 
   @Post()
   create(@Body() createSynergyDto: CreateSynergyDto) {
-    return this.synergyService.create(createSynergyDto);
+    return this.synergyService.createSynergy(createSynergyDto);
   }
 
   @Get()
   findAll() {
-    return this.synergyService.findAll();
+    return this.synergyService.findAllSynergy();
   }
 
   @Get(':id')
   findOne(@Param('id') id: number) {
-    return this.synergyService.findOne(id);
+    return this.synergyService.findOneSynergy(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: number, @Body() updateSynergyDto: UpdateSynergyDto) {
-    return this.synergyService.update(id, updateSynergyDto);
+    return this.synergyService.updateSynergy(id, updateSynergyDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: number) {
-    return this.synergyService.remove(id);
+    return this.synergyService.deleteSynergy(id);
   }
 }
