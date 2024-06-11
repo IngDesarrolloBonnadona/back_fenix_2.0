@@ -14,6 +14,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Synergy } from 'src/modules/synergy/entities/synergy.entity';
+import { CaseType } from 'src/modules/case-type/entities/case-type.entity';
 
 @Entity()
 export class CaseReportValidate {
@@ -128,6 +129,10 @@ export class CaseReportValidate {
   )
   @JoinColumn({ name: 'val_cr_originalcase_id_fk' })
   caseReportOriginal: CaseReportOriginal;
+
+  @ManyToOne(() => CaseType, (caseType) => caseType.caseReportOriginal)
+    @JoinColumn({ name: 'val_cr_casetype_id_fk'})
+    caseType: CaseType
 
   @OneToMany(() => Log, (log) => log.caseReportValidate)
   log: Log[];

@@ -1,4 +1,5 @@
 import { CaseReportOriginal } from "src/modules/case-report-original/entities/case-report-original.entity";
+import { CaseReportValidate } from "src/modules/case-report-validate/entities/case-report-validate.entity";
 import { EventType } from "src/modules/event-type/entities/event-type.entity";
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
@@ -30,4 +31,7 @@ export class CaseType {
 
     @OneToMany(() => CaseReportOriginal, (caseReportOriginal) => caseReportOriginal.caseType)
     caseReportOriginal: CaseReportOriginal[];
+
+    @OneToMany(() => CaseReportValidate, (caseReportValidate) => caseReportValidate.caseType)
+    caseReportValidate: CaseReportValidate[];
 }

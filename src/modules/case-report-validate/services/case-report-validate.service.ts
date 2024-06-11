@@ -320,6 +320,7 @@ export class CaseReportValidateService {
         log: true,
         reportAnalystAssignment: true,
         synergy: true,
+        caseType: true,
       },
     });
 
