@@ -48,6 +48,15 @@ export class SynergyController {
     return this.synergyService.rescheduleSynergy(id, clientIp, idValidator);
   }
 
+  @Post('/resolutionSynergy/:id/:idValidator')
+  resolutionSynergy(
+    @Param('id') id: number,
+    @Ip() clientIp: string,
+    @Param('idValidator') idValidator: number,
+  ) {
+    return this.synergyService.resolutionSynergy(id, clientIp, idValidator);
+  }
+
   @Delete('/deleteSynergy/:id')
   deleteSynergy(@Param('id') id: number) {
     return this.synergyService.deleteSynergy(id);

@@ -9,6 +9,7 @@ import { CaseType as CaseTypeEntity } from 'src/modules/case-type/entities/case-
 import { caseTypeReport } from 'src/enums/caseType-report.enum';
 import { LogService } from 'src/modules/log/services/log.service';
 import { logReports } from 'src/enums/logs.enum';
+import { CaseReportValidate as CaseReportValidateEntity } from 'src/modules/case-report-validate/entities/case-report-validate.entity';
 
 @Injectable()
 export class SynergyService {
@@ -17,6 +18,8 @@ export class SynergyService {
     private readonly synergyRepository: Repository<SynergyEntity>,
     @InjectRepository(CaseTypeEntity)
     private readonly caseTypeRepository: Repository<CaseTypeEntity>,
+    @InjectRepository(CaseReportValidateEntity)
+    private readonly caseReportValidateRepository: Repository<CaseReportValidateEntity>,
 
     private readonly logService: LogService,
   ) {}
@@ -39,13 +42,26 @@ export class SynergyService {
       );
     }
 
-    const synValidateCaseIds = createSynergy.map(
+    const synergyValidateCaseIds = createSynergy.map(
       (dto) => dto.syn_validatedcase_id_fk,
     );
 
+    const existingCaseValidate = await this.caseReportValidateRepository.find({
+      where: {
+        id: In(synergyValidateCaseIds),
+      },
+    });
+
+    if (existingCaseValidate.length !== synergyValidateCaseIds.length) {
+      throw new HttpException(
+        'No se encontró el reporte para algunos casos',
+        HttpStatus.CONFLICT,
+      );
+    }
+
     const existingSynergies = await this.synergyRepository.find({
       where: {
-        syn_validatedcase_id_fk: In(synValidateCaseIds),
+        syn_validatedcase_id_fk: In(synergyValidateCaseIds),
       },
     });
 
@@ -141,6 +157,36 @@ export class SynergyService {
 
     return new HttpException(
       `¡Caso reprogramado correctamente!`,
+      HttpStatus.ACCEPTED,
+    );
+  }
+
+  async resolutionSynergy(id: number, clientIp: string, idValidator: number) {
+    const synergy = await this.findOneSynergy(id);
+
+    synergy.syn_status = true;
+    await this.synergyRepository.save(synergy);
+
+    const newSynergy = this.synergyRepository.create({
+      syn_validatedcase_id_fk: synergy.syn_validatedcase_id_fk,
+      syn_programmingcounter: synergy.syn_programmingcounter,
+      syn_reschedulingdate: synergy.syn_reschedulingdate,
+      syn_evaluationdate: synergy.syn_evaluationdate,
+      syn_resolutiondate: new Date(),
+      syn_status: true,
+    });
+
+    await this.synergyRepository.save(newSynergy);
+
+    await this.logService.createLog(
+      synergy.syn_validatedcase_id_fk,
+      idValidator,
+      clientIp,
+      logReports.LOG_SOLUTION_CASE_SYNERGY,
+    );
+
+    return new HttpException(
+      `¡Caso resuelto y registrado correctamente!`,
       HttpStatus.ACCEPTED,
     );
   }
