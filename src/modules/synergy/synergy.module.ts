@@ -17,5 +17,6 @@ import { CaseReportValidate } from '../case-report-validate/entities/case-report
 ],
   controllers: [SynergyController],
   providers: [SynergyService],
+  exports: [SynergyService]
 })
 export class SynergyModule {}

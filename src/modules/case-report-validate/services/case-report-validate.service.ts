@@ -29,6 +29,8 @@ import { LogService } from 'src/modules/log/services/log.service';
 import { logReports } from 'src/enums/logs.enum';
 import { ReportAnalystAssignment as ReportAnalystAssignmentEntity } from 'src/modules/report-analyst-assignment/entities/report-analyst-assignment.entity';
 import { ReportAnalystAssignmentService } from 'src/modules/report-analyst-assignment/services/report-analyst-assignment.service';
+import { Synergy as SynergyEntity } from 'src/modules/synergy/entities/synergy.entity';
+import { SynergyService } from 'src/modules/synergy/services/synergy.service';
 
 @Injectable()
 export class CaseReportValidateService {
@@ -41,11 +43,14 @@ export class CaseReportValidateService {
     private readonly movementReportRepository: Repository<MovementReportEntity>,
     @InjectRepository(ReportAnalystAssignmentEntity)
     private readonly reportAnalystAssignmentRepository: Repository<ReportAnalystAssignmentEntity>,
+    @InjectRepository(SynergyEntity)
+    private readonly synergyRepository: Repository<SynergyEntity>,
 
     private readonly medicineService: MedicineService,
     private readonly deviceService: DeviceService,
     private readonly statusReportService: StatusReportService,
     private readonly logService: LogService,
+    private readonly synergyService: SynergyService,
     private dataSource: DataSource,
     @Inject(forwardRef(() => ReportAnalystAssignmentService))
     private readonly reportAnalystAssygnmentService: ReportAnalystAssignmentService,
@@ -403,7 +408,15 @@ export class CaseReportValidateService {
       );
     }
 
-    
+    const findSynergy = await this.synergyRepository.findOne({
+      where: {
+        syn_validatedcase_id_fk: caseReportValidate.id,
+      },
+    });
+
+    if (findSynergy) {
+      await this.synergyService.deleteSynergy(findSynergy.id);
+    }
 
     return new HttpException(
       `¡Datos anulados correctamente!`,

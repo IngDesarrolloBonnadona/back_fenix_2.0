@@ -11,6 +11,8 @@ import { StatusReportModule } from '../status-report/status-report.module';
 import { LogModule } from '../log/log.module';
 import { ReportAnalystAssignment } from '../report-analyst-assignment/entities/report-analyst-assignment.entity';
 import { ReportAnalystAssignmentModule } from '../report-analyst-assignment/report-analyst-assignment.module';
+import { Synergy } from '../synergy/entities/synergy.entity';
+import { SynergyModule } from '../synergy/synergy.module';
 
 @Module({
   imports: [
@@ -18,12 +20,14 @@ import { ReportAnalystAssignmentModule } from '../report-analyst-assignment/repo
       CaseReportValidate,
       CaseType,
       MovementReport,
-      ReportAnalystAssignment
+      ReportAnalystAssignment,
+      Synergy
     ]),
     MedicineModule,
     DeviceModule,
     StatusReportModule,
     LogModule,
+    SynergyModule,
     forwardRef(() => ReportAnalystAssignmentModule),
   ],
   controllers: [CaseReportValidateController],
