@@ -124,22 +124,23 @@ export class SynergyService {
     return synergy;
   }
 
-  async updateSynergy(id: number, updateSynergyDto: UpdateSynergyDto) {
+  async rescheduleSynergy(id: number, clientIp: string, idValidator: number) {
     const synergy = await this.findOneSynergy(id);
-    const result = await this.synergyRepository.update(
-      synergy.id,
-      updateSynergyDto,
+
+    synergy.syn_reschedulingdate = new Date();
+    synergy.syn_programmingcounter += 1;
+
+    await this.synergyRepository.save(synergy);
+
+    await this.logService.createLog(
+      synergy.syn_validatedcase_id_fk,
+      idValidator,
+      clientIp,
+      logReports.LOG_CASE_RESCHEDULED_SYNERGY,
     );
 
-    if (result.affected === 0) {
-      return new HttpException(
-        `No se actualizar el reporte en sinergia.`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-
     return new HttpException(
-      `¡Datos actualizados correctamente!`,
+      `¡Caso reprogramado correctamente!`,
       HttpStatus.ACCEPTED,
     );
   }

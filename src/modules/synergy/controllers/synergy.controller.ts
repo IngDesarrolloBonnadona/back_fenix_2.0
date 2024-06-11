@@ -1,7 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put, Ip } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Put,
+  Ip,
+} from '@nestjs/common';
 import { SynergyService } from '../services/synergy.service';
 import { CreateSynergyDto } from '../dto/create-synergy.dto';
-import { UpdateSynergyDto } from '../dto/update-synergy.dto';
 
 @Controller('synergy')
 export class SynergyController {
@@ -11,12 +20,12 @@ export class SynergyController {
   createSynergy(
     @Body() createSynergyDto: CreateSynergyDto[],
     @Ip() clientIp: string,
-    @Param('idValidator') idValidator: number
+    @Param('idValidator') idValidator: number,
   ) {
     return this.synergyService.createSynergy(
       createSynergyDto,
       clientIp,
-      idValidator
+      idValidator,
     );
   }
 
@@ -30,9 +39,13 @@ export class SynergyController {
     return this.synergyService.findOneSynergy(id);
   }
 
-  @Put('/updateSynergy/:id')
-  updateSynergy(@Param('id') id: number, @Body() updateSynergyDto: UpdateSynergyDto) {
-    return this.synergyService.updateSynergy(id, updateSynergyDto);
+  @Put('/rescheduleSynergy/:id/:idValidator')
+  rescheduleSynergy(
+    @Param('id') id: number,
+    @Ip() clientIp: string,
+    @Param('idValidator') idValidator: number,
+  ) {
+    return this.synergyService.rescheduleSynergy(id, clientIp, idValidator);
   }
 
   @Delete('/deleteSynergy/:id')
