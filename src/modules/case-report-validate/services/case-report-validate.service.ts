@@ -403,6 +403,8 @@ export class CaseReportValidateService {
       );
     }
 
+    
+
     return new HttpException(
       `¡Datos anulados correctamente!`,
       HttpStatus.ACCEPTED,
