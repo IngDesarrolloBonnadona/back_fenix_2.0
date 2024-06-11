@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { ReportAnalystAssignmentService } from './services/report-analyst-assignment.service';
 import { ReportAnalystAssignmentController } from './controllers/report-analyst-assignment.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -13,11 +13,12 @@ import { HttpModule } from '@nestjs/axios';
   imports: [
     TypeOrmModule.forFeature([ReportAnalystAssignment]),
     LogModule,
-    CaseReportValidateModule,
     PositionModule,
     HttpModule,
+    forwardRef(() => CaseReportValidateModule),
   ],
   controllers: [ReportAnalystAssignmentController],
   providers: [ReportAnalystAssignmentService, HttpPositionService],
+  exports: [ReportAnalystAssignmentService]
 })
 export class ReportAnalystAssignmentModule {}

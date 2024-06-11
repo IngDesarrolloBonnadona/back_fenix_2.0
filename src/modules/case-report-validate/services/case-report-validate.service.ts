@@ -1,4 +1,10 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  forwardRef,
+} from '@nestjs/common';
 import { UpdateCaseReportValidateDto } from '../dto/update-case-report-validate.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CaseReportValidate as CaseReportValidateEntity } from '../entities/case-report-validate.entity';
@@ -21,6 +27,8 @@ import { movementReport } from 'src/enums/movement-report.enum';
 import { StatusReportService } from 'src/modules/status-report/services/status-report.service';
 import { LogService } from 'src/modules/log/services/log.service';
 import { logReports } from 'src/enums/logs.enum';
+import { ReportAnalystAssignment as ReportAnalystAssignmentEntity } from 'src/modules/report-analyst-assignment/entities/report-analyst-assignment.entity';
+import { ReportAnalystAssignmentService } from 'src/modules/report-analyst-assignment/services/report-analyst-assignment.service';
 
 @Injectable()
 export class CaseReportValidateService {
@@ -31,12 +39,16 @@ export class CaseReportValidateService {
     private readonly caseTypeRepository: Repository<CaseTypeEntity>,
     @InjectRepository(MovementReportEntity)
     private readonly movementReportRepository: Repository<MovementReportEntity>,
+    @InjectRepository(ReportAnalystAssignmentEntity)
+    private readonly reportAnalystAssignmentRepository: Repository<ReportAnalystAssignmentEntity>,
 
     private readonly medicineService: MedicineService,
     private readonly deviceService: DeviceService,
     private readonly statusReportService: StatusReportService,
     private readonly logService: LogService,
     private dataSource: DataSource,
+    @Inject(forwardRef(() => ReportAnalystAssignmentService))
+    private readonly reportAnalystAssygnmentService: ReportAnalystAssignmentService,
   ) {}
 
   async findSimilarCaseReportsValidate(
@@ -377,6 +389,19 @@ export class CaseReportValidateService {
       clientIp,
       logReports.LOG_ANULATION,
     );
+
+    const findReportAnalystAssygnment =
+      await this.reportAnalystAssignmentRepository.findOne({
+        where: {
+          ass_ra_validatedcase_id_fk: caseReportValidate.id,
+        },
+      });
+
+    if (findReportAnalystAssygnment) {
+      await this.reportAnalystAssygnmentService.deleteAssignedAnalyst(
+        findReportAnalystAssygnment.id,
+      );
+    }
 
     return new HttpException(
       `¡Datos anulados correctamente!`,
