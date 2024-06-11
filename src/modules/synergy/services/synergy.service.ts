@@ -3,18 +3,90 @@ import { CreateSynergyDto } from '../dto/create-synergy.dto';
 import { UpdateSynergyDto } from '../dto/update-synergy.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Synergy as SynergyEntity } from '../entities/synergy.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
+import { CaseReportValidateService } from 'src/modules/case-report-validate/services/case-report-validate.service';
+import { CaseType as CaseTypeEntity } from 'src/modules/case-type/entities/case-type.entity';
+import { caseTypeReport } from 'src/enums/caseType-report.enum';
+import { LogService } from 'src/modules/log/services/log.service';
+import { logReports } from 'src/enums/logs.enum';
 
 @Injectable()
 export class SynergyService {
   constructor(
     @InjectRepository(SynergyEntity)
     private readonly synergyRepository: Repository<SynergyEntity>,
+    @InjectRepository(CaseTypeEntity)
+    private readonly caseTypeRepository: Repository<CaseTypeEntity>,
+
+    private readonly logService: LogService,
   ) {}
 
-  async createSynergy(createSynergyDto: CreateSynergyDto) {
-    const synergy = this.synergyRepository.create(createSynergyDto);
-    return await this.synergyRepository.save(synergy);
+  async createSynergy(
+    createSynergy: CreateSynergyDto[],
+    clientIp: string,
+    idAnalyst: number,
+  ) {
+    const adverseEventType = await this.caseTypeRepository.findOne({
+      where: {
+        cas_t_name: caseTypeReport.ADVERSE_EVENT,
+      },
+    });
+
+    if (!adverseEventType) {
+      throw new HttpException(
+        `Tipo de caso ${caseTypeReport.ADVERSE_EVENT} no encontrado`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    const synValidateCaseIds = createSynergy.map(
+      (dto) => dto.syn_validatedcase_id_fk,
+    );
+
+    const existingSynergies = await this.synergyRepository.find({
+      where: {
+        syn_validatedcase_id_fk: In(synValidateCaseIds),
+      },
+    });
+
+    if (existingSynergies.length > 0) {
+      throw new HttpException(
+        'Algunos casos ya fueron elevados a comité de sinergia',
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    const invalidSynergyIds = createSynergy
+      .filter((dto) => dto.caseType_id !== adverseEventType.id)
+      .map((dto) => dto.syn_validatedcase_id_fk);
+
+    if (invalidSynergyIds.length > 0) {
+      return {
+        message: `Algunos tipos de caso no coinciden con el tipo de caso ${caseTypeReport.ADVERSE_EVENT}`,
+        invalidSynergyIds,
+      };
+    }
+
+    const synergies = createSynergy.map((dto) => {
+      return this.synergyRepository.create({
+        ...dto,
+        syn_programmingcounter: 0,
+        syn_evaluationdate: new Date(),
+      });
+    });
+
+    const savedSynergies = await this.synergyRepository.save(synergies);
+
+    for (const synergy of savedSynergies) {
+      await this.logService.createLog(
+        synergy.syn_validatedcase_id_fk,
+        idAnalyst,
+        clientIp,
+        logReports.LOG_CASE_RAISED_SYNERGY_COMMITTEE,
+      );
+    }
+
+    return savedSynergies;
   }
 
   async findAllSynergy() {
@@ -47,7 +119,7 @@ export class SynergyService {
         'No se encontró el caso en sinergia',
         HttpStatus.NOT_FOUND,
       );
-    };
+    }
 
     return synergy;
   }

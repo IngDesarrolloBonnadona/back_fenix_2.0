@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put, Ip } from '@nestjs/common';
 import { SynergyService } from '../services/synergy.service';
 import { CreateSynergyDto } from '../dto/create-synergy.dto';
 import { UpdateSynergyDto } from '../dto/update-synergy.dto';
@@ -7,9 +7,17 @@ import { UpdateSynergyDto } from '../dto/update-synergy.dto';
 export class SynergyController {
   constructor(private readonly synergyService: SynergyService) {}
 
-  @Post('/createSynergy')
-  create(@Body() createSynergyDto: CreateSynergyDto) {
-    return this.synergyService.createSynergy(createSynergyDto);
+  @Post('/createSynergy/:idValidator')
+  createSynergy(
+    @Body() createSynergyDto: CreateSynergyDto[],
+    @Ip() clientIp: string,
+    @Param('idValidator') idValidator: number
+  ) {
+    return this.synergyService.createSynergy(
+      createSynergyDto,
+      clientIp,
+      idValidator
+    );
   }
 
   @Get('/listSynergies')
