@@ -41,6 +41,14 @@ export class SynergyService {
     const synergy = await this.synergyRepository.findOne({
       where: { id, syn_status: false },
     });
+
+    if (!synergy) {
+      throw new HttpException(
+        'No se encontró el caso en sinergia',
+        HttpStatus.NOT_FOUND,
+      );
+    };
+
     return synergy;
   }
 

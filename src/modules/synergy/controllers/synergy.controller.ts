@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/common';
 import { SynergyService } from '../services/synergy.service';
 import { CreateSynergyDto } from '../dto/create-synergy.dto';
 import { UpdateSynergyDto } from '../dto/update-synergy.dto';
@@ -7,28 +7,28 @@ import { UpdateSynergyDto } from '../dto/update-synergy.dto';
 export class SynergyController {
   constructor(private readonly synergyService: SynergyService) {}
 
-  @Post()
+  @Post('/createSynergy')
   create(@Body() createSynergyDto: CreateSynergyDto) {
     return this.synergyService.createSynergy(createSynergyDto);
   }
 
-  @Get()
-  findAll() {
+  @Get('/listSynergies')
+  listSynergies() {
     return this.synergyService.findAllSynergy();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: number) {
+  @Get('/findSynergy/:id')
+  findSynergy(@Param('id') id: number) {
     return this.synergyService.findOneSynergy(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: number, @Body() updateSynergyDto: UpdateSynergyDto) {
+  @Put('/updateSynergy/:id')
+  updateSynergy(@Param('id') id: number, @Body() updateSynergyDto: UpdateSynergyDto) {
     return this.synergyService.updateSynergy(id, updateSynergyDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: number) {
+  @Delete('/deleteSynergy/:id')
+  deleteSynergy(@Param('id') id: number) {
     return this.synergyService.deleteSynergy(id);
   }
 }
