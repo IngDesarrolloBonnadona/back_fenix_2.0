@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { CaseReportValidateService } from './services/case-report-validate.service';
 import { CaseReportValidateController } from './controllers/case-report-validate.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -9,6 +9,10 @@ import { DeviceModule } from '../device/device.module';
 import { MovementReport } from '../movement-report/entities/movement-report.entity';
 import { StatusReportModule } from '../status-report/status-report.module';
 import { LogModule } from '../log/log.module';
+import { ReportAnalystAssignment } from '../report-analyst-assignment/entities/report-analyst-assignment.entity';
+import { ReportAnalystAssignmentModule } from '../report-analyst-assignment/report-analyst-assignment.module';
+import { Synergy } from '../synergy/entities/synergy.entity';
+import { SynergyModule } from '../synergy/synergy.module';
 
 @Module({
   imports: [
@@ -16,11 +20,15 @@ import { LogModule } from '../log/log.module';
       CaseReportValidate,
       CaseType,
       MovementReport,
+      ReportAnalystAssignment,
+      Synergy
     ]),
     MedicineModule,
     DeviceModule,
     StatusReportModule,
     LogModule,
+    SynergyModule,
+    forwardRef(() => ReportAnalystAssignmentModule),
   ],
   controllers: [CaseReportValidateController],
   providers: [CaseReportValidateService],

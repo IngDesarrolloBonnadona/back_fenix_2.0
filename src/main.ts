@@ -17,7 +17,7 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('FENIX 2.0')
-    .setDescription('The FENIX API description')
+    .setDescription('El módulo Fénix II será el software de creación del caso o reporte, donde se podrá realizar también la validación, asignación, revisión, auditoria, seguimiento, análisis y la creación del plan de acción, así como el seguimiento del mismo, la creación y muestra de sus indicadores e informes de la gestión; opciones de: AUTOEVALUACIÓN INSTITUCIONAL, GENERACIÓN DE INFORMES Y PLANES DE MEJORAMIENTO, MEDICIÓN Y ANÁLISIS PERMANENTE, SEGUIMIENTO EN TIEMPO REAL DE LAS ACCIONES DE MEJORA, GESTIÓN DEL RIESGO INDIVIDUAL, SEGURIDAD DEL PACIENTE')
     .setVersion('2.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);

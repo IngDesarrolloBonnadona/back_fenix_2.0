@@ -22,12 +22,12 @@ export class Synergy {
   syn_programmingcounter: number
 
   @Column()
-  syn_reschedulingdate: Date;
-
-  @Column()
   syn_evaluationdate: Date;
 
-  @Column()
+  @Column({ nullable: true })
+  syn_reschedulingdate: Date;
+
+  @Column({ nullable: true })
   syn_resolutiondate: Date;
 
   @Column({ default: false })

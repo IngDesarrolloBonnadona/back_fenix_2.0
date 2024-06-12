@@ -1,34 +1,66 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Put,
+  Ip,
+} from '@nestjs/common';
 import { SynergyService } from '../services/synergy.service';
 import { CreateSynergyDto } from '../dto/create-synergy.dto';
-import { UpdateSynergyDto } from '../dto/update-synergy.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('synergy')
 @Controller('synergy')
 export class SynergyController {
   constructor(private readonly synergyService: SynergyService) {}
 
-  @Post()
-  create(@Body() createSynergyDto: CreateSynergyDto) {
-    return this.synergyService.createSynergy(createSynergyDto);
+  @Post('/createSynergy/:idValidator')
+  createSynergy(
+    @Body() createSynergyDto: CreateSynergyDto[],
+    @Ip() clientIp: string,
+    @Param('idValidator') idValidator: number,
+  ) {
+    return this.synergyService.createSynergy(
+      createSynergyDto,
+      clientIp,
+      idValidator,
+    );
   }
 
-  @Get()
-  findAll() {
+  @Get('/listSynergies')
+  listSynergies() {
     return this.synergyService.findAllSynergy();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: number) {
+  @Get('/findSynergy/:id')
+  findSynergy(@Param('id') id: number) {
     return this.synergyService.findOneSynergy(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: number, @Body() updateSynergyDto: UpdateSynergyDto) {
-    return this.synergyService.updateSynergy(id, updateSynergyDto);
+  @Put('/rescheduleSynergy/:id/:idValidator')
+  rescheduleSynergy(
+    @Param('id') id: number,
+    @Ip() clientIp: string,
+    @Param('idValidator') idValidator: number,
+  ) {
+    return this.synergyService.rescheduleSynergy(id, clientIp, idValidator);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: number) {
+  @Post('/resolutionSynergy/:id/:idValidator')
+  resolutionSynergy(
+    @Param('id') id: number,
+    @Ip() clientIp: string,
+    @Param('idValidator') idValidator: number,
+  ) {
+    return this.synergyService.resolutionSynergy(id, clientIp, idValidator);
+  }
+
+  @Delete('/deleteSynergy/:id')
+  deleteSynergy(@Param('id') id: number) {
     return this.synergyService.deleteSynergy(id);
   }
 }

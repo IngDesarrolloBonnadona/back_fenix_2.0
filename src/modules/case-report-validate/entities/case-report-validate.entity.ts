@@ -9,11 +9,20 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Synergy } from 'src/modules/synergy/entities/synergy.entity';
+import { CaseType } from 'src/modules/case-type/entities/case-type.entity';
+import { RiskType } from 'src/modules/risk-type/entities/risk-type.entity';
+import { SeverityClasification } from 'src/modules/severity-clasification/entities/severity-clasification.entity';
+import { Origin } from 'src/modules/origin/entities/origin.entity';
+import { SubOrigin } from 'src/modules/sub-origin/entities/sub-origin.entity';
+import { RiskLevel } from 'src/modules/risk-level/entities/risk-level.entity';
+import { EventType } from 'src/modules/event-type/entities/event-type.entity';
+import { Event } from 'src/modules/event/entities/event.entity';
+import { Service } from 'src/modules/service/entities/service.entity';
+import { Unit } from 'src/modules/unit/entities/unit.entity';
 
 @Entity()
 export class CaseReportValidate {
@@ -129,11 +138,57 @@ export class CaseReportValidate {
   @JoinColumn({ name: 'val_cr_originalcase_id_fk' })
   caseReportOriginal: CaseReportOriginal;
 
+  @ManyToOne(() => CaseType, (caseType) => caseType.caseReportValidate)
+  @JoinColumn({ name: 'val_cr_casetype_id_fk' })
+  caseType: CaseType;
+
+  @ManyToOne(() => RiskType, (riskType) => riskType.caseReportValidate)
+  @JoinColumn({ name: 'val_cr_risktype_id_fk' })
+  riskType: RiskType;
+
+  @ManyToOne(
+    () => SeverityClasification,
+    (severityClasification) => severityClasification.caseReportValidate,
+  )
+  @JoinColumn({ name: 'val_cr_severityclasif_id_fk' })
+  severityClasification: SeverityClasification;
+
+  @ManyToOne(() => Origin, (origin) => origin.caseReportValidate)
+  @JoinColumn({ name: 'val_cr_origin_id_fk' })
+  origin: Origin;
+
+  @ManyToOne(() => SubOrigin, (subOrigin) => subOrigin.caseReportValidate)
+  @JoinColumn({ name: 'val_cr_suborigin_id_fk' })
+  subOrigin: SubOrigin;
+
+  @ManyToOne(() => RiskLevel, (riskLevel) => riskLevel.caseReportValidate)
+  @JoinColumn({ name: 'val_cr_risklevel_id_fk' })
+  riskLevel: RiskLevel;
+
+  @ManyToOne(() => EventType, (eventType) => eventType.caseReportValidate)
+  @JoinColumn({ name: 'val_cr_eventtype_id_fk' })
+  eventType: EventType;
+
+  @ManyToOne(() => Event, (event) => event.caseReportValidate)
+  @JoinColumn({ name: 'val_cr_event_id_fk' })
+  event: Event;
+
+  @ManyToOne(() => Service, (service) => service.caseReportValidate)
+  @JoinColumn({ name: 'val_cr_service_id_fk' })
+  service: Service;
+
+  @ManyToOne(() => Unit, (unit) => unit.caseReportValidate)
+  @JoinColumn({ name: 'val_cr_unit_id_fk' })
+  unit: Unit;
+
   @OneToMany(() => Log, (log) => log.caseReportValidate)
   log: Log[];
-  
-  @OneToMany(() => ReportAnalystAssignment, (reportAnalystAssignment) => reportAnalystAssignment.caseReportValidate)
-  reportAnalystAssignment: ReportAnalystAssignment[]
+
+  @OneToMany(
+    () => ReportAnalystAssignment,
+    (reportAnalystAssignment) => reportAnalystAssignment.caseReportValidate,
+  )
+  reportAnalystAssignment: ReportAnalystAssignment[];
 
   @OneToMany(() => Synergy, (synergy) => synergy.caseReportValidate)
   synergy: Synergy[];

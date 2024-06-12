@@ -3,18 +3,106 @@ import { CreateSynergyDto } from '../dto/create-synergy.dto';
 import { UpdateSynergyDto } from '../dto/update-synergy.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Synergy as SynergyEntity } from '../entities/synergy.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
+import { CaseReportValidateService } from 'src/modules/case-report-validate/services/case-report-validate.service';
+import { CaseType as CaseTypeEntity } from 'src/modules/case-type/entities/case-type.entity';
+import { caseTypeReport } from 'src/enums/caseType-report.enum';
+import { LogService } from 'src/modules/log/services/log.service';
+import { logReports } from 'src/enums/logs.enum';
+import { CaseReportValidate as CaseReportValidateEntity } from 'src/modules/case-report-validate/entities/case-report-validate.entity';
 
 @Injectable()
 export class SynergyService {
   constructor(
     @InjectRepository(SynergyEntity)
     private readonly synergyRepository: Repository<SynergyEntity>,
+    @InjectRepository(CaseTypeEntity)
+    private readonly caseTypeRepository: Repository<CaseTypeEntity>,
+    @InjectRepository(CaseReportValidateEntity)
+    private readonly caseReportValidateRepository: Repository<CaseReportValidateEntity>,
+
+    private readonly logService: LogService,
   ) {}
 
-  async createSynergy(createSynergyDto: CreateSynergyDto) {
-    const synergy = this.synergyRepository.create(createSynergyDto);
-    return await this.synergyRepository.save(synergy);
+  async createSynergy(
+    createSynergy: CreateSynergyDto[],
+    clientIp: string,
+    idAnalyst: number,
+  ) {
+    const adverseEventType = await this.caseTypeRepository.findOne({
+      where: {
+        cas_t_name: caseTypeReport.ADVERSE_EVENT,
+      },
+    });
+
+    if (!adverseEventType) {
+      throw new HttpException(
+        `Tipo de caso ${caseTypeReport.ADVERSE_EVENT} no encontrado`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    const synergyValidateCaseIds = createSynergy.map(
+      (list) => list.syn_validatedcase_id_fk,
+    );
+
+    const existingCaseValidate = await this.caseReportValidateRepository.find({
+      where: {
+        id: In(synergyValidateCaseIds),
+      },
+    });
+
+    if (existingCaseValidate.length !== synergyValidateCaseIds.length) {
+      throw new HttpException(
+        'No se encontró el reporte para algunos casos',
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    const existingSynergies = await this.synergyRepository.find({
+      where: {
+        syn_validatedcase_id_fk: In(synergyValidateCaseIds),
+      },
+    });
+
+    if (existingSynergies.length > 0) {
+      throw new HttpException(
+        'Algunos casos ya fueron elevados a comité de sinergia',
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    const invalidSynergyIds = existingCaseValidate
+      .filter((caseType) => caseType.val_cr_casetype_id_fk !== adverseEventType.id)
+      .map((caseValidateId) => caseValidateId.id);
+
+    if (invalidSynergyIds.length > 0) {
+      return {
+        message: `Algunos tipos de caso no coinciden con el tipo de caso ${caseTypeReport.ADVERSE_EVENT}`,
+        invalidSynergyIds,
+      };
+    }
+
+    const synergies = createSynergy.map((syn) => {
+      return this.synergyRepository.create({
+        ...syn,
+        syn_programmingcounter: 0,
+        syn_evaluationdate: new Date(),
+      });
+    });
+
+    const savedSynergies = await this.synergyRepository.save(synergies);
+
+    for (const synergy of savedSynergies) {
+      await this.logService.createLog(
+        synergy.syn_validatedcase_id_fk,
+        idAnalyst,
+        clientIp,
+        logReports.LOG_CASE_RAISED_SYNERGY_COMMITTEE,
+      );
+    }
+
+    return savedSynergies;
   }
 
   async findAllSynergy() {
@@ -41,25 +129,64 @@ export class SynergyService {
     const synergy = await this.synergyRepository.findOne({
       where: { id, syn_status: false },
     });
-    return synergy;
-  }
 
-  async updateSynergy(id: number, updateSynergyDto: UpdateSynergyDto) {
-    const synergy = await this.findOneSynergy(id);
-    const result = await this.synergyRepository.update(
-      synergy.id,
-      updateSynergyDto,
-    );
-
-    if (result.affected === 0) {
-      return new HttpException(
-        `No se actualizar el reporte en sinergia.`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
+    if (!synergy) {
+      throw new HttpException(
+        'No se encontró el caso en sinergia',
+        HttpStatus.NOT_FOUND,
       );
     }
 
+    return synergy;
+  }
+
+  async rescheduleSynergy(id: number, clientIp: string, idValidator: number) {
+    const synergy = await this.findOneSynergy(id);
+
+    synergy.syn_reschedulingdate = new Date();
+    synergy.syn_programmingcounter += 1;
+
+    await this.synergyRepository.save(synergy);
+
+    await this.logService.createLog(
+      synergy.syn_validatedcase_id_fk,
+      idValidator,
+      clientIp,
+      logReports.LOG_CASE_RESCHEDULED_SYNERGY,
+    );
+
     return new HttpException(
-      `¡Datos actualizados correctamente!`,
+      `¡Caso reprogramado correctamente!`,
+      HttpStatus.ACCEPTED,
+    );
+  }
+
+  async resolutionSynergy(id: number, clientIp: string, idValidator: number) {
+    const synergy = await this.findOneSynergy(id);
+
+    synergy.syn_status = true;
+    await this.synergyRepository.save(synergy);
+
+    const newSynergy = this.synergyRepository.create({
+      syn_validatedcase_id_fk: synergy.syn_validatedcase_id_fk,
+      syn_programmingcounter: synergy.syn_programmingcounter,
+      syn_reschedulingdate: synergy.syn_reschedulingdate,
+      syn_evaluationdate: synergy.syn_evaluationdate,
+      syn_resolutiondate: new Date(),
+      syn_status: true,
+    });
+
+    await this.synergyRepository.save(newSynergy);
+
+    await this.logService.createLog(
+      synergy.syn_validatedcase_id_fk,
+      idValidator,
+      clientIp,
+      logReports.LOG_SOLUTION_CASE_SYNERGY,
+    );
+
+    return new HttpException(
+      `¡Caso resuelto y registrado correctamente!`,
       HttpStatus.ACCEPTED,
     );
   }

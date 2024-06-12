@@ -1,4 +1,10 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  forwardRef,
+} from '@nestjs/common';
 import { ReportAnalystAssignmentDto } from '../dto/analyst-assignment.dto';
 import { UpdateReportAnalystAssignmentDto } from '../dto/update-report-analyst-assignment.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -17,9 +23,10 @@ export class ReportAnalystAssignmentService {
     private readonly reportAnalystAssignmentRepository: Repository<ReportAnalystAssignmentEntity>,
 
     private readonly logService: LogService,
-    private readonly caseReportValidateService: CaseReportValidateService,
     private readonly positionService: PositionService,
     private readonly httpPositionService: HttpPositionService,
+    @Inject(forwardRef(() => CaseReportValidateService))
+    private readonly caseReportValidateService: CaseReportValidateService,
   ) {}
 
   async findOneAnalyst(code?: number) {
