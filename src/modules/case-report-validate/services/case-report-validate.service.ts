@@ -327,6 +327,7 @@ export class CaseReportValidateService {
         subOrigin: true,
         riskLevel: true,
         eventType: true,
+        event: true,
       },
     });
 

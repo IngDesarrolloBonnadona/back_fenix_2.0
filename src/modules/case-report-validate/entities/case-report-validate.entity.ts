@@ -21,6 +21,7 @@ import { Origin } from 'src/modules/origin/entities/origin.entity';
 import { SubOrigin } from 'src/modules/sub-origin/entities/sub-origin.entity';
 import { RiskLevel } from 'src/modules/risk-level/entities/risk-level.entity';
 import { EventType } from 'src/modules/event-type/entities/event-type.entity';
+import { Event } from 'src/modules/event/entities/event.entity';
 
 @Entity()
 export class CaseReportValidate {
@@ -166,6 +167,10 @@ export class CaseReportValidate {
   @ManyToOne(() => EventType, (eventType) => eventType.caseReportValidate)
   @JoinColumn({ name: 'val_cr_eventtype_id_fk' })
   eventType: EventType;
+
+  @ManyToOne(() => Event, (event) => event.caseReportValidate)
+  @JoinColumn({ name: 'val_cr_event_id_fk' })
+  event: Event;
 
   @OneToMany(() => Log, (log) => log.caseReportValidate)
   log: Log[];
