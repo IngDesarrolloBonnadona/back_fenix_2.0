@@ -43,7 +43,7 @@ export class SynergyService {
     }
 
     const synergyValidateCaseIds = createSynergy.map(
-      (dto) => dto.syn_validatedcase_id_fk,
+      (list) => list.syn_validatedcase_id_fk,
     );
 
     const existingCaseValidate = await this.caseReportValidateRepository.find({
@@ -72,9 +72,9 @@ export class SynergyService {
       );
     }
 
-    const invalidSynergyIds = createSynergy
-      .filter((dto) => dto.caseType_id !== adverseEventType.id)
-      .map((dto) => dto.syn_validatedcase_id_fk);
+    const invalidSynergyIds = existingCaseValidate
+      .filter((caseType) => caseType.val_cr_casetype_id_fk !== adverseEventType.id)
+      .map((caseValidateId) => caseValidateId.id);
 
     if (invalidSynergyIds.length > 0) {
       return {
@@ -83,9 +83,9 @@ export class SynergyService {
       };
     }
 
-    const synergies = createSynergy.map((dto) => {
+    const synergies = createSynergy.map((syn) => {
       return this.synergyRepository.create({
-        ...dto,
+        ...syn,
         syn_programmingcounter: 0,
         syn_evaluationdate: new Date(),
       });

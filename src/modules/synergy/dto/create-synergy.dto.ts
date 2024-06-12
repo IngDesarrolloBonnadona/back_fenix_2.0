@@ -5,7 +5,7 @@ export class CreateSynergyDto {
     @IsString()
     syn_validatedcase_id_fk: string;
 
-    @IsNotEmpty()
-    @IsNumber()
-    caseType_id: number;
+    // @IsNotEmpty()
+    // @IsNumber()
+    // caseType_id: number;
 }
