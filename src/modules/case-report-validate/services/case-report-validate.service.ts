@@ -360,9 +360,11 @@ export class CaseReportValidateService {
 
   async findOneReportValidateByConsecutive(consecutive: string) {
     const caseReportValidate = await this.caseReportValidateRepository
-    .createQueryBuilder('caseReportValidate')
-    .where('caseReportValidate.val_cr_filingnumber LIKE :consecutive', { consecutive: `%${consecutive}%` })
-    .getOne();
+      .createQueryBuilder('caseReportValidate')
+      .where('caseReportValidate.val_cr_filingnumber LIKE :consecutive', {
+        consecutive: `%${consecutive}%`,
+      })
+      .getMany();
 
     if (!caseReportValidate) {
       throw new HttpException(
