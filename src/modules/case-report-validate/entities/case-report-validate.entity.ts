@@ -20,6 +20,7 @@ import { SeverityClasification } from 'src/modules/severity-clasification/entiti
 import { Origin } from 'src/modules/origin/entities/origin.entity';
 import { SubOrigin } from 'src/modules/sub-origin/entities/sub-origin.entity';
 import { RiskLevel } from 'src/modules/risk-level/entities/risk-level.entity';
+import { EventType } from 'src/modules/event-type/entities/event-type.entity';
 
 @Entity()
 export class CaseReportValidate {
@@ -161,6 +162,10 @@ export class CaseReportValidate {
   @ManyToOne(() => RiskLevel, (riskLevel) => riskLevel.caseReportValidate)
   @JoinColumn({ name: 'val_cr_risklevel_id_fk' })
   riskLevel: RiskLevel;
+
+  @ManyToOne(() => EventType, (eventType) => eventType.caseReportValidate)
+  @JoinColumn({ name: 'val_cr_eventtype_id_fk' })
+  eventType: EventType;
 
   @OneToMany(() => Log, (log) => log.caseReportValidate)
   log: Log[];
