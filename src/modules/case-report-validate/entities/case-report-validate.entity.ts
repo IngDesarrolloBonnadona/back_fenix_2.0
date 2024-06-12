@@ -22,6 +22,7 @@ import { RiskLevel } from 'src/modules/risk-level/entities/risk-level.entity';
 import { EventType } from 'src/modules/event-type/entities/event-type.entity';
 import { Event } from 'src/modules/event/entities/event.entity';
 import { Service } from 'src/modules/service/entities/service.entity';
+import { Unit } from 'src/modules/unit/entities/unit.entity';
 
 @Entity()
 export class CaseReportValidate {
@@ -175,6 +176,10 @@ export class CaseReportValidate {
   @ManyToOne(() => Service, (service) => service.caseReportValidate)
   @JoinColumn({ name: 'val_cr_service_id_fk' })
   service: Service;
+
+  @ManyToOne(() => Unit, (unit) => unit.caseReportValidate)
+  @JoinColumn({ name: 'val_cr_unit_id_fk' })
+  unit: Unit;
 
   @OneToMany(() => Log, (log) => log.caseReportValidate)
   log: Log[];

@@ -329,6 +329,7 @@ export class CaseReportValidateService {
         eventType: true,
         event: true,
         service: true,
+        unit: true,
       },
     });
 
