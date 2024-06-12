@@ -325,6 +325,7 @@ export class CaseReportValidateService {
         severityClasification: true,
         origin: true,
         subOrigin: true,
+        riskLevel: true,
       },
     });
 

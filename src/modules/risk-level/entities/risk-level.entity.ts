@@ -1,4 +1,5 @@
 import { CaseReportOriginal } from "src/modules/case-report-original/entities/case-report-original.entity";
+import { CaseReportValidate } from "src/modules/case-report-validate/entities/case-report-validate.entity";
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
@@ -26,4 +27,7 @@ export class RiskLevel {
 
     @OneToMany(() => CaseReportOriginal, (caseReportOriginal) => caseReportOriginal.riskLevel)
     caseReportOriginal: CaseReportOriginal[];
+
+    @OneToMany(() => CaseReportValidate, (caseReportValidate) => caseReportValidate.riskLevel)
+    caseReportValidate: CaseReportValidate[];
 }
