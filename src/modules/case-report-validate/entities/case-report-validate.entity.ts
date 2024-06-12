@@ -15,6 +15,7 @@ import {
 } from 'typeorm';
 import { Synergy } from 'src/modules/synergy/entities/synergy.entity';
 import { CaseType } from 'src/modules/case-type/entities/case-type.entity';
+import { RiskType } from 'src/modules/risk-type/entities/risk-type.entity';
 
 @Entity()
 export class CaseReportValidate {
@@ -130,15 +131,22 @@ export class CaseReportValidate {
   @JoinColumn({ name: 'val_cr_originalcase_id_fk' })
   caseReportOriginal: CaseReportOriginal;
 
-  @ManyToOne(() => CaseType, (caseType) => caseType.caseReportOriginal)
-    @JoinColumn({ name: 'val_cr_casetype_id_fk'})
-    caseType: CaseType
+  @ManyToOne(() => CaseType, (caseType) => caseType.caseReportValidate)
+  @JoinColumn({ name: 'val_cr_casetype_id_fk' })
+  caseType: CaseType;
+
+  @ManyToOne(() => RiskType, (riskType) => riskType.caseReportValidate)
+  @JoinColumn({ name: 'val_cr_risktype_id_fk' })
+  riskType: RiskType;
 
   @OneToMany(() => Log, (log) => log.caseReportValidate)
   log: Log[];
-  
-  @OneToMany(() => ReportAnalystAssignment, (reportAnalystAssignment) => reportAnalystAssignment.caseReportValidate)
-  reportAnalystAssignment: ReportAnalystAssignment[]
+
+  @OneToMany(
+    () => ReportAnalystAssignment,
+    (reportAnalystAssignment) => reportAnalystAssignment.caseReportValidate,
+  )
+  reportAnalystAssignment: ReportAnalystAssignment[];
 
   @OneToMany(() => Synergy, (synergy) => synergy.caseReportValidate)
   synergy: Synergy[];

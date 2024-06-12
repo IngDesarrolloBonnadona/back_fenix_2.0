@@ -321,6 +321,7 @@ export class CaseReportValidateService {
         reportAnalystAssignment: true,
         synergy: true,
         caseType: true,
+        riskType: true,
       },
     });
 
