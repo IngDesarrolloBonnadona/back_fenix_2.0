@@ -42,6 +42,11 @@ export class PositionController {
     return this.positionService.findOnePosition(id);
   }
 
+  @Get('/findEmployeeByCode/:code')
+  findEmployeeByCode(@Param('code') code: number) {
+    return this.positionService.findEmployeeByCode(code);
+  }
+
   @Patch('/updateEnabledPosition/:id')
   updateEnabledPosition(
     @Param('id') id: number,
