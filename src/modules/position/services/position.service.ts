@@ -87,6 +87,26 @@ export class PositionService {
     return position;
   }
 
+  async findEmployeeByCode(code: number) {
+    const externalData = await this.httpPositionService.getPositionData(code);
+
+    if (!Array.isArray(externalData.data.data)) {
+      throw new HttpException(
+        'La estructura de los datos externos no es la esperada.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    if (externalData.data.data.length === 0) {
+      throw new HttpException(
+        'No se encontraron datos del empleado',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return externalData.data.data;
+  }
+
   async updateEnabledPosition(
     id: number,
     EnabledPositionDto: EnabledPositionDto,
