@@ -328,6 +328,7 @@ export class CaseReportValidateService {
         riskLevel: true,
         eventType: true,
         event: true,
+        service: true,
       },
     });
 
