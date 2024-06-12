@@ -70,9 +70,14 @@ export class CaseReportValidateController {
     return this.caseReportValidateService.findAllReportsValidate();
   }
 
-  @Get('/listReportValidate/:id')
+  @Get('/findReportValidate/:id')
   findReportValidate(@Param('id') id: string): Promise<CaseReportValidate> {
     return this.caseReportValidateService.findOneReportValidate(id);
+  }
+
+  @Get('/findReportValidateByConsecutive/:consecutive')
+  findReportValidateByConsecutive(@Param('consecutive') consecutive: string): Promise<CaseReportValidate> {
+    return this.caseReportValidateService.findOneReportValidateByConsecutive(consecutive);
   }
 
   @Put('/updateReportValidate/:id')
