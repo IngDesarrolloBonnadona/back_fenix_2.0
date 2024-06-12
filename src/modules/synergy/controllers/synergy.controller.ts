@@ -11,7 +11,9 @@ import {
 } from '@nestjs/common';
 import { SynergyService } from '../services/synergy.service';
 import { CreateSynergyDto } from '../dto/create-synergy.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('synergy')
 @Controller('synergy')
 export class SynergyController {
   constructor(private readonly synergyService: SynergyService) {}
