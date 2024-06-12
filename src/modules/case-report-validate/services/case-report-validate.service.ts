@@ -322,6 +322,7 @@ export class CaseReportValidateService {
         synergy: true,
         caseType: true,
         riskType: true,
+        severityClasification: true,
       },
     });
 

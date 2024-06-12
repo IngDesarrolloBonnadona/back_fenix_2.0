@@ -16,6 +16,7 @@ import {
 import { Synergy } from 'src/modules/synergy/entities/synergy.entity';
 import { CaseType } from 'src/modules/case-type/entities/case-type.entity';
 import { RiskType } from 'src/modules/risk-type/entities/risk-type.entity';
+import { SeverityClasification } from 'src/modules/severity-clasification/entities/severity-clasification.entity';
 
 @Entity()
 export class CaseReportValidate {
@@ -138,6 +139,13 @@ export class CaseReportValidate {
   @ManyToOne(() => RiskType, (riskType) => riskType.caseReportValidate)
   @JoinColumn({ name: 'val_cr_risktype_id_fk' })
   riskType: RiskType;
+
+  @ManyToOne(
+    () => SeverityClasification,
+    (severityClasification) => severityClasification.caseReportValidate,
+  )
+  @JoinColumn({ name: 'val_cr_severityclasif_id_fk' })
+  severityClasification: SeverityClasification;
 
   @OneToMany(() => Log, (log) => log.caseReportValidate)
   log: Log[];
