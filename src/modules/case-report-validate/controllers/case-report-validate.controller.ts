@@ -76,7 +76,7 @@ export class CaseReportValidateController {
   }
 
   @Get('/findReportValidateByConsecutive/:consecutive')
-  findReportValidateByConsecutive(@Param('consecutive') consecutive: string): Promise<CaseReportValidate> {
+  findReportValidateByConsecutive(@Param('consecutive') consecutive: string): Promise<CaseReportValidate[]> {
     return this.caseReportValidateService.findOneReportValidateByConsecutive(consecutive);
   }
 
