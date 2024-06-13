@@ -1,5 +1,6 @@
 import { CaseReportValidate } from 'src/modules/case-report-validate/entities/case-report-validate.entity';
 import { Position } from 'src/modules/position/entities/position.entity';
+import { Researcher } from 'src/modules/researchers/entities/researchers.entity';
 import {
   Column,
   CreateDateColumn,
@@ -7,6 +8,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -48,4 +50,10 @@ export class ReportAnalystAssignment {
   )
   @JoinColumn({ name: 'ass_ra_validatedcase_id_fk' })
   caseReportValidate: CaseReportValidate;
+
+  @OneToMany(
+    () => Researcher,
+    (researcher) => researcher.reportAnalystAssignment,
+  )
+  researcher: Researcher[];
 }

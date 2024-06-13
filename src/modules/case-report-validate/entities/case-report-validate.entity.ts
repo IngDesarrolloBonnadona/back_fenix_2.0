@@ -9,6 +9,7 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -23,6 +24,7 @@ import { EventType } from 'src/modules/event-type/entities/event-type.entity';
 import { Event } from 'src/modules/event/entities/event.entity';
 import { Service } from 'src/modules/service/entities/service.entity';
 import { Unit } from 'src/modules/unit/entities/unit.entity';
+import { Researcher } from 'src/modules/researchers/entities/researchers.entity';
 
 @Entity()
 export class CaseReportValidate {
@@ -192,4 +194,7 @@ export class CaseReportValidate {
 
   @OneToMany(() => Synergy, (synergy) => synergy.caseReportValidate)
   synergy: Synergy[];
+
+  @OneToOne(() => Researcher, (researcher) => researcher.caseReportValidate)
+  researcher: Researcher[];
 }
