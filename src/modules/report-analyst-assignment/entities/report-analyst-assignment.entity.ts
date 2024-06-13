@@ -1,5 +1,6 @@
 import { CaseReportValidate } from 'src/modules/case-report-validate/entities/case-report-validate.entity';
 import { Position } from 'src/modules/position/entities/position.entity';
+import { Researcher } from 'src/modules/researchers/entities/researchers.entity';
 import {
   Column,
   CreateDateColumn,
@@ -7,6 +8,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -24,7 +26,10 @@ export class ReportAnalystAssignment {
   ass_ra_position_id_fk: number;
 
   @Column()
-  ass_ra_documentanalyst: number;
+  ass_ra_useranalyst_id: number;
+
+  @Column()
+  ass_ra_uservalidator_id: number
 
   @Column({ default: true })
   ass_ra_status: boolean;

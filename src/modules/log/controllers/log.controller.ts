@@ -1,4 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus, Put } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  HttpException,
+  HttpStatus,
+  Put,
+} from '@nestjs/common';
 import { LogService } from '../services/log.service';
 import { CreateLogDto } from '../dto/create-log.dto';
 import { UpdateLogDto } from '../dto/update-log.dto';
@@ -14,9 +25,9 @@ export class LogController {
   createLog(@Body() createLogDto: CreateLogDto): Promise<Log> {
     return this.logService.createLog(
       createLogDto.log_validatedcase_id_fk,
-      createLogDto.log_user_id_fk,
+      createLogDto.log_user_id,
       createLogDto.log_ip,
-      createLogDto.log_action
+      createLogDto.log_action,
     );
   }
 
@@ -31,7 +42,10 @@ export class LogController {
   }
 
   @Put('/updateLog/:id')
-  updateLog(@Param('id') id: number, @Body() updateLogDto: UpdateLogDto): Promise<HttpException> {
+  updateLog(
+    @Param('id') id: number,
+    @Body() updateLogDto: UpdateLogDto,
+  ): Promise<HttpException> {
     return this.logService.updateLog(id, updateLogDto);
   }
 

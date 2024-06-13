@@ -1,4 +1,5 @@
 import { CaseReportValidate } from 'src/modules/case-report-validate/entities/case-report-validate.entity';
+import { ReportAnalystAssignment } from 'src/modules/report-analyst-assignment/entities/report-analyst-assignment.entity';
 import {
   Column,
   CreateDateColumn,
@@ -6,29 +7,30 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
-export class Log {
+export class Researcher {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'uuid' })
-  log_validatedcase_id_fk: string;
+  @Column()
+  res_validatedcase_id_fk: string;
 
   @Column()
-  log_user_id: number;
+  ass_ra_useranalyst_id: number;
 
-  @Column({ type: 'varchar' })
-  log_action: string;
+  @Column()
+  ass_ra_userresearch_id: number;
 
-  @Column({ type: 'varchar' })
-  log_ip: string;
+  @Column()
+  ass_ra_days: number
 
   @Column({ default: true })
-  log_status: boolean;
+  res_status: boolean;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -39,10 +41,10 @@ export class Log {
   @DeleteDateColumn()
   deletedAt: Date;
 
-  @ManyToOne(
+  @OneToOne(
     () => CaseReportValidate,
-    (caseReportValidate) => caseReportValidate.log,
+    (caseReportValidate) => caseReportValidate.researcher,
   )
-  @JoinColumn({ name: 'log_validatedcase_id_fk' })
+  @JoinColumn({ name: 'res_validatedcase_id_fk' })
   caseReportValidate: CaseReportValidate;
 }

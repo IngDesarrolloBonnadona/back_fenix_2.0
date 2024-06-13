@@ -53,7 +53,6 @@ export class ReportAnalystAssignmentService {
   async assingAnalyst(
     createReportAnalystAssignmentDto: ReportAnalystAssignmentDto,
     clientIp: string,
-    idValidator: number,
   ) {
     const reportAssignmentFind =
       await this.reportAnalystAssignmentRepository.findOne({
@@ -81,7 +80,7 @@ export class ReportAnalystAssignmentService {
 
     await this.logService.createLog(
       createReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
-      idValidator,
+      createReportAnalystAssignmentDto.ass_ra_uservalidator_id,
       clientIp,
       logReports.LOG_ASSIGNMENT_ANALYST,
     );
@@ -98,7 +97,6 @@ export class ReportAnalystAssignmentService {
   async reAssingAnalyst(
     updateReportAnalystAssignmentDto: UpdateReportAnalystAssignmentDto,
     clientIp: string,
-    idValidator: number,
   ) {
     const reportAssignmentFind =
       await this.reportAnalystAssignmentRepository.findOne({
@@ -140,7 +138,7 @@ export class ReportAnalystAssignmentService {
 
     await this.logService.createLog(
       updateReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
-      idValidator,
+      updateReportAnalystAssignmentDto.ass_ra_uservalidator_id,
       clientIp,
       logReports.LOG_REASSIGNMENT_ANALYST,
     );
