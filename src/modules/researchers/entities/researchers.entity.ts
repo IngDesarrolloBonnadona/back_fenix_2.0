@@ -18,19 +18,16 @@ export class Researcher {
   id: number;
 
   @Column()
-  res_documentresearcher: number;
-
-  @Column()
-  res_nameresearcher: string;
-
-  @Column()
-  res_lastnameresearcher: string;
-
-  @Column()
   res_validatedcase_id_fk: string;
 
-  // @Column()
-  // res_analyst_id_fk: number;
+  @Column()
+  ass_ra_useranalyst_id: number;
+
+  @Column()
+  ass_ra_userresearch_id: number;
+
+  @Column()
+  ass_ra_days: number
 
   @Column({ default: true })
   res_status: boolean;
@@ -50,11 +47,4 @@ export class Researcher {
   )
   @JoinColumn({ name: 'res_validatedcase_id_fk' })
   caseReportValidate: CaseReportValidate;
-
-  // @ManyToOne(
-  //   () => ReportAnalystAssignment,
-  //   (reportAnalystAssignment) => reportAnalystAssignment.researcher,
-  // )
-  // @JoinColumn({ name: 'res_analyst_id_fk' })
-  // reportAnalystAssignment: ReportAnalystAssignment;
 }
