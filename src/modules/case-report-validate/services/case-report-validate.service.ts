@@ -12,6 +12,7 @@ import {
   Between,
   DataSource,
   FindOptionsWhere,
+  Like,
   QueryRunner,
   Repository,
 } from 'typeorm';
@@ -359,14 +360,28 @@ export class CaseReportValidateService {
   }
 
   async findOneReportValidateByConsecutive(consecutive: string) {
-    const caseReportValidate = await this.caseReportValidateRepository
-      .createQueryBuilder('caseReportValidate')
-      .where('caseReportValidate.val_cr_filingnumber LIKE :consecutive', {
-        consecutive: `%${consecutive}%`,
-      })
-      .getMany();
+    // const caseReportValidate = await this.caseReportValidateRepository
+    //   .createQueryBuilder('caseReportValidate')
+    //   .where('caseReportValidate.val_cr_filingnumber LIKE :consecutive', {
+    //     consecutive: `%${consecutive}%`,
+    //   })
+    //   .getMany();
 
-    if (!caseReportValidate) {
+    // const caseReportValidate = await this.dataSource
+    //   .getRepository(CaseReportValidateEntity)
+    //   .createQueryBuilder('caseReportValidate')
+    //   .where('caseReportValidate.val_cr_filingnumber LIKE :consecutive', {
+    //     consecutive: `%${consecutive}%`,
+    //   })
+    //   .getMany();
+
+    const caseReportValidate = await this.caseReportValidateRepository.find({
+      where: {
+        val_cr_filingnumber: Like(`%${consecutive}%`),
+      },
+    });
+
+    if (caseReportValidate.length === 0) {
       throw new HttpException(
         'No se encontró el reporte.',
         HttpStatus.NOT_FOUND,
