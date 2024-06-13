@@ -17,11 +17,11 @@ export class LogService {
     caseReportValidateId: string,
     reporterId: number,
     clientIp: string,
-    action: string
+    action: string,
   ): Promise<void> {
     const log = this.logRepository.create({
       log_validatedcase_id_fk: caseReportValidateId,
-      log_user_id_fk: reporterId,
+      log_user_id: reporterId,
       log_ip: clientIp,
       log_action: action,
     });
@@ -33,14 +33,14 @@ export class LogService {
     caseReportValidateId: string,
     userId: number,
     clientIp: string,
-    action: string
+    action: string,
   ) {
     const createLogDto: CreateLogDto = {
       log_validatedcase_id_fk: caseReportValidateId,
-      log_user_id_fk: userId,
+      log_user_id: userId,
       log_ip: clientIp,
-      log_action: action
-    }
+      log_action: action,
+    };
 
     const log = this.logRepository.create(createLogDto);
     return await this.logRepository.save(log);

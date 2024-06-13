@@ -12,13 +12,18 @@ export class ResearchersController {
   @Get('filterResearchers')
   filterResearchers(
     @Query('empImmediateBoss') empImmediateBoss?: string,
-    @Query('empPosition') empPosition?: string
+    @Query('empPosition') empPosition?: string,
   ): Promise<FilterResearcherDto[]> {
     const filter = new FilterResearcherDto();
-      filter.empImmediateBoss = empImmediateBoss;
-      filter.empPosition = empPosition;
-    
+    filter.empImmediateBoss = empImmediateBoss;
+    filter.empPosition = empPosition;
+
     return this.researchersService.filterResearchers(filter);
+  }
+
+  @Get('findAssignedResearch/:id')
+  findAssignedResearch(@Param('id') id: number) {
+    return this.researchersService.findOneAssignedResearch(id);
   }
 
   @Post('assingResearcher/:idAnalyst')
@@ -30,7 +35,7 @@ export class ResearchersController {
     return this.researchersService.assingResearcher(
       createResearcherDto,
       clientIp,
-      idAnalyst
-    )
+      idAnalyst,
+    );
   }
 }

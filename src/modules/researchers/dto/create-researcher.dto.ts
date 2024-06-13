@@ -2,8 +2,8 @@ import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 
 export class CreateResearcherDto {
     @IsNotEmpty()
-    @IsString()
-    res_documentresearcher: string
+    @IsNumber()
+    res_documentresearcher: number
 
     @IsNotEmpty()
     @IsString()
@@ -16,8 +16,4 @@ export class CreateResearcherDto {
     @IsNotEmpty()
     @IsString()
     res_validatedcase_id_fk: string;
-
-    @IsNotEmpty()
-    @IsNumber()
-    res_analyst_id_fk: number;
 }
