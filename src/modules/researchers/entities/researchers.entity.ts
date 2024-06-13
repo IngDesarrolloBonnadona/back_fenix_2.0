@@ -32,7 +32,7 @@ export class Researcher {
   @Column()
   res_analyst_id_fk: number;
 
-  @Column()
+  @Column({ default: true })
   res_status: boolean;
 
   @CreateDateColumn()
