@@ -86,9 +86,10 @@ export class ReportAnalystAssignmentService {
       logReports.LOG_ASSIGNMENT_ANALYST,
     );
 
-    const analyst = this.reportAnalystAssignmentRepository.create(
-      createReportAnalystAssignmentDto,
-    );
+    const analyst = this.reportAnalystAssignmentRepository.create({
+      ...createReportAnalystAssignmentDto,
+      ass_ra_uservalidator_id: idValidator,
+    });
 
     const assigned = await this.reportAnalystAssignmentRepository.save(analyst);
 
