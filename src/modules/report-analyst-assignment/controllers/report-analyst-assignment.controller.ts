@@ -23,16 +23,14 @@ export class ReportAnalystAssignmentController {
     private readonly ReportAnalisysAssignmentService: ReportAnalystAssignmentService,
   ) {}
 
-  @Post('assingAnalyst/:idValidator')
+  @Post('assingAnalyst/')
   createAssingAnalystReporter(
     @Body() createAnalystReporterDto: ReportAnalystAssignmentDto,
     @Ip() clientIp: string,
-    @Param('idValidator') idValidator: number,
   ): Promise<ReportAnalystAssignment> {
     return this.ReportAnalisysAssignmentService.assingAnalyst(
       createAnalystReporterDto,
       clientIp,
-      idValidator,
     );
   }
 
