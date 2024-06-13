@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { FilterResearcherDto } from '../dto/filter-researcher.dto';
 import { HttpResearchersService } from '../http/http-researchers.service';
+import { CreateResearcherDto } from '../dto/create-researcher.dto';
 
 @Injectable()
 export class ResearchersService {
@@ -29,5 +30,13 @@ export class ResearchersService {
     }
 
     return filteredResearchers;
+  }
+
+  async assingResearcher(
+    createResearcherDto: CreateResearcherDto,
+    clientIp: string,
+    idAnalyst: number,
+  ) {
+
   }
 }
