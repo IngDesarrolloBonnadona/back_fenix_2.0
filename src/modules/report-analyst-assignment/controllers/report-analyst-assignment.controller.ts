@@ -66,16 +66,14 @@ export class ReportAnalystAssignmentController {
     return this.ReportAnalisysAssignmentService.findOneAnalyst(code)
   }
 
-  @Put('updateReAssignedAnalyst/:idValidator')
+  @Put('updateReAssignedAnalyst/')
   updateReAssignedAnalyst(
     @Body() updateReportAnalystAssignmentDto: UpdateReportAnalystAssignmentDto,
     @Ip() clientIp: string,
-    @Param('idValidator') idValidator: number,
   ): Promise<HttpException> {
     return this.ReportAnalisysAssignmentService.reAssingAnalyst(
       updateReportAnalystAssignmentDto,
       clientIp,
-      idValidator,
     );
   }
 
