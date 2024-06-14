@@ -28,7 +28,7 @@ export class OriginService {
     if (!origins || origins.length === 0) {
       throw new HttpException(
         'No se encontró la lista de fuentes',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
 
@@ -41,7 +41,7 @@ export class OriginService {
     if (!origin) {
       throw new HttpException(
         'No se encontró la fuente',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
 

@@ -54,7 +54,7 @@ export class CaseReportOriginalService {
       if (!caseTypeFound) {
         throw new HttpException(
           `El tipo de caso no existe.`,
-          HttpStatus.NOT_FOUND,
+          HttpStatus.NO_CONTENT,
         );
       }
 
@@ -117,7 +117,7 @@ export class CaseReportOriginalService {
       if (!movementReportFound) {
         throw new HttpException(
           `El movimiento ${movementReport.REPORT_CREATION} no existe.`,
-          HttpStatus.NOT_FOUND,
+          HttpStatus.NO_CONTENT,
         );
       }
 
@@ -186,7 +186,7 @@ export class CaseReportOriginalService {
     if (!caseReportsOriginal || caseReportsOriginal.length === 0) {
       throw new HttpException(
         'No hay reportes para mostrar.',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
 
@@ -200,7 +200,7 @@ export class CaseReportOriginalService {
     if (!caseReportsOriginal) {
       throw new HttpException(
         `No se encontró el reporte.`,
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
 

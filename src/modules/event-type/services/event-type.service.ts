@@ -29,7 +29,7 @@ export class EventTypeService {
     if (!eventTypes || eventTypes.length === 0) {
       throw new HttpException(
         'No se encontró la lista de tipo de eventos.',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
     return eventTypes
@@ -41,7 +41,7 @@ export class EventTypeService {
     if (!eventType) {
       throw new HttpException(
         'No se encontró el tipo de reporte.',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
 

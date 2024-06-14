@@ -27,7 +27,7 @@ export class SeverityClasificationService {
     if (!severityClasifs || severityClasifs.length === 0) {
       throw new HttpException(
         'No se encontró la lista de clasificaciones de severidad',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
 
@@ -40,7 +40,7 @@ export class SeverityClasificationService {
     if (!severityClasif) {
       throw new HttpException(
         'No se encontró la clasificacion de severidad',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
 

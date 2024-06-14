@@ -48,7 +48,7 @@ export class MedicineService {
     if (!medicines || medicines.length === 0) {
       throw new HttpException(
         'No se encontró la lista de medicamentos',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
 
@@ -61,7 +61,7 @@ export class MedicineService {
     if (!medicine) {
       throw new HttpException(
         'No se encontró el medicamento',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
 

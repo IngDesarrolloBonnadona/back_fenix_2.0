@@ -29,7 +29,7 @@ export class CaseTypeService {
     if (!caseTypes || caseTypes.length === 0) {
       throw new HttpException(
         'No se encontró la lista de tipos de caso',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
 
@@ -42,7 +42,7 @@ export class CaseTypeService {
     if (!caseType) {
       throw new HttpException(
         'No se encontró el tipo de caso',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
 

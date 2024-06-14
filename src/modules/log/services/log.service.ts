@@ -56,7 +56,7 @@ export class LogService {
     if (!logs || logs.length === 0) {
       throw new HttpException(
         'No se encontró la lista de logs.',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
     return logs;
@@ -66,7 +66,7 @@ export class LogService {
     const log = await this.logRepository.findOne({ where: { id } });
 
     if (!log) {
-      throw new HttpException('No se encontró el log.', HttpStatus.NOT_FOUND);
+      throw new HttpException('No se encontró el log.', HttpStatus.NO_CONTENT);
     }
 
     return log;

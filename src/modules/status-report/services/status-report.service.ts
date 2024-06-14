@@ -42,7 +42,7 @@ export class StatusReportService {
     if (!statusReports || statusReports.length === 0) {
       throw new HttpException(
         'No se encontró la lista de estado de reportes',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
 
@@ -55,7 +55,7 @@ export class StatusReportService {
     if (!statusReport) {
       throw new HttpException(
         'No se encontró el estado de reporte',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
 
