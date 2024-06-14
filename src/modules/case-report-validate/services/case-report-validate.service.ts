@@ -385,6 +385,22 @@ export class CaseReportValidateService {
       where: {
         val_cr_filingnumber: Like(`%${consecutive}%`),
       },
+      relations: {
+        caseReportOriginal: true,
+        log: true,
+        reportAnalystAssignment: true,
+        synergy: true,
+        caseType: true,
+        riskType: true,
+        severityClasification: true,
+        origin: true,
+        subOrigin: true,
+        riskLevel: true,
+        eventType: true,
+        event: true,
+        service: true,
+        unit: true,
+      },
     });
 
     if (caseReportValidate.length === 0) {
