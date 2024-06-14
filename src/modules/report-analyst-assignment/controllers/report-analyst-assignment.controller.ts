@@ -23,14 +23,16 @@ export class ReportAnalystAssignmentController {
     private readonly ReportAnalisysAssignmentService: ReportAnalystAssignmentService,
   ) {}
 
-  @Post('assingAnalyst/')
+  @Post('assingAnalyst/:idValidator')
   createAssingAnalystReporter(
     @Body() createAnalystReporterDto: ReportAnalystAssignmentDto,
     @Ip() clientIp: string,
+    @Param('idValidator') idValidator: number,
   ): Promise<ReportAnalystAssignment> {
     return this.ReportAnalisysAssignmentService.assingAnalyst(
       createAnalystReporterDto,
       clientIp,
+      idValidator
     );
   }
 
@@ -63,17 +65,19 @@ export class ReportAnalystAssignmentController {
 
   @Get('findInfoAnalyst/:code')
   findInfoAnalyst(@Param('code') code?: number) {
-    return this.ReportAnalisysAssignmentService.findOneAnalyst(code)
+    return this.ReportAnalisysAssignmentService.findOneAnalyst(code);
   }
 
-  @Put('updateReAssignedAnalyst/')
+  @Put('updateReAssignedAnalyst/:idValidator')
   updateReAssignedAnalyst(
     @Body() updateReportAnalystAssignmentDto: UpdateReportAnalystAssignmentDto,
     @Ip() clientIp: string,
+    @Param('idValidator') idValidator: number
   ): Promise<HttpException> {
     return this.ReportAnalisysAssignmentService.reAssingAnalyst(
       updateReportAnalystAssignmentDto,
       clientIp,
+      idValidator
     );
   }
 

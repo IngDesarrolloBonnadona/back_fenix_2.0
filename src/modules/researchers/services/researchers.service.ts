@@ -68,8 +68,6 @@ export class ResearchersService {
       createResearcherDto.res_validatedcase_id_fk,
     );
 
-    // await this.reportAnalystAssignmentService.findOneAnalyst(idAnalyst);
-
     await this.logService.createLog(
       createResearcherDto.res_validatedcase_id_fk,
       idAnalyst,

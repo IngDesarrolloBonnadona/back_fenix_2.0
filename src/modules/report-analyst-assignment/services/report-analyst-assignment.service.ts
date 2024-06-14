@@ -53,6 +53,7 @@ export class ReportAnalystAssignmentService {
   async assingAnalyst(
     createReportAnalystAssignmentDto: ReportAnalystAssignmentDto,
     clientIp: string,
+    idValidator: number
   ) {
     const reportAssignmentFind =
       await this.reportAnalystAssignmentRepository.findOne({
@@ -80,13 +81,15 @@ export class ReportAnalystAssignmentService {
 
     await this.logService.createLog(
       createReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
-      createReportAnalystAssignmentDto.ass_ra_uservalidator_id,
+      idValidator,
       clientIp,
       logReports.LOG_ASSIGNMENT_ANALYST,
     );
 
-    const analyst = this.reportAnalystAssignmentRepository.create(
-      createReportAnalystAssignmentDto,
+    const analyst = this.reportAnalystAssignmentRepository.create({
+      ...createReportAnalystAssignmentDto,
+      ass_ra_uservalidator_id: idValidator
+    }
     );
 
     const assigned = await this.reportAnalystAssignmentRepository.save(analyst);
@@ -97,6 +100,7 @@ export class ReportAnalystAssignmentService {
   async reAssingAnalyst(
     updateReportAnalystAssignmentDto: UpdateReportAnalystAssignmentDto,
     clientIp: string,
+    idValidator: number
   ) {
     const reportAssignmentFind =
       await this.reportAnalystAssignmentRepository.findOne({
@@ -125,7 +129,10 @@ export class ReportAnalystAssignmentService {
     if (reportAssignmentFind) {
       const result = await this.reportAnalystAssignmentRepository.update(
         reportAssignmentFind.id,
-        updateReportAnalystAssignmentDto,
+        {
+          ...updateReportAnalystAssignmentDto,
+          ass_ra_uservalidator_id: idValidator
+        },
       );
 
       if (result.affected === 0) {
@@ -138,7 +145,7 @@ export class ReportAnalystAssignmentService {
 
     await this.logService.createLog(
       updateReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
-      updateReportAnalystAssignmentDto.ass_ra_uservalidator_id,
+      idValidator,
       clientIp,
       logReports.LOG_REASSIGNMENT_ANALYST,
     );
