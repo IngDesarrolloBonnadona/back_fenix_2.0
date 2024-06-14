@@ -77,6 +77,22 @@ export class CaseReportValidateService {
           similarCaseReportValidate.val_cr_eventtype_id_fk,
         val_cr_validated: false,
       },
+      relations: {
+        caseReportOriginal: true,
+        log: true,
+        reportAnalystAssignment: true,
+        synergy: true,
+        caseType: true,
+        riskType: true,
+        severityClasification: true,
+        origin: true,
+        subOrigin: true,
+        riskLevel: true,
+        eventType: true,
+        event: true,
+        service: true,
+        unit: true,
+      },
     });
 
     if (similarReport.length > 0) {
@@ -308,6 +324,22 @@ export class CaseReportValidateService {
 
     const caseReportsValidate = await this.caseReportValidateRepository.find({
       where,
+      relations: {
+        caseReportOriginal: true,
+        log: true,
+        reportAnalystAssignment: true,
+        synergy: true,
+        caseType: true,
+        riskType: true,
+        severityClasification: true,
+        origin: true,
+        subOrigin: true,
+        riskLevel: true,
+        eventType: true,
+        event: true,
+        service: true,
+        unit: true,
+      },
     });
 
     if (!caseReportsValidate || caseReportsValidate.length === 0) {
@@ -353,6 +385,22 @@ export class CaseReportValidateService {
   async findOneReportValidate(id: string) {
     const caseReportValidate = await this.caseReportValidateRepository.findOne({
       where: { id },
+      relations: {
+        caseReportOriginal: true,
+        log: true,
+        reportAnalystAssignment: true,
+        synergy: true,
+        caseType: true,
+        riskType: true,
+        severityClasification: true,
+        origin: true,
+        subOrigin: true,
+        riskLevel: true,
+        eventType: true,
+        event: true,
+        service: true,
+        unit: true,
+      },
     });
 
     if (!caseReportValidate) {
