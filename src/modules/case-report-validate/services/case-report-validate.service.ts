@@ -126,7 +126,7 @@ export class CaseReportValidateService {
       if (!caseTypeFound) {
         throw new HttpException(
           `El tipo de caso no existe.`,
-          HttpStatus.NOT_FOUND,
+          HttpStatus.NO_CONTENT,
         );
       }
 
@@ -150,7 +150,7 @@ export class CaseReportValidateService {
       if (!previousReport) {
         throw new HttpException(
           `El reporte no existe o ya fue validado.`,
-          HttpStatus.NOT_FOUND,
+          HttpStatus.NO_CONTENT,
         );
       }
 
@@ -206,7 +206,7 @@ export class CaseReportValidateService {
       if (!movementReportFound) {
         throw new HttpException(
           `El movimiento ${movementReport.VALIDATION} no existe.`,
-          HttpStatus.NOT_FOUND,
+          HttpStatus.NO_CONTENT,
         );
       }
 
@@ -345,7 +345,7 @@ export class CaseReportValidateService {
     if (!caseReportsValidate || caseReportsValidate.length === 0) {
       throw new HttpException(
         'No hay reportes para mostrar.',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
 
@@ -375,7 +375,7 @@ export class CaseReportValidateService {
     if (!caseReportValidates || caseReportValidates.length === 0) {
       throw new HttpException(
         'No hay reportes para mostrar.',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
 
@@ -406,7 +406,7 @@ export class CaseReportValidateService {
     if (!caseReportValidate) {
       throw new HttpException(
         'No se encontró el reporte.',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
 
@@ -414,13 +414,6 @@ export class CaseReportValidateService {
   }
 
   async findOneReportValidateByConsecutive(consecutive: string) {
-    // const caseReportValidate = await this.caseReportValidateRepository
-    //   .createQueryBuilder('caseReportValidate')
-    //   .where('caseReportValidate.val_cr_filingnumber LIKE :consecutive', {
-    //     consecutive: `%${consecutive}%`,
-    //   })
-    //   .getMany();
-
     // const caseReportValidate = await this.dataSource
     //   .getRepository(CaseReportValidateEntity)
     //   .createQueryBuilder('caseReportValidate')
@@ -454,7 +447,7 @@ export class CaseReportValidateService {
     if (caseReportValidate.length === 0) {
       throw new HttpException(
         'No se encontró el reporte.',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
 
