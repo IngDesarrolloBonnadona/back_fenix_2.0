@@ -99,4 +99,23 @@ export class ResearchersService {
     }
     return research;
   }
+
+  async deleteAssignedResearcher(id: number) {
+    const Researcher = await this.findOneAssignedResearch(id);
+    const result = await this.researcherRepository.softDelete(
+      Researcher.id,
+    );
+
+    if (result.affected === 0) {
+      return new HttpException(
+        `No se pudo eliminar el investigador`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    return new HttpException(
+      `¡Datos eliminados correctamente!`,
+      HttpStatus.ACCEPTED,
+    );
+  }
 }

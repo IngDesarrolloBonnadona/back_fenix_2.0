@@ -20,7 +20,7 @@ import { ReportAnalystAssignment } from '../entities/report-analyst-assignment.e
 @Controller('report-analyst-assignment')
 export class ReportAnalystAssignmentController {
   constructor(
-    private readonly ReportAnalisysAssignmentService: ReportAnalystAssignmentService,
+    private readonly reportAnalisysAssignmentService: ReportAnalystAssignmentService,
   ) {}
 
   @Post('assingAnalyst/:idValidator')
@@ -29,7 +29,7 @@ export class ReportAnalystAssignmentController {
     @Ip() clientIp: string,
     @Param('idValidator') idValidator: number,
   ): Promise<ReportAnalystAssignment> {
-    return this.ReportAnalisysAssignmentService.assingAnalyst(
+    return this.reportAnalisysAssignmentService.assingAnalyst(
       createAnalystReporterDto,
       clientIp,
       idValidator
@@ -42,7 +42,7 @@ export class ReportAnalystAssignmentController {
     @Ip() clientIp: string,
     @Param('idAnalyst') idAnalyst: number,
   ): Promise<ReportAnalystAssignment> {
-    return this.ReportAnalisysAssignmentService.returnCaseBetweenAnalyst(
+    return this.reportAnalisysAssignmentService.returnCaseBetweenAnalyst(
       createAnalystReporterDto,
       clientIp,
       idAnalyst,
@@ -53,19 +53,19 @@ export class ReportAnalystAssignmentController {
   async listAssignedAnalystsByPosition(
     @Query('positionId') positionId?: number,
   ): Promise<ReportAnalystAssignment[]> {
-    return await this.ReportAnalisysAssignmentService.findAssignedAnalystsByPosition(
+    return await this.reportAnalisysAssignmentService.findAssignedAnalystsByPosition(
       positionId,
     );
   }
 
   @Get('findAssignedAnalyst/:id')
   findAssignedAnalyst(@Param('id') id: number) {
-    return this.ReportAnalisysAssignmentService.findOneAssignedAnalyst(id);
+    return this.reportAnalisysAssignmentService.findOneAssignedAnalyst(id);
   }
 
   @Get('findInfoAnalyst/:code')
   findInfoAnalyst(@Param('code') code?: number) {
-    return this.ReportAnalisysAssignmentService.findOneAnalyst(code);
+    return this.reportAnalisysAssignmentService.findOneAnalyst(code);
   }
 
   @Put('updateReAssignedAnalyst/:idValidator')
@@ -74,7 +74,7 @@ export class ReportAnalystAssignmentController {
     @Ip() clientIp: string,
     @Param('idValidator') idValidator: number
   ): Promise<HttpException> {
-    return this.ReportAnalisysAssignmentService.reAssingAnalyst(
+    return this.reportAnalisysAssignmentService.reAssingAnalyst(
       updateReportAnalystAssignmentDto,
       clientIp,
       idValidator
@@ -83,6 +83,6 @@ export class ReportAnalystAssignmentController {
 
   @Delete('deleteAssignedAnalyst/:id')
   deleteAssignedAnalyst(@Param('id') id: number) {
-    return this.ReportAnalisysAssignmentService.deleteAssignedAnalyst(id);
+    return this.reportAnalisysAssignmentService.deleteAssignedAnalyst(id);
   }
 }

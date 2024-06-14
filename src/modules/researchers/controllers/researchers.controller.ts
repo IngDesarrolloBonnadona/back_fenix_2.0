@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Ip, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Ip, Param, Post, Query } from '@nestjs/common';
 import { ResearchersService } from '../services/researchers.service';
 import { FilterResearcherDto } from '../dto/filter-researcher.dto';
 import { ApiTags } from '@nestjs/swagger';
@@ -37,5 +37,10 @@ export class ResearchersController {
       clientIp,
       idAnalyst,
     );
+  }
+
+  @Delete('deleteAssignedResearch/:id')
+  deleteAssignedResearch(@Param('id') id: number) {
+    return this.researchersService.deleteAssignedResearcher(id);
   }
 }
