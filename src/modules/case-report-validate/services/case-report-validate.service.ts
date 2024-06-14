@@ -77,6 +77,22 @@ export class CaseReportValidateService {
           similarCaseReportValidate.val_cr_eventtype_id_fk,
         val_cr_validated: false,
       },
+      relations: {
+        caseReportOriginal: true,
+        log: true,
+        reportAnalystAssignment: true,
+        synergy: true,
+        caseType: true,
+        riskType: true,
+        severityClasification: true,
+        origin: true,
+        subOrigin: true,
+        riskLevel: true,
+        eventType: true,
+        event: true,
+        service: true,
+        unit: true,
+      },
     });
 
     if (similarReport.length > 0) {
@@ -110,7 +126,7 @@ export class CaseReportValidateService {
       if (!caseTypeFound) {
         throw new HttpException(
           `El tipo de caso no existe.`,
-          HttpStatus.NOT_FOUND,
+          HttpStatus.NO_CONTENT,
         );
       }
 
@@ -134,7 +150,7 @@ export class CaseReportValidateService {
       if (!previousReport) {
         throw new HttpException(
           `El reporte no existe o ya fue validado.`,
-          HttpStatus.NOT_FOUND,
+          HttpStatus.NO_CONTENT,
         );
       }
 
@@ -190,7 +206,7 @@ export class CaseReportValidateService {
       if (!movementReportFound) {
         throw new HttpException(
           `El movimiento ${movementReport.VALIDATION} no existe.`,
-          HttpStatus.NOT_FOUND,
+          HttpStatus.NO_CONTENT,
         );
       }
 
@@ -308,12 +324,28 @@ export class CaseReportValidateService {
 
     const caseReportsValidate = await this.caseReportValidateRepository.find({
       where,
+      relations: {
+        caseReportOriginal: true,
+        log: true,
+        reportAnalystAssignment: true,
+        synergy: true,
+        caseType: true,
+        riskType: true,
+        severityClasification: true,
+        origin: true,
+        subOrigin: true,
+        riskLevel: true,
+        eventType: true,
+        event: true,
+        service: true,
+        unit: true,
+      },
     });
 
     if (!caseReportsValidate || caseReportsValidate.length === 0) {
       throw new HttpException(
         'No hay reportes para mostrar.',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
 
@@ -343,7 +375,7 @@ export class CaseReportValidateService {
     if (!caseReportValidates || caseReportValidates.length === 0) {
       throw new HttpException(
         'No hay reportes para mostrar.',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
 
@@ -353,12 +385,28 @@ export class CaseReportValidateService {
   async findOneReportValidate(id: string) {
     const caseReportValidate = await this.caseReportValidateRepository.findOne({
       where: { id },
+      relations: {
+        caseReportOriginal: true,
+        log: true,
+        reportAnalystAssignment: true,
+        synergy: true,
+        caseType: true,
+        riskType: true,
+        severityClasification: true,
+        origin: true,
+        subOrigin: true,
+        riskLevel: true,
+        eventType: true,
+        event: true,
+        service: true,
+        unit: true,
+      },
     });
 
     if (!caseReportValidate) {
       throw new HttpException(
         'No se encontró el reporte.',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
 
@@ -366,13 +414,6 @@ export class CaseReportValidateService {
   }
 
   async findOneReportValidateByConsecutive(consecutive: string) {
-    // const caseReportValidate = await this.caseReportValidateRepository
-    //   .createQueryBuilder('caseReportValidate')
-    //   .where('caseReportValidate.val_cr_filingnumber LIKE :consecutive', {
-    //     consecutive: `%${consecutive}%`,
-    //   })
-    //   .getMany();
-
     // const caseReportValidate = await this.dataSource
     //   .getRepository(CaseReportValidateEntity)
     //   .createQueryBuilder('caseReportValidate')
@@ -406,7 +447,7 @@ export class CaseReportValidateService {
     if (caseReportValidate.length === 0) {
       throw new HttpException(
         'No se encontró el reporte.',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
 
