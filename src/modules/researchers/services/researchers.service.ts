@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable, forwardRef } from '@nestjs/common';
 import { FilterResearcherDto } from '../dto/filter-researcher.dto';
 import { HttpResearchersService } from '../http/http-researchers.service';
 import { CreateResearcherDto } from '../dto/create-researcher.dto';
@@ -6,7 +6,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Researcher as ResearcherEntity } from '../entities/researchers.entity';
 import { Repository } from 'typeorm';
 import { CaseReportValidateService } from 'src/modules/case-report-validate/services/case-report-validate.service';
-import { ReportAnalystAssignmentService } from 'src/modules/report-analyst-assignment/services/report-analyst-assignment.service';
 import { LogService } from 'src/modules/log/services/log.service';
 import { logReports } from 'src/enums/logs.enum';
 
@@ -17,9 +16,9 @@ export class ResearchersService {
     private readonly researcherRepository: Repository<ResearcherEntity>,
 
     private readonly httpResearchersService: HttpResearchersService,
-    private readonly caseReportValidateService: CaseReportValidateService,
-    private readonly reportAnalystAssignmentService: ReportAnalystAssignmentService,
     private readonly logService: LogService,
+    @Inject(forwardRef(() => CaseReportValidateService))
+    private readonly caseReportValidateService: CaseReportValidateService,
   ) {}
 
   async filterResearchers(resFilter: Partial<FilterResearcherDto>) {

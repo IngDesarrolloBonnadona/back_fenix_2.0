@@ -13,6 +13,8 @@ import { ReportAnalystAssignment } from '../report-analyst-assignment/entities/r
 import { ReportAnalystAssignmentModule } from '../report-analyst-assignment/report-analyst-assignment.module';
 import { Synergy } from '../synergy/entities/synergy.entity';
 import { SynergyModule } from '../synergy/synergy.module';
+import { Researcher } from '../researchers/entities/researchers.entity';
+import { ResearchersModule } from '../researchers/researchers.module';
 
 @Module({
   imports: [
@@ -21,13 +23,15 @@ import { SynergyModule } from '../synergy/synergy.module';
       CaseType,
       MovementReport,
       ReportAnalystAssignment,
-      Synergy
+      Synergy,
+      Researcher,
     ]),
     MedicineModule,
     DeviceModule,
     StatusReportModule,
     LogModule,
     SynergyModule,
+    forwardRef(() => ResearchersModule),
     forwardRef(() => ReportAnalystAssignmentModule),
   ],
   controllers: [CaseReportValidateController],
