@@ -32,6 +32,8 @@ import { ReportAnalystAssignment as ReportAnalystAssignmentEntity } from 'src/mo
 import { ReportAnalystAssignmentService } from 'src/modules/report-analyst-assignment/services/report-analyst-assignment.service';
 import { Synergy as SynergyEntity } from 'src/modules/synergy/entities/synergy.entity';
 import { SynergyService } from 'src/modules/synergy/services/synergy.service';
+import { Researcher as ResearcherEntity } from 'src/modules/researchers/entities/researchers.entity';
+import { ResearchersService } from 'src/modules/researchers/services/researchers.service';
 
 @Injectable()
 export class CaseReportValidateService {
@@ -46,13 +48,17 @@ export class CaseReportValidateService {
     private readonly reportAnalystAssignmentRepository: Repository<ReportAnalystAssignmentEntity>,
     @InjectRepository(SynergyEntity)
     private readonly synergyRepository: Repository<SynergyEntity>,
+    @InjectRepository(ResearcherEntity)
+    private readonly researchRepository: Repository<ResearcherEntity>,
 
+    private dataSource: DataSource,
     private readonly medicineService: MedicineService,
     private readonly deviceService: DeviceService,
     private readonly statusReportService: StatusReportService,
     private readonly logService: LogService,
     private readonly synergyService: SynergyService,
-    private dataSource: DataSource,
+    @Inject(forwardRef(() => ResearchersService))
+    private readonly researchService: ResearchersService,
     @Inject(forwardRef(() => ReportAnalystAssignmentService))
     private readonly reportAnalystAssygnmentService: ReportAnalystAssignmentService,
   ) {}
@@ -379,6 +385,22 @@ export class CaseReportValidateService {
       where: {
         val_cr_filingnumber: Like(`%${consecutive}%`),
       },
+      relations: {
+        caseReportOriginal: true,
+        log: true,
+        reportAnalystAssignment: true,
+        synergy: true,
+        caseType: true,
+        riskType: true,
+        severityClasification: true,
+        origin: true,
+        subOrigin: true,
+        riskLevel: true,
+        eventType: true,
+        event: true,
+        service: true,
+        unit: true,
+      },
     });
 
     if (caseReportValidate.length === 0) {
@@ -459,6 +481,18 @@ export class CaseReportValidateService {
 
     if (findSynergy) {
       await this.synergyService.deleteSynergy(findSynergy.id);
+    }
+
+    const findResearchAssignment = await this.researchRepository.findOne({
+      where: {
+        res_validatedcase_id_fk: caseReportValidate.id,
+      },
+    });
+
+    if (findResearchAssignment) {
+      await this.researchService.deleteAssignedResearcher(
+        findResearchAssignment.id,
+      );
     }
 
     return new HttpException(

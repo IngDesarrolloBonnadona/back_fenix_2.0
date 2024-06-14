@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable, forwardRef } from '@nestjs/common';
 import { FilterResearcherDto } from '../dto/filter-researcher.dto';
 import { HttpResearchersService } from '../http/http-researchers.service';
 import { CreateResearcherDto } from '../dto/create-researcher.dto';
@@ -6,7 +6,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Researcher as ResearcherEntity } from '../entities/researchers.entity';
 import { Repository } from 'typeorm';
 import { CaseReportValidateService } from 'src/modules/case-report-validate/services/case-report-validate.service';
-import { ReportAnalystAssignmentService } from 'src/modules/report-analyst-assignment/services/report-analyst-assignment.service';
 import { LogService } from 'src/modules/log/services/log.service';
 import { logReports } from 'src/enums/logs.enum';
 
@@ -17,9 +16,9 @@ export class ResearchersService {
     private readonly researcherRepository: Repository<ResearcherEntity>,
 
     private readonly httpResearchersService: HttpResearchersService,
-    private readonly caseReportValidateService: CaseReportValidateService,
-    private readonly reportAnalystAssignmentService: ReportAnalystAssignmentService,
     private readonly logService: LogService,
+    @Inject(forwardRef(() => CaseReportValidateService))
+    private readonly caseReportValidateService: CaseReportValidateService,
   ) {}
 
   async filterResearchers(resFilter: Partial<FilterResearcherDto>) {
@@ -68,8 +67,6 @@ export class ResearchersService {
       createResearcherDto.res_validatedcase_id_fk,
     );
 
-    // await this.reportAnalystAssignmentService.findOneAnalyst(idAnalyst);
-
     await this.logService.createLog(
       createResearcherDto.res_validatedcase_id_fk,
       idAnalyst,
@@ -77,7 +74,10 @@ export class ResearchersService {
       logReports.LOG_ASSIGNMENT_INVESTIGATOR,
     );
 
-    const research = this.researcherRepository.create(createResearcherDto);
+    const research = this.researcherRepository.create({
+      ...createResearcherDto,
+      ass_ra_useranalyst_id: idAnalyst
+    });
 
     const assigned = await this.researcherRepository.save(research);
 
@@ -97,5 +97,24 @@ export class ResearchersService {
       );
     }
     return research;
+  }
+
+  async deleteAssignedResearcher(id: number) {
+    const Researcher = await this.findOneAssignedResearch(id);
+    const result = await this.researcherRepository.softDelete(
+      Researcher.id,
+    );
+
+    if (result.affected === 0) {
+      return new HttpException(
+        `No se pudo eliminar el investigador`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    return new HttpException(
+      `¡Datos eliminados correctamente!`,
+      HttpStatus.ACCEPTED,
+    );
   }
 }
