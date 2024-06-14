@@ -28,7 +28,7 @@ export class ServiceService {
     if (!services || services.length === 0) {
       throw new HttpException(
         'No se encontró la lista de servicios',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
     return services
@@ -40,7 +40,7 @@ export class ServiceService {
     if (!service) {
       throw new HttpException(
         'No se encontró el servicio',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
     return service

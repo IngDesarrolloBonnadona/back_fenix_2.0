@@ -27,7 +27,7 @@ export class MovementReportService {
     if (!movementReports || movementReports.length === 0) {
       throw new HttpException(
         'No se encontró la lista de movimientos de reportes.',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
 
@@ -40,7 +40,7 @@ export class MovementReportService {
     if (!movementReport) {
       throw new HttpException(
         'No se encontró el movimiento de reporte.',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
 

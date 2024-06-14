@@ -16,7 +16,7 @@ export class PatientService {
     if (patient.length === 0) {
       throw new HttpException(
         'No se encontraron datos del paciente.',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
 

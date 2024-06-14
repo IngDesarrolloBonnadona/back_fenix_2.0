@@ -37,7 +37,7 @@ export class ResearchersService {
     if (filteredResearchers.length === 0) {
       throw new HttpException(
         'No se encontraron investigadores que coincidan con los criterios de búsqueda.',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
 
@@ -93,7 +93,7 @@ export class ResearchersService {
     if (!research) {
       throw new HttpException(
         'No se encontró el investigador',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
     return research;

@@ -28,7 +28,7 @@ export class SubOriginService {
     if (!subOrigins || subOrigins.length === 0) {
       throw new HttpException(
         'No se encontró la lista de subfuentes',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     };
 
@@ -41,7 +41,7 @@ export class SubOriginService {
     if (!subOrigin) {
       throw new HttpException(
         'No se encontró el subfuente',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     };
 

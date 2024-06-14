@@ -43,7 +43,7 @@ export class ReportAnalystAssignmentService {
     if (analyst.length === 0) {
       throw new HttpException(
         'No se encontraron datos de analistas',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
 
@@ -114,7 +114,7 @@ export class ReportAnalystAssignmentService {
     if (!reportAssignmentFind) {
       throw new HttpException(
         'No se encontró el reporte asignado a analista',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
 
@@ -178,7 +178,7 @@ export class ReportAnalystAssignmentService {
     if (!analystReporters || analystReporters.length === 0) {
       throw new HttpException(
         '¡No hay reportes asignados para mostrar.!',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
 
@@ -194,7 +194,7 @@ export class ReportAnalystAssignmentService {
     if (!analystReporter) {
       throw new HttpException(
         'No se encontró el analista',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
     return analystReporter;
@@ -217,7 +217,7 @@ export class ReportAnalystAssignmentService {
     if (!reportAssignmentFind) {
       throw new HttpException(
         'No se encontró el reporte asignado a analista',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
 

@@ -33,7 +33,7 @@ export class PositionService {
     if (externalData.data.data.length === 0) {
       throw new HttpException(
         'No se encontraron datos de cargos',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
 
@@ -69,7 +69,7 @@ export class PositionService {
     if (!positions || positions.length === 0) {
       throw new HttpException(
         'No se encontró la lista de cargos',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
 
@@ -82,7 +82,7 @@ export class PositionService {
     });
 
     if (!position) {
-      throw new HttpException('No se encontró el cargo', HttpStatus.NOT_FOUND);
+      throw new HttpException('No se encontró el cargo', HttpStatus.NO_CONTENT);
     }
     return position;
   }
@@ -100,7 +100,7 @@ export class PositionService {
     if (externalData.data.data.length === 0) {
       throw new HttpException(
         'No se encontraron datos del empleado',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
 

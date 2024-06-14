@@ -27,7 +27,7 @@ export class RiskLevelService {
     if (!riskLevels || riskLevels.length === 0) {
       throw new HttpException(
         'No se encontró la lista de niveles de riesgo',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
 
@@ -40,7 +40,7 @@ export class RiskLevelService {
     if (!riskLevel) {
       throw new HttpException(
         'No se encontró el nivel de riesgo',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
 

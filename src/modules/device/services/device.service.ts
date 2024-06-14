@@ -48,7 +48,7 @@ export class DeviceService {
     if (!devices || devices.length === 0) {
       throw new HttpException(
         'No se encontró la lista de dispositivos',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
 
@@ -61,7 +61,7 @@ export class DeviceService {
     if (!device) {
       throw new HttpException(
         'No se encontró el dispositivo',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
 

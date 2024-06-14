@@ -28,7 +28,7 @@ export class EventService {
     if (!events || events.length === 0) {
       throw new HttpException(
         'No se encontró la lista de eventos.',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
 
@@ -41,7 +41,7 @@ export class EventService {
     if (!event) {
       throw new HttpException(
         'No se encontró el evento.',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
 

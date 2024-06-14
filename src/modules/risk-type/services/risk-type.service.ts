@@ -27,7 +27,7 @@ export class RiskTypeService {
     if (!riskTypes || riskTypes.length === 0) {
       throw new HttpException(
         'No se encontró la lista de tipos de riesgo',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
 
@@ -40,7 +40,7 @@ export class RiskTypeService {
     if (!riskType) {
       throw new HttpException(
         'No se encontró el tipo de riesgo',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
 

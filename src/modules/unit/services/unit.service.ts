@@ -28,7 +28,7 @@ export class UnitService {
     if (!units || units.length === 0) {
       throw new HttpException(
         'No se encontró la lista de unidades.',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
 
@@ -41,7 +41,7 @@ export class UnitService {
     if (!unit) {
       throw new HttpException(
         'No se encontró la unidad.',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
 

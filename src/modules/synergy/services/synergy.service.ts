@@ -38,7 +38,7 @@ export class SynergyService {
     if (!adverseEventType) {
       throw new HttpException(
         `Tipo de caso ${caseTypeReport.ADVERSE_EVENT} no encontrado`,
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
 
@@ -118,7 +118,7 @@ export class SynergyService {
     if (!synergies || synergies.length === 0) {
       throw new HttpException(
         'No se encontró la lista de casos en sinergia',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
 
@@ -133,7 +133,7 @@ export class SynergyService {
     if (!synergy) {
       throw new HttpException(
         'No se encontró el caso en sinergia',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
 
