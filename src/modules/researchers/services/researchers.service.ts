@@ -75,7 +75,10 @@ export class ResearchersService {
       logReports.LOG_ASSIGNMENT_INVESTIGATOR,
     );
 
-    const research = this.researcherRepository.create(createResearcherDto);
+    const research = this.researcherRepository.create({
+      ...createResearcherDto,
+      ass_ra_useranalyst_id: idAnalyst
+    });
 
     const assigned = await this.researcherRepository.save(research);
 
