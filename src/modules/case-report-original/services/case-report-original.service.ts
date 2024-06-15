@@ -194,8 +194,25 @@ export class CaseReportOriginalService {
   }
 
   async findOneReportOriginal(id: string) {
-    const caseReportsOriginal =
-      await this.caseReportOriginalRepository.findOneBy({ id });
+    const caseReportsOriginal = await this.caseReportOriginalRepository.findOne({
+        where: { id },
+        relations: {
+          caseReportValidate: true,
+          medicine: true,
+          device: true,
+          statusReport: true,
+          caseType: true,
+          riskType: true,
+          severityClasification: true,
+          origin: true,
+          subOrigin: true,
+          riskLevel: true,
+          event: true,
+          eventType: true,
+          service: true,
+          unit: true,
+        },
+      });
 
     if (!caseReportsOriginal) {
       throw new HttpException(
