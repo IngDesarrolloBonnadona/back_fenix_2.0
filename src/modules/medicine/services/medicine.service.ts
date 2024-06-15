@@ -20,10 +20,10 @@ export class MedicineService {
     queryRunner: QueryRunner,
   ) {
     const existingMedicines = await this.medicineRepository.find({
-      where: { med_case_id_fk: caseId }
-    })
+      where: { med_case_id_fk: caseId },
+    });
 
-    if ( existingMedicines.length > 0 ) {
+    if (existingMedicines.length > 0) {
       await queryRunner.manager.remove(existingMedicines);
     }
 
@@ -43,9 +43,13 @@ export class MedicineService {
   }
 
   async findAllMedicines() {
-    const medicines = await this.medicineRepository.find();
+    const medicines = await this.medicineRepository.find({
+      relations: {
+        caseReportOriginal: true,
+      },
+    });
 
-    if (!medicines || medicines.length === 0) {
+    if (medicines.length === 0) {
       throw new HttpException(
         'No se encontró la lista de medicamentos',
         HttpStatus.NO_CONTENT,
@@ -56,7 +60,12 @@ export class MedicineService {
   }
 
   async findOneMedicine(id: number) {
-    const medicine = await this.medicineRepository.findOne({ where: { id } });
+    const medicine = await this.medicineRepository.findOne({
+      where: { id },
+      relations: {
+        caseReportOriginal: true,
+      },
+    });
 
     if (!medicine) {
       throw new HttpException(
