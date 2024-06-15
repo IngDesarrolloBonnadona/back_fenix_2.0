@@ -73,7 +73,9 @@ export class SynergyService {
     }
 
     const invalidSynergyIds = existingCaseValidate
-      .filter((caseType) => caseType.val_cr_casetype_id_fk !== adverseEventType.id)
+      .filter(
+        (caseType) => caseType.val_cr_casetype_id_fk !== adverseEventType.id,
+      )
       .map((caseValidateId) => caseValidateId.id);
 
     if (invalidSynergyIds.length > 0) {
@@ -115,7 +117,7 @@ export class SynergyService {
       },
     });
 
-    if (!synergies || synergies.length === 0) {
+    if (synergies.length === 0) {
       throw new HttpException(
         'No se encontró la lista de casos en sinergia',
         HttpStatus.NO_CONTENT,
@@ -128,6 +130,9 @@ export class SynergyService {
   async findOneSynergy(id: number) {
     const synergy = await this.synergyRepository.findOne({
       where: { id, syn_status: false },
+      relations: {
+        caseReportValidate: true,
+      },
     });
 
     if (!synergy) {

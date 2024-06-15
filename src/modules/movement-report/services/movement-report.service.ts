@@ -1,4 +1,9 @@
-import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateMovementReportDto } from '../dto/create-movement-report.dto';
 import { UpdateMovementReportDto } from '../dto/update-movement-report.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -9,33 +14,40 @@ import { Repository } from 'typeorm';
 export class MovementReportService {
   constructor(
     @InjectRepository(MovementReportEntity)
-    private readonly movementReportRepository: Repository<MovementReportEntity>
-  ){}
+    private readonly movementReportRepository: Repository<MovementReportEntity>,
+  ) {}
 
   async createMovementReport(createMovementReportDto: CreateMovementReportDto) {
-    const movementReport = this.movementReportRepository.create(createMovementReportDto);
+    const movementReport = this.movementReportRepository.create(
+      createMovementReportDto,
+    );
     return await this.movementReportRepository.save(movementReport);
   }
 
   async findAllMovementReports() {
     const movementReports = await this.movementReportRepository.find({
       relations: {
-        statusReport: true
-      }
-    })
+        statusReport: true,
+      },
+    });
 
-    if (!movementReports || movementReports.length === 0) {
+    if (movementReports.length === 0) {
       throw new HttpException(
         'No se encontró la lista de movimientos de reportes.',
         HttpStatus.NO_CONTENT,
       );
     }
 
-    return movementReports
+    return movementReports;
   }
 
   async findOneMovementReport(id: number) {
-    const movementReport = await this.movementReportRepository.findOne({ where: { id } });
+    const movementReport = await this.movementReportRepository.findOne({
+      where: { id },
+      relations: {
+        statusReport: true,
+      },
+    });
 
     if (!movementReport) {
       throw new HttpException(
@@ -44,19 +56,25 @@ export class MovementReportService {
       );
     }
 
-    return movementReport
+    return movementReport;
   }
 
-  async updateMovementReport(id: number, updateMovementReportDto: UpdateMovementReportDto) {
+  async updateMovementReport(
+    id: number,
+    updateMovementReportDto: UpdateMovementReportDto,
+  ) {
     const movementReport = await this.findOneMovementReport(id);
-    const result = await this.movementReportRepository.update(movementReport.id, updateMovementReportDto);
+    const result = await this.movementReportRepository.update(
+      movementReport.id,
+      updateMovementReportDto,
+    );
 
     if (result.affected === 0) {
       return new HttpException(
         `No se pudo actualizar el movimiento de reporte`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
-    }  
+    }
 
     return new HttpException(
       `¡Datos actualizados correctamente!`,
@@ -66,14 +84,16 @@ export class MovementReportService {
 
   async deleteMovementReport(id: number) {
     const movementReport = await this.findOneMovementReport(id);
-    const result = await this.movementReportRepository.softDelete(movementReport.id);
-    
+    const result = await this.movementReportRepository.softDelete(
+      movementReport.id,
+    );
+
     if (result.affected === 0) {
       return new HttpException(
         `No se pudo eliminar el movimiento de reporte.`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
-    } 
+    }
     return new HttpException(
       `¡Datos eliminados correctamente!`,
       HttpStatus.ACCEPTED,

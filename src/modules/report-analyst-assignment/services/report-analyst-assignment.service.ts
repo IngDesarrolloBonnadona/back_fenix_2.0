@@ -53,7 +53,7 @@ export class ReportAnalystAssignmentService {
   async assingAnalyst(
     createReportAnalystAssignmentDto: ReportAnalystAssignmentDto,
     clientIp: string,
-    idValidator: number
+    idValidator: number,
   ) {
     const reportAssignmentFind =
       await this.reportAnalystAssignmentRepository.findOne({
@@ -88,9 +88,8 @@ export class ReportAnalystAssignmentService {
 
     const analyst = this.reportAnalystAssignmentRepository.create({
       ...createReportAnalystAssignmentDto,
-      ass_ra_uservalidator_id: idValidator
-    }
-    );
+      ass_ra_uservalidator_id: idValidator,
+    });
 
     const assigned = await this.reportAnalystAssignmentRepository.save(analyst);
 
@@ -100,7 +99,7 @@ export class ReportAnalystAssignmentService {
   async reAssingAnalyst(
     updateReportAnalystAssignmentDto: UpdateReportAnalystAssignmentDto,
     clientIp: string,
-    idValidator: number
+    idValidator: number,
   ) {
     const reportAssignmentFind =
       await this.reportAnalystAssignmentRepository.findOne({
@@ -131,7 +130,7 @@ export class ReportAnalystAssignmentService {
         reportAssignmentFind.id,
         {
           ...updateReportAnalystAssignmentDto,
-          ass_ra_uservalidator_id: idValidator
+          ass_ra_uservalidator_id: idValidator,
         },
       );
 
@@ -175,7 +174,7 @@ export class ReportAnalystAssignmentService {
       },
     });
 
-    if (!analystReporters || analystReporters.length === 0) {
+    if (analystReporters.length === 0) {
       throw new HttpException(
         '¡No hay reportes asignados para mostrar.!',
         HttpStatus.NO_CONTENT,
@@ -189,6 +188,10 @@ export class ReportAnalystAssignmentService {
     const analystReporter =
       await this.reportAnalystAssignmentRepository.findOne({
         where: { id, ass_ra_status: true },
+        relations: {
+          caseReportValidate: true,
+          position: true,
+        },
       });
 
     if (!analystReporter) {

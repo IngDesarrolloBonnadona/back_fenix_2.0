@@ -66,7 +66,7 @@ export class PositionService {
       where: { pos_enabled: true },
     });
 
-    if (!positions || positions.length === 0) {
+    if (positions.length === 0) {
       throw new HttpException(
         'No se encontró la lista de cargos',
         HttpStatus.NO_CONTENT,

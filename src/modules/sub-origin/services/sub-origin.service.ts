@@ -1,4 +1,9 @@
-import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateSubOriginDto } from '../dto/create-sub-origin.dto';
 import { UpdateSubOriginDto } from '../dto/update-sub-origin.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -10,7 +15,7 @@ export class SubOriginService {
   constructor(
     @InjectRepository(SubOriginEntity)
     private readonly subOriginRepository: Repository<SubOriginEntity>,
-  ){}
+  ) {}
 
   async createSubOrigin(createSubOriginDto: CreateSubOriginDto) {
     const subOrigin = this.subOriginRepository.create(createSubOriginDto);
@@ -21,48 +26,57 @@ export class SubOriginService {
     const subOrigins = await this.subOriginRepository.find({
       relations: {
         origin: true,
-        caseReportOriginal: true
-      }
+        caseReportOriginal: true,
+      },
     });
 
-    if (!subOrigins || subOrigins.length === 0) {
+    if (subOrigins.length === 0) {
       throw new HttpException(
         'No se encontró la lista de subfuentes',
         HttpStatus.NO_CONTENT,
       );
-    };
+    }
 
-    return subOrigins
+    return subOrigins;
   }
 
   async findOneSubOrigin(id: number) {
-    const subOrigin = await this.subOriginRepository.findOne({ where: { id } });
+    const subOrigin = await this.subOriginRepository.findOne({
+      where: { id },
+      relations: {
+        origin: true,
+        caseReportOriginal: true,
+      },
+    });
 
     if (!subOrigin) {
       throw new HttpException(
         'No se encontró el subfuente',
         HttpStatus.NO_CONTENT,
       );
-    };
+    }
 
-    return subOrigin
+    return subOrigin;
   }
 
   async updateSubOrigin(id: number, updateSubOriginDto: UpdateSubOriginDto) {
     const subOrigin = await this.findOneSubOrigin(id);
-    const result = await this.subOriginRepository.update(subOrigin.id, updateSubOriginDto);
-    
+    const result = await this.subOriginRepository.update(
+      subOrigin.id,
+      updateSubOriginDto,
+    );
+
     if (result.affected === 0) {
       return new HttpException(
         `No se pudo actualizar el sub fuente`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
-    } 
-    
+    }
+
     return new HttpException(
       `¡Datos actualizados correctamente!`,
       HttpStatus.ACCEPTED,
-    ); 
+    );
   }
 
   async deleteSubOrigin(id: number) {
@@ -74,7 +88,7 @@ export class SubOriginService {
         `No se pudo eliminar el suborigen.`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
-    }  
+    }
     return new HttpException(
       `¡Datos eliminados correctamente!`,
       HttpStatus.ACCEPTED,

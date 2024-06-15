@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateRiskLevelDto } from '../dto/create-risk-level.dto';
 import { UpdateRiskLevelDto } from '../dto/update-risk-level.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -9,8 +9,8 @@ import { Repository } from 'typeorm';
 export class RiskLevelService {
   constructor(
     @InjectRepository(RiskLevelEntity)
-    private readonly riskLevelRepository: Repository<RiskLevelEntity>
-  ){}
+    private readonly riskLevelRepository: Repository<RiskLevelEntity>,
+  ) {}
 
   async createRiskLevel(createRiskLevelDto: CreateRiskLevelDto) {
     const riskLevel = this.riskLevelRepository.create(createRiskLevelDto);
@@ -20,22 +20,29 @@ export class RiskLevelService {
   async findAllRiskLevel() {
     const riskLevels = await this.riskLevelRepository.find({
       relations: {
-        caseReportOriginal: true
-      }
+        caseReportOriginal: true,
+        caseReportValidate: true,
+      },
     });
 
-    if (!riskLevels || riskLevels.length === 0) {
+    if (riskLevels.length === 0) {
       throw new HttpException(
         'No se encontró la lista de niveles de riesgo',
         HttpStatus.NO_CONTENT,
       );
     }
 
-    return riskLevels
+    return riskLevels;
   }
 
   async findOneRiskLevel(id: number) {
-    const riskLevel = await this.riskLevelRepository.findOne({ where: { id } });
+    const riskLevel = await this.riskLevelRepository.findOne({
+      where: { id },
+      relations: {
+        caseReportOriginal: true,
+        caseReportValidate: true,
+      },
+    });
 
     if (!riskLevel) {
       throw new HttpException(
@@ -44,24 +51,27 @@ export class RiskLevelService {
       );
     }
 
-    return riskLevel
+    return riskLevel;
   }
 
   async updateRiskLevel(id: number, updateRiskLevelDto: UpdateRiskLevelDto) {
     const riskLevel = await this.findOneRiskLevel(id);
-    const result = await this.riskLevelRepository.update(riskLevel.id, updateRiskLevelDto);
-    
+    const result = await this.riskLevelRepository.update(
+      riskLevel.id,
+      updateRiskLevelDto,
+    );
+
     if (result.affected === 0) {
       return new HttpException(
         `No se pudo actualizar el nivel de riesgo`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
-    } 
+    }
 
     return new HttpException(
       `¡Datos actualizados correctamente!`,
       HttpStatus.ACCEPTED,
-    ); 
+    );
   }
 
   async deleteRiskLevel(id: number) {
@@ -73,7 +83,7 @@ export class RiskLevelService {
         `No se pudo eliminar el nivel de riesgo`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
-    } 
+    }
     return new HttpException(
       `¡Datos eliminados correctamente!`,
       HttpStatus.ACCEPTED,

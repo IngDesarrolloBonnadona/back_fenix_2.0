@@ -63,7 +63,12 @@ export class LogService {
   }
 
   async findOneLog(id: number) {
-    const log = await this.logRepository.findOne({ where: { id } });
+    const log = await this.logRepository.findOne({
+      where: { id },
+      relations: {
+        caseReportValidate: true,
+      },
+    });
 
     if (!log) {
       throw new HttpException('No se encontró el log.', HttpStatus.NO_CONTENT);

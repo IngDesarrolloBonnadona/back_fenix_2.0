@@ -1,4 +1,9 @@
-import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateRiskTypeDto } from '../dto/create-risk-type.dto';
 import { UpdateRiskTypeDto } from '../dto/update-risk-type.dto';
 import { Repository } from 'typeorm';
@@ -21,21 +26,28 @@ export class RiskTypeService {
     const riskTypes = await this.riskTypeRepository.find({
       relations: {
         caseReportOriginal: true,
-      }
+        caseReportValidate: true,
+      },
     });
 
-    if (!riskTypes || riskTypes.length === 0) {
+    if (riskTypes.length === 0) {
       throw new HttpException(
         'No se encontró la lista de tipos de riesgo',
         HttpStatus.NO_CONTENT,
       );
     }
 
-    return riskTypes
+    return riskTypes;
   }
 
   async findOneRiskType(id: number) {
-    const riskType = await this.riskTypeRepository.findOne({ where: { id } });
+    const riskType = await this.riskTypeRepository.findOne({
+      where: { id },
+      relations: {
+        caseReportOriginal: true,
+        caseReportValidate: true,
+      },
+    });
 
     if (!riskType) {
       throw new HttpException(
@@ -44,19 +56,22 @@ export class RiskTypeService {
       );
     }
 
-    return riskType
+    return riskType;
   }
 
   async updateRiskType(id: number, updateRiskTypeDto: UpdateRiskTypeDto) {
     const riskType = await this.findOneRiskType(id);
-    const result = await this.riskTypeRepository.update(riskType.id, updateRiskTypeDto);
-    
+    const result = await this.riskTypeRepository.update(
+      riskType.id,
+      updateRiskTypeDto,
+    );
+
     if (result.affected === 0) {
       return new HttpException(
         `No se pudo actualizar el tipo de riesgo`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
-    } 
+    }
 
     return new HttpException(
       `¡Datos actualizados correctamente!`,
@@ -73,7 +88,7 @@ export class RiskTypeService {
         `No se pudo eliminar el tipo de riesgo.`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
-    }  
+    }
     return new HttpException(
       `¡Datos eliminados correctamente!`,
       HttpStatus.ACCEPTED,
