@@ -1,8 +1,13 @@
-import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateOriginDto } from '../dto/create-origin.dto';
 import { UpdateOriginDto } from '../dto/update-origin.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Origin as OriginEntity} from '../entities/origin.entity';
+import { Origin as OriginEntity } from '../entities/origin.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -10,7 +15,7 @@ export class OriginService {
   constructor(
     @InjectRepository(OriginEntity)
     private readonly originRepository: Repository<OriginEntity>,
-  ){}
+  ) {}
 
   async createOrigin(createOriginDto: CreateOriginDto) {
     const origin = this.originRepository.create(createOriginDto);
@@ -21,8 +26,8 @@ export class OriginService {
     const origins = await this.originRepository.find({
       relations: {
         subOrigins: true,
-        caseReportOriginal: true
-      }
+        caseReportOriginal: true,
+      },
     });
 
     if (!origins || origins.length === 0) {
@@ -32,11 +37,17 @@ export class OriginService {
       );
     }
 
-    return origins
+    return origins;
   }
 
   async findOneOrigin(id: number) {
-    const origin = await this.originRepository.findOne({ where: { id } });
+    const origin = await this.originRepository.findOne({
+      where: { id },
+      relations: {
+        subOrigins: true,
+        caseReportOriginal: true,
+      },
+    });
 
     if (!origin) {
       throw new HttpException(
@@ -50,19 +61,22 @@ export class OriginService {
 
   async updateOrigin(id: number, updateOriginDto: UpdateOriginDto) {
     const origin = await this.findOneOrigin(id);
-    const result = await this.originRepository.update(origin.id, updateOriginDto);
+    const result = await this.originRepository.update(
+      origin.id,
+      updateOriginDto,
+    );
 
     if (result.affected === 0) {
       return new HttpException(
         `No se pudo actualizar la fuente`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
-    } 
+    }
 
     return new HttpException(
       `¡Datos actualizados correctamente!`,
       HttpStatus.ACCEPTED,
-    ); 
+    );
   }
 
   async deleteOrigin(id: number) {
@@ -74,7 +88,7 @@ export class OriginService {
         `No se pudo eliminar el origen`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
-    }  
+    }
     return new HttpException(
       `¡Datos eliminados correctamente!`,
       HttpStatus.ACCEPTED,
