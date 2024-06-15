@@ -11,8 +11,8 @@ import { HttpStatus } from '@nestjs/common';
 export class DeviceService {
   constructor(
     @InjectRepository(DeviceEntity)
-    private readonly deviceRepository: Repository<DeviceEntity>
-  ){}
+    private readonly deviceRepository: Repository<DeviceEntity>,
+  ) {}
 
   async createDeviceTransation(
     devices: CreateDeviceDto[],
@@ -20,13 +20,13 @@ export class DeviceService {
     queryRunner: QueryRunner,
   ) {
     const existingDevice = await this.deviceRepository.find({
-      where: { dev_case_id_fk: caseId }
-    })
+      where: { dev_case_id_fk: caseId },
+    });
 
-    if ( existingDevice.length > 0 ) {
-      await queryRunner.manager.remove(existingDevice)
+    if (existingDevice.length > 0) {
+      await queryRunner.manager.remove(existingDevice);
     }
-    
+
     for (const device of devices) {
       const dev = this.deviceRepository.create({
         ...device,
@@ -43,7 +43,11 @@ export class DeviceService {
   }
 
   async findAllDevices() {
-    const devices = await this.deviceRepository.find();
+    const devices = await this.deviceRepository.find({
+      relations: {
+        caseReportOriginal: true,
+      },
+    });
 
     if (!devices || devices.length === 0) {
       throw new HttpException(
@@ -52,11 +56,16 @@ export class DeviceService {
       );
     }
 
-    return devices
+    return devices;
   }
 
   async findOneDevice(id: number) {
-    const device = await this.deviceRepository.findOne({ where: { id } })
+    const device = await this.deviceRepository.findOne({
+      where: { id },
+      relations: {
+        caseReportOriginal: true,
+      },
+    });
 
     if (!device) {
       throw new HttpException(
@@ -70,14 +79,17 @@ export class DeviceService {
 
   async updateDevice(id: number, updateDeviceDto: UpdateDeviceDto) {
     const device = await this.findOneDevice(id);
-    const result = await this.deviceRepository.update(device.id, updateDeviceDto);
-    
+    const result = await this.deviceRepository.update(
+      device.id,
+      updateDeviceDto,
+    );
+
     if (result.affected === 0) {
       return new HttpException(
         `No se pudo actualizar el dispositivo`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
-    }  
+    }
 
     return new HttpException(
       `¡Datos actualizados correctamente!`,
@@ -87,14 +99,14 @@ export class DeviceService {
 
   async deleteDevice(id: number) {
     const device = await this.findOneDevice(id);
-    const result = await this.deviceRepository.softDelete(device.id)
-    
+    const result = await this.deviceRepository.softDelete(device.id);
+
     if (result.affected === 0) {
       return new HttpException(
         `No se pudo eliminar el dispositivo`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
-    } 
+    }
 
     return new HttpException(
       `¡Datos eliminados correctamente!`,
