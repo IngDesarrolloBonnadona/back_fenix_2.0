@@ -399,6 +399,7 @@ export class CaseReportValidateService {
 
   async findAllReportsValidate() {
     const caseReportValidates = await this.caseReportValidateRepository.find({
+      where: { val_cr_validated: false },
       relations: {
         caseReportOriginal: true,
         log: true,
@@ -429,7 +430,7 @@ export class CaseReportValidateService {
 
   async findOneReportValidate(id: string) {
     const caseReportValidate = await this.caseReportValidateRepository.findOne({
-      where: { id },
+      where: { id, val_cr_validated: false },
       relations: {
         caseReportOriginal: true,
         log: true,
@@ -470,6 +471,7 @@ export class CaseReportValidateService {
     const caseReportValidate = await this.caseReportValidateRepository.find({
       where: {
         val_cr_filingnumber: Like(`%${consecutive}%`),
+        val_cr_validated: false
       },
       relations: {
         caseReportOriginal: true,
