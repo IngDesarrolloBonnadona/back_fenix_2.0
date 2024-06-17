@@ -95,6 +95,7 @@ export class CaseReportValidateService {
         event: true,
         service: true,
         unit: true,
+        priority: true,
       },
     });
 
@@ -383,6 +384,7 @@ export class CaseReportValidateService {
         event: true,
         service: true,
         unit: true,
+        priority: true
       },
     });
 
@@ -414,6 +416,7 @@ export class CaseReportValidateService {
         event: true,
         service: true,
         unit: true,
+        priority: true,
       },
     });
 
@@ -445,6 +448,7 @@ export class CaseReportValidateService {
         event: true,
         service: true,
         unit: true,
+        priority: true,
       },
     });
 
@@ -487,6 +491,7 @@ export class CaseReportValidateService {
         event: true,
         service: true,
         unit: true,
+        priority: true,
       },
     });
 
