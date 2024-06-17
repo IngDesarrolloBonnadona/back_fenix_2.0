@@ -23,6 +23,7 @@ import { ReportAnalystAssignmentModule } from './modules/report-analyst-assignme
 import { ResearchersModule } from './modules/researchers/researchers.module';
 import { PatientModule } from './modules/patient/patient.module';
 import { SynergyModule } from './modules/synergy/synergy.module';
+import { PriorityModule } from './modules/priority/priority.module';
 
 require('dotenv').config();
 
@@ -61,6 +62,7 @@ require('dotenv').config();
     ResearchersModule,
     PatientModule,
     SynergyModule,
+    PriorityModule,
   ],
   controllers: [],
   providers: [],
