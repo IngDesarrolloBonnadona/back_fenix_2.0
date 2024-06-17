@@ -342,7 +342,7 @@ export class CaseReportValidateService {
     }
 
     if (filingNumber) {
-      where.val_cr_filingnumber = filingNumber;
+      where.val_cr_filingnumber = Like(`%${filingNumber}%`) ;
     }
 
     if (patientId) {
