@@ -329,8 +329,9 @@ export class CaseReportValidateService {
   async SummaryReportsValidate(
     creationDate?: Date,
     filingNumber?: string,
-    patientId?: string,
+    patientDoc?: string,
     caseTypeId?: number,
+    unitId?: number,
   ): Promise<CaseReportValidateEntity[]> {
     const where: FindOptionsWhere<CaseReportValidateEntity> = {};
 
@@ -345,12 +346,16 @@ export class CaseReportValidateService {
       where.val_cr_filingnumber = Like(`%${filingNumber}%`) ;
     }
 
-    if (patientId) {
-      where.val_cr_documentpatient = patientId;
+    if (patientDoc) {
+      where.val_cr_documentpatient = patientDoc;
     }
 
     if (caseTypeId) {
       where.val_cr_casetype_id_fk = caseTypeId;
+    }
+
+    if (unitId) {
+      where.val_cr_unit_id_fk = unitId;
     }
 
     where.val_cr_validated = false;
