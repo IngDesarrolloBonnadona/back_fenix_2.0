@@ -1,17 +1,7 @@
-<!-- <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p> -->
+<img src="./public/logos/logo_fenix.png" alt="logo-fenixII">
 
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="512" height="512" viewBox="0 0 384 383.999986">
-  <defs>
-    <clipPath id="5d4750bd47">
-      <path d="M 116 32.984375 L 384 32.984375 L 384 349.484375 L 116 349.484375 Z M 116 32.984375 " clip-rule="nonzero"/>
-    </clipPath>
-  </defs>
-  <g clip-path="url(#5d4750bd47)">
-    <path fill="#ff9220" d="M 383.523438 32.984375 C 350.574219 86.53125 266.371094 95.222656 250.125 101.21875 C 233.878906 107.21875 174.878906 138.117188 169.296875 227.277344 C 163.714844 316.4375 116.71875 349.691406 116.71875 349.691406 C 140.046875 339.6875 193.460938 291.078125 201.164062 241.933594 C 204.78125 218.898438 217.445312 200.300781 229.882812 187.042969 C 241.0625 175.398438 253.867188 165.949219 268.289062 158.699219 C 319.484375 132.226562 342.132812 99.511719 342.132812 99.511719 C 324.976562 113.808594 282.089844 119.527344 282.089844 119.527344 C 385.027344 93.804688 383.523438 32.984375 383.523438 32.984375 Z M 383.523438 32.984375 " fill-opacity="1" fill-rule="nonzero"/>
-  </g>
-</svg>
+## FENIX 2.0
 
- framework TypeScript starter repository.
+#### El módulo Fénix II será el software de creación del caso o reporte, donde se podrá realizar también la validación, asignación, revisión, auditoria, seguimiento, análisis y la creación del plan de acción, así como el seguimiento del mismo, la creación y muestra de sus indicadores e informes de la gestión; opciones de: AUTOEVALUACIÓN INSTITUCIONAL, GENERACIÓN DE INFORMES Y PLANES DE MEJORAMIENTO, MEDICIÓN Y ANÁLISIS PERMANENTE, SEGUIMIENTO EN TIEMPO REAL DE LAS ACCIONES DE MEJORA, GESTIÓN DEL RIESGO INDIVIDUAL, SEGURIDAD DEL PACIENTE
+
 

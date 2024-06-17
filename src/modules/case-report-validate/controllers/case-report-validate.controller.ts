@@ -26,7 +26,7 @@ export class CaseReportValidateController {
     private readonly caseReportValidateService: CaseReportValidateService,
   ) {}
 
-  @Post('/findReportsSimilar')
+  @Get('/findReportsSimilar')
   async findReportsSimilar(
     @Body() similarCaseReportValidate: FindSimilarCaseReportValidateDto,
   ) {
