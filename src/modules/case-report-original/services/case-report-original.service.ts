@@ -10,7 +10,6 @@ import { StatusReportService } from 'src/modules/status-report/services/status-r
 import { LogService } from 'src/modules/log/services/log.service';
 import { MedicineService } from 'src/modules/medicine/services/medicine.service';
 import { DeviceService } from 'src/modules/device/services/device.service';
-import { reportCreatorOriDictionary } from '../utils/helpers/report-ori-creator.helper';
 import { logReports } from 'src/enums/logs.enum';
 import { generateFilingNumber } from '../utils/helpers/generate_filing_number.helper';
 import { MovementReport as MovementReportEntity } from 'src/modules/movement-report/entities/movement-report.entity';

@@ -20,7 +20,6 @@ import { CreateCaseReportOriginalDto } from 'src/modules/case-report-original/dt
 import { FindSimilarCaseReportValidateDto } from '../dto/find-similar-case-report-validate';
 import { ValDtoValidator } from '../helper/val-dto-validator.helper';
 import { CaseType as CaseTypeEntity } from 'src/modules/case-type/entities/case-type.entity';
-import { reportCreatorValDictionary } from '../helper/report-val-creator.helper';
 import { MedicineService } from 'src/modules/medicine/services/medicine.service';
 import { DeviceService } from 'src/modules/device/services/device.service';
 import { MovementReport as MovementReportEntity } from 'src/modules/movement-report/entities/movement-report.entity';
