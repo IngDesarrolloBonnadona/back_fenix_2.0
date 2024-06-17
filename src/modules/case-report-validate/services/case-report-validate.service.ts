@@ -333,6 +333,7 @@ export class CaseReportValidateService {
     patientDoc?: string,
     caseTypeId?: number,
     unitId?: number,
+    priorityId?: number,
   ): Promise<CaseReportValidateEntity[]> {
     const where: FindOptionsWhere<CaseReportValidateEntity> = {};
 
@@ -357,6 +358,10 @@ export class CaseReportValidateService {
 
     if (unitId) {
       where.val_cr_unit_id_fk = unitId;
+    }
+
+    if (priorityId) {
+      where.val_cr_priority_id_fk = priorityId;
     }
 
     where.val_cr_validated = false;
