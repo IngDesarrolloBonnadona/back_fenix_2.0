@@ -15,6 +15,12 @@ import { logReports } from 'src/enums/logs.enum';
 import { generateFilingNumber } from '../utils/helpers/generate_filing_number.helper';
 import { MovementReport as MovementReportEntity } from 'src/modules/movement-report/entities/movement-report.entity';
 import { movementReport } from 'src/enums/movement-report.enum';
+import { caseTypeReport } from 'src/enums/caseType-report.enum';
+import { CreateOriRiskReportDto } from '../dto/create-ori-risk-report.dto';
+import { CreateOriAdverseEventReportDto } from '../dto/create-ori-adverse-event-report.dto';
+import { CreateOriIncidentReportDto } from '../dto/create-ori-incident-report.dto';
+import { CreateOriIndicatingUnsafeCareReportDto } from '../dto/create-ori-indicating-unsafe-care-report.dto';
+import { CreateOriComplicationsReportDto } from '../dto/create-ori-complications-report.dto';
 
 @Injectable()
 export class CaseReportOriginalService {
@@ -58,22 +64,51 @@ export class CaseReportOriginalService {
         );
       }
 
-      const dtoClass = reportCreatorOriDictionary[caseTypeFound.cas_t_name];
-      console.log('dtoClass:', dtoClass);
+      let caseReportOriginal: any;
 
-      if (!dtoClass) {
-        throw new HttpException(
-          'Tipo de caso no reconocido.',
-          HttpStatus.BAD_REQUEST,
-        );
+      switch (caseTypeFound.cas_t_name) {
+        case caseTypeReport.RISK:
+          caseReportOriginal = this.caseReportOriginalRepository.create(
+            createReportOriDto as CreateOriRiskReportDto,
+          );
+          console.log(`Se creó reporte ${caseTypeReport.RISK}`);
+          break;
+        case caseTypeReport.ADVERSE_EVENT:
+          caseReportOriginal = this.caseReportOriginalRepository.create(
+            createReportOriDto as CreateOriAdverseEventReportDto,
+          );
+          console.log(`Se creó reporte ${caseTypeReport.ADVERSE_EVENT}`);
+          break;
+        case caseTypeReport.INCIDENT:
+          caseReportOriginal = this.caseReportOriginalRepository.create(
+            createReportOriDto as CreateOriIncidentReportDto,
+          );
+          console.log(`Se creó reporte ${caseTypeReport.INCIDENT}`);
+          break;
+        case caseTypeReport.INDICATING_UNSAFE_CARE:
+          caseReportOriginal = this.caseReportOriginalRepository.create(
+            createReportOriDto as CreateOriIndicatingUnsafeCareReportDto,
+          );
+          console.log(`Se creó reporte ${caseTypeReport.INDICATING_UNSAFE_CARE}`);
+          break;
+        case caseTypeReport.COMPLICATIONS:
+          caseReportOriginal = this.caseReportOriginalRepository.create(
+            createReportOriDto as CreateOriComplicationsReportDto,
+          );
+          console.log(`Se creó reporte ${caseTypeReport.COMPLICATIONS}`);
+          break;
+          // agregar un tipo de caso nuevo
+        default:
+          throw new HttpException(
+            'Tipo de caso no reconocido.',
+            HttpStatus.BAD_REQUEST,
+          );
       }
 
       const filingNumber = await generateFilingNumber(
         this.caseReportOriginalRepository,
       );
 
-      const caseReportOriginal = new CaseReportOriginalEntity();
-      Object.assign(caseReportOriginal, createReportOriDto);
       caseReportOriginal.ori_cr_filingnumber = filingNumber;
 
       await queryRunner.manager.save(caseReportOriginal);
