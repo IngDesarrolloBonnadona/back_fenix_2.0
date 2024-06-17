@@ -1,4 +1,4 @@
-<img src="./public/logos/logo_fenix.png" alt="logo-fenixII">
+<img src="./public/logos/logo_text-5000x2500.png" alt="logo-fenixII">
 
 ## FENIX 2.0
 
