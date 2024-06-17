@@ -318,6 +318,7 @@ export class CaseReportValidateService {
       val_cr_suborigin_id_fk: caseReportOriginal.ori_cr_suborigin_id_fk,
       val_cr_risklevel_id_fk: caseReportOriginal.ori_cr_risklevel_id_fk,
       val_cr_unit_id_fk: caseReportOriginal.ori_cr_unit_id_fk,
+      val_cr_priority_id_fk: caseReportOriginal.ori_cr_priority_id_fk,
       val_cr_description: caseReportOriginal.ori_cr_description,
       val_cr_inmediateaction: caseReportOriginal.ori_cr_inmediateaction,
       val_cr_materializedrisk: caseReportOriginal.ori_cr_materializedrisk,

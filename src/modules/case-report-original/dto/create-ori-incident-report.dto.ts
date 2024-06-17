@@ -88,6 +88,10 @@ export class CreateOriIncidentReportDto {
     @IsOptional()
     @IsString()
     ori_cr_inmediateaction: string;
+    
+    @IsNumber()
+    @IsNotEmpty()
+    ori_cr_priority_id_fk: number;
 
     @IsOptional()
     @IsArray()
