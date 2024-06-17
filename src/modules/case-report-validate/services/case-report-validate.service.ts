@@ -76,11 +76,9 @@ export class CaseReportValidateService {
       where: {
         val_cr_casetype_id_fk: similarCaseReportValidate.val_cr_casetype_id_fk,
         val_cr_unit_id_fk: similarCaseReportValidate.val_cr_unit_id_fk,
-        val_cr_documentpatient:
-          similarCaseReportValidate.val_cr_documentpatient,
+        val_cr_documentpatient: similarCaseReportValidate.val_cr_documentpatient,
         val_cr_event_id_fk: similarCaseReportValidate.val_cr_event_id_fk,
-        val_cr_eventtype_id_fk:
-          similarCaseReportValidate.val_cr_eventtype_id_fk,
+        val_cr_eventtype_id_fk:  similarCaseReportValidate.val_cr_eventtype_id_fk,
         val_cr_validated: false,
       },
       relations: {
@@ -136,15 +134,6 @@ export class CaseReportValidateService {
         );
       }
 
-      // const dtoClass = reportCreatorValDictionary[caseTypeFound.cas_t_name];
-      // console.log('dtoClass:', dtoClass);
-
-      // if (!dtoClass) {
-      //   throw new HttpException(
-      //     'Tipo de caso no reconocido.',
-      //     HttpStatus.BAD_REQUEST,
-      //   );
-      // }
 
       const previousReport = await this.caseReportValidateRepository.findOne({
         where: {
