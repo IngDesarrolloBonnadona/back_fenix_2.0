@@ -34,6 +34,12 @@ import { Synergy as SynergyEntity } from 'src/modules/synergy/entities/synergy.e
 import { SynergyService } from 'src/modules/synergy/services/synergy.service';
 import { Researcher as ResearcherEntity } from 'src/modules/researchers/entities/researchers.entity';
 import { ResearchersService } from 'src/modules/researchers/services/researchers.service';
+import { caseTypeReport } from 'src/enums/caseType-report.enum';
+import { CreateValRiskReportDto } from '../dto/create-val-risk-report.dto';
+import { CreateValAdverseEventReportDto } from '../dto/create-val-adverse-event-report.dto';
+import { CreateValIncidentReportDto } from '../dto/create-val-incident-report.dto';
+import { CreateValIndicatingUnsafeCareReportDto } from '../dto/create-val-indicating-unsafe-care-report.dto';
+import { CreateValComplicationsReportDto } from '../dto/create-val-complications-report.dto';
 
 @Injectable()
 export class CaseReportValidateService {
@@ -130,15 +136,15 @@ export class CaseReportValidateService {
         );
       }
 
-      const dtoClass = reportCreatorValDictionary[caseTypeFound.cas_t_name];
-      console.log('dtoClass:', dtoClass);
+      // const dtoClass = reportCreatorValDictionary[caseTypeFound.cas_t_name];
+      // console.log('dtoClass:', dtoClass);
 
-      if (!dtoClass) {
-        throw new HttpException(
-          'Tipo de caso no reconocido.',
-          HttpStatus.BAD_REQUEST,
-        );
-      }
+      // if (!dtoClass) {
+      //   throw new HttpException(
+      //     'Tipo de caso no reconocido.',
+      //     HttpStatus.BAD_REQUEST,
+      //   );
+      // }
 
       const previousReport = await this.caseReportValidateRepository.findOne({
         where: {
@@ -160,15 +166,54 @@ export class CaseReportValidateService {
         await queryRunner.manager.save(previousReport);
       }
 
+      let caseReportValidate: any;
+
+      switch (caseTypeFound.cas_t_name) {
+        case caseTypeReport.RISK:
+          caseReportValidate = this.caseReportValidateRepository.create(
+            createReportValDto as CreateValRiskReportDto,
+          );
+          console.log(`Se creó reporte validado ${caseTypeReport.RISK}`);
+          break;
+        case caseTypeReport.ADVERSE_EVENT:
+          caseReportValidate = this.caseReportValidateRepository.create(
+            createReportValDto as CreateValAdverseEventReportDto,
+          );
+          console.log(`Se creó reporte validado ${caseTypeReport.ADVERSE_EVENT}`);
+          break;
+        case caseTypeReport.INCIDENT:
+          caseReportValidate = this.caseReportValidateRepository.create(
+            createReportValDto as CreateValIncidentReportDto,
+          );
+          console.log(`Se creó reporte validado ${caseTypeReport.INCIDENT}`);
+          break;
+        case caseTypeReport.INDICATING_UNSAFE_CARE:
+          caseReportValidate = this.caseReportValidateRepository.create(
+            createReportValDto as CreateValIndicatingUnsafeCareReportDto,
+          );
+          console.log(
+            `Se creó reporte validado ${caseTypeReport.INDICATING_UNSAFE_CARE}`,
+          );
+          break;
+        case caseTypeReport.COMPLICATIONS:
+          caseReportValidate = this.caseReportValidateRepository.create(
+            createReportValDto as CreateValComplicationsReportDto,
+          );
+          console.log(`Se creó reporte validado ${caseTypeReport.COMPLICATIONS}`);
+          break;
+        // agregar un tipo de caso nuevo
+        default:
+          throw new HttpException(
+            'Tipo de caso no reconocido.',
+            HttpStatus.BAD_REQUEST,
+          );
+      }
+
       const consecutiveId = previousReport.val_cr_consecutive_id + 1;
       const previousId = previousReport.val_cr_previous_id + 1;
 
-      const caseReportValidate = new CaseReportValidateEntity();
-      Object.assign(caseReportValidate, createReportValDto);
-      caseReportValidate.val_cr_filingnumber =
-        previousReport.val_cr_filingnumber;
-      caseReportValidate.val_cr_originalcase_id_fk =
-        previousReport.val_cr_originalcase_id_fk;
+      caseReportValidate.val_cr_filingnumber = previousReport.val_cr_filingnumber;
+      caseReportValidate.val_cr_originalcase_id_fk = previousReport.val_cr_originalcase_id_fk;
       caseReportValidate.val_cr_consecutive_id = consecutiveId;
       caseReportValidate.val_cr_previous_id = previousId;
 
