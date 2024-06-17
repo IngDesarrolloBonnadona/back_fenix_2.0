@@ -90,6 +90,10 @@ export class CreateCaseReportOriginalDto {
     @IsNotEmpty()
     ori_cr_unit_id_fk: number;
 
+    @IsNumber()
+    @IsNotEmpty()
+    ori_cr_priority_id_fk: number;
+
     @IsString()
     @IsOptional()
     ori_cr_description: string;

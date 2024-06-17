@@ -52,16 +52,20 @@ export class CaseReportValidateController {
   async SummaryReportsValidate(
     @Query('creationDate') creationDate?: string,
     @Query('filingNumber') filingNumber?: string,
-    @Query('patientId') patientId?: string,
+    @Query('patientDoc') patientDoc?: string,
     @Query('caseTypeId') caseTypeId?: number,
+    @Query('unitId') unitId?: number,
+    @Query('priorityId') priorityId?: number,
   ): Promise<CaseReportValidate[]> {
     const creationDateObj = creationDate ? new Date(creationDate) : undefined;
 
     return await this.caseReportValidateService.SummaryReportsValidate(
       creationDateObj,
       filingNumber,
-      patientId,
+      patientDoc,
       caseTypeId,
+      unitId,
+      priorityId,
     );
   }
 
@@ -76,8 +80,12 @@ export class CaseReportValidateController {
   }
 
   @Get('/findReportValidateByConsecutive/:consecutive')
-  findReportValidateByConsecutive(@Param('consecutive') consecutive: string): Promise<CaseReportValidate[]> {
-    return this.caseReportValidateService.findOneReportValidateByConsecutive(consecutive);
+  findReportValidateByConsecutive(
+    @Param('consecutive') consecutive: string,
+  ): Promise<CaseReportValidate[]> {
+    return this.caseReportValidateService.findOneReportValidateByConsecutive(
+      consecutive,
+    );
   }
 
   @Put('/updateReportValidate/:id')

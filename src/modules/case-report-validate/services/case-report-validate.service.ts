@@ -95,6 +95,7 @@ export class CaseReportValidateService {
         event: true,
         service: true,
         unit: true,
+        priority: true,
       },
     });
 
@@ -318,6 +319,7 @@ export class CaseReportValidateService {
       val_cr_suborigin_id_fk: caseReportOriginal.ori_cr_suborigin_id_fk,
       val_cr_risklevel_id_fk: caseReportOriginal.ori_cr_risklevel_id_fk,
       val_cr_unit_id_fk: caseReportOriginal.ori_cr_unit_id_fk,
+      val_cr_priority_id_fk: caseReportOriginal.ori_cr_priority_id_fk,
       val_cr_description: caseReportOriginal.ori_cr_description,
       val_cr_inmediateaction: caseReportOriginal.ori_cr_inmediateaction,
       val_cr_materializedrisk: caseReportOriginal.ori_cr_materializedrisk,
@@ -329,8 +331,10 @@ export class CaseReportValidateService {
   async SummaryReportsValidate(
     creationDate?: Date,
     filingNumber?: string,
-    patientId?: string,
+    patientDoc?: string,
     caseTypeId?: number,
+    unitId?: number,
+    priorityId?: number,
   ): Promise<CaseReportValidateEntity[]> {
     const where: FindOptionsWhere<CaseReportValidateEntity> = {};
 
@@ -345,12 +349,20 @@ export class CaseReportValidateService {
       where.val_cr_filingnumber = Like(`%${filingNumber}%`) ;
     }
 
-    if (patientId) {
-      where.val_cr_documentpatient = patientId;
+    if (patientDoc) {
+      where.val_cr_documentpatient = patientDoc;
     }
 
     if (caseTypeId) {
       where.val_cr_casetype_id_fk = caseTypeId;
+    }
+
+    if (unitId) {
+      where.val_cr_unit_id_fk = unitId;
+    }
+
+    if (priorityId) {
+      where.val_cr_priority_id_fk = priorityId;
     }
 
     where.val_cr_validated = false;
@@ -372,6 +384,7 @@ export class CaseReportValidateService {
         event: true,
         service: true,
         unit: true,
+        priority: true
       },
     });
 
@@ -403,6 +416,7 @@ export class CaseReportValidateService {
         event: true,
         service: true,
         unit: true,
+        priority: true,
       },
     });
 
@@ -434,6 +448,7 @@ export class CaseReportValidateService {
         event: true,
         service: true,
         unit: true,
+        priority: true,
       },
     });
 
@@ -476,6 +491,7 @@ export class CaseReportValidateService {
         event: true,
         service: true,
         unit: true,
+        priority: true,
       },
     });
 

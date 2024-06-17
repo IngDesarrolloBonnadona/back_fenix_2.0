@@ -214,6 +214,7 @@ export class CaseReportOriginalService {
         eventType: true,
         service: true,
         unit: true,
+        priority: true,
       },
     });
 
@@ -245,6 +246,7 @@ export class CaseReportOriginalService {
           eventType: true,
           service: true,
           unit: true,
+          priority: true
         },
       });
 

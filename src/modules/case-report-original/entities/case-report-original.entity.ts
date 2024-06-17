@@ -5,6 +5,7 @@ import { EventType } from 'src/modules/event-type/entities/event-type.entity';
 import { Event } from 'src/modules/event/entities/event.entity';
 import { Medicine } from 'src/modules/medicine/entities/medicine.entity';
 import { Origin } from 'src/modules/origin/entities/origin.entity';
+import { Priority } from 'src/modules/priority/entities/priority.entity';
 import { RiskLevel } from 'src/modules/risk-level/entities/risk-level.entity';
 import { RiskType } from 'src/modules/risk-type/entities/risk-type.entity';
 import { Service } from 'src/modules/service/entities/service.entity';
@@ -95,6 +96,9 @@ export class CaseReportOriginal {
   @Column({ nullable: true })
   ori_cr_unit_id_fk: number;
 
+  @Column({ nullable: true })
+  ori_cr_priority_id_fk: number;
+
   @Column({ type: 'varchar', nullable: true })
   ori_cr_description: string;
 
@@ -179,4 +183,8 @@ export class CaseReportOriginal {
   @ManyToOne(() => Unit, (unit) => unit.caseReportOriginal)
   @JoinColumn({ name: 'ori_cr_unit_id_fk' })
   unit: Unit;
+
+  @ManyToOne(() => Priority, (priority) => priority.caseReportOriginal)
+  @JoinColumn({ name: 'ori_cr_priority_id_fk' })
+  priority: Priority;
 }

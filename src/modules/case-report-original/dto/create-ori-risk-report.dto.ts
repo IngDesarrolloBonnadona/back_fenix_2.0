@@ -91,6 +91,10 @@ export class CreateOriRiskReportDto {
     @IsBoolean()
     @IsNotEmpty()
     ori_cr_associatedpatient: boolean;
+    
+    @IsNumber()
+    @IsNotEmpty()
+    ori_cr_priority_id_fk: number;
 
     @IsOptional()
     @IsArray()
