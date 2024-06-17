@@ -20,7 +20,6 @@ import { CreateCaseReportOriginalDto } from 'src/modules/case-report-original/dt
 import { FindSimilarCaseReportValidateDto } from '../dto/find-similar-case-report-validate';
 import { ValDtoValidator } from '../helper/val-dto-validator.helper';
 import { CaseType as CaseTypeEntity } from 'src/modules/case-type/entities/case-type.entity';
-import { reportCreatorValDictionary } from '../helper/report-val-creator.helper';
 import { MedicineService } from 'src/modules/medicine/services/medicine.service';
 import { DeviceService } from 'src/modules/device/services/device.service';
 import { MovementReport as MovementReportEntity } from 'src/modules/movement-report/entities/movement-report.entity';
@@ -34,6 +33,12 @@ import { Synergy as SynergyEntity } from 'src/modules/synergy/entities/synergy.e
 import { SynergyService } from 'src/modules/synergy/services/synergy.service';
 import { Researcher as ResearcherEntity } from 'src/modules/researchers/entities/researchers.entity';
 import { ResearchersService } from 'src/modules/researchers/services/researchers.service';
+import { caseTypeReport } from 'src/enums/caseType-report.enum';
+import { CreateValRiskReportDto } from '../dto/create-val-risk-report.dto';
+import { CreateValAdverseEventReportDto } from '../dto/create-val-adverse-event-report.dto';
+import { CreateValIncidentReportDto } from '../dto/create-val-incident-report.dto';
+import { CreateValIndicatingUnsafeCareReportDto } from '../dto/create-val-indicating-unsafe-care-report.dto';
+import { CreateValComplicationsReportDto } from '../dto/create-val-complications-report.dto';
 
 @Injectable()
 export class CaseReportValidateService {
@@ -70,11 +75,9 @@ export class CaseReportValidateService {
       where: {
         val_cr_casetype_id_fk: similarCaseReportValidate.val_cr_casetype_id_fk,
         val_cr_unit_id_fk: similarCaseReportValidate.val_cr_unit_id_fk,
-        val_cr_documentpatient:
-          similarCaseReportValidate.val_cr_documentpatient,
+        val_cr_documentpatient: similarCaseReportValidate.val_cr_documentpatient,
         val_cr_event_id_fk: similarCaseReportValidate.val_cr_event_id_fk,
-        val_cr_eventtype_id_fk:
-          similarCaseReportValidate.val_cr_eventtype_id_fk,
+        val_cr_eventtype_id_fk:  similarCaseReportValidate.val_cr_eventtype_id_fk,
         val_cr_validated: false,
       },
       relations: {
@@ -130,15 +133,6 @@ export class CaseReportValidateService {
         );
       }
 
-      const dtoClass = reportCreatorValDictionary[caseTypeFound.cas_t_name];
-      console.log('dtoClass:', dtoClass);
-
-      if (!dtoClass) {
-        throw new HttpException(
-          'Tipo de caso no reconocido.',
-          HttpStatus.BAD_REQUEST,
-        );
-      }
 
       const previousReport = await this.caseReportValidateRepository.findOne({
         where: {
@@ -160,15 +154,54 @@ export class CaseReportValidateService {
         await queryRunner.manager.save(previousReport);
       }
 
+      let caseReportValidate: any;
+
+      switch (caseTypeFound.cas_t_name) {
+        case caseTypeReport.RISK:
+          caseReportValidate = this.caseReportValidateRepository.create(
+            createReportValDto as CreateValRiskReportDto,
+          );
+          console.log(`Se creó reporte validado ${caseTypeReport.RISK}`);
+          break;
+        case caseTypeReport.ADVERSE_EVENT:
+          caseReportValidate = this.caseReportValidateRepository.create(
+            createReportValDto as CreateValAdverseEventReportDto,
+          );
+          console.log(`Se creó reporte validado ${caseTypeReport.ADVERSE_EVENT}`);
+          break;
+        case caseTypeReport.INCIDENT:
+          caseReportValidate = this.caseReportValidateRepository.create(
+            createReportValDto as CreateValIncidentReportDto,
+          );
+          console.log(`Se creó reporte validado ${caseTypeReport.INCIDENT}`);
+          break;
+        case caseTypeReport.INDICATING_UNSAFE_CARE:
+          caseReportValidate = this.caseReportValidateRepository.create(
+            createReportValDto as CreateValIndicatingUnsafeCareReportDto,
+          );
+          console.log(
+            `Se creó reporte validado ${caseTypeReport.INDICATING_UNSAFE_CARE}`,
+          );
+          break;
+        case caseTypeReport.COMPLICATIONS:
+          caseReportValidate = this.caseReportValidateRepository.create(
+            createReportValDto as CreateValComplicationsReportDto,
+          );
+          console.log(`Se creó reporte validado ${caseTypeReport.COMPLICATIONS}`);
+          break;
+        // agregar un tipo de caso nuevo
+        default:
+          throw new HttpException(
+            'Tipo de caso no reconocido.',
+            HttpStatus.BAD_REQUEST,
+          );
+      }
+
       const consecutiveId = previousReport.val_cr_consecutive_id + 1;
       const previousId = previousReport.val_cr_previous_id + 1;
 
-      const caseReportValidate = new CaseReportValidateEntity();
-      Object.assign(caseReportValidate, createReportValDto);
-      caseReportValidate.val_cr_filingnumber =
-        previousReport.val_cr_filingnumber;
-      caseReportValidate.val_cr_originalcase_id_fk =
-        previousReport.val_cr_originalcase_id_fk;
+      caseReportValidate.val_cr_filingnumber = previousReport.val_cr_filingnumber;
+      caseReportValidate.val_cr_originalcase_id_fk = previousReport.val_cr_originalcase_id_fk;
       caseReportValidate.val_cr_consecutive_id = consecutiveId;
       caseReportValidate.val_cr_previous_id = previousId;
 
@@ -309,7 +342,7 @@ export class CaseReportValidateService {
     }
 
     if (filingNumber) {
-      where.val_cr_filingnumber = filingNumber;
+      where.val_cr_filingnumber = Like(`%${filingNumber}%`) ;
     }
 
     if (patientId) {
@@ -354,6 +387,7 @@ export class CaseReportValidateService {
 
   async findAllReportsValidate() {
     const caseReportValidates = await this.caseReportValidateRepository.find({
+      where: { val_cr_validated: false },
       relations: {
         caseReportOriginal: true,
         log: true,
@@ -384,7 +418,7 @@ export class CaseReportValidateService {
 
   async findOneReportValidate(id: string) {
     const caseReportValidate = await this.caseReportValidateRepository.findOne({
-      where: { id },
+      where: { id, val_cr_validated: false },
       relations: {
         caseReportOriginal: true,
         log: true,
@@ -425,6 +459,7 @@ export class CaseReportValidateService {
     const caseReportValidate = await this.caseReportValidateRepository.find({
       where: {
         val_cr_filingnumber: Like(`%${consecutive}%`),
+        val_cr_validated: false
       },
       relations: {
         caseReportOriginal: true,
