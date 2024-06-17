@@ -25,6 +25,7 @@ import { Event } from 'src/modules/event/entities/event.entity';
 import { Service } from 'src/modules/service/entities/service.entity';
 import { Unit } from 'src/modules/unit/entities/unit.entity';
 import { Researcher } from 'src/modules/researchers/entities/researchers.entity';
+import { Priority } from 'src/modules/priority/entities/priority.entity';
 
 @Entity()
 export class CaseReportValidate {
@@ -185,6 +186,10 @@ export class CaseReportValidate {
   @ManyToOne(() => Unit, (unit) => unit.caseReportValidate)
   @JoinColumn({ name: 'val_cr_unit_id_fk' })
   unit: Unit;
+
+  @ManyToOne(() => Priority, (priority) => priority.caseReportValidate)
+  @JoinColumn({ name: 'val_cr_priority_id_fk' })
+  priority: Priority;
 
   @OneToMany(() => Log, (log) => log.caseReportValidate)
   log: Log[];
