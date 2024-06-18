@@ -11,7 +11,6 @@ import { RiskLevel } from 'src/modules/risk-level/entities/risk-level.entity';
 import { RiskType } from 'src/modules/risk-type/entities/risk-type.entity';
 import { Service } from 'src/modules/service/entities/service.entity';
 import { SeverityClasification } from 'src/modules/severity-clasification/entities/severity-clasification.entity';
-// import { StatusReport } from 'src/modules/status-report/entities/status-report.entity';
 import { SubOrigin } from 'src/modules/sub-origin/entities/sub-origin.entity';
 import { Unit } from 'src/modules/unit/entities/unit.entity';
 import {
@@ -138,12 +137,6 @@ export class CaseReportOriginal {
 
   @OneToMany(() => Device, (device) => device.caseReportOriginal)
   device: Device[];
-
-  // @OneToMany(
-  //   () => StatusReport,
-  //   (statusReport) => statusReport.caseReportOriginal,
-  // )
-  // statusReport: StatusReport[];
 
   @ManyToOne(() => MovementReport, (movementReport) => movementReport.caseReportOriginal)
   @JoinColumn({ name: 'ori_cr_statusmovement_id_fk' })
