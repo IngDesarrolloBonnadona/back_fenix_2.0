@@ -86,13 +86,6 @@ export class ReportAnalystAssignmentService {
       createReportAnalystAssignmentDto.ass_ra_position_id_fk,
     );
 
-    await this.logService.createLog(
-      createReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
-      idValidator,
-      clientIp,
-      logReports.LOG_ASSIGNMENT_ANALYST,
-    );
-
     const movementReportFound = await this.movementReportRepository.findOne({
       where: {
         mov_r_name: movementReport.ASSIGNMENT_ANALYST,
@@ -106,9 +99,23 @@ export class ReportAnalystAssignmentService {
         HttpStatus.NO_CONTENT,
       );
     }
+    
+    const analyst = this.reportAnalystAssignmentRepository.create({
+      ...createReportAnalystAssignmentDto,
+      ass_ra_uservalidator_id: idValidator,
+    });
+
+    const assigned = await this.reportAnalystAssignmentRepository.save(analyst);
+
+    await this.logService.createLog(
+      assigned.ass_ra_validatedcase_id_fk,
+      idValidator,
+      clientIp,
+      logReports.LOG_ASSIGNMENT_ANALYST,
+    );
 
     const updateStatusMovement = await this.caseReportValidateRepository.update(
-      createReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
+      assigned.ass_ra_validatedcase_id_fk,
       {
         val_cr_statusmovement_id_fk: movementReportFound.id,
       },
@@ -120,13 +127,6 @@ export class ReportAnalystAssignmentService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-
-    const analyst = this.reportAnalystAssignmentRepository.create({
-      ...createReportAnalystAssignmentDto,
-      ass_ra_uservalidator_id: idValidator,
-    });
-
-    const assigned = await this.reportAnalystAssignmentRepository.save(analyst);
 
     return assigned;
   }
