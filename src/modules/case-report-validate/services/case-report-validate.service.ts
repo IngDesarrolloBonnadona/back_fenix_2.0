@@ -341,6 +341,7 @@ export class CaseReportValidateService {
     priorityId?: number,
     severityClasificationId?: number,
     eventTypeId?: number,
+    statusMovementId?: number,
   ): Promise<CaseReportValidateEntity[]> {
     const where: FindOptionsWhere<CaseReportValidateEntity> = {};
 
@@ -379,6 +380,9 @@ export class CaseReportValidateService {
       where.val_cr_eventtype_id_fk = eventTypeId;
     }
 
+    if (statusMovementId) {
+      where.val_cr_statusmovement_id_fk = statusMovementId;
+    }
 
     where.val_cr_validated = false;
 

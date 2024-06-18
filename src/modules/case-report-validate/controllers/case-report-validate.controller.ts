@@ -58,6 +58,7 @@ export class CaseReportValidateController {
     @Query('priorityId') priorityId?: number,
     @Query('severityClasificationId') severityClasificationId?: number,
     @Query('eventTypeId') eventTypeId?: number,
+    @Query('statusMovementId') statusMovementId?: number,
   ): Promise<CaseReportValidate[]> {
     const creationDateObj = creationDate ? new Date(creationDate) : undefined;
 
@@ -70,6 +71,7 @@ export class CaseReportValidateController {
       priorityId,
       severityClasificationId,
       eventTypeId,
+      statusMovementId,
     );
   }
 
