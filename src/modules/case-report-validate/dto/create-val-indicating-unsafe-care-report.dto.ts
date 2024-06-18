@@ -93,10 +93,6 @@ export class CreateValIndicatingUnsafeCareReportDto {
     @IsNotEmpty()
     val_cr_priority_id_fk: number;
 
-    @IsNumber()
-    @IsNotEmpty()
-    val_cr_statusmovement_id_fk: number;
-
     @IsOptional()
     @IsArray()
     @ValidateNested({ each: true })

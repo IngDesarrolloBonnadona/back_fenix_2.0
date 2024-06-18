@@ -207,12 +207,25 @@ export class CaseReportValidateService {
       const consecutiveId = previousReport.val_cr_consecutive_id + 1;
       const previousId = previousReport.val_cr_previous_id + 1;
 
-      caseReportValidate.val_cr_filingnumber =
-        previousReport.val_cr_filingnumber;
-      caseReportValidate.val_cr_originalcase_id_fk =
-        previousReport.val_cr_originalcase_id_fk;
+      const movementReportFound = await this.movementReportRepository.findOne({
+        where: {
+          mov_r_name: movementReport.VALIDATION,
+          mov_r_status: true,
+        },
+      });
+
+      if (!movementReportFound) {
+        throw new HttpException(
+          `El movimiento ${movementReport.VALIDATION} no existe.`,
+          HttpStatus.NO_CONTENT,
+        );
+      }
+
+      caseReportValidate.val_cr_filingnumber = previousReport.val_cr_filingnumber;
+      caseReportValidate.val_cr_originalcase_id_fk = previousReport.val_cr_originalcase_id_fk;
       caseReportValidate.val_cr_consecutive_id = consecutiveId;
       caseReportValidate.val_cr_previous_id = previousId;
+      caseReportValidate.val_cr_statusmovement_id_fk = movementReportFound.id
 
       await queryRunner.manager.save(caseReportValidate);
 
@@ -235,20 +248,6 @@ export class CaseReportValidateService {
           createReportValDto.devices,
           caseReportValidate.val_cr_originalcase_id_fk,
           queryRunner,
-        );
-      }
-
-      const movementReportFound = await this.movementReportRepository.findOne({
-        where: {
-          mov_r_name: movementReport.VALIDATION,
-          mov_r_status: true,
-        },
-      });
-
-      if (!movementReportFound) {
-        throw new HttpException(
-          `El movimiento ${movementReport.VALIDATION} no existe.`,
-          HttpStatus.NO_CONTENT,
         );
       }
 
@@ -387,7 +386,6 @@ export class CaseReportValidateService {
       where,
       relations: {
         caseReportOriginal: true,
-        // log: true,
         movementReport: true,
         reportAnalystAssignment: true,
         synergy: true,
