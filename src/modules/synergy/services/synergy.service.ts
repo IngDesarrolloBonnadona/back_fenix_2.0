@@ -239,8 +239,30 @@ export class SynergyService {
   async resolutionSynergy(id: number, clientIp: string, idValidator: number) {
     const synergy = await this.findOneSynergy(id);
 
-    synergy.syn_status = true;
-    await this.synergyRepository.save(synergy);
+    const movementReportFound = await this.movementReportRepository.findOne({
+      where: {
+        mov_r_name: movementReport.SOLUTION_CASE_SYNERGY,
+        mov_r_status: true,
+      },
+    });
+
+    if (!movementReportFound) {
+      throw new HttpException(
+        `El movimiento ${movementReport.SOLUTION_CASE_SYNERGY} no existe.`,
+        HttpStatus.NO_CONTENT,
+      );
+    }
+
+    const updateStatusSynergy = await this.synergyRepository.update(synergy.id, {
+      syn_status: true,
+    });
+
+    if (updateStatusSynergy.affected === 0) {
+      throw new HttpException(
+        `No se pudo reprogramar el caso.`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
 
     const newSynergy = this.synergyRepository.create({
       syn_validatedcase_id_fk: synergy.syn_validatedcase_id_fk,
@@ -259,6 +281,20 @@ export class SynergyService {
       clientIp,
       logReports.LOG_SOLUTION_CASE_SYNERGY,
     );
+
+    const updateStatusMovement = await this.caseReportValidateRepository.update(
+      synergy.syn_validatedcase_id_fk,
+      {
+        val_cr_statusmovement_id_fk: movementReportFound.id,
+      },
+    );
+
+    if (updateStatusMovement.affected === 0) {
+      throw new HttpException(
+        `No se pudo actualizar el moviemiento del reporte.`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
 
     return new HttpException(
       `¡Caso resuelto y registrado correctamente!`,
