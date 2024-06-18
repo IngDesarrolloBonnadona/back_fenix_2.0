@@ -544,10 +544,33 @@ export class CaseReportValidateService {
   }
 
   async cancelReportValidate(id: string, clientIp: string) {
+    const movementReportFound = await this.movementReportRepository.findOne({
+      where: {
+        mov_r_name: movementReport.ANULATION,
+        mov_r_status: true,
+      },
+    });
+
+    if (!movementReportFound) {
+      throw new HttpException(
+        `El movimiento ${movementReport.ANULATION} no existe.`,
+        HttpStatus.NO_CONTENT,
+      );
+    }
+
     const caseReportValidate = await this.findOneReportValidate(id);
 
-    caseReportValidate.val_cr_status = false;
-    await this.caseReportValidateRepository.save(caseReportValidate);
+    const updateStatusMovement = await this.caseReportValidateRepository.update(caseReportValidate.id, {
+      val_cr_statusmovement_id_fk: movementReportFound.id,
+      val_cr_status: false
+    });
+
+    if (updateStatusMovement.affected === 0) {
+      throw new HttpException(
+        `No se pudo actualizar el moviemiento del reporte.`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
 
     const result = await this.caseReportValidateRepository.softDelete(
       caseReportValidate.id,
