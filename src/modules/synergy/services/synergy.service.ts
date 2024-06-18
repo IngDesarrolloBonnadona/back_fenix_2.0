@@ -10,6 +10,8 @@ import { caseTypeReport } from 'src/enums/caseType-report.enum';
 import { LogService } from 'src/modules/log/services/log.service';
 import { logReports } from 'src/enums/logs.enum';
 import { CaseReportValidate as CaseReportValidateEntity } from 'src/modules/case-report-validate/entities/case-report-validate.entity';
+import { movementReport } from 'src/enums/movement-report.enum';
+import { MovementReport as MovementReportEntity } from 'src/modules/movement-report/entities/movement-report.entity';
 
 @Injectable()
 export class SynergyService {
@@ -20,6 +22,8 @@ export class SynergyService {
     private readonly caseTypeRepository: Repository<CaseTypeEntity>,
     @InjectRepository(CaseReportValidateEntity)
     private readonly caseReportValidateRepository: Repository<CaseReportValidateEntity>,
+    @InjectRepository(MovementReportEntity)
+    private readonly movementReportRepository: Repository<MovementReportEntity>,
 
     private readonly logService: LogService,
   ) {}
@@ -72,6 +76,20 @@ export class SynergyService {
       );
     }
 
+    const movementReportFound = await this.movementReportRepository.findOne({
+      where: {
+        mov_r_name: movementReport.CASE_RAISED_SYNERGY_COMMITTEE,
+        mov_r_status: true,
+      },
+    });
+
+    if (!movementReportFound) {
+      throw new HttpException(
+        `El movimiento ${movementReport.CASE_RAISED_SYNERGY_COMMITTEE} no existe.`,
+        HttpStatus.NO_CONTENT,
+      );
+    }
+
     const invalidSynergyIds = existingCaseValidate
       .filter(
         (caseType) => caseType.val_cr_casetype_id_fk !== adverseEventType.id,
@@ -102,6 +120,19 @@ export class SynergyService {
         clientIp,
         logReports.LOG_CASE_RAISED_SYNERGY_COMMITTEE,
       );
+    }
+
+    for (const synergy of savedSynergies) {
+      const updateStatusMovement = await this.caseReportValidateRepository.update(synergy.syn_validatedcase_id_fk, {
+        val_cr_statusmovement_id_fk: movementReportFound.id,
+      });
+  
+      if (updateStatusMovement.affected === 0) {
+        throw new HttpException(
+          `No se pudo actualizar el moviemiento del reporte.`,
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
     }
 
     return savedSynergies;
