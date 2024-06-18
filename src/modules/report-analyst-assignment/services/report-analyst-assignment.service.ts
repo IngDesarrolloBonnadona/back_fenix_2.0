@@ -15,12 +15,19 @@ import { logReports } from 'src/enums/logs.enum';
 import { CaseReportValidateService } from 'src/modules/case-report-validate/services/case-report-validate.service';
 import { PositionService } from 'src/modules/position/services/position.service';
 import { HttpPositionService } from 'src/modules/position/http/http-position.service';
+import { MovementReport as MovementReportEntity } from 'src/modules/movement-report/entities/movement-report.entity';
+import { movementReport } from 'src/enums/movement-report.enum';
+import { CaseReportValidate as CaseReportValidateEntity } from 'src/modules/case-report-validate/entities/case-report-validate.entity';
 
 @Injectable()
 export class ReportAnalystAssignmentService {
   constructor(
     @InjectRepository(ReportAnalystAssignmentEntity)
     private readonly reportAnalystAssignmentRepository: Repository<ReportAnalystAssignmentEntity>,
+    @InjectRepository(MovementReportEntity)
+    private readonly movementReportRepository: Repository<MovementReportEntity>,
+    @InjectRepository (CaseReportValidateEntity)
+    private readonly caseReportValidateRepository: Repository<CaseReportValidateEntity>,
 
     private readonly logService: LogService,
     private readonly positionService: PositionService,
@@ -85,6 +92,35 @@ export class ReportAnalystAssignmentService {
       clientIp,
       logReports.LOG_ASSIGNMENT_ANALYST,
     );
+
+    const movementReportFound = await this.movementReportRepository.findOne({
+      where: {
+        mov_r_name: movementReport.ASSIGNMENT_ANALYST,
+        mov_r_status: true,
+      },
+    });
+
+    if (!movementReportFound) {
+      throw new HttpException(
+        `El movimiento ${movementReport.ASSIGNMENT_ANALYST} no existe.`,
+        HttpStatus.NO_CONTENT,
+      );
+    }
+
+    const updateStatusMovement = await this.caseReportValidateRepository.update(
+      createReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
+      {
+        val_cr_statusmovement_id_fk: movementReportFound.id,
+        val_cr_status: false,
+      },
+    );
+
+    if (updateStatusMovement.affected === 0) {
+      throw new HttpException(
+        `No se pudo actualizar el moviemiento del reporte.`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
 
     const analyst = this.reportAnalystAssignmentRepository.create({
       ...createReportAnalystAssignmentDto,

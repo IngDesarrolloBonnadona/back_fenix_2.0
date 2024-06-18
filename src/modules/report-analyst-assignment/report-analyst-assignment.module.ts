@@ -8,10 +8,16 @@ import { CaseReportValidateModule } from '../case-report-validate/case-report-va
 import { PositionModule } from '../position/position.module';
 import { HttpPositionService } from '../position/http/http-position.service';
 import { HttpModule } from '@nestjs/axios';
+import { MovementReport } from '../movement-report/entities/movement-report.entity';
+import { CaseReportValidate } from '../case-report-validate/entities/case-report-validate.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([ReportAnalystAssignment]),
+    TypeOrmModule.forFeature([
+      ReportAnalystAssignment,
+      MovementReport,
+      CaseReportValidate,
+    ]),
     LogModule,
     PositionModule,
     HttpModule,
@@ -19,6 +25,6 @@ import { HttpModule } from '@nestjs/axios';
   ],
   controllers: [ReportAnalystAssignmentController],
   providers: [ReportAnalystAssignmentService, HttpPositionService],
-  exports: [ReportAnalystAssignmentService]
+  exports: [ReportAnalystAssignmentService],
 })
 export class ReportAnalystAssignmentModule {}
