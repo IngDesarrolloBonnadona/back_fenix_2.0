@@ -26,7 +26,7 @@ export class ReportAnalystAssignmentService {
     private readonly reportAnalystAssignmentRepository: Repository<ReportAnalystAssignmentEntity>,
     @InjectRepository(MovementReportEntity)
     private readonly movementReportRepository: Repository<MovementReportEntity>,
-    @InjectRepository (CaseReportValidateEntity)
+    @InjectRepository(CaseReportValidateEntity)
     private readonly caseReportValidateRepository: Repository<CaseReportValidateEntity>,
 
     private readonly logService: LogService,
@@ -160,6 +160,35 @@ export class ReportAnalystAssignmentService {
     await this.positionService.findOnePosition(
       updateReportAnalystAssignmentDto.ass_ra_position_id_fk,
     );
+
+    const movementReportFound = await this.movementReportRepository.findOne({
+      where: {
+        mov_r_name: movementReport.REASSIGNMENT_ANALYST,
+        mov_r_status: true,
+      },
+    });
+
+    if (!movementReportFound) {
+      throw new HttpException(
+        `El movimiento ${movementReport.REASSIGNMENT_ANALYST} no existe.`,
+        HttpStatus.NO_CONTENT,
+      );
+    }
+
+    const updateStatusMovement = await this.caseReportValidateRepository.update(
+      updateReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
+      {
+        val_cr_statusmovement_id_fk: movementReportFound.id,
+        val_cr_status: false,
+      },
+    );
+
+    if (updateStatusMovement.affected === 0) {
+      throw new HttpException(
+        `No se pudo actualizar el moviemiento del reporte.`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
 
     if (reportAssignmentFind) {
       const result = await this.reportAnalystAssignmentRepository.update(
