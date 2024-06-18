@@ -118,7 +118,7 @@ export class ResearchersService {
 
     const research = this.researcherRepository.create({
       ...createResearcherDto,
-      ass_ra_useranalyst_id: idAnalyst,
+      res_ra_useranalyst_id: idAnalyst,
     });
 
     const assigned = await this.researcherRepository.save(research);

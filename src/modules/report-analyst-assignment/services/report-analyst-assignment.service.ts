@@ -111,7 +111,6 @@ export class ReportAnalystAssignmentService {
       createReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
       {
         val_cr_statusmovement_id_fk: movementReportFound.id,
-        val_cr_status: false,
       },
     );
 
@@ -179,7 +178,6 @@ export class ReportAnalystAssignmentService {
       updateReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
       {
         val_cr_statusmovement_id_fk: movementReportFound.id,
-        val_cr_status: false,
       },
     );
 
@@ -300,16 +298,45 @@ export class ReportAnalystAssignmentService {
     reportAssignmentFind.ass_ra_status = false;
     await this.reportAnalystAssignmentRepository.save(reportAssignmentFind);
 
+    const movementReportFound = await this.movementReportRepository.findOne({
+      where: {
+        mov_r_name: movementReport.RETURN_CASE_ANALYST,
+        mov_r_status: true,
+      },
+    });
+
+    if (!movementReportFound) {
+      throw new HttpException(
+        `El movimiento ${movementReport.RETURN_CASE_ANALYST} no existe.`,
+        HttpStatus.NO_CONTENT,
+      );
+    }
+
+    const updateStatusMovement = await this.caseReportValidateRepository.update(
+      createReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
+      {
+        val_cr_statusmovement_id_fk: movementReportFound.id,
+      },
+    );
+
+    if (updateStatusMovement.affected === 0) {
+      throw new HttpException(
+        `No se pudo actualizar el moviemiento del reporte.`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
     await this.logService.createLog(
       createReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
       idAnalyst,
       clientIp,
-      logReports.LOG_REASSIGNMENT_ANALYST,
+      logReports.LOG_RETURN_CASE_ANALYST,
     );
 
-    const analyst = this.reportAnalystAssignmentRepository.create(
-      createReportAnalystAssignmentDto,
-    );
+    const analyst = this.reportAnalystAssignmentRepository.create({
+      ...createReportAnalystAssignmentDto,
+      ass_ra_uservalidator_id: reportAssignmentFind.ass_ra_uservalidator_id,
+    });
 
     const assigned = await this.reportAnalystAssignmentRepository.save(analyst);
 
