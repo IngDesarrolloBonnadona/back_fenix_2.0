@@ -67,9 +67,6 @@ export class CaseReportOriginal {
   ori_cr_admconsecutivepatient: number;
 
   @Column({ nullable: true })
-  ori_cr_statusmovement_id_fk: number;
-
-  @Column({ nullable: true })
   ori_cr_reporter_id_fk: number;
 
   @Column({ nullable: true })
@@ -101,6 +98,9 @@ export class CaseReportOriginal {
 
   @Column({ nullable: true })
   ori_cr_priority_id_fk: number;
+  
+  @Column({ nullable: true })
+  ori_cr_statusmovement_id_fk: number;
 
   @Column({ type: 'varchar', nullable: true })
   ori_cr_description: string;

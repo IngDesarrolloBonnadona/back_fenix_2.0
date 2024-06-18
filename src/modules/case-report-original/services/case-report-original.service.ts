@@ -108,7 +108,22 @@ export class CaseReportOriginalService {
         this.caseReportOriginalRepository,
       );
 
+      const movementReportFound = await this.movementReportRepository.findOne({
+        where: {
+          mov_r_name: movementReport.REPORT_CREATION,
+          mov_r_status: true,
+        },
+      });
+
+      if (!movementReportFound) {
+        throw new HttpException(
+          `El movimiento ${movementReport.REPORT_CREATION} no existe.`,
+          HttpStatus.NO_CONTENT,
+        );
+      }
+
       caseReportOriginal.ori_cr_filingnumber = filingNumber;
+      caseReportOriginal.ori_cr_statusmovement_id_fk = movementReportFound.id
 
       await queryRunner.manager.save(caseReportOriginal);
 
@@ -141,19 +156,7 @@ export class CaseReportOriginalService {
         );
       }
 
-      const movementReportFound = await this.movementReportRepository.findOne({
-        where: {
-          mov_r_name: movementReport.REPORT_CREATION,
-          mov_r_status: true,
-        },
-      });
-
-      if (!movementReportFound) {
-        throw new HttpException(
-          `El movimiento ${movementReport.REPORT_CREATION} no existe.`,
-          HttpStatus.NO_CONTENT,
-        );
-      }
+      
 
       // const statusReport =
       //   await this.statusReportService.createStatusReportTransaction(
