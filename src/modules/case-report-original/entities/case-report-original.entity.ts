@@ -67,6 +67,9 @@ export class CaseReportOriginal {
   ori_cr_admconsecutivepatient: number;
 
   @Column({ nullable: true })
+  ori_cr_statusmovement_id_fk: number;
+
+  @Column({ nullable: true })
   ori_cr_reporter_id_fk: number;
 
   @Column({ nullable: true })

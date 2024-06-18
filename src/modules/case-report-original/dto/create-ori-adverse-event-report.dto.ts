@@ -97,6 +97,10 @@ export class CreateOriAdverseEventReportDto {
     @IsNotEmpty()
     ori_cr_priority_id_fk: number;
 
+    @IsNumber()
+    @IsNotEmpty()
+    ori_cr_statusmovement_id_fk: number;
+
     @IsOptional()
     @IsArray()
     @ValidateNested({ each: true })
