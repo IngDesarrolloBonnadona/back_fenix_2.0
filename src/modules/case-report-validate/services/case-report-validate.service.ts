@@ -375,12 +375,13 @@ export class CaseReportValidateService {
     }
 
     if (severityClasificationId) {
-      where.val_cr_severityclasif_id_fk = severityClasificationId
+      where.val_cr_severityclasif_id_fk = severityClasificationId;
     }
 
     if (eventTypeId) {
-      where.val_cr_eventtype_id_fk = eventTypeId
+      where.val_cr_eventtype_id_fk = eventTypeId;
     }
+
 
     where.val_cr_validated = false;
 
@@ -388,7 +389,7 @@ export class CaseReportValidateService {
       where,
       relations: {
         caseReportOriginal: true,
-        log: true,
+        // log: true,
         reportAnalystAssignment: true,
         synergy: true,
         caseType: true,
