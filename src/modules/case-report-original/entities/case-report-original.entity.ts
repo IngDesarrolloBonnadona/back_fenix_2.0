@@ -4,6 +4,7 @@ import { Device } from 'src/modules/device/entities/device.entity';
 import { EventType } from 'src/modules/event-type/entities/event-type.entity';
 import { Event } from 'src/modules/event/entities/event.entity';
 import { Medicine } from 'src/modules/medicine/entities/medicine.entity';
+import { MovementReport } from 'src/modules/movement-report/entities/movement-report.entity';
 import { Origin } from 'src/modules/origin/entities/origin.entity';
 import { Priority } from 'src/modules/priority/entities/priority.entity';
 import { RiskLevel } from 'src/modules/risk-level/entities/risk-level.entity';
@@ -143,6 +144,10 @@ export class CaseReportOriginal {
   //   (statusReport) => statusReport.caseReportOriginal,
   // )
   // statusReport: StatusReport[];
+
+  @ManyToOne(() => MovementReport, (movementReport) => movementReport.caseReportOriginal)
+  @JoinColumn({ name: 'ori_cr_statusmovement_id_fk' })
+  movementReport: MovementReport
 
   @ManyToOne(() => CaseType, (caseType) => caseType.caseReportOriginal)
   @JoinColumn({ name: 'ori_cr_casetype_id_fk' })
