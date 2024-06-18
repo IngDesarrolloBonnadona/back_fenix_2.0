@@ -75,9 +75,11 @@ export class CaseReportValidateService {
       where: {
         val_cr_casetype_id_fk: similarCaseReportValidate.val_cr_casetype_id_fk,
         val_cr_unit_id_fk: similarCaseReportValidate.val_cr_unit_id_fk,
-        val_cr_documentpatient: similarCaseReportValidate.val_cr_documentpatient,
+        val_cr_documentpatient:
+          similarCaseReportValidate.val_cr_documentpatient,
         val_cr_event_id_fk: similarCaseReportValidate.val_cr_event_id_fk,
-        val_cr_eventtype_id_fk:  similarCaseReportValidate.val_cr_eventtype_id_fk,
+        val_cr_eventtype_id_fk:
+          similarCaseReportValidate.val_cr_eventtype_id_fk,
         val_cr_validated: false,
       },
       relations: {
@@ -134,7 +136,6 @@ export class CaseReportValidateService {
         );
       }
 
-
       const previousReport = await this.caseReportValidateRepository.findOne({
         where: {
           id: reportId,
@@ -168,7 +169,9 @@ export class CaseReportValidateService {
           caseReportValidate = this.caseReportValidateRepository.create(
             createReportValDto as CreateValAdverseEventReportDto,
           );
-          console.log(`Se creó reporte validado ${caseTypeReport.ADVERSE_EVENT}`);
+          console.log(
+            `Se creó reporte validado ${caseTypeReport.ADVERSE_EVENT}`,
+          );
           break;
         case caseTypeReport.INCIDENT:
           caseReportValidate = this.caseReportValidateRepository.create(
@@ -188,7 +191,9 @@ export class CaseReportValidateService {
           caseReportValidate = this.caseReportValidateRepository.create(
             createReportValDto as CreateValComplicationsReportDto,
           );
-          console.log(`Se creó reporte validado ${caseTypeReport.COMPLICATIONS}`);
+          console.log(
+            `Se creó reporte validado ${caseTypeReport.COMPLICATIONS}`,
+          );
           break;
         // agregar un tipo de caso nuevo
         default:
@@ -201,8 +206,10 @@ export class CaseReportValidateService {
       const consecutiveId = previousReport.val_cr_consecutive_id + 1;
       const previousId = previousReport.val_cr_previous_id + 1;
 
-      caseReportValidate.val_cr_filingnumber = previousReport.val_cr_filingnumber;
-      caseReportValidate.val_cr_originalcase_id_fk = previousReport.val_cr_originalcase_id_fk;
+      caseReportValidate.val_cr_filingnumber =
+        previousReport.val_cr_filingnumber;
+      caseReportValidate.val_cr_originalcase_id_fk =
+        previousReport.val_cr_originalcase_id_fk;
       caseReportValidate.val_cr_consecutive_id = consecutiveId;
       caseReportValidate.val_cr_previous_id = previousId;
 
@@ -335,6 +342,8 @@ export class CaseReportValidateService {
     caseTypeId?: number,
     unitId?: number,
     priorityId?: number,
+    severityClasificationId?: number,
+    eventTypeId?: number,
   ): Promise<CaseReportValidateEntity[]> {
     const where: FindOptionsWhere<CaseReportValidateEntity> = {};
 
@@ -346,7 +355,7 @@ export class CaseReportValidateService {
     }
 
     if (filingNumber) {
-      where.val_cr_filingnumber = Like(`%${filingNumber}%`) ;
+      where.val_cr_filingnumber = Like(`%${filingNumber}%`);
     }
 
     if (patientDoc) {
@@ -363,6 +372,14 @@ export class CaseReportValidateService {
 
     if (priorityId) {
       where.val_cr_priority_id_fk = priorityId;
+    }
+
+    if (severityClasificationId) {
+      where.val_cr_severityclasif_id_fk = severityClasificationId
+    }
+
+    if (eventTypeId) {
+      where.val_cr_eventtype_id_fk = eventTypeId
     }
 
     where.val_cr_validated = false;
@@ -384,7 +401,7 @@ export class CaseReportValidateService {
         event: true,
         service: true,
         unit: true,
-        priority: true
+        priority: true,
       },
     });
 
@@ -474,7 +491,7 @@ export class CaseReportValidateService {
     const caseReportValidate = await this.caseReportValidateRepository.find({
       where: {
         val_cr_filingnumber: Like(`%${consecutive}%`),
-        val_cr_validated: false
+        val_cr_validated: false,
       },
       relations: {
         caseReportOriginal: true,
