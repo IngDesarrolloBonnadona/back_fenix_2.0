@@ -35,11 +35,11 @@ export class PriorityController {
   }
 
   @Patch('/updatePriority/:id')
-  updatePriority(
+  updateStatusPriority(
     @Param('id') id: number,
     @Body() updateStatusPriorityDto: UpdateStatusPriorityDto,
   ) {
-    return this.priorityService.updatePriority(id, updateStatusPriorityDto);
+    return this.priorityService.updateStatusPriority(id, updateStatusPriorityDto);
   }
 
   @Delete('/deletePriority/:id')

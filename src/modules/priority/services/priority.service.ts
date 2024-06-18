@@ -55,7 +55,7 @@ export class PriorityService {
     return priority;
   }
 
-  async updatePriority(
+  async updateStatusPriority(
     id: number,
     updateStatusPriorityDto: UpdateStatusPriorityDto,
   ) {
