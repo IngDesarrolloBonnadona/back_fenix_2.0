@@ -85,6 +85,7 @@ export class CaseReportValidateService {
       relations: {
         caseReportOriginal: true,
         // log: true,
+        movementReport: true,
         reportAnalystAssignment: true,
         synergy: true,
         caseType: true,
@@ -387,6 +388,7 @@ export class CaseReportValidateService {
       relations: {
         caseReportOriginal: true,
         // log: true,
+        movementReport: true,
         reportAnalystAssignment: true,
         synergy: true,
         caseType: true,
@@ -418,7 +420,7 @@ export class CaseReportValidateService {
       where: { val_cr_validated: false },
       relations: {
         caseReportOriginal: true,
-        log: true,
+        movementReport: true,
         reportAnalystAssignment: true,
         synergy: true,
         caseType: true,
@@ -450,7 +452,7 @@ export class CaseReportValidateService {
       where: { id, val_cr_validated: false },
       relations: {
         caseReportOriginal: true,
-        log: true,
+        movementReport: true,
         reportAnalystAssignment: true,
         synergy: true,
         caseType: true,
@@ -493,7 +495,7 @@ export class CaseReportValidateService {
       },
       relations: {
         caseReportOriginal: true,
-        log: true,
+        movementReport: true,
         reportAnalystAssignment: true,
         synergy: true,
         caseType: true,
