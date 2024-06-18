@@ -25,11 +25,11 @@ export class StatusReport {
     @DeleteDateColumn()
     deletedAt: Date
 
-    @ManyToOne(() => MovementReport, (movementReport) => movementReport.statusReport)
-    @JoinColumn({ name: 'sta_r_movement_id_fk'})
-    movementReport: MovementReport
+    // @ManyToOne(() => MovementReport, (movementReport) => movementReport.statusReport)
+    // @JoinColumn({ name: 'sta_r_movement_id_fk'})
+    // movementReport: MovementReport
 
-    @ManyToOne(() => CaseReportOriginal, (caseReportOriginal) => caseReportOriginal.statusReport)
-    @JoinColumn({ name: 'sta_r_originalcase_id_fk'})
-    caseReportOriginal: CaseReportOriginal
+    // @ManyToOne(() => CaseReportOriginal, (caseReportOriginal) => caseReportOriginal.statusReport)
+    // @JoinColumn({ name: 'sta_r_originalcase_id_fk'})
+    // caseReportOriginal: CaseReportOriginal
 }

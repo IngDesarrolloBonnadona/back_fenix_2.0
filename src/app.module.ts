@@ -14,7 +14,7 @@ import { DeviceModule } from './modules/device/device.module';
 import { ServiceModule } from './modules/service/service.module';
 import { UnitModule } from './modules/unit/unit.module';
 import { CaseReportValidateModule } from './modules/case-report-validate/case-report-validate.module';
-import { StatusReportModule } from './modules/status-report/status-report.module';
+// import { StatusReportModule } from './modules/status-report/status-report.module';
 import { MovementReportModule } from './modules/movement-report/movement-report.module';
 // import { IpClientMiddleware } from './middlewares/ip-client.middleware';
 import { LogModule } from './modules/log/log.module';
@@ -54,7 +54,7 @@ require('dotenv').config();
     ServiceModule,
     UnitModule,
     CaseReportValidateModule,
-    StatusReportModule,
+    // StatusReportModule,
     MovementReportModule,
     LogModule,
     PositionModule,

@@ -1,4 +1,4 @@
-import { StatusReport } from "src/modules/status-report/entities/status-report.entity";
+// import { StatusReport } from "src/modules/status-report/entities/status-report.entity";
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
@@ -27,6 +27,6 @@ export class MovementReport {
     @DeleteDateColumn()
     deletedAt: Date;
 
-    @OneToMany(() => StatusReport, (statusReport) => statusReport.movementReport)
-    statusReport: StatusReport[];
+    // @OneToMany(() => StatusReport, (statusReport) => statusReport.movementReport)
+    // statusReport: StatusReport[];
 }

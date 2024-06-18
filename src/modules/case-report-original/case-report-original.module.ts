@@ -5,7 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CaseReportOriginal } from './entities/case-report-original.entity';
 import { CaseReportValidateModule } from '../case-report-validate/case-report-validate.module';
 import { CaseType } from '../case-type/entities/case-type.entity';
-import { StatusReportModule } from '../status-report/status-report.module';
+// import { StatusReportModule } from '../status-report/status-report.module';
 import { LogModule } from '../log/log.module';
 import { MedicineModule } from '../medicine/medicine.module';
 import { DeviceModule } from '../device/device.module';
@@ -19,7 +19,7 @@ import { MovementReport } from '../movement-report/entities/movement-report.enti
       MovementReport,
     ]),
     CaseReportValidateModule,
-    StatusReportModule,
+    // StatusReportModule,
     LogModule,
     MedicineModule,
     DeviceModule

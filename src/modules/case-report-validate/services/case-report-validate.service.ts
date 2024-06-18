@@ -24,7 +24,7 @@ import { MedicineService } from 'src/modules/medicine/services/medicine.service'
 import { DeviceService } from 'src/modules/device/services/device.service';
 import { MovementReport as MovementReportEntity } from 'src/modules/movement-report/entities/movement-report.entity';
 import { movementReport } from 'src/enums/movement-report.enum';
-import { StatusReportService } from 'src/modules/status-report/services/status-report.service';
+// import { StatusReportService } from 'src/modules/status-report/services/status-report.service';
 import { LogService } from 'src/modules/log/services/log.service';
 import { logReports } from 'src/enums/logs.enum';
 import { ReportAnalystAssignment as ReportAnalystAssignmentEntity } from 'src/modules/report-analyst-assignment/entities/report-analyst-assignment.entity';
@@ -59,7 +59,7 @@ export class CaseReportValidateService {
     private dataSource: DataSource,
     private readonly medicineService: MedicineService,
     private readonly deviceService: DeviceService,
-    private readonly statusReportService: StatusReportService,
+    // private readonly statusReportService: StatusReportService,
     private readonly logService: LogService,
     private readonly synergyService: SynergyService,
     @Inject(forwardRef(() => ResearchersService))
@@ -84,7 +84,7 @@ export class CaseReportValidateService {
       },
       relations: {
         caseReportOriginal: true,
-        log: true,
+        // log: true,
         reportAnalystAssignment: true,
         synergy: true,
         caseType: true,
@@ -251,12 +251,12 @@ export class CaseReportValidateService {
         );
       }
 
-      const statusReport =
-        await this.statusReportService.createStatusReportTransaction(
-          queryRunner,
-          caseReportValidate.val_cr_originalcase_id_fk,
-          movementReportFound.id,
-        );
+      // const statusReport =
+      //   await this.statusReportService.createStatusReportTransaction(
+      //     queryRunner,
+      //     caseReportValidate.val_cr_originalcase_id_fk,
+      //     movementReportFound.id,
+      //   );
 
       await this.logService.createLogTransaction(
         queryRunner,
@@ -272,7 +272,7 @@ export class CaseReportValidateService {
         caseReportValidate,
         createdMedicine: createReportValDto.medicines,
         createdDevice: createReportValDto.devices,
-        statusReport,
+        // statusReport,
       };
 
       return {
