@@ -123,10 +123,14 @@ export class SynergyService {
     }
 
     for (const synergy of savedSynergies) {
-      const updateStatusMovement = await this.caseReportValidateRepository.update(synergy.syn_validatedcase_id_fk, {
-        val_cr_statusmovement_id_fk: movementReportFound.id,
-      });
-  
+      const updateStatusMovement =
+        await this.caseReportValidateRepository.update(
+          synergy.syn_validatedcase_id_fk,
+          {
+            val_cr_statusmovement_id_fk: movementReportFound.id,
+          },
+        );
+
       if (updateStatusMovement.affected === 0) {
         throw new HttpException(
           `No se pudo actualizar el moviemiento del reporte.`,
@@ -179,10 +183,31 @@ export class SynergyService {
   async rescheduleSynergy(id: number, clientIp: string, idValidator: number) {
     const synergy = await this.findOneSynergy(id);
 
-    synergy.syn_reschedulingdate = new Date();
-    synergy.syn_programmingcounter += 1;
+    const movementReportFound = await this.movementReportRepository.findOne({
+      where: {
+        mov_r_name: movementReport.CASE_RESCHEDULED_SYNERGY,
+        mov_r_status: true,
+      },
+    });
 
-    await this.synergyRepository.save(synergy);
+    if (!movementReportFound) {
+      throw new HttpException(
+        `El movimiento ${movementReport.CASE_RESCHEDULED_SYNERGY} no existe.`,
+        HttpStatus.NO_CONTENT,
+      );
+    }
+
+    const updateSynergy = await this.synergyRepository.update(synergy.id, {
+      syn_reschedulingdate: new Date(),
+      syn_programmingcounter: (synergy.syn_programmingcounter += 1),
+    });
+
+    if (updateSynergy.affected === 0) {
+      throw new HttpException(
+        `No se pudo reprogramar el caso.`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
 
     await this.logService.createLog(
       synergy.syn_validatedcase_id_fk,
@@ -190,6 +215,20 @@ export class SynergyService {
       clientIp,
       logReports.LOG_CASE_RESCHEDULED_SYNERGY,
     );
+
+    const updateStatusMovement = await this.caseReportValidateRepository.update(
+      synergy.syn_validatedcase_id_fk,
+      {
+        val_cr_statusmovement_id_fk: movementReportFound.id,
+      },
+    );
+
+    if (updateStatusMovement.affected === 0) {
+      throw new HttpException(
+        `No se pudo actualizar el moviemiento del reporte.`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
 
     return new HttpException(
       `¡Caso reprogramado correctamente!`,
