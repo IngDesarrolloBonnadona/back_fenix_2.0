@@ -10,10 +10,10 @@ export class Priority {
   @Column()
   prior_name: string;
 
-  @Column()
+  @Column({ nullable: true })
   prior_description: string;
 
-  @Column()
+  @Column({ default: true })
   prior_status: boolean;
 
   @CreateDateColumn()
