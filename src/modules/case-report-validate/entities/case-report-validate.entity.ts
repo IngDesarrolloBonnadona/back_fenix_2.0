@@ -110,6 +110,9 @@ export class CaseReportValidate {
   @Column({ nullable: true })
   val_cr_priority_id_fk: number;
 
+  @Column({ nullable: true })
+  val_cr_statusmovement_id_fk: number;
+
   @Column({ type: 'varchar', nullable: true }) //
   val_cr_description: string;
 
