@@ -287,6 +287,25 @@ export class ReportAnalystAssignmentService {
       );
     }
 
+    const analystAssignedFind =
+      await this.reportAnalystAssignmentRepository.findOne({
+        where: {
+          ass_ra_useranalyst_id:
+            createReportAnalystAssignmentDto.ass_ra_useranalyst_id,
+          ass_ra_validatedcase_id_fk:
+            createReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
+          ass_ra_position_id_fk:
+            createReportAnalystAssignmentDto.ass_ra_position_id_fk,
+        },
+      });
+
+    if (analystAssignedFind) {
+      throw new HttpException(
+        'El analista ya se encuentra asignado con ese reporte.',
+        HttpStatus.NO_CONTENT,
+      );
+    }
+
     await this.caseReportValidateService.findOneReportValidate(
       createReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
     );
