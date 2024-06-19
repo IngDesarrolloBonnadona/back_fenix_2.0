@@ -109,19 +109,19 @@ export class ResearchersService {
       );
     }
 
-    await this.logService.createLog(
-      createResearcherDto.res_validatedcase_id_fk,
-      idAnalyst,
-      clientIp,
-      logReports.LOG_ASSIGNMENT_INVESTIGATOR,
-    );
-
     const research = this.researcherRepository.create({
       ...createResearcherDto,
       res_ra_useranalyst_id: idAnalyst,
     });
 
     const assigned = await this.researcherRepository.save(research);
+
+    await this.logService.createLog(
+      assigned.res_validatedcase_id_fk,
+      idAnalyst,
+      clientIp,
+      logReports.LOG_ASSIGNMENT_INVESTIGATOR,
+    );
 
     return assigned;
   }

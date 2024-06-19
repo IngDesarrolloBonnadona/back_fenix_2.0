@@ -112,4 +112,26 @@ export class MedicineService {
       HttpStatus.ACCEPTED,
     );
   }
+
+  async deleteMedicinesByCaseId(caseId: string) {
+    const findListMedicines = await this.medicineRepository.find({
+      where: {
+        med_case_id_fk: caseId,
+      },
+    });
+
+    if (findListMedicines.length > 0) {
+      for (const medicine of findListMedicines) {
+        const result = await this.medicineRepository.softDelete(medicine.id);
+
+        if (result.affected === 0) {
+          return new HttpException(
+            `No se pudo eliminar el medicamento.`,
+            HttpStatus.INTERNAL_SERVER_ERROR,
+          );
+        }
+      }
+      return 
+    }
+  }
 }

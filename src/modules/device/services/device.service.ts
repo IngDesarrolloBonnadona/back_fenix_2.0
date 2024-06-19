@@ -113,4 +113,26 @@ export class DeviceService {
       HttpStatus.ACCEPTED,
     );
   }
+
+  async deleteDevicesByCaseId(caseId: string) {
+    const findListDevices = await this.deviceRepository.find({
+      where: {
+        dev_case_id_fk: caseId,
+      },
+    });
+
+    if (findListDevices.length > 0) {
+      for (const device of findListDevices) {
+        const result = await this.deviceRepository.softDelete(device.id);
+
+        if (result.affected === 0) {
+          return new HttpException(
+            `No se pudo eliminar el dispositivo.`,
+            HttpStatus.INTERNAL_SERVER_ERROR,
+          );
+        }
+      }
+      return 
+    }
+  }
 }

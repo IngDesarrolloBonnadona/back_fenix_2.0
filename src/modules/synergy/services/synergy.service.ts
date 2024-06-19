@@ -264,6 +264,20 @@ export class SynergyService {
       );
     }
 
+    const updateStatusMovement = await this.caseReportValidateRepository.update(
+      synergy.syn_validatedcase_id_fk,
+      {
+        val_cr_statusmovement_id_fk: movementReportFound.id,
+      },
+    );
+
+    if (updateStatusMovement.affected === 0) {
+      throw new HttpException(
+        `No se pudo actualizar el moviemiento del reporte.`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
     const newSynergy = this.synergyRepository.create({
       syn_validatedcase_id_fk: synergy.syn_validatedcase_id_fk,
       syn_programmingcounter: synergy.syn_programmingcounter,
@@ -281,20 +295,6 @@ export class SynergyService {
       clientIp,
       logReports.LOG_SOLUTION_CASE_SYNERGY,
     );
-
-    const updateStatusMovement = await this.caseReportValidateRepository.update(
-      synergy.syn_validatedcase_id_fk,
-      {
-        val_cr_statusmovement_id_fk: movementReportFound.id,
-      },
-    );
-
-    if (updateStatusMovement.affected === 0) {
-      throw new HttpException(
-        `No se pudo actualizar el moviemiento del reporte.`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
 
     return new HttpException(
       `¡Caso resuelto y registrado correctamente!`,
