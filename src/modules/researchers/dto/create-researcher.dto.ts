@@ -7,11 +7,11 @@ export class CreateResearcherDto {
  
     @IsNotEmpty()
     @IsNumber()
-    ass_ra_userresearch_id: number;
+    res_ra_userresearch_id: number;
     
     @IsNotEmpty()
     @IsNumber()
-    ass_ra_days: number
+    res_ra_days: number
 
     // @IsNotEmpty()
     // @IsNumber()

@@ -6,7 +6,6 @@ import { DataSource, Repository } from 'typeorm';
 import { CaseReportValidateService } from 'src/modules/case-report-validate/services/case-report-validate.service';
 import { OriDtoValidator } from '../utils/helpers/ori-dto-validator.helper';
 import { CaseType as CaseTypeEntity } from 'src/modules/case-type/entities/case-type.entity';
-import { StatusReportService } from 'src/modules/status-report/services/status-report.service';
 import { LogService } from 'src/modules/log/services/log.service';
 import { MedicineService } from 'src/modules/medicine/services/medicine.service';
 import { DeviceService } from 'src/modules/device/services/device.service';
@@ -32,7 +31,6 @@ export class CaseReportOriginalService {
     private readonly movementReportRepository: Repository<MovementReportEntity>,
 
     private readonly caseReportValidateService: CaseReportValidateService,
-    private readonly statusReportService: StatusReportService,
     private readonly logService: LogService,
     private readonly medicineService: MedicineService,
     private readonly deviceService: DeviceService,
@@ -108,7 +106,22 @@ export class CaseReportOriginalService {
         this.caseReportOriginalRepository,
       );
 
+      const movementReportFound = await this.movementReportRepository.findOne({
+        where: {
+          mov_r_name: movementReport.REPORT_CREATION,
+          mov_r_status: true,
+        },
+      });
+
+      if (!movementReportFound) {
+        throw new HttpException(
+          `El movimiento ${movementReport.REPORT_CREATION} no existe.`,
+          HttpStatus.NO_CONTENT,
+        );
+      }
+
       caseReportOriginal.ori_cr_filingnumber = filingNumber;
+      caseReportOriginal.ori_cr_statusmovement_id_fk = movementReportFound.id
 
       await queryRunner.manager.save(caseReportOriginal);
 
@@ -141,27 +154,6 @@ export class CaseReportOriginalService {
         );
       }
 
-      const movementReportFound = await this.movementReportRepository.findOne({
-        where: {
-          mov_r_name: movementReport.REPORT_CREATION,
-          mov_r_status: true,
-        },
-      });
-
-      if (!movementReportFound) {
-        throw new HttpException(
-          `El movimiento ${movementReport.REPORT_CREATION} no existe.`,
-          HttpStatus.NO_CONTENT,
-        );
-      }
-
-      const statusReport =
-        await this.statusReportService.createStatusReportTransaction(
-          queryRunner,
-          caseReportOriginal.id,
-          movementReportFound.id,
-        );
-
       const log = await this.logService.createLogTransaction(
         queryRunner,
         caseReportValidate.id,
@@ -177,7 +169,6 @@ export class CaseReportOriginalService {
         caseReportValidate,
         createdMedicine: createReportOriDto.medicines,
         createdDevice: createReportOriDto.devices,
-        statusReport,
         log,
       };
 
@@ -203,7 +194,7 @@ export class CaseReportOriginalService {
         caseReportValidate: true,
         medicine: true,
         device: true,
-        statusReport: true,
+        movementReport: true,
         caseType: true,
         riskType: true,
         severityClasification: true,
@@ -235,7 +226,7 @@ export class CaseReportOriginalService {
           caseReportValidate: true,
           medicine: true,
           device: true,
-          statusReport: true,
+          movementReport: true,
           caseType: true,
           riskType: true,
           severityClasification: true,

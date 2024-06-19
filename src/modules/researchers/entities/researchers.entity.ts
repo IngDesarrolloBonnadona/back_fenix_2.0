@@ -21,13 +21,13 @@ export class Researcher {
   res_validatedcase_id_fk: string;
 
   @Column()
-  ass_ra_useranalyst_id: number;
+  res_ra_useranalyst_id: number;
 
   @Column()
-  ass_ra_userresearch_id: number;
+  res_ra_userresearch_id: number;
 
   @Column()
-  ass_ra_days: number
+  res_ra_days: number
 
   @Column({ default: true })
   res_status: boolean;

@@ -15,12 +15,19 @@ import { logReports } from 'src/enums/logs.enum';
 import { CaseReportValidateService } from 'src/modules/case-report-validate/services/case-report-validate.service';
 import { PositionService } from 'src/modules/position/services/position.service';
 import { HttpPositionService } from 'src/modules/position/http/http-position.service';
+import { MovementReport as MovementReportEntity } from 'src/modules/movement-report/entities/movement-report.entity';
+import { movementReport } from 'src/enums/movement-report.enum';
+import { CaseReportValidate as CaseReportValidateEntity } from 'src/modules/case-report-validate/entities/case-report-validate.entity';
 
 @Injectable()
 export class ReportAnalystAssignmentService {
   constructor(
     @InjectRepository(ReportAnalystAssignmentEntity)
     private readonly reportAnalystAssignmentRepository: Repository<ReportAnalystAssignmentEntity>,
+    @InjectRepository(MovementReportEntity)
+    private readonly movementReportRepository: Repository<MovementReportEntity>,
+    @InjectRepository(CaseReportValidateEntity)
+    private readonly caseReportValidateRepository: Repository<CaseReportValidateEntity>,
 
     private readonly logService: LogService,
     private readonly positionService: PositionService,
@@ -79,12 +86,19 @@ export class ReportAnalystAssignmentService {
       createReportAnalystAssignmentDto.ass_ra_position_id_fk,
     );
 
-    await this.logService.createLog(
-      createReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
-      idValidator,
-      clientIp,
-      logReports.LOG_ASSIGNMENT_ANALYST,
-    );
+    const movementReportFound = await this.movementReportRepository.findOne({
+      where: {
+        mov_r_name: movementReport.ASSIGNMENT_ANALYST,
+        mov_r_status: true,
+      },
+    });
+
+    if (!movementReportFound) {
+      throw new HttpException(
+        `El movimiento ${movementReport.ASSIGNMENT_ANALYST} no existe.`,
+        HttpStatus.NO_CONTENT,
+      );
+    }
 
     const analyst = this.reportAnalystAssignmentRepository.create({
       ...createReportAnalystAssignmentDto,
@@ -92,6 +106,27 @@ export class ReportAnalystAssignmentService {
     });
 
     const assigned = await this.reportAnalystAssignmentRepository.save(analyst);
+
+    await this.logService.createLog(
+      assigned.ass_ra_validatedcase_id_fk,
+      idValidator,
+      clientIp,
+      logReports.LOG_ASSIGNMENT_ANALYST,
+    );
+
+    const updateStatusMovement = await this.caseReportValidateRepository.update(
+      assigned.ass_ra_validatedcase_id_fk,
+      {
+        val_cr_statusmovement_id_fk: movementReportFound.id,
+      },
+    );
+
+    if (updateStatusMovement.affected === 0) {
+      throw new HttpException(
+        `No se pudo actualizar el moviemiento del reporte.`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
 
     return assigned;
   }
@@ -124,6 +159,34 @@ export class ReportAnalystAssignmentService {
     await this.positionService.findOnePosition(
       updateReportAnalystAssignmentDto.ass_ra_position_id_fk,
     );
+
+    const movementReportFound = await this.movementReportRepository.findOne({
+      where: {
+        mov_r_name: movementReport.REASSIGNMENT_ANALYST,
+        mov_r_status: true,
+      },
+    });
+
+    if (!movementReportFound) {
+      throw new HttpException(
+        `El movimiento ${movementReport.REASSIGNMENT_ANALYST} no existe.`,
+        HttpStatus.NO_CONTENT,
+      );
+    }
+
+    const updateStatusMovement = await this.caseReportValidateRepository.update(
+      updateReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
+      {
+        val_cr_statusmovement_id_fk: movementReportFound.id,
+      },
+    );
+
+    if (updateStatusMovement.affected === 0) {
+      throw new HttpException(
+        `No se pudo actualizar el moviemiento del reporte.`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
 
     if (reportAssignmentFind) {
       const result = await this.reportAnalystAssignmentRepository.update(
@@ -235,18 +298,47 @@ export class ReportAnalystAssignmentService {
     reportAssignmentFind.ass_ra_status = false;
     await this.reportAnalystAssignmentRepository.save(reportAssignmentFind);
 
-    await this.logService.createLog(
-      createReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
-      idAnalyst,
-      clientIp,
-      logReports.LOG_REASSIGNMENT_ANALYST,
-    );
+    const movementReportFound = await this.movementReportRepository.findOne({
+      where: {
+        mov_r_name: movementReport.RETURN_CASE_ANALYST,
+        mov_r_status: true,
+      },
+    });
 
-    const analyst = this.reportAnalystAssignmentRepository.create(
-      createReportAnalystAssignmentDto,
-    );
+    if (!movementReportFound) {
+      throw new HttpException(
+        `El movimiento ${movementReport.RETURN_CASE_ANALYST} no existe.`,
+        HttpStatus.NO_CONTENT,
+      );
+    }
+
+    const analyst = this.reportAnalystAssignmentRepository.create({
+      ...createReportAnalystAssignmentDto,
+      ass_ra_uservalidator_id: reportAssignmentFind.ass_ra_uservalidator_id,
+    });
 
     const assigned = await this.reportAnalystAssignmentRepository.save(analyst);
+
+    await this.logService.createLog(
+      assigned.ass_ra_validatedcase_id_fk,
+      idAnalyst,
+      clientIp,
+      logReports.LOG_RETURN_CASE_ANALYST,
+    );
+
+    const updateStatusMovement = await this.caseReportValidateRepository.update(
+      assigned.ass_ra_validatedcase_id_fk,
+      {
+        val_cr_statusmovement_id_fk: movementReportFound.id,
+      },
+    );
+
+    if (updateStatusMovement.affected === 0) {
+      throw new HttpException(
+        `No se pudo actualizar el moviemiento del reporte.`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
 
     return assigned;
   }

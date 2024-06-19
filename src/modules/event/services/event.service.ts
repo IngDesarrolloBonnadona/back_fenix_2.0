@@ -82,7 +82,7 @@ export class EventService {
 
     if (result.affected === 0) {
       return new HttpException(
-        `No se pudo eliminar el el evento`,
+        `No se pudo eliminar el evento`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }

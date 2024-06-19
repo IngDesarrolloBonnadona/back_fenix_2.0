@@ -7,16 +7,18 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Researcher } from './entities/researchers.entity';
 import { CaseReportValidateModule } from '../case-report-validate/case-report-validate.module';
 import { LogModule } from '../log/log.module';
+import { MovementReport } from '../movement-report/entities/movement-report.entity';
+import { CaseReportValidate } from '../case-report-validate/entities/case-report-validate.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Researcher]),
+    TypeOrmModule.forFeature([Researcher, MovementReport, CaseReportValidate]),
     HttpModule,
     LogModule,
     forwardRef(() => CaseReportValidateModule),
   ],
   controllers: [ResearchersController],
   providers: [ResearchersService, HttpResearchersService],
-  exports: [ResearchersService]
+  exports: [ResearchersService],
 })
 export class ResearchersModule {}

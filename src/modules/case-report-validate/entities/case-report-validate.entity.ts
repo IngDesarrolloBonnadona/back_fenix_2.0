@@ -26,6 +26,7 @@ import { Service } from 'src/modules/service/entities/service.entity';
 import { Unit } from 'src/modules/unit/entities/unit.entity';
 import { Researcher } from 'src/modules/researchers/entities/researchers.entity';
 import { Priority } from 'src/modules/priority/entities/priority.entity';
+import { MovementReport } from 'src/modules/movement-report/entities/movement-report.entity';
 
 @Entity()
 export class CaseReportValidate {
@@ -110,6 +111,9 @@ export class CaseReportValidate {
   @Column({ nullable: true })
   val_cr_priority_id_fk: number;
 
+  @Column({ nullable: true })
+  val_cr_statusmovement_id_fk: number;
+
   @Column({ type: 'varchar', nullable: true }) //
   val_cr_description: string;
 
@@ -190,6 +194,10 @@ export class CaseReportValidate {
   @ManyToOne(() => Priority, (priority) => priority.caseReportValidate)
   @JoinColumn({ name: 'val_cr_priority_id_fk' })
   priority: Priority;
+
+  @ManyToOne(() => MovementReport, (movementReport) => movementReport.caseReportValidate)
+  @JoinColumn({ name: 'val_cr_statusmovement_id_fk' })
+  movementReport: MovementReport
 
   @OneToMany(() => Log, (log) => log.caseReportValidate)
   log: Log[];

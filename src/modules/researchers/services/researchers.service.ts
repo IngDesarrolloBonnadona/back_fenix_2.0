@@ -1,4 +1,10 @@
-import { HttpException, HttpStatus, Inject, Injectable, forwardRef } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  forwardRef,
+} from '@nestjs/common';
 import { FilterResearcherDto } from '../dto/filter-researcher.dto';
 import { HttpResearchersService } from '../http/http-researchers.service';
 import { CreateResearcherDto } from '../dto/create-researcher.dto';
@@ -8,12 +14,19 @@ import { Repository } from 'typeorm';
 import { CaseReportValidateService } from 'src/modules/case-report-validate/services/case-report-validate.service';
 import { LogService } from 'src/modules/log/services/log.service';
 import { logReports } from 'src/enums/logs.enum';
+import { MovementReport as MovementReportEntity } from 'src/modules/movement-report/entities/movement-report.entity';
+import { movementReport } from 'src/enums/movement-report.enum';
+import { CaseReportValidate as CaseReportValidateEntity } from 'src/modules/case-report-validate/entities/case-report-validate.entity';
 
 @Injectable()
 export class ResearchersService {
   constructor(
     @InjectRepository(ResearcherEntity)
     private readonly researcherRepository: Repository<ResearcherEntity>,
+    @InjectRepository(MovementReportEntity)
+    private readonly movementReportRepository: Repository<MovementReportEntity>,
+    @InjectRepository(CaseReportValidateEntity)
+    private readonly caseReportValidateRepository: Repository<CaseReportValidateEntity>,
 
     private readonly httpResearchersService: HttpResearchersService,
     private readonly logService: LogService,
@@ -67,6 +80,35 @@ export class ResearchersService {
       createResearcherDto.res_validatedcase_id_fk,
     );
 
+    const movementReportFound = await this.movementReportRepository.findOne({
+      where: {
+        mov_r_name: movementReport.ASSIGNMENT_INVESTIGATOR,
+        mov_r_status: true,
+      },
+    });
+
+    if (!movementReportFound) {
+      throw new HttpException(
+        `El movimiento ${movementReport.ASSIGNMENT_INVESTIGATOR} no existe.`,
+        HttpStatus.NO_CONTENT,
+      );
+    }
+
+    const updateStatusMovement = await this.caseReportValidateRepository.update(
+      createResearcherDto.res_validatedcase_id_fk,
+      {
+        val_cr_statusmovement_id_fk: movementReportFound.id,
+        val_cr_status: false,
+      },
+    );
+
+    if (updateStatusMovement.affected === 0) {
+      throw new HttpException(
+        `No se pudo actualizar el moviemiento del reporte.`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
     await this.logService.createLog(
       createResearcherDto.res_validatedcase_id_fk,
       idAnalyst,
@@ -76,7 +118,7 @@ export class ResearchersService {
 
     const research = this.researcherRepository.create({
       ...createResearcherDto,
-      ass_ra_useranalyst_id: idAnalyst
+      res_ra_useranalyst_id: idAnalyst,
     });
 
     const assigned = await this.researcherRepository.save(research);
@@ -85,10 +127,9 @@ export class ResearchersService {
   }
 
   async findOneAssignedResearch(id: number) {
-    const research =
-      await this.researcherRepository.findOne({
-        where: { id, res_status: true },
-      });
+    const research = await this.researcherRepository.findOne({
+      where: { id, res_status: true },
+    });
 
     if (!research) {
       throw new HttpException(
@@ -101,9 +142,7 @@ export class ResearchersService {
 
   async deleteAssignedResearcher(id: number) {
     const Researcher = await this.findOneAssignedResearch(id);
-    const result = await this.researcherRepository.softDelete(
-      Researcher.id,
-    );
+    const result = await this.researcherRepository.softDelete(Researcher.id);
 
     if (result.affected === 0) {
       return new HttpException(

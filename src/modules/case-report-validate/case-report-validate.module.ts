@@ -7,7 +7,6 @@ import { CaseType } from '../case-type/entities/case-type.entity';
 import { MedicineModule } from '../medicine/medicine.module';
 import { DeviceModule } from '../device/device.module';
 import { MovementReport } from '../movement-report/entities/movement-report.entity';
-import { StatusReportModule } from '../status-report/status-report.module';
 import { LogModule } from '../log/log.module';
 import { ReportAnalystAssignment } from '../report-analyst-assignment/entities/report-analyst-assignment.entity';
 import { ReportAnalystAssignmentModule } from '../report-analyst-assignment/report-analyst-assignment.module';
@@ -28,7 +27,6 @@ import { ResearchersModule } from '../researchers/researchers.module';
     ]),
     MedicineModule,
     DeviceModule,
-    StatusReportModule,
     LogModule,
     SynergyModule,
     forwardRef(() => ResearchersModule),

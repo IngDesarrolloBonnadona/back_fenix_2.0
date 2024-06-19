@@ -4,12 +4,13 @@ import { UpdatePriorityDto } from '../dto/update-priority.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Priority as PriorityEntity } from '../entities/priority.entity';
 import { Repository } from 'typeorm';
+import { UpdateStatusPriorityDto } from '../dto/update-status-priority.dto';
 
 @Injectable()
 export class PriorityService {
   constructor(
     @InjectRepository(PriorityEntity)
-    private readonly priorityRepository: Repository<PriorityEntity>
+    private readonly priorityRepository: Repository<PriorityEntity>,
   ) {}
 
   async createPriority(createPriorityDto: CreatePriorityDto) {
@@ -21,6 +22,9 @@ export class PriorityService {
     const priorities = await this.priorityRepository.find({
       relations: {
         caseReportOriginal: true,
+      },
+      where: {
+        prior_status: true,
       },
     });
 
@@ -35,7 +39,7 @@ export class PriorityService {
 
   async findOnePriority(id: number) {
     const priority = await this.priorityRepository.findOne({
-      where: { id },
+      where: { id, prior_status: true },
       relations: {
         caseReportOriginal: true,
       },
@@ -51,11 +55,42 @@ export class PriorityService {
     return priority;
   }
 
-  updatePriority(id: number, updatePriorityDto: UpdatePriorityDto) {
-    return `This action updates a #${id} priority`;
+  async updateStatusPriority(
+    id: number,
+    updateStatusPriorityDto: UpdateStatusPriorityDto,
+  ) {
+    const priority = await this.findOnePriority(id);
+    const result = await this.priorityRepository.update(
+      priority.id,
+      updateStatusPriorityDto,
+    );
+
+    if (result.affected === 0) {
+      return new HttpException(
+        `No se pudo actualizar el estado de la prioridad`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+    return new HttpException(
+      `¡Datos actualizados correctamente!`,
+      HttpStatus.ACCEPTED,
+    );
   }
 
-  deletePriority(id: number) {
-    return `This action removes a #${id} priority`;
+  async deletePriority(id: number) {
+    const priority = await this.findOnePriority(id);
+    const result = await this.priorityRepository.softDelete(priority.id);
+
+    if (result.affected === 0) {
+      return new HttpException(
+        `No se pudo eliminar la prioridad`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    return new HttpException(
+      `¡Datos eliminados correctamente!`,
+      HttpStatus.ACCEPTED,
+    );
   }
 }

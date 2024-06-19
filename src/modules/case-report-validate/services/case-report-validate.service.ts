@@ -24,7 +24,6 @@ import { MedicineService } from 'src/modules/medicine/services/medicine.service'
 import { DeviceService } from 'src/modules/device/services/device.service';
 import { MovementReport as MovementReportEntity } from 'src/modules/movement-report/entities/movement-report.entity';
 import { movementReport } from 'src/enums/movement-report.enum';
-import { StatusReportService } from 'src/modules/status-report/services/status-report.service';
 import { LogService } from 'src/modules/log/services/log.service';
 import { logReports } from 'src/enums/logs.enum';
 import { ReportAnalystAssignment as ReportAnalystAssignmentEntity } from 'src/modules/report-analyst-assignment/entities/report-analyst-assignment.entity';
@@ -59,7 +58,6 @@ export class CaseReportValidateService {
     private dataSource: DataSource,
     private readonly medicineService: MedicineService,
     private readonly deviceService: DeviceService,
-    private readonly statusReportService: StatusReportService,
     private readonly logService: LogService,
     private readonly synergyService: SynergyService,
     @Inject(forwardRef(() => ResearchersService))
@@ -75,14 +73,17 @@ export class CaseReportValidateService {
       where: {
         val_cr_casetype_id_fk: similarCaseReportValidate.val_cr_casetype_id_fk,
         val_cr_unit_id_fk: similarCaseReportValidate.val_cr_unit_id_fk,
-        val_cr_documentpatient: similarCaseReportValidate.val_cr_documentpatient,
+        val_cr_documentpatient:
+          similarCaseReportValidate.val_cr_documentpatient,
         val_cr_event_id_fk: similarCaseReportValidate.val_cr_event_id_fk,
-        val_cr_eventtype_id_fk:  similarCaseReportValidate.val_cr_eventtype_id_fk,
+        val_cr_eventtype_id_fk:
+          similarCaseReportValidate.val_cr_eventtype_id_fk,
         val_cr_validated: false,
       },
       relations: {
         caseReportOriginal: true,
-        log: true,
+        // log: true,
+        movementReport: true,
         reportAnalystAssignment: true,
         synergy: true,
         caseType: true,
@@ -134,7 +135,6 @@ export class CaseReportValidateService {
         );
       }
 
-
       const previousReport = await this.caseReportValidateRepository.findOne({
         where: {
           id: reportId,
@@ -168,7 +168,9 @@ export class CaseReportValidateService {
           caseReportValidate = this.caseReportValidateRepository.create(
             createReportValDto as CreateValAdverseEventReportDto,
           );
-          console.log(`Se creó reporte validado ${caseTypeReport.ADVERSE_EVENT}`);
+          console.log(
+            `Se creó reporte validado ${caseTypeReport.ADVERSE_EVENT}`,
+          );
           break;
         case caseTypeReport.INCIDENT:
           caseReportValidate = this.caseReportValidateRepository.create(
@@ -188,7 +190,9 @@ export class CaseReportValidateService {
           caseReportValidate = this.caseReportValidateRepository.create(
             createReportValDto as CreateValComplicationsReportDto,
           );
-          console.log(`Se creó reporte validado ${caseTypeReport.COMPLICATIONS}`);
+          console.log(
+            `Se creó reporte validado ${caseTypeReport.COMPLICATIONS}`,
+          );
           break;
         // agregar un tipo de caso nuevo
         default:
@@ -201,10 +205,25 @@ export class CaseReportValidateService {
       const consecutiveId = previousReport.val_cr_consecutive_id + 1;
       const previousId = previousReport.val_cr_previous_id + 1;
 
+      const movementReportFound = await this.movementReportRepository.findOne({
+        where: {
+          mov_r_name: movementReport.VALIDATION,
+          mov_r_status: true,
+        },
+      });
+
+      if (!movementReportFound) {
+        throw new HttpException(
+          `El movimiento ${movementReport.VALIDATION} no existe.`,
+          HttpStatus.NO_CONTENT,
+        );
+      }
+
       caseReportValidate.val_cr_filingnumber = previousReport.val_cr_filingnumber;
       caseReportValidate.val_cr_originalcase_id_fk = previousReport.val_cr_originalcase_id_fk;
       caseReportValidate.val_cr_consecutive_id = consecutiveId;
       caseReportValidate.val_cr_previous_id = previousId;
+      caseReportValidate.val_cr_statusmovement_id_fk = movementReportFound.id
 
       await queryRunner.manager.save(caseReportValidate);
 
@@ -230,27 +249,6 @@ export class CaseReportValidateService {
         );
       }
 
-      const movementReportFound = await this.movementReportRepository.findOne({
-        where: {
-          mov_r_name: movementReport.VALIDATION,
-          mov_r_status: true,
-        },
-      });
-
-      if (!movementReportFound) {
-        throw new HttpException(
-          `El movimiento ${movementReport.VALIDATION} no existe.`,
-          HttpStatus.NO_CONTENT,
-        );
-      }
-
-      const statusReport =
-        await this.statusReportService.createStatusReportTransaction(
-          queryRunner,
-          caseReportValidate.val_cr_originalcase_id_fk,
-          movementReportFound.id,
-        );
-
       await this.logService.createLogTransaction(
         queryRunner,
         caseReportValidate.id,
@@ -265,7 +263,6 @@ export class CaseReportValidateService {
         caseReportValidate,
         createdMedicine: createReportValDto.medicines,
         createdDevice: createReportValDto.devices,
-        statusReport,
       };
 
       return {
@@ -299,27 +296,24 @@ export class CaseReportValidateService {
       val_cr_doctypepatient: caseReportOriginal.ori_cr_doctypepatient,
       val_cr_firstnamepatient: caseReportOriginal.ori_cr_firstnamepatient,
       val_cr_secondnamepatient: caseReportOriginal.ori_cr_secondnamepatient,
-      val_cr_firstlastnamepatient:
-        caseReportOriginal.ori_cr_firstlastnamepatient,
-      val_cr_secondlastnamepatient:
-        caseReportOriginal.ori_cr_secondlastnamepatient,
+      val_cr_firstlastnamepatient: caseReportOriginal.ori_cr_firstlastnamepatient,
+      val_cr_secondlastnamepatient: caseReportOriginal.ori_cr_secondlastnamepatient,
       val_cr_agepatient: caseReportOriginal.ori_cr_agepatient,
       val_cr_genderpatient: caseReportOriginal.ori_cr_genderpatient,
       val_cr_epspatient: caseReportOriginal.ori_cr_epspatient,
-      val_cr_admconsecutivepatient:
-        caseReportOriginal.ori_cr_admconsecutivepatient,
+      val_cr_admconsecutivepatient: caseReportOriginal.ori_cr_admconsecutivepatient,
       val_cr_reporter_id_fk: caseReportOriginal.ori_cr_reporter_id_fk,
       val_cr_eventtype_id_fk: caseReportOriginal.ori_cr_eventtype_id_fk,
       val_cr_service_id_fk: caseReportOriginal.ori_cr_service_id_fk,
       val_cr_event_id_fk: caseReportOriginal.ori_cr_event_id_fk,
       val_cr_risktype_id_fk: caseReportOriginal.ori_cr_risktype_id_fk,
-      val_cr_severityclasif_id_fk:
-        caseReportOriginal.ori_cr_severityclasif_id_fk,
+      val_cr_severityclasif_id_fk: caseReportOriginal.ori_cr_severityclasif_id_fk,
       val_cr_origin_id_fk: caseReportOriginal.ori_cr_origin_id_fk,
       val_cr_suborigin_id_fk: caseReportOriginal.ori_cr_suborigin_id_fk,
       val_cr_risklevel_id_fk: caseReportOriginal.ori_cr_risklevel_id_fk,
       val_cr_unit_id_fk: caseReportOriginal.ori_cr_unit_id_fk,
       val_cr_priority_id_fk: caseReportOriginal.ori_cr_priority_id_fk,
+      val_cr_statusmovement_id_fk: caseReportOriginal.ori_cr_statusmovement_id_fk,
       val_cr_description: caseReportOriginal.ori_cr_description,
       val_cr_inmediateaction: caseReportOriginal.ori_cr_inmediateaction,
       val_cr_materializedrisk: caseReportOriginal.ori_cr_materializedrisk,
@@ -335,6 +329,9 @@ export class CaseReportValidateService {
     caseTypeId?: number,
     unitId?: number,
     priorityId?: number,
+    severityClasificationId?: number,
+    eventTypeId?: number,
+    statusMovementId?: number,
   ): Promise<CaseReportValidateEntity[]> {
     const where: FindOptionsWhere<CaseReportValidateEntity> = {};
 
@@ -346,7 +343,7 @@ export class CaseReportValidateService {
     }
 
     if (filingNumber) {
-      where.val_cr_filingnumber = Like(`%${filingNumber}%`) ;
+      where.val_cr_filingnumber = Like(`%${filingNumber}%`);
     }
 
     if (patientDoc) {
@@ -365,13 +362,25 @@ export class CaseReportValidateService {
       where.val_cr_priority_id_fk = priorityId;
     }
 
+    if (severityClasificationId) {
+      where.val_cr_severityclasif_id_fk = severityClasificationId;
+    }
+
+    if (eventTypeId) {
+      where.val_cr_eventtype_id_fk = eventTypeId;
+    }
+
+    if (statusMovementId) {
+      where.val_cr_statusmovement_id_fk = statusMovementId;
+    }
+
     where.val_cr_validated = false;
 
     const caseReportsValidate = await this.caseReportValidateRepository.find({
       where,
       relations: {
         caseReportOriginal: true,
-        log: true,
+        movementReport: true,
         reportAnalystAssignment: true,
         synergy: true,
         caseType: true,
@@ -384,7 +393,7 @@ export class CaseReportValidateService {
         event: true,
         service: true,
         unit: true,
-        priority: true
+        priority: true,
       },
     });
 
@@ -403,7 +412,7 @@ export class CaseReportValidateService {
       where: { val_cr_validated: false },
       relations: {
         caseReportOriginal: true,
-        log: true,
+        movementReport: true,
         reportAnalystAssignment: true,
         synergy: true,
         caseType: true,
@@ -435,7 +444,7 @@ export class CaseReportValidateService {
       where: { id, val_cr_validated: false },
       relations: {
         caseReportOriginal: true,
-        log: true,
+        movementReport: true,
         reportAnalystAssignment: true,
         synergy: true,
         caseType: true,
@@ -474,11 +483,11 @@ export class CaseReportValidateService {
     const caseReportValidate = await this.caseReportValidateRepository.find({
       where: {
         val_cr_filingnumber: Like(`%${consecutive}%`),
-        val_cr_validated: false
+        val_cr_validated: false,
       },
       relations: {
         caseReportOriginal: true,
-        log: true,
+        movementReport: true,
         reportAnalystAssignment: true,
         synergy: true,
         caseType: true,
@@ -529,10 +538,33 @@ export class CaseReportValidateService {
   }
 
   async cancelReportValidate(id: string, clientIp: string) {
+    const movementReportFound = await this.movementReportRepository.findOne({
+      where: {
+        mov_r_name: movementReport.ANULATION,
+        mov_r_status: true,
+      },
+    });
+
+    if (!movementReportFound) {
+      throw new HttpException(
+        `El movimiento ${movementReport.ANULATION} no existe.`,
+        HttpStatus.NO_CONTENT,
+      );
+    }
+
     const caseReportValidate = await this.findOneReportValidate(id);
 
-    caseReportValidate.val_cr_status = false;
-    await this.caseReportValidateRepository.save(caseReportValidate);
+    const updateStatusMovement = await this.caseReportValidateRepository.update(caseReportValidate.id, {
+      val_cr_statusmovement_id_fk: movementReportFound.id,
+      val_cr_status: false
+    });
+
+    if (updateStatusMovement.affected === 0) {
+      throw new HttpException(
+        `No se pudo actualizar el moviemiento del reporte.`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
 
     const result = await this.caseReportValidateRepository.softDelete(
       caseReportValidate.id,
