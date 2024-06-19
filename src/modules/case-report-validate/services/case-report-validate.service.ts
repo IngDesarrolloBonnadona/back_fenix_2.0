@@ -567,6 +567,7 @@ export class CaseReportValidateService {
     }
 
     await this.medicineService.deleteMedicinesByCaseId(caseReportValidate.val_cr_originalcase_id_fk)
+    await this.deviceService.deleteDevicesByCaseId(caseReportValidate.val_cr_originalcase_id_fk)
 
     const result = await this.caseReportValidateRepository.softDelete(
       caseReportValidate.id,
