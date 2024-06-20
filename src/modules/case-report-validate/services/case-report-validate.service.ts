@@ -397,7 +397,7 @@ export class CaseReportValidateService {
       },
     });
 
-    if (!caseReportsValidate || caseReportsValidate.length === 0) {
+    if (caseReportsValidate.length === 0) {
       throw new HttpException(
         'No hay reportes para mostrar.',
         HttpStatus.NO_CONTENT,
@@ -429,7 +429,7 @@ export class CaseReportValidateService {
       },
     });
 
-    if (!caseReportValidates || caseReportValidates.length === 0) {
+    if (caseReportValidates.length === 0) {
       throw new HttpException(
         'No hay reportes para mostrar.',
         HttpStatus.NO_CONTENT,
