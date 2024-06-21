@@ -188,7 +188,7 @@ export class CaseReportOriginalService {
     }
   }
 
-  async findAllReportsOriginal() {
+  async findAllReportsOriginal(): Promise<CaseReportOriginalEntity[]> {
     const caseReportsOriginal = await this.caseReportOriginalRepository.find({
       relations: {
         caseReportValidate: true,
@@ -219,7 +219,7 @@ export class CaseReportOriginalService {
     return caseReportsOriginal;
   }
 
-  async findOneReportOriginal(id: string) {
+  async findOneReportOriginal(id: string): Promise<CaseReportOriginalEntity> {
     const caseReportsOriginal = await this.caseReportOriginalRepository.findOne({
         where: { id },
         relations: {
