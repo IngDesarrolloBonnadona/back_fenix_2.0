@@ -3,6 +3,7 @@ import { ServiceService } from '../services/service.service';
 import { CreateServiceDto } from '../dto/create-service.dto';
 import { UpdateServiceDto } from '../dto/update-service.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { Service } from '../entities/service.entity';
 
 @ApiTags('service')
 @Controller('service')
@@ -10,17 +11,17 @@ export class ServiceController {
   constructor(private readonly serviceService: ServiceService) {}
 
   @Post('/createService')
-  createService(@Body() createServiceDto: CreateServiceDto) {
+  createService(@Body() createServiceDto: CreateServiceDto): Promise<Service> {
     return this.serviceService.createService(createServiceDto);
   }
 
   @Get('/listServices')
-  listServices() {
+  listServices(): Promise<Service[]> {
     return this.serviceService.findAllServices();
   }
 
   @Get('/findService/:id')
-  findService(@Param('id') id: number) {
+  findService(@Param('id') id: number): Promise<Service> {
     return this.serviceService.findOneService(id);
   }
 
@@ -30,7 +31,7 @@ export class ServiceController {
   }
 
   @Delete('/deleteService/:id')
-  async deleteService(@Param('id') id: number): Promise<{ message: string }> {
+  async deleteService(@Param('id') id: number): Promise<HttpException> {
     return await this.serviceService.deleteService(id);
   }
 }
