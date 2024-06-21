@@ -17,12 +17,12 @@ export class CaseTypeService {
     private readonly caseTypeRepository: Repository<CaseTypeEntity>,
   ) {}
 
-  async createCaseType(createCaseTypeDto: CreateCaseTypeDto) {
+  async createCaseType(createCaseTypeDto: CreateCaseTypeDto): Promise<CaseTypeEntity> {
     const caseType = this.caseTypeRepository.create(createCaseTypeDto);
     return await this.caseTypeRepository.save(caseType);
   }
 
-  async findAllCaseTypes() {
+  async findAllCaseTypes(): Promise<CaseTypeEntity[]> {
     const caseTypes = await this.caseTypeRepository.find({
       relations: {
         eventType: true,
@@ -30,7 +30,7 @@ export class CaseTypeService {
       },
     });
 
-    if (!caseTypes || caseTypes.length === 0) {
+    if (caseTypes.length === 0) {
       throw new HttpException(
         'No se encontró la lista de tipos de caso',
         HttpStatus.NO_CONTENT,
@@ -40,7 +40,7 @@ export class CaseTypeService {
     return caseTypes;
   }
 
-  async findOneCaseType(id: number) {
+  async findOneCaseType(id: number): Promise<CaseTypeEntity> {
     const caseType = await this.caseTypeRepository.findOne({
       where: { id },
       relations: {

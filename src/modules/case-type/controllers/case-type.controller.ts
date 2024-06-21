@@ -1,10 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, Put } from '@nestjs/common';
 import { CaseTypeService } from '../services/case-type.service';
 import { CreateCaseTypeDto } from '../dto/create-case-type.dto';
 import { UpdateCaseTypeDto } from '../dto/update-case-type.dto';
 import { CaseType } from '../entities/case-type.entity';
 import { ApiTags } from '@nestjs/swagger';
-import { UpdateResult } from 'typeorm';
 
 @ApiTags('case-type')
 @Controller('case-type')
