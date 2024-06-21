@@ -13,7 +13,6 @@ import { PriorityService } from '../services/priority.service';
 import { CreatePriorityDto } from '../dto/create-priority.dto';
 import { UpdatePriorityDto } from '../dto/update-priority.dto';
 import { ApiTags } from '@nestjs/swagger';
-import { UpdateStatusPriorityDto } from '../dto/update-status-priority.dto';
 import { Priority } from '../entities/priority.entity';
 
 @ApiTags('priority')
@@ -41,11 +40,11 @@ export class PriorityController {
   @Patch('/updatePriority/:id')
   updateStatusPriority(
     @Param('id') id: number,
-    @Body() updateStatusPriorityDto: UpdateStatusPriorityDto,
+    @Body() updateStatusPriority: UpdatePriorityDto,
   ): Promise<HttpException> {
     return this.priorityService.updateStatusPriority(
       id,
-      updateStatusPriorityDto,
+      updateStatusPriority,
     );
   }
 

@@ -4,7 +4,6 @@ import { UpdatePriorityDto } from '../dto/update-priority.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Priority as PriorityEntity } from '../entities/priority.entity';
 import { Repository } from 'typeorm';
-import { UpdateStatusPriorityDto } from '../dto/update-status-priority.dto';
 
 @Injectable()
 export class PriorityService {
@@ -59,12 +58,12 @@ export class PriorityService {
 
   async updateStatusPriority(
     id: number,
-    updateStatusPriorityDto: UpdateStatusPriorityDto,
+    updateStatusPriority: UpdatePriorityDto,
   ) {
     const priority = await this.findOnePriority(id);
     const result = await this.priorityRepository.update(
       priority.id,
-      updateStatusPriorityDto,
+      updateStatusPriority,
     );
 
     if (result.affected === 0) {
