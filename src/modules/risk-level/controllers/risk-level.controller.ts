@@ -31,7 +31,7 @@ export class RiskLevelController {
   }
 
   @Delete('/deleteRiskLevel/:id')
-  async deleteRiskLevel(@Param('id') id: number): Promise<{ message: string }> {
+  async deleteRiskLevel(@Param('id') id: number): Promise<HttpException> {
     return await this.riskLevelService.deleteRiskLevel(id);
   }
 }

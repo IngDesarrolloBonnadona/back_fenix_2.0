@@ -31,7 +31,7 @@ export class EventTypeController {
   }
 
   @Delete('/deleteEventType/:id')
-  async deleteEventType(@Param('id') id: number): Promise<{ message: string }> {
+  async deleteEventType(@Param('id') id: number): Promise<HttpException> {
     return await this.eventTypeService.deleteEventType(id);
   }
 }

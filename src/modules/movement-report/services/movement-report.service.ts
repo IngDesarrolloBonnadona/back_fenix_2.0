@@ -17,18 +17,20 @@ export class MovementReportService {
     private readonly movementReportRepository: Repository<MovementReportEntity>,
   ) {}
 
-  async createMovementReport(createMovementReportDto: CreateMovementReportDto) {
+  async createMovementReport(
+    createMovementReportDto: CreateMovementReportDto,
+  ): Promise<MovementReportEntity> {
     const movementReport = this.movementReportRepository.create(
       createMovementReportDto,
     );
     return await this.movementReportRepository.save(movementReport);
   }
 
-  async findAllMovementReports() {
+  async findAllMovementReports(): Promise<MovementReportEntity[]> {
     const movementReports = await this.movementReportRepository.find({
       relations: {
         caseReportOriginal: true,
-        caseReportValidate: true
+        caseReportValidate: true,
       },
     });
 
@@ -42,12 +44,12 @@ export class MovementReportService {
     return movementReports;
   }
 
-  async findOneMovementReport(id: number) {
+  async findOneMovementReport(id: number): Promise<MovementReportEntity> {
     const movementReport = await this.movementReportRepository.findOne({
       where: { id },
       relations: {
         caseReportOriginal: true,
-        caseReportValidate: true
+        caseReportValidate: true,
       },
     });
 

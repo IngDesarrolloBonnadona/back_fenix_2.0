@@ -28,7 +28,7 @@ export class PositionController {
   }
 
   @Post('/synchronizePositions')
-  syncronizePositions() {
+  syncronizePositions(): Promise<number> {
     return this.positionService.synchronizePositions();
   }
 

@@ -17,12 +17,12 @@ export class EventService {
     private readonly eventRepository: Repository<EventEntity>,
   ) {}
 
-  async createEvent(createEventDto: CreateEventDto) {
+  async createEvent(createEventDto: CreateEventDto): Promise<EventEntity> {
     const event = this.eventRepository.create(createEventDto);
     return await this.eventRepository.save(event);
   }
 
-  async findAllEvents() {
+  async findAllEvents(): Promise<EventEntity[]> {
     const events = await this.eventRepository.find({
       relations: {
         eventType: true,
@@ -30,7 +30,7 @@ export class EventService {
       },
     });
 
-    if (!events || events.length === 0) {
+    if (events.length === 0) {
       throw new HttpException(
         'No se encontró la lista de eventos.',
         HttpStatus.NO_CONTENT,
@@ -40,7 +40,7 @@ export class EventService {
     return events;
   }
 
-  async findOneEvent(id: number) {
+  async findOneEvent(id: number): Promise<EventEntity> {
     const event = await this.eventRepository.findOne({
       where: { id },
       relations: {

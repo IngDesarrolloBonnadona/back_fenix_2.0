@@ -17,12 +17,12 @@ export class EventTypeService {
     private readonly eventTypeRepository: Repository<EventTypeEntity>,
   ) {}
 
-  async createEventType(createEventTypeDto: CreateEventTypeDto) {
+  async createEventType(createEventTypeDto: CreateEventTypeDto): Promise<EventTypeEntity> {
     const eventType = this.eventTypeRepository.create(createEventTypeDto);
     return await this.eventTypeRepository.save(eventType);
   }
 
-  async findAllEventTypes() {
+  async findAllEventTypes(): Promise<EventTypeEntity[]> {
     const eventTypes = await this.eventTypeRepository.find({
       relations: {
         event: true,
@@ -31,7 +31,7 @@ export class EventTypeService {
       },
     });
 
-    if (!eventTypes || eventTypes.length === 0) {
+    if (eventTypes.length === 0) {
       throw new HttpException(
         'No se encontró la lista de tipo de eventos.',
         HttpStatus.NO_CONTENT,
@@ -40,7 +40,7 @@ export class EventTypeService {
     return eventTypes;
   }
 
-  async findOneEventType(id: number) {
+  async findOneEventType(id: number): Promise<EventTypeEntity> {
     const eventType = await this.eventTypeRepository.findOne({
       where: { id },
       relations: {

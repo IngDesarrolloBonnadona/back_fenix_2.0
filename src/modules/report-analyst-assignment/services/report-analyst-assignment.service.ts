@@ -247,7 +247,9 @@ export class ReportAnalystAssignmentService {
     return analystReporters;
   }
 
-  async findOneAssignedAnalyst(id: number) {
+  async findOneAssignedAnalyst(
+    id: number,
+  ): Promise<ReportAnalystAssignmentEntity> {
     const analystReporter =
       await this.reportAnalystAssignmentRepository.findOne({
         where: { id, ass_ra_status: true },

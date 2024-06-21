@@ -44,7 +44,7 @@ export class DeviceController {
   }
 
   @Delete('/deleteDevice/:id')
-  async deleteDevice(@Param('id') id: number): Promise<{ message: string }> {
+  async deleteDevice(@Param('id') id: number): Promise<HttpException> {
     return await this.deviceService.deleteDevice(id);
   }
 }

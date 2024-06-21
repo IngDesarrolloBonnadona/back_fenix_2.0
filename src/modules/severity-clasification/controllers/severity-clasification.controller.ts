@@ -54,7 +54,7 @@ export class SeverityClasificationController {
   }
 
   @Delete('/deleteSeverityClasification/:id')
-  async deleteSeverityClasification(@Param('id') id: number): Promise<{ message: string }> {
+  async deleteSeverityClasification(@Param('id') id: number): Promise<HttpException> {
     return await this.severityClasificationService.deleteSeverityClasification(id);
   }
 }

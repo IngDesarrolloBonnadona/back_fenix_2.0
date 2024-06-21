@@ -31,7 +31,7 @@ export class OriginController {
   }
 
   @Delete('/deleteOrigin/:id')
-  async deleteOrigin(@Param('id') id: number): Promise<{ message: string }> {
+  async deleteOrigin(@Param('id') id: number): Promise<HttpException> {
     return await this.originService.deleteOrigin(id);
   }
 }

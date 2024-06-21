@@ -13,12 +13,14 @@ export class PriorityService {
     private readonly priorityRepository: Repository<PriorityEntity>,
   ) {}
 
-  async createPriority(createPriorityDto: CreatePriorityDto) {
+  async createPriority(
+    createPriorityDto: CreatePriorityDto,
+  ): Promise<PriorityEntity> {
     const priority = this.priorityRepository.create(createPriorityDto);
     return await this.priorityRepository.save(priority);
   }
 
-  async findAllPriorities() {
+  async findAllPriorities(): Promise<PriorityEntity[]> {
     const priorities = await this.priorityRepository.find({
       relations: {
         caseReportOriginal: true,
@@ -37,7 +39,7 @@ export class PriorityService {
     return priorities;
   }
 
-  async findOnePriority(id: number) {
+  async findOnePriority(id: number): Promise<PriorityEntity> {
     const priority = await this.priorityRepository.findOne({
       where: { id, prior_status: true },
       relations: {

@@ -37,12 +37,12 @@ export class MedicineService {
     }
   }
 
-  async createMedicine(createMedicineDto: CreateMedicineDto) {
+  async createMedicine(createMedicineDto: CreateMedicineDto): Promise<MedicineEntity> {
     const medicine = this.medicineRepository.create(createMedicineDto);
     return await this.medicineRepository.save(medicine);
   }
 
-  async findAllMedicines() {
+  async findAllMedicines(): Promise<MedicineEntity[]> {
     const medicines = await this.medicineRepository.find({
       relations: {
         caseReportOriginal: true,
@@ -59,7 +59,7 @@ export class MedicineService {
     return medicines;
   }
 
-  async findOneMedicine(id: number) {
+  async findOneMedicine(id: number): Promise<MedicineEntity> {
     const medicine = await this.medicineRepository.findOne({
       where: { id },
       relations: {
