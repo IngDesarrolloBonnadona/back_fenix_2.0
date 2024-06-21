@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Position as PositionEntity } from '../entities/position.entity';
 import { Repository } from 'typeorm';
 import { HttpPositionService } from '../http/http-position.service';
-import { EnabledPositionDto } from '../dto/enabled-position.dto';
+import { UpdatePositionDto } from '../dto/update-position.dto';
 
 @Injectable()
 export class PositionService {
@@ -111,12 +111,12 @@ export class PositionService {
 
   async updateEnabledPosition(
     id: number,
-    EnabledPositionDto: EnabledPositionDto,
+    enabledPosition: UpdatePositionDto,
   ) {
     const position = await this.findOnePosition(id);
     const result = await this.positionRepository.update(
       position.id,
-      EnabledPositionDto,
+      enabledPosition,
     );
 
     if (result.affected === 0) {
