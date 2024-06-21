@@ -219,11 +219,13 @@ export class CaseReportValidateService {
         );
       }
 
-      caseReportValidate.val_cr_filingnumber = previousReport.val_cr_filingnumber;
-      caseReportValidate.val_cr_originalcase_id_fk = previousReport.val_cr_originalcase_id_fk;
+      caseReportValidate.val_cr_filingnumber =
+        previousReport.val_cr_filingnumber;
+      caseReportValidate.val_cr_originalcase_id_fk =
+        previousReport.val_cr_originalcase_id_fk;
       caseReportValidate.val_cr_consecutive_id = consecutiveId;
       caseReportValidate.val_cr_previous_id = previousId;
-      caseReportValidate.val_cr_statusmovement_id_fk = movementReportFound.id
+      caseReportValidate.val_cr_statusmovement_id_fk = movementReportFound.id;
 
       await queryRunner.manager.save(caseReportValidate);
 
@@ -296,24 +298,29 @@ export class CaseReportValidateService {
       val_cr_doctypepatient: caseReportOriginal.ori_cr_doctypepatient,
       val_cr_firstnamepatient: caseReportOriginal.ori_cr_firstnamepatient,
       val_cr_secondnamepatient: caseReportOriginal.ori_cr_secondnamepatient,
-      val_cr_firstlastnamepatient: caseReportOriginal.ori_cr_firstlastnamepatient,
-      val_cr_secondlastnamepatient: caseReportOriginal.ori_cr_secondlastnamepatient,
+      val_cr_firstlastnamepatient:
+        caseReportOriginal.ori_cr_firstlastnamepatient,
+      val_cr_secondlastnamepatient:
+        caseReportOriginal.ori_cr_secondlastnamepatient,
       val_cr_agepatient: caseReportOriginal.ori_cr_agepatient,
       val_cr_genderpatient: caseReportOriginal.ori_cr_genderpatient,
       val_cr_epspatient: caseReportOriginal.ori_cr_epspatient,
-      val_cr_admconsecutivepatient: caseReportOriginal.ori_cr_admconsecutivepatient,
+      val_cr_admconsecutivepatient:
+        caseReportOriginal.ori_cr_admconsecutivepatient,
       val_cr_reporter_id_fk: caseReportOriginal.ori_cr_reporter_id_fk,
       val_cr_eventtype_id_fk: caseReportOriginal.ori_cr_eventtype_id_fk,
       val_cr_service_id_fk: caseReportOriginal.ori_cr_service_id_fk,
       val_cr_event_id_fk: caseReportOriginal.ori_cr_event_id_fk,
       val_cr_risktype_id_fk: caseReportOriginal.ori_cr_risktype_id_fk,
-      val_cr_severityclasif_id_fk: caseReportOriginal.ori_cr_severityclasif_id_fk,
+      val_cr_severityclasif_id_fk:
+        caseReportOriginal.ori_cr_severityclasif_id_fk,
       val_cr_origin_id_fk: caseReportOriginal.ori_cr_origin_id_fk,
       val_cr_suborigin_id_fk: caseReportOriginal.ori_cr_suborigin_id_fk,
       val_cr_risklevel_id_fk: caseReportOriginal.ori_cr_risklevel_id_fk,
       val_cr_unit_id_fk: caseReportOriginal.ori_cr_unit_id_fk,
       val_cr_priority_id_fk: caseReportOriginal.ori_cr_priority_id_fk,
-      val_cr_statusmovement_id_fk: caseReportOriginal.ori_cr_statusmovement_id_fk,
+      val_cr_statusmovement_id_fk:
+        caseReportOriginal.ori_cr_statusmovement_id_fk,
       val_cr_description: caseReportOriginal.ori_cr_description,
       val_cr_inmediateaction: caseReportOriginal.ori_cr_inmediateaction,
       val_cr_materializedrisk: caseReportOriginal.ori_cr_materializedrisk,
@@ -397,7 +404,7 @@ export class CaseReportValidateService {
       },
     });
 
-    if (!caseReportsValidate || caseReportsValidate.length === 0) {
+    if (caseReportsValidate.length === 0) {
       throw new HttpException(
         'No hay reportes para mostrar.',
         HttpStatus.NO_CONTENT,
@@ -407,7 +414,7 @@ export class CaseReportValidateService {
     return caseReportsValidate;
   }
 
-  async findAllReportsValidate() {
+  async findAllReportsValidate(): Promise<CaseReportValidateEntity[]> {
     const caseReportValidates = await this.caseReportValidateRepository.find({
       where: { val_cr_validated: false },
       relations: {
@@ -429,7 +436,7 @@ export class CaseReportValidateService {
       },
     });
 
-    if (!caseReportValidates || caseReportValidates.length === 0) {
+    if (caseReportValidates.length === 0) {
       throw new HttpException(
         'No hay reportes para mostrar.',
         HttpStatus.NO_CONTENT,
@@ -439,7 +446,7 @@ export class CaseReportValidateService {
     return caseReportValidates;
   }
 
-  async findOneReportValidate(id: string) {
+  async findOneReportValidate(id: string): Promise<CaseReportValidateEntity> {
     const caseReportValidate = await this.caseReportValidateRepository.findOne({
       where: { id, val_cr_validated: false },
       relations: {
@@ -471,15 +478,9 @@ export class CaseReportValidateService {
     return caseReportValidate;
   }
 
-  async findOneReportValidateByConsecutive(consecutive: string) {
-    // const caseReportValidate = await this.dataSource
-    //   .getRepository(CaseReportValidateEntity)
-    //   .createQueryBuilder('caseReportValidate')
-    //   .where('caseReportValidate.val_cr_filingnumber LIKE :consecutive', {
-    //     consecutive: `%${consecutive}%`,
-    //   })
-    //   .getMany();
-
+  async findOneReportValidateByConsecutive(
+    consecutive: string,
+  ): Promise<CaseReportValidateEntity[]> {
     const caseReportValidate = await this.caseReportValidateRepository.find({
       where: {
         val_cr_filingnumber: Like(`%${consecutive}%`),
@@ -554,10 +555,13 @@ export class CaseReportValidateService {
 
     const caseReportValidate = await this.findOneReportValidate(id);
 
-    const updateStatusMovement = await this.caseReportValidateRepository.update(caseReportValidate.id, {
-      val_cr_statusmovement_id_fk: movementReportFound.id,
-      val_cr_status: false
-    });
+    const updateStatusMovement = await this.caseReportValidateRepository.update(
+      caseReportValidate.id,
+      {
+        val_cr_statusmovement_id_fk: movementReportFound.id,
+        val_cr_status: false,
+      },
+    );
 
     if (updateStatusMovement.affected === 0) {
       throw new HttpException(
@@ -566,8 +570,12 @@ export class CaseReportValidateService {
       );
     }
 
-    await this.medicineService.deleteMedicinesByCaseId(caseReportValidate.val_cr_originalcase_id_fk)
-    await this.deviceService.deleteDevicesByCaseId(caseReportValidate.val_cr_originalcase_id_fk)
+    await this.medicineService.deleteMedicinesByCaseId(
+      caseReportValidate.val_cr_originalcase_id_fk,
+    );
+    await this.deviceService.deleteDevicesByCaseId(
+      caseReportValidate.val_cr_originalcase_id_fk,
+    );
 
     const result = await this.caseReportValidateRepository.softDelete(
       caseReportValidate.id,

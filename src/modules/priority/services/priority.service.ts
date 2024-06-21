@@ -4,7 +4,6 @@ import { UpdatePriorityDto } from '../dto/update-priority.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Priority as PriorityEntity } from '../entities/priority.entity';
 import { Repository } from 'typeorm';
-import { UpdateStatusPriorityDto } from '../dto/update-status-priority.dto';
 
 @Injectable()
 export class PriorityService {
@@ -13,12 +12,14 @@ export class PriorityService {
     private readonly priorityRepository: Repository<PriorityEntity>,
   ) {}
 
-  async createPriority(createPriorityDto: CreatePriorityDto) {
+  async createPriority(
+    createPriorityDto: CreatePriorityDto,
+  ): Promise<PriorityEntity> {
     const priority = this.priorityRepository.create(createPriorityDto);
     return await this.priorityRepository.save(priority);
   }
 
-  async findAllPriorities() {
+  async findAllPriorities(): Promise<PriorityEntity[]> {
     const priorities = await this.priorityRepository.find({
       relations: {
         caseReportOriginal: true,
@@ -37,7 +38,7 @@ export class PriorityService {
     return priorities;
   }
 
-  async findOnePriority(id: number) {
+  async findOnePriority(id: number): Promise<PriorityEntity> {
     const priority = await this.priorityRepository.findOne({
       where: { id, prior_status: true },
       relations: {
@@ -57,12 +58,12 @@ export class PriorityService {
 
   async updateStatusPriority(
     id: number,
-    updateStatusPriorityDto: UpdateStatusPriorityDto,
+    updateStatusPriority: UpdatePriorityDto,
   ) {
     const priority = await this.findOnePriority(id);
     const result = await this.priorityRepository.update(
       priority.id,
-      updateStatusPriorityDto,
+      updateStatusPriority,
     );
 
     if (result.affected === 0) {

@@ -31,7 +31,7 @@ export class MovementReportController {
   }
 
   @Delete('/deleteMovementReport/:id')
-  async deleteMovementReport(@Param('id') id: number): Promise<{ message: string }> {
+  async deleteMovementReport(@Param('id') id: number): Promise<HttpException> {
     return await this.movementReportService.deleteMovementReport(id);
   }
 }

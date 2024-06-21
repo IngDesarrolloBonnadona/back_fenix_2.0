@@ -17,12 +17,12 @@ export class UnitService {
     private readonly unitRepository: Repository<UnitEntity>,
   ) {}
 
-  async createUnit(createUnitDto: CreateUnitDto) {
+  async createUnit(createUnitDto: CreateUnitDto): Promise<UnitEntity> {
     const unit = this.unitRepository.create(createUnitDto);
     return await this.unitRepository.save(unit);
   }
 
-  async findAllUnits() {
+  async findAllUnits(): Promise<UnitEntity[]> {
     const units = await this.unitRepository.find({
       relations: {
         service: true,
@@ -40,7 +40,7 @@ export class UnitService {
     return units;
   }
 
-  async findOneUnit(id: number) {
+  async findOneUnit(id: number): Promise<UnitEntity> {
     const unit = await this.unitRepository.findOne({
       where: { id },
       relations: {

@@ -61,7 +61,7 @@ export class ResearchersService {
     createResearcherDto: CreateResearcherDto,
     clientIp: string,
     idAnalyst: number,
-  ) {
+  ): Promise<ResearcherEntity> {
     const reportAssignmentFind = await this.researcherRepository.findOne({
       where: {
         res_validatedcase_id_fk: createResearcherDto.res_validatedcase_id_fk,
@@ -126,7 +126,7 @@ export class ResearchersService {
     return assigned;
   }
 
-  async findOneAssignedResearch(id: number) {
+  async findOneAssignedResearch(id: number): Promise<ResearcherEntity> {
     const research = await this.researcherRepository.findOne({
       where: { id, res_status: true },
     });

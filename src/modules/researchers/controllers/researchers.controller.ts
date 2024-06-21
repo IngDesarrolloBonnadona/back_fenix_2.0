@@ -1,8 +1,19 @@
-import { Body, Controller, Delete, Get, Ip, Param, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpException,
+  Ip,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { ResearchersService } from '../services/researchers.service';
 import { FilterResearcherDto } from '../dto/filter-researcher.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateResearcherDto } from '../dto/create-researcher.dto';
+import { Researcher } from '../entities/researchers.entity';
 
 @ApiTags('researchers')
 @Controller('researchers')
@@ -22,7 +33,7 @@ export class ResearchersController {
   }
 
   @Get('findAssignedResearch/:id')
-  findAssignedResearch(@Param('id') id: number) {
+  findAssignedResearch(@Param('id') id: number): Promise<Researcher> {
     return this.researchersService.findOneAssignedResearch(id);
   }
 
@@ -40,7 +51,7 @@ export class ResearchersController {
   }
 
   @Delete('deleteAssignedResearch/:id')
-  deleteAssignedResearch(@Param('id') id: number) {
+  deleteAssignedResearch(@Param('id') id: number): Promise<HttpException> {
     return this.researchersService.deleteAssignedResearcher(id);
   }
 }

@@ -16,9 +16,7 @@ export class CaseReportOriginalController {
   async createReportOriginal(
     @Body() createReportOriDto: CreateReportOriDto, 
     @Ip() clientIp: string
-    // @Req() req: Request
   ) : Promise<any>{
-    // const clientIp = req.ip;
     return await this.CaseReportOriginalService.createReportOriginal(
       createReportOriDto,
       clientIp,

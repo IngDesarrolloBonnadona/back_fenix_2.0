@@ -8,10 +8,12 @@ import {
   Delete,
   Put,
   Ip,
+  HttpException,
 } from '@nestjs/common';
 import { SynergyService } from '../services/synergy.service';
 import { CreateSynergyDto } from '../dto/create-synergy.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { Synergy } from '../entities/synergy.entity';
 
 @ApiTags('synergy')
 @Controller('synergy')
@@ -32,12 +34,12 @@ export class SynergyController {
   }
 
   @Get('/listSynergies')
-  listSynergies() {
+  listSynergies(): Promise<Synergy[]> {
     return this.synergyService.findAllSynergy();
   }
 
   @Get('/findSynergy/:id')
-  findSynergy(@Param('id') id: number) {
+  findSynergy(@Param('id') id: number): Promise<Synergy> {
     return this.synergyService.findOneSynergy(id);
   }
 
@@ -46,7 +48,7 @@ export class SynergyController {
     @Param('id') id: number,
     @Ip() clientIp: string,
     @Param('idValidator') idValidator: number,
-  ) {
+  ): Promise<HttpException> {
     return this.synergyService.rescheduleSynergy(id, clientIp, idValidator);
   }
 
@@ -55,12 +57,12 @@ export class SynergyController {
     @Param('id') id: number,
     @Ip() clientIp: string,
     @Param('idValidator') idValidator: number,
-  ) {
+  ): Promise<HttpException> {
     return this.synergyService.resolutionSynergy(id, clientIp, idValidator);
   }
 
   @Delete('/deleteSynergy/:id')
-  deleteSynergy(@Param('id') id: number) {
+  deleteSynergy(@Param('id') id: number): Promise<HttpException> {
     return this.synergyService.deleteSynergy(id);
   }
 }

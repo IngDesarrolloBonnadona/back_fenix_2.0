@@ -50,7 +50,7 @@ export class LogController {
   }
 
   @Delete('/deleteLog/:id')
-  async deleteLog(@Param('id') id: number): Promise<{ message: string }> {
+  async deleteLog(@Param('id') id: number): Promise<HttpException> {
     return await this.logService.deleteLog(id);
   }
 }

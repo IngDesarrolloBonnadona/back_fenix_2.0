@@ -17,12 +17,14 @@ export class SubOriginService {
     private readonly subOriginRepository: Repository<SubOriginEntity>,
   ) {}
 
-  async createSubOrigin(createSubOriginDto: CreateSubOriginDto) {
+  async createSubOrigin(
+    createSubOriginDto: CreateSubOriginDto,
+  ): Promise<SubOriginEntity> {
     const subOrigin = this.subOriginRepository.create(createSubOriginDto);
     return await this.subOriginRepository.save(subOrigin);
   }
 
-  async findAllSubOrigins() {
+  async findAllSubOrigins(): Promise<SubOriginEntity[]> {
     const subOrigins = await this.subOriginRepository.find({
       relations: {
         origin: true,
@@ -40,7 +42,7 @@ export class SubOriginService {
     return subOrigins;
   }
 
-  async findOneSubOrigin(id: number) {
+  async findOneSubOrigin(id: number): Promise<SubOriginEntity> {
     const subOrigin = await this.subOriginRepository.findOne({
       where: { id },
       relations: {

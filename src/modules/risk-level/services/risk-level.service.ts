@@ -12,12 +12,12 @@ export class RiskLevelService {
     private readonly riskLevelRepository: Repository<RiskLevelEntity>,
   ) {}
 
-  async createRiskLevel(createRiskLevelDto: CreateRiskLevelDto) {
+  async createRiskLevel(createRiskLevelDto: CreateRiskLevelDto):Promise<RiskLevelEntity> {
     const riskLevel = this.riskLevelRepository.create(createRiskLevelDto);
     return await this.riskLevelRepository.save(riskLevel);
   }
 
-  async findAllRiskLevel() {
+  async findAllRiskLevel():Promise<RiskLevelEntity[]> {
     const riskLevels = await this.riskLevelRepository.find({
       relations: {
         caseReportOriginal: true,
@@ -35,7 +35,7 @@ export class RiskLevelService {
     return riskLevels;
   }
 
-  async findOneRiskLevel(id: number) {
+  async findOneRiskLevel(id: number):Promise<RiskLevelEntity> {
     const riskLevel = await this.riskLevelRepository.findOne({
       where: { id },
       relations: {

@@ -31,7 +31,7 @@ export class MedicineController {
   }
 
   @Delete('/DeleteMedicine/:id')
-  async DeleteMedicine(@Param('id') id: number): Promise<{ message: string }> {
+  async DeleteMedicine(@Param('id') id: number): Promise<HttpException> {
     return await this.medicineService.deleteMedicine(id);
   }
 }

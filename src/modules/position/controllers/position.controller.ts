@@ -13,7 +13,7 @@ import { PositionService } from '../services/position.service';
 import { CreatePositionDto } from '../dto/create-position.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { Position } from '../entities/position.entity';
-import { EnabledPositionDto } from '../dto/enabled-position.dto';
+import { UpdatePositionDto } from '../dto/update-position.dto';
 
 @ApiTags('position')
 @Controller('position')
@@ -28,7 +28,7 @@ export class PositionController {
   }
 
   @Post('/synchronizePositions')
-  syncronizePositions() {
+  syncronizePositions(): Promise<number> {
     return this.positionService.synchronizePositions();
   }
 
@@ -50,9 +50,9 @@ export class PositionController {
   @Patch('/updateEnabledPosition/:id')
   updateEnabledPosition(
     @Param('id') id: number,
-    @Body() enabledPositionDto: EnabledPositionDto,
+    @Body() enabledPosition: UpdatePositionDto,
   ): Promise<HttpException> {
-    return this.positionService.updateEnabledPosition(id, enabledPositionDto);
+    return this.positionService.updateEnabledPosition(id, enabledPosition);
   }
 
   @Delete('/deletePosition/:id')

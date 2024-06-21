@@ -32,7 +32,7 @@ export class ReportAnalystAssignmentController {
     return this.reportAnalisysAssignmentService.assingAnalyst(
       createAnalystReporterDto,
       clientIp,
-      idValidator
+      idValidator,
     );
   }
 
@@ -59,7 +59,9 @@ export class ReportAnalystAssignmentController {
   }
 
   @Get('findAssignedAnalyst/:id')
-  findAssignedAnalyst(@Param('id') id: number) {
+  findAssignedAnalyst(
+    @Param('id') id: number,
+  ): Promise<ReportAnalystAssignment> {
     return this.reportAnalisysAssignmentService.findOneAssignedAnalyst(id);
   }
 
@@ -72,17 +74,17 @@ export class ReportAnalystAssignmentController {
   updateReAssignedAnalyst(
     @Body() updateReportAnalystAssignmentDto: UpdateReportAnalystAssignmentDto,
     @Ip() clientIp: string,
-    @Param('idValidator') idValidator: number
+    @Param('idValidator') idValidator: number,
   ): Promise<HttpException> {
     return this.reportAnalisysAssignmentService.reAssingAnalyst(
       updateReportAnalystAssignmentDto,
       clientIp,
-      idValidator
+      idValidator,
     );
   }
 
   @Delete('deleteAssignedAnalyst/:id')
-  deleteAssignedAnalyst(@Param('id') id: number) {
+  deleteAssignedAnalyst(@Param('id') id: number): Promise<HttpException> {
     return this.reportAnalisysAssignmentService.deleteAssignedAnalyst(id);
   }
 }

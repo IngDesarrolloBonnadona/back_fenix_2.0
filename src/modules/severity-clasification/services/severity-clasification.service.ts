@@ -19,14 +19,14 @@ export class SeverityClasificationService {
 
   async createSeverityClasification(
     createSeverityClasificationDto: CreateSeverityClasificationDto,
-  ) {
+  ): Promise<SeverityClasifEntity> {
     const severityClasif = this.severityClasifRepository.create(
       createSeverityClasificationDto,
     );
     return await this.severityClasifRepository.save(severityClasif);
   }
 
-  async findAllSeverityClasifications() {
+  async findAllSeverityClasifications(): Promise<SeverityClasifEntity[]> {
     const severityClasifs = await this.severityClasifRepository.find({
       relations: {
         caseReportOriginal: true,
@@ -43,7 +43,7 @@ export class SeverityClasificationService {
     return severityClasifs;
   }
 
-  async findOneSeverityClasification(id: number) {
+  async findOneSeverityClasification(id: number): Promise<SeverityClasifEntity> {
     const severityClasif = await this.severityClasifRepository.findOne({
       where: { id },
       relations: {

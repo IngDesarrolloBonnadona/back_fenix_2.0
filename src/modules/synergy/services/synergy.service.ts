@@ -142,7 +142,7 @@ export class SynergyService {
     return savedSynergies;
   }
 
-  async findAllSynergy() {
+  async findAllSynergy(): Promise<SynergyEntity[]> {
     const synergies = await this.synergyRepository.find({
       relations: {
         caseReportValidate: true,
@@ -162,7 +162,7 @@ export class SynergyService {
     return synergies;
   }
 
-  async findOneSynergy(id: number) {
+  async findOneSynergy(id: number): Promise<SynergyEntity> {
     const synergy = await this.synergyRepository.findOne({
       where: { id, syn_status: false },
       relations: {

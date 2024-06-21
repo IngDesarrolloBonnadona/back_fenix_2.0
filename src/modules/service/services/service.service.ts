@@ -7,7 +7,7 @@ import {
 import { CreateServiceDto } from '../dto/create-service.dto';
 import { UpdateServiceDto } from '../dto/update-service.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Service as ServiceEntity } from '../entities/service.entity';
+import { Service, Service as ServiceEntity } from '../entities/service.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -17,12 +17,12 @@ export class ServiceService {
     private readonly serviceRepository: Repository<ServiceEntity>,
   ) {}
 
-  async createService(createServiceDto: CreateServiceDto) {
+  async createService(createServiceDto: CreateServiceDto): Promise<Service> {
     const service = this.serviceRepository.create(createServiceDto);
     return await this.serviceRepository.save(service);
   }
 
-  async findAllServices() {
+  async findAllServices(): Promise<Service[]> {
     const services = await this.serviceRepository.find({
       relations: {
         unit: true,
@@ -39,7 +39,7 @@ export class ServiceService {
     return services;
   }
 
-  async findOneService(id: number) {
+  async findOneService(id: number): Promise<Service> {
     const service = await this.serviceRepository.findOne({
       where: { id },
       relations: {

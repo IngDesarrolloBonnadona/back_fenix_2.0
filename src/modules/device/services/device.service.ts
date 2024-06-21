@@ -37,19 +37,19 @@ export class DeviceService {
     }
   }
 
-  async createDevice(createDeviceDto: CreateDeviceDto) {
+  async createDevice(createDeviceDto: CreateDeviceDto): Promise<DeviceEntity> {
     const device = this.deviceRepository.create(createDeviceDto);
     return await this.deviceRepository.save(device);
   }
 
-  async findAllDevices() {
+  async findAllDevices(): Promise<DeviceEntity[]> {
     const devices = await this.deviceRepository.find({
       relations: {
         caseReportOriginal: true,
       },
     });
 
-    if (!devices || devices.length === 0) {
+    if (devices.length === 0) {
       throw new HttpException(
         'No se encontró la lista de dispositivos',
         HttpStatus.NO_CONTENT,
@@ -59,7 +59,7 @@ export class DeviceService {
     return devices;
   }
 
-  async findOneDevice(id: number) {
+  async findOneDevice(id: number): Promise<DeviceEntity> {
     const device = await this.deviceRepository.findOne({
       where: { id },
       relations: {

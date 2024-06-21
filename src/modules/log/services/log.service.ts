@@ -34,7 +34,7 @@ export class LogService {
     userId: number,
     clientIp: string,
     action: string,
-  ) {
+  ): Promise<LogEntity> {
     const createLogDto: CreateLogDto = {
       log_validatedcase_id_fk: caseReportValidateId,
       log_user_id: userId,
@@ -46,14 +46,14 @@ export class LogService {
     return await this.logRepository.save(log);
   }
 
-  async findAllLogs() {
+  async findAllLogs(): Promise<LogEntity[]> {
     const logs = await this.logRepository.find({
       relations: {
         caseReportValidate: true,
       },
     });
 
-    if (!logs || logs.length === 0) {
+    if (logs.length === 0) {
       throw new HttpException(
         'No se encontró la lista de logs.',
         HttpStatus.NO_CONTENT,
@@ -62,7 +62,7 @@ export class LogService {
     return logs;
   }
 
-  async findOneLog(id: number) {
+  async findOneLog(id: number): Promise<LogEntity> {
     const log = await this.logRepository.findOne({
       where: { id },
       relations: {

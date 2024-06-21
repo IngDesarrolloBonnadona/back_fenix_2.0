@@ -31,7 +31,7 @@ export class UnitController {
   }
 
   @Delete('/deleteUnit/:id')
-  async deleteUnit(@Param('id') id: number): Promise<{ message: string }> {
+  async deleteUnit(@Param('id') id: number): Promise<HttpException> {
     return await this.unitService.deleteUnit(id);
   }
 }
