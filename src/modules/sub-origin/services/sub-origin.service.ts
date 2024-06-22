@@ -26,10 +26,10 @@ export class SubOriginService {
 
   async findAllSubOrigins(): Promise<SubOriginEntity[]> {
     const subOrigins = await this.subOriginRepository.find({
-      relations: {
-        origin: true,
-        caseReportOriginal: true,
-      },
+      // relations: {
+      //   origin: true,
+      //   caseReportValidate: true,
+      // },
     });
 
     if (subOrigins.length === 0) {
@@ -45,10 +45,10 @@ export class SubOriginService {
   async findOneSubOrigin(id: number): Promise<SubOriginEntity> {
     const subOrigin = await this.subOriginRepository.findOne({
       where: { id },
-      relations: {
-        origin: true,
-        caseReportOriginal: true,
-      },
+      // relations: {
+      //   origin: true,
+      //   caseReportValidate: true,
+      // },
     });
 
     if (!subOrigin) {

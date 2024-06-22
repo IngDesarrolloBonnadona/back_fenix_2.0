@@ -26,7 +26,7 @@ export class CaseTypeService {
     const caseTypes = await this.caseTypeRepository.find({
       relations: {
         eventType: true,
-        caseReportOriginal: true,
+        caseReportValidate: true,
       },
     });
 
@@ -44,8 +44,10 @@ export class CaseTypeService {
     const caseType = await this.caseTypeRepository.findOne({
       where: { id },
       relations: {
-        eventType: true,
-        caseReportOriginal: true,
+        eventType: {
+          event: true
+        },
+        caseReportValidate: true,
       },
     });
 

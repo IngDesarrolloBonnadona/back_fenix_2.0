@@ -44,9 +44,9 @@ export class DeviceService {
 
   async findAllDevices(): Promise<DeviceEntity[]> {
     const devices = await this.deviceRepository.find({
-      relations: {
-        caseReportOriginal: true,
-      },
+      // relations: {
+      //   caseReportOriginal: true,
+      // },
     });
 
     if (devices.length === 0) {
@@ -62,9 +62,9 @@ export class DeviceService {
   async findOneDevice(id: number): Promise<DeviceEntity> {
     const device = await this.deviceRepository.findOne({
       where: { id },
-      relations: {
-        caseReportOriginal: true,
-      },
+      // relations: {
+      //   caseReportOriginal: true,
+      // },
     });
 
     if (!device) {

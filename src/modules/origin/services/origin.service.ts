@@ -26,7 +26,7 @@ export class OriginService {
     const origins = await this.originRepository.find({
       relations: {
         subOrigins: true,
-        caseReportOriginal: true,
+        // caseReportValidate: true,
       },
     });
 
@@ -45,7 +45,7 @@ export class OriginService {
       where: { id },
       relations: {
         subOrigins: true,
-        caseReportOriginal: true,
+        // caseReportValidate: true,
       },
     });
 

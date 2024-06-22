@@ -24,10 +24,10 @@ export class UnitService {
 
   async findAllUnits(): Promise<UnitEntity[]> {
     const units = await this.unitRepository.find({
-      relations: {
-        service: true,
-        caseReportOriginal: true,
-      },
+      // relations: {
+      //   service: true,
+      //   caseReportValidate: true,
+      // },
     });
 
     if (units.length === 0) {
@@ -43,10 +43,10 @@ export class UnitService {
   async findOneUnit(id: number): Promise<UnitEntity> {
     const unit = await this.unitRepository.findOne({
       where: { id },
-      relations: {
-        service: true,
-        caseReportOriginal: true,
-      },
+      // relations: {
+      //   service: true,
+      //   caseReportValidate: true,
+      // },
     });
 
     if (!unit) {

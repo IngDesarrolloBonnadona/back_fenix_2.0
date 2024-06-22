@@ -26,7 +26,7 @@ export class ServiceService {
     const services = await this.serviceRepository.find({
       relations: {
         unit: true,
-        caseReportOriginal: true,
+        // caseReportValidate: true,
       },
     });
 
@@ -44,7 +44,7 @@ export class ServiceService {
       where: { id },
       relations: {
         unit: true,
-        caseReportOriginal: true,
+        // caseReportValidate: true,
       },
     });
 

@@ -28,10 +28,9 @@ export class MovementReportService {
 
   async findAllMovementReports(): Promise<MovementReportEntity[]> {
     const movementReports = await this.movementReportRepository.find({
-      relations: {
-        caseReportOriginal: true,
-        caseReportValidate: true,
-      },
+      // relations: {
+      //   caseReportValidate: true,
+      // },
     });
 
     if (movementReports.length === 0) {
@@ -47,10 +46,9 @@ export class MovementReportService {
   async findOneMovementReport(id: number): Promise<MovementReportEntity> {
     const movementReport = await this.movementReportRepository.findOne({
       where: { id },
-      relations: {
-        caseReportOriginal: true,
-        caseReportValidate: true,
-      },
+      // relations: {
+      //   caseReportValidate: true,
+      // },
     });
 
     if (!movementReport) {
