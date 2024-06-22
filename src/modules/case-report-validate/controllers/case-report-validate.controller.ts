@@ -58,7 +58,6 @@ export class CaseReportValidateController {
     @Query('priorityId') priorityId?: number,
     @Query('severityClasificationId') severityClasificationId?: number,
     @Query('eventTypeId') eventTypeId?: number,
-    @Query('statusMovementId') statusMovementId?: number,
   ): Promise<CaseReportValidate[]> {
     const creationDateObj = creationDate ? new Date(creationDate) : undefined;
 
@@ -71,6 +70,26 @@ export class CaseReportValidateController {
       priorityId,
       severityClasificationId,
       eventTypeId,
+    );
+  }
+
+  @Get('/summaryReportsForValidator')
+  async SummaryReportsForValidator(
+    @Query('creationDate') creationDate?: string,
+    @Query('filingNumber') filingNumber?: string,
+    @Query('patientDoc') patientDoc?: string,
+    @Query('caseTypeId') caseTypeId?: number,
+    @Query('priorityId') priorityId?: number,
+    @Query('statusMovementId') statusMovementId?: number,
+  ): Promise<CaseReportValidate[]> {
+    const creationDateObj = creationDate ? new Date(creationDate) : undefined;
+
+    return await this.caseReportValidateService.SummaryReportsForValidator(
+      creationDateObj,
+      filingNumber,
+      patientDoc,
+      caseTypeId,
+      priorityId,
       statusMovementId,
     );
   }

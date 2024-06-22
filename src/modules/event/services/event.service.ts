@@ -59,6 +59,21 @@ export class EventService {
     return event;
   }
 
+  async findEventByEventTypeId(eventTypeId: number): Promise<EventEntity[]> {
+    const events = await this.eventRepository.find({
+      where: { eve_eventtype_id_FK: eventTypeId },
+    });
+
+    if (events.length === 0) {
+      throw new HttpException(
+        'No se encontró la lista de eventos relacionados con el tipo de evento.',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return events;
+  }
+
   async updateEvent(id: number, updateEventDto: UpdateEventDto) {
     const event = await this.findOneEvent(id);
     const result = await this.eventRepository.update(event.id, updateEventDto);
