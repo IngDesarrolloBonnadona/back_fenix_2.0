@@ -28,9 +28,9 @@ export class SeverityClasificationService {
 
   async findAllSeverityClasifications(): Promise<SeverityClasifEntity[]> {
     const severityClasifs = await this.severityClasifRepository.find({
-      relations: {
-        caseReportOriginal: true,
-      },
+      // relations: {
+      //   caseReportValidate: true,
+      // },
     });
 
     if (severityClasifs.length === 0) {
@@ -46,9 +46,9 @@ export class SeverityClasificationService {
   async findOneSeverityClasification(id: number): Promise<SeverityClasifEntity> {
     const severityClasif = await this.severityClasifRepository.findOne({
       where: { id },
-      relations: {
-        caseReportOriginal: true,
-      },
+      // relations: {
+      //   caseReportValidate: true,
+      // },
     });
 
     if (!severityClasif) {

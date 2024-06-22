@@ -45,7 +45,7 @@ export class MedicineService {
   async findAllMedicines(): Promise<MedicineEntity[]> {
     const medicines = await this.medicineRepository.find({
       relations: {
-        caseReportOriginal: true,
+        // caseReportOriginal: true,
       },
     });
 
@@ -63,7 +63,7 @@ export class MedicineService {
     const medicine = await this.medicineRepository.findOne({
       where: { id },
       relations: {
-        caseReportOriginal: true,
+        // caseReportOriginal: true,
       },
     });
 

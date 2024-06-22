@@ -27,7 +27,7 @@ export class EventTypeService {
       relations: {
         event: true,
         caseType: true,
-        caseReportOriginal: true,
+        // caseReportValidate: true,
       },
     });
 
@@ -46,7 +46,7 @@ export class EventTypeService {
       relations: {
         event: true,
         caseType: true,
-        caseReportOriginal: true,
+        // caseReportValidate: true,
       },
     });
 

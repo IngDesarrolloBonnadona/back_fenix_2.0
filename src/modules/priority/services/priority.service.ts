@@ -21,9 +21,9 @@ export class PriorityService {
 
   async findAllPriorities(): Promise<PriorityEntity[]> {
     const priorities = await this.priorityRepository.find({
-      relations: {
-        caseReportOriginal: true,
-      },
+      // relations: {
+      //   caseReportValidate: true,
+      // },
       where: {
         prior_status: true,
       },
@@ -41,9 +41,9 @@ export class PriorityService {
   async findOnePriority(id: number): Promise<PriorityEntity> {
     const priority = await this.priorityRepository.findOne({
       where: { id, prior_status: true },
-      relations: {
-        caseReportOriginal: true,
-      },
+      // relations: {
+      //   caseReportValidate: true,
+      // },
     });
 
     if (!priority) {

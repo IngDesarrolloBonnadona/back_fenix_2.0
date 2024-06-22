@@ -81,8 +81,6 @@ export class CaseReportValidateService {
         val_cr_validated: false,
       },
       relations: {
-        caseReportOriginal: true,
-        // log: true,
         movementReport: true,
         reportAnalystAssignment: true,
         synergy: true,
@@ -386,7 +384,6 @@ export class CaseReportValidateService {
     const caseReportsValidate = await this.caseReportValidateRepository.find({
       where,
       relations: {
-        caseReportOriginal: true,
         movementReport: true,
         reportAnalystAssignment: true,
         synergy: true,
@@ -418,7 +415,6 @@ export class CaseReportValidateService {
     const caseReportValidates = await this.caseReportValidateRepository.find({
       where: { val_cr_validated: false },
       relations: {
-        caseReportOriginal: true,
         movementReport: true,
         reportAnalystAssignment: true,
         synergy: true,
@@ -450,7 +446,6 @@ export class CaseReportValidateService {
     const caseReportValidate = await this.caseReportValidateRepository.findOne({
       where: { id, val_cr_validated: false },
       relations: {
-        caseReportOriginal: true,
         movementReport: true,
         reportAnalystAssignment: true,
         synergy: true,
@@ -487,7 +482,6 @@ export class CaseReportValidateService {
         val_cr_validated: false,
       },
       relations: {
-        caseReportOriginal: true,
         movementReport: true,
         reportAnalystAssignment: true,
         synergy: true,

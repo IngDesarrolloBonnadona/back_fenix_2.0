@@ -19,10 +19,9 @@ export class RiskLevelService {
 
   async findAllRiskLevel():Promise<RiskLevelEntity[]> {
     const riskLevels = await this.riskLevelRepository.find({
-      relations: {
-        caseReportOriginal: true,
-        caseReportValidate: true,
-      },
+      // relations: {
+      //   caseReportValidate: true,
+      // },
     });
 
     if (riskLevels.length === 0) {
@@ -38,10 +37,9 @@ export class RiskLevelService {
   async findOneRiskLevel(id: number):Promise<RiskLevelEntity> {
     const riskLevel = await this.riskLevelRepository.findOne({
       where: { id },
-      relations: {
-        caseReportOriginal: true,
-        caseReportValidate: true,
-      },
+      // relations: {
+      //   caseReportValidate: true,
+      // },
     });
 
     if (!riskLevel) {
