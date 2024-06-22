@@ -80,22 +80,22 @@ export class CaseReportValidateService {
           similarCaseReportValidate.val_cr_eventtype_id_fk,
         val_cr_validated: false,
       },
-      relations: {
-        movementReport: true,
-        reportAnalystAssignment: true,
-        synergy: true,
-        caseType: true,
-        riskType: true,
-        severityClasification: true,
-        origin: true,
-        subOrigin: true,
-        riskLevel: true,
-        eventType: true,
-        event: true,
-        service: true,
-        unit: true,
-        priority: true,
-      },
+      // relations: {
+      //   movementReport: true,
+      //   reportAnalystAssignment: true,
+      //   synergy: true,
+      //   caseType: true,
+      //   riskType: true,
+      //   severityClasification: true,
+      //   origin: true,
+      //   subOrigin: true,
+      //   riskLevel: true,
+      //   eventType: true,
+      //   event: true,
+      //   service: true,
+      //   unit: true,
+      //   priority: true,
+      // },
     });
 
     if (similarReport.length > 0) {
@@ -336,7 +336,6 @@ export class CaseReportValidateService {
     priorityId?: number,
     severityClasificationId?: number,
     eventTypeId?: number,
-    statusMovementId?: number,
   ): Promise<CaseReportValidateEntity[]> {
     const where: FindOptionsWhere<CaseReportValidateEntity> = {};
 
@@ -375,6 +374,63 @@ export class CaseReportValidateService {
       where.val_cr_eventtype_id_fk = eventTypeId;
     }
 
+    where.val_cr_validated = false;
+
+    const caseReportsValidate = await this.caseReportValidateRepository.find({
+      where,
+      relations: {
+        movementReport: true,
+        caseType: true,
+        severityClasification: true,
+        event: true,
+        unit: true,
+        priority: true,
+      },
+    });
+
+    if (caseReportsValidate.length === 0) {
+      throw new HttpException(
+        'No hay reportes para mostrar.',
+        HttpStatus.NO_CONTENT,
+      );
+    }
+
+    return caseReportsValidate;
+  }
+
+  async SummaryReportsForValidator(
+    creationDate?: Date,
+    filingNumber?: string,
+    patientDoc?: string,
+    caseTypeId?: number,
+    priorityId?: number,
+    statusMovementId?: number,
+  ): Promise<CaseReportValidateEntity[]> {
+    const where: FindOptionsWhere<CaseReportValidateEntity> = {};
+
+    if (creationDate) {
+      const nextDay = new Date(creationDate);
+      nextDay.setDate(creationDate.getDate() + 1);
+
+      where.createdAt = Between(creationDate, nextDay);
+    }
+
+    if (filingNumber) {
+      where.val_cr_filingnumber = Like(`%${filingNumber}%`);
+    }
+
+    if (patientDoc) {
+      where.val_cr_documentpatient = patientDoc;
+    }
+
+    if (caseTypeId) {
+      where.val_cr_casetype_id_fk = caseTypeId;
+    }
+
+    if (priorityId) {
+      where.val_cr_priority_id_fk = priorityId;
+    }
+
     if (statusMovementId) {
       where.val_cr_statusmovement_id_fk = statusMovementId;
     }
@@ -385,18 +441,8 @@ export class CaseReportValidateService {
       where,
       relations: {
         movementReport: true,
-        reportAnalystAssignment: true,
-        synergy: true,
         caseType: true,
-        riskType: true,
-        severityClasification: true,
-        origin: true,
-        subOrigin: true,
-        riskLevel: true,
-        eventType: true,
         event: true,
-        service: true,
-        unit: true,
         priority: true,
       },
     });
