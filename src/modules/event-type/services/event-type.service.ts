@@ -26,7 +26,7 @@ export class EventTypeService {
     const eventTypes = await this.eventTypeRepository.find({
       relations: {
         event: true,
-        caseType: true,
+        // caseType: true,
         // caseReportValidate: true,
       },
     });
@@ -45,7 +45,7 @@ export class EventTypeService {
       where: { id },
       relations: {
         event: true,
-        caseType: true,
+        // caseType: true,
         // caseReportValidate: true,
       },
     });

@@ -25,6 +25,11 @@ export class EventController {
     return this.eventService.findOneEvent(id);
   }
 
+  @Get('/findEventsByEventTypeId/:eventTypeId')
+  findEventsByEventTypeId(@Param('eventTypeId') eventTypeId: number): Promise<Event[]> {
+    return this.eventService.findEventByEventTypeId(eventTypeId );
+  }
+
   @Put('/updateEvent/:id')
   updateEvent(@Param('id') id: number, @Body() updateEventDto: UpdateEventDto): Promise<HttpException> {
     return this.eventService.updateEvent(id, updateEventDto);
