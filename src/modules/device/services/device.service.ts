@@ -38,6 +38,20 @@ export class DeviceService {
   }
 
   async createDevice(createDeviceDto: CreateDeviceDto): Promise<DeviceEntity> {
+    const FindDevice = await this.deviceRepository.findOne({
+      where: {
+        dev_name: createDeviceDto.dev_name,
+        dev_code: createDeviceDto.dev_code,
+      },
+    });
+
+    if (FindDevice) {
+      throw new HttpException(
+        'El dispositivo ya existe.',
+        HttpStatus.NO_CONTENT,
+      );
+    }
+    
     const device = this.deviceRepository.create(createDeviceDto);
     return await this.deviceRepository.save(device);
   }
@@ -132,7 +146,7 @@ export class DeviceService {
           );
         }
       }
-      return 
+      return;
     }
   }
 }
