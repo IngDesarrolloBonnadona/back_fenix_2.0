@@ -18,6 +18,19 @@ export class PositionService {
   async createPosition(
     createPositionDto: CreatePositionDto,
   ): Promise<PositionEntity> {
+    const FindPosition = await this.positionRepository.findOne({
+      where: {
+        pos_name: createPositionDto.pos_name,
+        pos_enabled: true,
+      },
+    });
+
+    if (FindPosition) {
+      throw new HttpException(
+        'La posicion ya existe.',
+        HttpStatus.NO_CONTENT,
+      );
+    }
     const position = this.positionRepository.create(createPositionDto);
     return await this.positionRepository.save(position);
   }
