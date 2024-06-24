@@ -18,6 +18,17 @@ export class ServiceService {
   ) {}
 
   async createService(createServiceDto: CreateServiceDto): Promise<Service> {
+    const FindService = await this.serviceRepository.findOne({
+      where: {
+        serv_name: createServiceDto.serv_name,
+        serv_status: true,
+      },
+    });
+
+    if (FindService) {
+      throw new HttpException('El  servicio ya existe.', HttpStatus.NO_CONTENT);
+    }
+
     const service = this.serviceRepository.create(createServiceDto);
     return await this.serviceRepository.save(service);
   }
