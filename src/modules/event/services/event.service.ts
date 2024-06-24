@@ -25,6 +25,7 @@ export class EventService {
       where: {
         eve_name: createEventDto.eve_name,
         eve_eventtype_id_FK: createEventDto.eve_eventtype_id_FK,
+        eve_status: true,
       },
     });
 
