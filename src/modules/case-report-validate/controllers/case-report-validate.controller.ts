@@ -54,14 +54,14 @@ export class CaseReportValidateController {
     @Query('filingNumber') filingNumber?: string,
     @Query('patientDoc') patientDoc?: string,
     @Query('caseTypeId') caseTypeId?: number,
+    @Query('eventId') eventId?: number,
     @Query('unitId') unitId?: number,
     @Query('priorityId') priorityId?: number,
     @Query('severityClasificationId') severityClasificationId?: number,
-    @Query('eventTypeId') eventTypeId?: number,
   ): Promise<CaseReportValidate[]> {
     const creationDateObj = creationDate ? new Date(creationDate) : undefined;
 
-    return await this.caseReportValidateService.SummaryReportsValidate(
+    return await this.caseReportValidateService.summaryReportsValidate(
       creationDateObj,
       filingNumber,
       patientDoc,
@@ -69,28 +69,67 @@ export class CaseReportValidateController {
       unitId,
       priorityId,
       severityClasificationId,
-      eventTypeId,
+      eventId,
     );
   }
 
   @Get('/summaryReportsForValidator')
   async SummaryReportsForValidator(
-    @Query('creationDate') creationDate?: string,
     @Query('filingNumber') filingNumber?: string,
-    @Query('patientDoc') patientDoc?: string,
-    @Query('caseTypeId') caseTypeId?: number,
-    @Query('priorityId') priorityId?: number,
     @Query('statusMovementId') statusMovementId?: number,
+    @Query('caseTypeId') caseTypeId?: number,
+    @Query('patientDoc') patientDoc?: string,
+    @Query('priorityId') priorityId?: number,
+    @Query('creationDate') creationDate?: string,
   ): Promise<CaseReportValidate[]> {
     const creationDateObj = creationDate ? new Date(creationDate) : undefined;
 
-    return await this.caseReportValidateService.SummaryReportsForValidator(
-      creationDateObj,
+    return await this.caseReportValidateService.summaryReportsForValidator(
       filingNumber,
-      patientDoc,
-      caseTypeId,
-      priorityId,
       statusMovementId,
+      caseTypeId,
+      patientDoc,
+      priorityId,
+      creationDateObj,
+    );
+  }
+
+  @Get('/summaryReportsForReview')
+  async summaryReportsForReview(
+    @Query('filingNumber') filingNumber?: string,
+    @Query('statusMovementId') statusMovementId?: number,
+    @Query('caseTypeId') caseTypeId?: number,
+    @Query('patientDoc') patientDoc?: string,
+    @Query('priorityId') priorityId?: number,
+    @Query('creationDate') creationDate?: string,
+  ): Promise<CaseReportValidate[]> {
+    const creationDateObj = creationDate ? new Date(creationDate) : undefined;
+
+    return await this.caseReportValidateService.summaryReportsForReview(
+      filingNumber,
+      statusMovementId,
+      caseTypeId,
+      patientDoc,
+      priorityId,
+      creationDateObj,
+    );
+  }
+
+  @Get('/summaryReportsForReview')
+  async summaryReportsForAssignCases(
+    @Query('filingNumber') filingNumber?: string,
+    @Query('statusMovementId') statusMovementId?: number,
+    @Query('caseTypeId') caseTypeId?: number,
+    @Query('eventId') eventId?: number,
+    @Query('priorityId') priorityId?: number,
+  ): Promise<CaseReportValidate[]> {
+
+    return await this.caseReportValidateService.summaryReportsForAssignCases(
+      filingNumber,
+      statusMovementId,
+      caseTypeId,
+      eventId,
+      priorityId,
     );
   }
 
