@@ -20,6 +20,19 @@ export class MovementReportService {
   async createMovementReport(
     createMovementReportDto: CreateMovementReportDto,
   ): Promise<MovementReportEntity> {
+    const FindmovementReport = await this.movementReportRepository.findOne({
+      where: {
+        mov_r_name: createMovementReportDto.mov_r_name,
+        mov_r_time: createMovementReportDto.mov_r_time
+      },
+    });
+
+    if (FindmovementReport) {
+      throw new HttpException(
+        'El movimiento del reporte ya existe.',
+        HttpStatus.NO_CONTENT,
+      );
+    }
     const movementReport = this.movementReportRepository.create(
       createMovementReportDto,
     );
