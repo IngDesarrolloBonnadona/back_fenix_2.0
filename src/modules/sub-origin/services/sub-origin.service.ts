@@ -23,7 +23,7 @@ export class SubOriginService {
     const FindSubOrigin = await this.subOriginRepository.findOne({
       where: {
         sub_o_name: createSubOriginDto.sub_o_name,
-        sub_o_origin_id_FK: createSubOriginDto.sub_o_origin_id_FK
+        sub_o_origin_id_FK: createSubOriginDto.sub_o_origin_id_FK,
       },
     });
 
@@ -73,6 +73,24 @@ export class SubOriginService {
     }
 
     return subOrigin;
+  }
+
+  async findSubOriginByOriginId(originId: number) {
+    const subOriginByOrigin = await this.subOriginRepository.find({
+      where: {
+        sub_o_origin_id_FK: originId,
+        sub_o_status: true,
+      },
+    });
+
+    if (!subOriginByOrigin) {
+      throw new HttpException(
+        'No se encontró el sub origen relacionado al origen.',
+        HttpStatus.NO_CONTENT,
+      );
+    }
+
+    return subOriginByOrigin;
   }
 
   async updateSubOrigin(id: number, updateSubOriginDto: UpdateSubOriginDto) {
