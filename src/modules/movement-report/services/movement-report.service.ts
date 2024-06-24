@@ -8,7 +8,7 @@ import { CreateMovementReportDto } from '../dto/create-movement-report.dto';
 import { UpdateMovementReportDto } from '../dto/update-movement-report.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MovementReport as MovementReportEntity } from '../entities/movement-report.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 
 @Injectable()
 export class MovementReportService {
@@ -60,6 +60,17 @@ export class MovementReportService {
 
     return movementReport;
   }
+
+  // async findStatusMovementIdByNames(namesMovement: string[]) {
+  //   const movements = await this.movementReportRepository.find({
+  //     where: {
+  //       mov_r_name: In(namesMovement)
+  //     },
+  //     select: ['id']
+  //   })
+
+  //   return movements.map(movement => movement.id)
+  // }
 
   async updateMovementReport(
     id: number,

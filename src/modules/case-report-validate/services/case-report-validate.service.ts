@@ -12,6 +12,7 @@ import {
   Between,
   DataSource,
   FindOptionsWhere,
+  In,
   Like,
   QueryRunner,
   Repository,
@@ -373,9 +374,9 @@ export class CaseReportValidateService {
         event: true,
         unit: true,
         priority: true,
-        movementReport: true
+        movementReport: true,
       },
-      withDeleted: true
+      withDeleted: true,
     });
 
     if (caseReportsValidate.length === 0) {
@@ -482,6 +483,22 @@ export class CaseReportValidateService {
 
     if (statusMovementId) {
       where.val_cr_statusmovement_id_fk = statusMovementId;
+    } else {
+      const namesMovement = [
+        movementReport.ANULATION,
+        movementReport.RETURN_CASE_ANALYST,
+      ];
+
+      const findMovementNames = await this.movementReportRepository.find({
+        where: {
+          mov_r_name: In(namesMovement),
+        },
+        select: ['id'],
+      });
+
+      const movementsIds = findMovementNames.map((movementId) => movementId.id);
+
+      where.val_cr_statusmovement_id_fk = In(movementsIds);
     }
 
     where.val_cr_validated = false;
@@ -494,6 +511,7 @@ export class CaseReportValidateService {
         event: true,
         priority: true,
       },
+      withDeleted: true,
     });
 
     if (caseReportsValidate.length === 0) {
@@ -545,7 +563,7 @@ export class CaseReportValidateService {
         event: true,
         priority: true,
         researcher: true,
-        reportAnalystAssignment: true
+        reportAnalystAssignment: true,
       },
     });
 
