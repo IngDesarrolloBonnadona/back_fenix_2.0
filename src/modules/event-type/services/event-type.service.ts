@@ -20,6 +20,20 @@ export class EventTypeService {
   async createEventType(
     createEventTypeDto: CreateEventTypeDto,
   ): Promise<EventTypeEntity> {
+    const eventTypes = await this.eventTypeRepository.findOne({
+      where: {
+        eve_t_name: createEventTypeDto.eve_t_name,
+        eve_t_casetype_id_FK: createEventTypeDto.eve_t_casetype_id_FK
+      }
+    });
+
+    if (eventTypes) {
+      throw new HttpException(
+        'El tipo de suceso ya existe con el tipo de caso.',
+        HttpStatus.NO_CONTENT,
+      );
+    }
+
     const eventType = this.eventTypeRepository.create(createEventTypeDto);
     return await this.eventTypeRepository.save(eventType);
   }
