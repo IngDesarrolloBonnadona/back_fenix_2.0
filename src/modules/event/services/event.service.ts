@@ -18,6 +18,19 @@ export class EventService {
   ) {}
 
   async createEvent(createEventDto: CreateEventDto): Promise<EventEntity> {
+    const events = await this.eventRepository.findOne({
+      where: {
+        eve_name: createEventDto.eve_name,
+        eve_eventtype_id_FK: createEventDto.eve_eventtype_id_FK,
+      },
+    });
+
+    if (events) {
+      throw new HttpException(
+        'El suceso ya existe con el tipo de suceso.',
+        HttpStatus.NO_CONTENT,
+      );
+    }
     const event = this.eventRepository.create(createEventDto);
     return await this.eventRepository.save(event);
   }
