@@ -32,7 +32,7 @@ export class EventService {
     if (events) {
       throw new HttpException(
         'El suceso ya existe con el tipo de suceso.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.CONFLICT,
       );
     }
 

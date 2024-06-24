@@ -26,7 +26,7 @@ export class ServiceService {
     });
 
     if (FindService) {
-      throw new HttpException('El  servicio ya existe.', HttpStatus.NO_CONTENT);
+      throw new HttpException('El  servicio ya existe.', HttpStatus.CONFLICT);
     }
 
     const service = this.serviceRepository.create(createServiceDto);

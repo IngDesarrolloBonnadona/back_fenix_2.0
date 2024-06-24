@@ -31,7 +31,7 @@ export class MovementReportService {
     if (FindmovementReport) {
       throw new HttpException(
         'El movimiento del reporte ya existe.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.CONFLICT,
       );
     }
     const movementReport = this.movementReportRepository.create(

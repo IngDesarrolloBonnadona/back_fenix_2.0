@@ -25,7 +25,7 @@ export class RiskLevelService {
     if (FindRiskLevel) {
       throw new HttpException(
         'El nivel de riesgo ya existe.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.CONFLICT,
       );
     }
     const riskLevel = this.riskLevelRepository.create(createRiskLevelDto);

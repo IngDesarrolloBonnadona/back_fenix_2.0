@@ -23,7 +23,7 @@ export class PriorityService {
     });
 
     if (FindPriority) {
-      throw new HttpException('La prioridad ya existe.', HttpStatus.NO_CONTENT);
+      throw new HttpException('La prioridad ya existe.', HttpStatus.CONFLICT);
     }
 
     const priority = this.priorityRepository.create(createPriorityDto);

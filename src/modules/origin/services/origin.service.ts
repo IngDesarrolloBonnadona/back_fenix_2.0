@@ -26,7 +26,7 @@ export class OriginService {
     });
 
     if (FindOrigin) {
-      throw new HttpException('El origen ya existe.', HttpStatus.NO_CONTENT);
+      throw new HttpException('El origen ya existe.', HttpStatus.CONFLICT);
     }
     const origin = this.originRepository.create(createOriginDto);
     return await this.originRepository.save(origin);

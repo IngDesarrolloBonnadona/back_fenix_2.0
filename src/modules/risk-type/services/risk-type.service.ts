@@ -28,7 +28,7 @@ export class RiskTypeService {
     if (FindRiskType) {
       throw new HttpException(
         'El  tipo de riesgo ya existe.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.CONFLICT,
       );
     }
 

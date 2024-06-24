@@ -28,7 +28,7 @@ export class PositionService {
     if (FindPosition) {
       throw new HttpException(
         'La posicion ya existe.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.CONFLICT,
       );
     }
     const position = this.positionRepository.create(createPositionDto);

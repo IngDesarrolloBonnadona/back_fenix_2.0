@@ -94,7 +94,7 @@ export class EventTypeService {
     if (!eventTypesByCaseType) {
       throw new HttpException(
         'No se encontró el tipo de suceso relacionado al tipo de caso.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.CONFLICT,
       );
     }
 

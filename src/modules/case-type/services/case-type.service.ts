@@ -30,7 +30,7 @@ export class CaseTypeService {
     if (FindCaseType) {
       throw new HttpException(
         'El  tipo de caso ya existe.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.CONFLICT,
       );
     }
     const caseType = this.caseTypeRepository.create(createCaseTypeDto);
