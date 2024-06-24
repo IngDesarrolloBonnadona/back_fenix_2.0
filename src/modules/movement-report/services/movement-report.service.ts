@@ -61,17 +61,6 @@ export class MovementReportService {
     return movementReport;
   }
 
-  // async findStatusMovementIdByNames(namesMovement: string[]) {
-  //   const movements = await this.movementReportRepository.find({
-  //     where: {
-  //       mov_r_name: In(namesMovement)
-  //     },
-  //     select: ['id']
-  //   })
-
-  //   return movements.map(movement => movement.id)
-  // }
-
   async updateMovementReport(
     id: number,
     updateMovementReportDto: UpdateMovementReportDto,

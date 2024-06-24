@@ -117,7 +117,7 @@ export class CaseReportValidateController {
     );
   }
 
-  @Get('/summaryReportsForReview')
+  @Get('/summaryReportsForAssignCases')
   async summaryReportsForAssignCases(
     @Query('filingNumber') filingNumber?: string,
     @Query('statusMovementId') statusMovementId?: number,

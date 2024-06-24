@@ -32,7 +32,7 @@ export class EventService {
 
     if (events.length === 0) {
       throw new HttpException(
-        'No se encontró la lista de eventos.',
+        'No se encontró la lista de sucesos.',
         HttpStatus.NO_CONTENT,
       );
     }
@@ -51,7 +51,7 @@ export class EventService {
 
     if (!event) {
       throw new HttpException(
-        'No se encontró el evento.',
+        'No se encontró el suceso.',
         HttpStatus.NO_CONTENT,
       );
     }
@@ -66,7 +66,7 @@ export class EventService {
 
     if (events.length === 0) {
       throw new HttpException(
-        'No se encontró la lista de eventos relacionados con el tipo de evento.',
+        'No se encontró la lista de sucesos relacionados con el tipo de suceso.',
         HttpStatus.NOT_FOUND,
       );
     }
@@ -97,7 +97,7 @@ export class EventService {
 
     if (result.affected === 0) {
       return new HttpException(
-        `No se pudo eliminar el evento`,
+        `No se pudo eliminar el suceso`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }

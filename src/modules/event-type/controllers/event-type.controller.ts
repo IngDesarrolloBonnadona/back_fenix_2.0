@@ -25,6 +25,11 @@ export class EventTypeController {
     return this.eventTypeService.findOneEventType(id);
   }
 
+  @Get('/findEvenTypeByCaseType/:caseTypeId')
+  findEvenTypeByCaseType(@Param('caseTypeId') caseTypeId: number): Promise<EventType[]> {
+    return this.eventTypeService.findEvenTypeByCaseType(caseTypeId);
+  }
+
   @Put('/updateEventType/:id')
   updateEventType(@Param('id') id: number, @Body() updateEventTypeDto: UpdateEventTypeDto): Promise<HttpException> {
     return this.eventTypeService.updateEventType(id, updateEventTypeDto);
