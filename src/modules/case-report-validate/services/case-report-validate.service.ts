@@ -316,10 +316,10 @@ export class CaseReportValidateService {
     filingNumber?: string,
     patientDoc?: string,
     caseTypeId?: number,
-    unitId?: number,
+    eventId?: number,
     priorityId?: number,
+    unitId?: number,
     severityClasificationId?: number,
-    eventTypeId?: number,
   ): Promise<CaseReportValidateEntity[]> {
     const where: FindOptionsWhere<CaseReportValidateEntity> = {};
 
@@ -354,8 +354,8 @@ export class CaseReportValidateService {
       where.val_cr_severityclasif_id_fk = severityClasificationId;
     }
 
-    if (eventTypeId) {
-      where.val_cr_eventtype_id_fk = eventTypeId;
+    if (eventId) {
+      where.val_cr_event_id_fk = eventId;
     }
 
     where.val_cr_validated = false;
@@ -363,7 +363,6 @@ export class CaseReportValidateService {
     const caseReportsValidate = await this.caseReportValidateRepository.find({
       where,
       relations: {
-        // movementReport: true,
         caseType: true,
         severityClasification: true,
         event: true,
