@@ -11,5 +11,6 @@ import { CaseTypeModule } from '../case-type/case-type.module';
 ],
   controllers: [EventTypeController],
   providers: [EventTypeService],
+  exports: [EventTypeService],
 })
 export class EventTypeModule {}

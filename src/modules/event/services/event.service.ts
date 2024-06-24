@@ -9,12 +9,15 @@ import { UpdateEventDto } from '../dto/update-event.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Event as EventEntity } from '../entities/event.entity';
 import { Repository } from 'typeorm';
+import { EventTypeService } from 'src/modules/event-type/services/event-type.service';
 
 @Injectable()
 export class EventService {
   constructor(
     @InjectRepository(EventEntity)
     private readonly eventRepository: Repository<EventEntity>,
+
+    private readonly eventTypeService: EventTypeService,
   ) {}
 
   async createEvent(createEventDto: CreateEventDto): Promise<EventEntity> {
@@ -31,6 +34,11 @@ export class EventService {
         HttpStatus.NO_CONTENT,
       );
     }
+
+    await this.eventTypeService.findOneEventType(
+      createEventDto.eve_eventtype_id_FK,
+    );
+
     const event = this.eventRepository.create(createEventDto);
     return await this.eventRepository.save(event);
   }
