@@ -383,12 +383,12 @@ export class CaseReportValidateService {
   }
 
   async summaryReportsForValidator(
-    creationDate?: Date,
     filingNumber?: string,
-    patientDoc?: string,
-    caseTypeId?: number,
-    priorityId?: number,
     statusMovementId?: number,
+    caseTypeId?: number,
+    patientDoc?: string,
+    priorityId?: number,
+    creationDate?: Date,
   ): Promise<CaseReportValidateEntity[]> {
     const where: FindOptionsWhere<CaseReportValidateEntity> = {};
 
@@ -442,12 +442,12 @@ export class CaseReportValidateService {
   }
 
   async summaryReportsForReview(
-    creationDate?: Date,
     filingNumber?: string,
-    patientDoc?: string,
-    caseTypeId?: number,
-    priorityId?: number,
     statusMovementId?: number,
+    caseTypeId?: number,
+    patientDoc?: string,
+    priorityId?: number,
+    creationDate?: Date,
   ): Promise<CaseReportValidateEntity[]> {
     const where: FindOptionsWhere<CaseReportValidateEntity> = {};
 

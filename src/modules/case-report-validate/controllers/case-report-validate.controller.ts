@@ -75,43 +75,43 @@ export class CaseReportValidateController {
 
   @Get('/summaryReportsForValidator')
   async SummaryReportsForValidator(
-    @Query('creationDate') creationDate?: string,
     @Query('filingNumber') filingNumber?: string,
-    @Query('patientDoc') patientDoc?: string,
-    @Query('caseTypeId') caseTypeId?: number,
-    @Query('priorityId') priorityId?: number,
     @Query('statusMovementId') statusMovementId?: number,
+    @Query('caseTypeId') caseTypeId?: number,
+    @Query('patientDoc') patientDoc?: string,
+    @Query('priorityId') priorityId?: number,
+    @Query('creationDate') creationDate?: string,
   ): Promise<CaseReportValidate[]> {
     const creationDateObj = creationDate ? new Date(creationDate) : undefined;
 
     return await this.caseReportValidateService.summaryReportsForValidator(
-      creationDateObj,
       filingNumber,
-      patientDoc,
-      caseTypeId,
-      priorityId,
       statusMovementId,
+      caseTypeId,
+      patientDoc,
+      priorityId,
+      creationDateObj,
     );
   }
 
   @Get('/summaryReportsForReview')
   async summaryReportsForReview(
-    @Query('creationDate') creationDate?: string,
     @Query('filingNumber') filingNumber?: string,
-    @Query('patientDoc') patientDoc?: string,
-    @Query('caseTypeId') caseTypeId?: number,
-    @Query('priorityId') priorityId?: number,
     @Query('statusMovementId') statusMovementId?: number,
+    @Query('caseTypeId') caseTypeId?: number,
+    @Query('patientDoc') patientDoc?: string,
+    @Query('priorityId') priorityId?: number,
+    @Query('creationDate') creationDate?: string,
   ): Promise<CaseReportValidate[]> {
     const creationDateObj = creationDate ? new Date(creationDate) : undefined;
 
     return await this.caseReportValidateService.summaryReportsForReview(
-      creationDateObj,
       filingNumber,
-      patientDoc,
-      caseTypeId,
-      priorityId,
       statusMovementId,
+      caseTypeId,
+      patientDoc,
+      priorityId,
+      creationDateObj,
     );
   }
 
