@@ -32,7 +32,7 @@ export class UnitService {
     await this.serviceService.findOneService(createUnitDto.unit_service_id_FK);
 
     if (FindUnit) {
-      throw new HttpException('La unidad ya existe en el servicio seleccionado.', HttpStatus.CONFLICT);
+      throw new HttpException('La unidad ya existe con el servicio seleccionado.', HttpStatus.CONFLICT);
     }
 
     const unit = this.unitRepository.create(createUnitDto);

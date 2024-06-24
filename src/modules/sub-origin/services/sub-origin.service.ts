@@ -29,7 +29,7 @@ export class SubOriginService {
     });
 
     if (FindSubOrigin) {
-      throw new HttpException('El sub origen ya existe.', HttpStatus.CONFLICT);
+      throw new HttpException('El sub origen ya existe con el origen seleccionado.', HttpStatus.CONFLICT);
     }
 
     const subOrigin = this.subOriginRepository.create(createSubOriginDto);

@@ -31,7 +31,7 @@ export class EventService {
 
     if (events) {
       throw new HttpException(
-        'El suceso ya existe con el tipo de suceso.',
+        'El suceso ya existe en el tipo de suceso seleccionado.',
         HttpStatus.CONFLICT,
       );
     }

@@ -32,7 +32,7 @@ export class EventTypeService {
 
     if (findEventType) {
       throw new HttpException(
-        'El tipo de suceso ya existe con el tipo de caso.',
+        'El tipo de suceso ya existe en el tipo de caso seleccionado.',
         HttpStatus.NO_CONTENT,
       );
     }
