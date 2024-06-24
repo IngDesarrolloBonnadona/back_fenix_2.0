@@ -15,6 +15,17 @@ export class PriorityService {
   async createPriority(
     createPriorityDto: CreatePriorityDto,
   ): Promise<PriorityEntity> {
+    const FindPriority = await this.priorityRepository.findOne({
+      where: {
+        prior_name: createPriorityDto.prior_name,
+        prior_status: true,
+      },
+    });
+
+    if (FindPriority) {
+      throw new HttpException('La prioridad ya existe.', HttpStatus.NO_CONTENT);
+    }
+
     const priority = this.priorityRepository.create(createPriorityDto);
     return await this.priorityRepository.save(priority);
   }
