@@ -314,9 +314,10 @@ export class CaseReportValidateService {
   async summaryReportsValidate(
     creationDate?: Date,
     filingNumber?: string,
+    statusMovementId?: number,
     patientDoc?: string,
     caseTypeId?: number,
-    eventId?: number,
+    eventTypeId?: number,
     priorityId?: number,
     unitId?: number,
     severityClasificationId?: number,
@@ -332,6 +333,10 @@ export class CaseReportValidateService {
 
     if (filingNumber) {
       where.val_cr_filingnumber = Like(`%${filingNumber}%`);
+    }
+
+    if (statusMovementId) {
+      where.val_cr_statusmovement_id_fk = statusMovementId;
     }
 
     if (patientDoc) {
@@ -354,8 +359,8 @@ export class CaseReportValidateService {
       where.val_cr_severityclasif_id_fk = severityClasificationId;
     }
 
-    if (eventId) {
-      where.val_cr_event_id_fk = eventId;
+    if (eventTypeId) {
+      where.val_cr_eventtype_id_fk = eventTypeId;
     }
 
     where.val_cr_validated = false;
@@ -366,10 +371,11 @@ export class CaseReportValidateService {
         caseType: true,
         severityClasification: true,
         event: true,
-        eventType: true,
         unit: true,
         priority: true,
+        movementReport: true
       },
+      withDeleted: true
     });
 
     if (caseReportsValidate.length === 0) {
@@ -382,64 +388,64 @@ export class CaseReportValidateService {
     return caseReportsValidate;
   }
 
-  async summaryReportsForValidator(
-    filingNumber?: string,
-    statusMovementId?: number,
-    caseTypeId?: number,
-    patientDoc?: string,
-    priorityId?: number,
-    creationDate?: Date,
-  ): Promise<CaseReportValidateEntity[]> {
-    const where: FindOptionsWhere<CaseReportValidateEntity> = {};
+  // async summaryReportsForValidator(
+  //   filingNumber?: string,
+  //   statusMovementId?: number,
+  //   caseTypeId?: number,
+  //   patientDoc?: string,
+  //   priorityId?: number,
+  //   creationDate?: Date,
+  // ): Promise<CaseReportValidateEntity[]> {
+  //   const where: FindOptionsWhere<CaseReportValidateEntity> = {};
 
-    if (creationDate) {
-      const nextDay = new Date(creationDate);
-      nextDay.setDate(creationDate.getDate() + 1);
+  //   if (creationDate) {
+  //     const nextDay = new Date(creationDate);
+  //     nextDay.setDate(creationDate.getDate() + 1);
 
-      where.createdAt = Between(creationDate, nextDay);
-    }
+  //     where.createdAt = Between(creationDate, nextDay);
+  //   }
 
-    if (filingNumber) {
-      where.val_cr_filingnumber = Like(`%${filingNumber}%`);
-    }
+  //   if (filingNumber) {
+  //     where.val_cr_filingnumber = Like(`%${filingNumber}%`);
+  //   }
 
-    if (patientDoc) {
-      where.val_cr_documentpatient = patientDoc;
-    }
+  //   if (patientDoc) {
+  //     where.val_cr_documentpatient = patientDoc;
+  //   }
 
-    if (caseTypeId) {
-      where.val_cr_casetype_id_fk = caseTypeId;
-    }
+  //   if (caseTypeId) {
+  //     where.val_cr_casetype_id_fk = caseTypeId;
+  //   }
 
-    if (priorityId) {
-      where.val_cr_priority_id_fk = priorityId;
-    }
+  //   if (priorityId) {
+  //     where.val_cr_priority_id_fk = priorityId;
+  //   }
 
-    if (statusMovementId) {
-      where.val_cr_statusmovement_id_fk = statusMovementId;
-    }
+  //   if (statusMovementId) {
+  //     where.val_cr_statusmovement_id_fk = statusMovementId;
+  //   }
 
-    where.val_cr_validated = false;
+  //   where.val_cr_validated = false;
 
-    const caseReportsValidate = await this.caseReportValidateRepository.find({
-      where,
-      relations: {
-        movementReport: true,
-        caseType: true,
-        event: true,
-        priority: true,
-      },
-    });
+  //   const caseReportsValidate = await this.caseReportValidateRepository.find({
+  //     where,
+  //     relations: {
+  //       movementReport: true,
+  //       caseType: true,
+  //       event: true,
+  //       priority: true,
+  //     },
+  //   });
 
-    if (caseReportsValidate.length === 0) {
-      throw new HttpException(
-        'No hay reportes para mostrar.',
-        HttpStatus.NO_CONTENT,
-      );
-    }
+  //   if (caseReportsValidate.length === 0) {
+  //     throw new HttpException(
+  //       'No hay reportes para mostrar.',
+  //       HttpStatus.NO_CONTENT,
+  //     );
+  //   }
 
-    return caseReportsValidate;
-  }
+  //   return caseReportsValidate;
+  // }
 
   async summaryReportsForReview(
     filingNumber?: string,
