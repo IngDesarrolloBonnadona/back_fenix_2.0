@@ -89,7 +89,7 @@ export class EventService {
     if (events.length === 0) {
       throw new HttpException(
         'No se encontró la lista de sucesos relacionados con el tipo de suceso.',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
 
