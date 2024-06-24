@@ -24,14 +24,12 @@ export class SubOriginService {
       where: {
         sub_o_name: createSubOriginDto.sub_o_name,
         sub_o_origin_id_FK: createSubOriginDto.sub_o_origin_id_FK,
+        sub_o_status: true,
       },
     });
 
     if (FindSubOrigin) {
-      throw new HttpException(
-        'El sub origen ya existe.',
-        HttpStatus.NO_CONTENT,
-      );
+      throw new HttpException('El sub origen ya existe.', HttpStatus.CONFLICT);
     }
 
     const subOrigin = this.subOriginRepository.create(createSubOriginDto);
