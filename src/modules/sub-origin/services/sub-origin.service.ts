@@ -20,6 +20,20 @@ export class SubOriginService {
   async createSubOrigin(
     createSubOriginDto: CreateSubOriginDto,
   ): Promise<SubOriginEntity> {
+    const FindSubOrigin = await this.subOriginRepository.findOne({
+      where: {
+        sub_o_name: createSubOriginDto.sub_o_name,
+        sub_o_origin_id_FK: createSubOriginDto.sub_o_origin_id_FK
+      },
+    });
+
+    if (FindSubOrigin) {
+      throw new HttpException(
+        'El sub origen ya existe.',
+        HttpStatus.NO_CONTENT,
+      );
+    }
+
     const subOrigin = this.subOriginRepository.create(createSubOriginDto);
     return await this.subOriginRepository.save(subOrigin);
   }
