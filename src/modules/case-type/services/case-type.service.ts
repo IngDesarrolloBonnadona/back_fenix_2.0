@@ -18,6 +18,18 @@ export class CaseTypeService {
   ) {}
 
   async createCaseType(createCaseTypeDto: CreateCaseTypeDto): Promise<CaseTypeEntity> {
+    const FindCaseType = await this.caseTypeRepository.findOne({
+      where: {
+        cas_t_name: createCaseTypeDto.cas_t_name
+      },
+    });
+
+    if (FindCaseType) {
+      throw new HttpException(
+        'El  tipo de caso ya existe.',
+        HttpStatus.NO_CONTENT,
+      );
+    }
     const caseType = this.caseTypeRepository.create(createCaseTypeDto);
     return await this.caseTypeRepository.save(caseType);
   }
