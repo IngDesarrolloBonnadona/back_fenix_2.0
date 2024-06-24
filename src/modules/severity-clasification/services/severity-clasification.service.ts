@@ -20,6 +20,20 @@ export class SeverityClasificationService {
   async createSeverityClasification(
     createSeverityClasificationDto: CreateSeverityClasificationDto,
   ): Promise<SeverityClasifEntity> {
+    const FindSevClasification = await this.severityClasifRepository.findOne({
+      where: {
+        sev_c_name: createSeverityClasificationDto.sev_c_name,
+        sev_c_status: true,
+      },
+    });
+
+    if (FindSevClasification) {
+      throw new HttpException(
+        'La clasificación de severidad ya existe.',
+        HttpStatus.CONFLICT,
+      );
+    }
+
     const severityClasif = this.severityClasifRepository.create(
       createSeverityClasificationDto,
     );
@@ -43,7 +57,9 @@ export class SeverityClasificationService {
     return severityClasifs;
   }
 
-  async findOneSeverityClasification(id: number): Promise<SeverityClasifEntity> {
+  async findOneSeverityClasification(
+    id: number,
+  ): Promise<SeverityClasifEntity> {
     const severityClasif = await this.severityClasifRepository.findOne({
       where: { id },
       // relations: {

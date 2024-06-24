@@ -17,7 +17,22 @@ export class CaseTypeService {
     private readonly caseTypeRepository: Repository<CaseTypeEntity>,
   ) {}
 
-  async createCaseType(createCaseTypeDto: CreateCaseTypeDto): Promise<CaseTypeEntity> {
+  async createCaseType(
+    createCaseTypeDto: CreateCaseTypeDto,
+  ): Promise<CaseTypeEntity> {
+    const FindCaseType = await this.caseTypeRepository.findOne({
+      where: {
+        cas_t_name: createCaseTypeDto.cas_t_name,
+        cas_t_status: true,
+      },
+    });
+
+    if (FindCaseType) {
+      throw new HttpException(
+        'El  tipo de caso ya existe.',
+        HttpStatus.CONFLICT,
+      );
+    }
     const caseType = this.caseTypeRepository.create(createCaseTypeDto);
     return await this.caseTypeRepository.save(caseType);
   }
@@ -43,12 +58,12 @@ export class CaseTypeService {
   async findOneCaseType(id: number): Promise<CaseTypeEntity> {
     const caseType = await this.caseTypeRepository.findOne({
       where: { id },
-      relations: {
-        eventType: {
-          event: true
-        },
-        caseReportValidate: true,
-      },
+      // relations: {
+      //   eventType: {
+      //     event: true
+      //   },
+      //   caseReportValidate: true,
+      // },
     });
 
     if (!caseType) {

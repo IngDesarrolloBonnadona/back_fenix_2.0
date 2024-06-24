@@ -9,15 +9,32 @@ import { UpdateUnitDto } from '../dto/update-unit.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Unit as UnitEntity } from '../entities/unit.entity';
 import { Repository } from 'typeorm';
+import { ServiceService } from 'src/modules/service/services/service.service';
 
 @Injectable()
 export class UnitService {
   constructor(
     @InjectRepository(UnitEntity)
     private readonly unitRepository: Repository<UnitEntity>,
+
+    private readonly serviceService: ServiceService,
   ) {}
 
   async createUnit(createUnitDto: CreateUnitDto): Promise<UnitEntity> {
+    const FindUnit = await this.unitRepository.findOne({
+      where: {
+        unit_name: createUnitDto.unit_name,
+        unit_service_id_FK: createUnitDto.unit_service_id_FK,
+        unit_status: true,
+      },
+    });
+
+    await this.serviceService.findOneService(createUnitDto.unit_service_id_FK);
+
+    if (FindUnit) {
+      throw new HttpException('La unidad ya existe con el servicio seleccionado.', HttpStatus.CONFLICT);
+    }
+
     const unit = this.unitRepository.create(createUnitDto);
     return await this.unitRepository.save(unit);
   }
@@ -57,6 +74,24 @@ export class UnitService {
     }
 
     return unit;
+  }
+
+  async findUnitByService(serviceId: number) {
+    const unitByService = await this.unitRepository.find({
+      where: {
+        unit_service_id_FK: serviceId,
+        unit_status: true,
+      },
+    });
+
+    if (!unitByService) {
+      throw new HttpException(
+        'No se encontró la unidad relacionado al servicio.',
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    return unitByService;
   }
 
   async updateUnit(id: number, updateUnitDto: UpdateUnitDto) {

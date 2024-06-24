@@ -18,6 +18,16 @@ export class OriginService {
   ) {}
 
   async createOrigin(createOriginDto: CreateOriginDto): Promise<OriginEntity> {
+    const FindOrigin = await this.originRepository.findOne({
+      where: {
+        orig_name: createOriginDto.orig_name,
+        orig_status: true,
+      },
+    });
+
+    if (FindOrigin) {
+      throw new HttpException('El origen ya existe.', HttpStatus.CONFLICT);
+    }
     const origin = this.originRepository.create(createOriginDto);
     return await this.originRepository.save(origin);
   }

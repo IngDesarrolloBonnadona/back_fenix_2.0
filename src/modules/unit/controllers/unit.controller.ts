@@ -25,6 +25,11 @@ export class UnitController {
     return this.unitService.findOneUnit(id);
   }
 
+  @Get('/findUnitByService/:serviceId')
+  findUnitByService(@Param('serviceId') serviceId: number): Promise<Unit[]> {
+    return this.unitService.findUnitByService(serviceId);
+  }
+
   @Put('/updateUnit/:id')
   updateUnit(@Param('id') id: number, @Body() updateUnitDto: UpdateUnitDto): Promise<HttpException> {
     return this.unitService.updateUnit(id, updateUnitDto);

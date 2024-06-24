@@ -9,15 +9,37 @@ import { UpdateEventDto } from '../dto/update-event.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Event as EventEntity } from '../entities/event.entity';
 import { Repository } from 'typeorm';
+import { EventTypeService } from 'src/modules/event-type/services/event-type.service';
 
 @Injectable()
 export class EventService {
   constructor(
     @InjectRepository(EventEntity)
     private readonly eventRepository: Repository<EventEntity>,
+
+    private readonly eventTypeService: EventTypeService,
   ) {}
 
   async createEvent(createEventDto: CreateEventDto): Promise<EventEntity> {
+    const events = await this.eventRepository.findOne({
+      where: {
+        eve_name: createEventDto.eve_name,
+        eve_eventtype_id_FK: createEventDto.eve_eventtype_id_FK,
+        eve_status: true,
+      },
+    });
+
+    if (events) {
+      throw new HttpException(
+        'El suceso ya existe en el tipo de suceso seleccionado.',
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    await this.eventTypeService.findOneEventType(
+      createEventDto.eve_eventtype_id_FK,
+    );
+
     const event = this.eventRepository.create(createEventDto);
     return await this.eventRepository.save(event);
   }
@@ -32,7 +54,7 @@ export class EventService {
 
     if (events.length === 0) {
       throw new HttpException(
-        'No se encontró la lista de eventos.',
+        'No se encontró la lista de sucesos.',
         HttpStatus.NO_CONTENT,
       );
     }
@@ -51,7 +73,7 @@ export class EventService {
 
     if (!event) {
       throw new HttpException(
-        'No se encontró el evento.',
+        'No se encontró el suceso.',
         HttpStatus.NO_CONTENT,
       );
     }
@@ -66,8 +88,8 @@ export class EventService {
 
     if (events.length === 0) {
       throw new HttpException(
-        'No se encontró la lista de eventos relacionados con el tipo de evento.',
-        HttpStatus.NOT_FOUND,
+        'No se encontró la lista de sucesos relacionados con el tipo de suceso.',
+        HttpStatus.NO_CONTENT,
       );
     }
 
@@ -97,7 +119,7 @@ export class EventService {
 
     if (result.affected === 0) {
       return new HttpException(
-        `No se pudo eliminar el evento`,
+        `No se pudo eliminar el suceso`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }

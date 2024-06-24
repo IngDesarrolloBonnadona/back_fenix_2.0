@@ -132,7 +132,7 @@ export class DeviceService {
           );
         }
       }
-      return 
+      return;
     }
   }
 }

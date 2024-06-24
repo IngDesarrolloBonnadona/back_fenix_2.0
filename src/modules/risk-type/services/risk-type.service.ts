@@ -18,6 +18,20 @@ export class RiskTypeService {
   ) {}
 
   async createRiskType(createRiskTypeDto: CreateRiskTypeDto): Promise<RiskTypeEntity> {
+    const FindRiskType = await this.riskTypeRepository.findOne({
+      where: {
+        ris_t_name: createRiskTypeDto.ris_t_name,
+        ris_t_status: true
+      },
+    });
+
+    if (FindRiskType) {
+      throw new HttpException(
+        'El  tipo de riesgo ya existe.',
+        HttpStatus.CONFLICT,
+      );
+    }
+
     const riskType = this.riskTypeRepository.create(createRiskTypeDto);
     return await this.riskTypeRepository.save(riskType);
   }

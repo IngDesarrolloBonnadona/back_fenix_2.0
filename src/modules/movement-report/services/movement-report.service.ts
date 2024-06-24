@@ -8,7 +8,7 @@ import { CreateMovementReportDto } from '../dto/create-movement-report.dto';
 import { UpdateMovementReportDto } from '../dto/update-movement-report.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MovementReport as MovementReportEntity } from '../entities/movement-report.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 
 @Injectable()
 export class MovementReportService {
@@ -20,6 +20,20 @@ export class MovementReportService {
   async createMovementReport(
     createMovementReportDto: CreateMovementReportDto,
   ): Promise<MovementReportEntity> {
+    const FindmovementReport = await this.movementReportRepository.findOne({
+      where: {
+        mov_r_name: createMovementReportDto.mov_r_name,
+        mov_r_time: createMovementReportDto.mov_r_time,
+        mov_r_status: true,
+      },
+    });
+
+    if (FindmovementReport) {
+      throw new HttpException(
+        'El movimiento del reporte ya existe.',
+        HttpStatus.CONFLICT,
+      );
+    }
     const movementReport = this.movementReportRepository.create(
       createMovementReportDto,
     );
