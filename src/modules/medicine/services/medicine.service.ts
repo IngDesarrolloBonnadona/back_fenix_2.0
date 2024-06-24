@@ -37,7 +37,9 @@ export class MedicineService {
     }
   }
 
-  async createMedicine(createMedicineDto: CreateMedicineDto): Promise<MedicineEntity> {
+  async createMedicine(
+    createMedicineDto: CreateMedicineDto,
+  ): Promise<MedicineEntity> {
     const medicine = this.medicineRepository.create(createMedicineDto);
     return await this.medicineRepository.save(medicine);
   }
@@ -131,7 +133,7 @@ export class MedicineService {
           );
         }
       }
-      return 
+      return;
     }
   }
 }
