@@ -9,12 +9,15 @@ import { UpdateEventTypeDto } from '../dto/update-event-type.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EventType as EventTypeEntity } from '../entities/event-type.entity';
 import { Repository } from 'typeorm';
+import { CaseTypeService } from 'src/modules/case-type/services/case-type.service';
 
 @Injectable()
 export class EventTypeService {
   constructor(
     @InjectRepository(EventTypeEntity)
     private readonly eventTypeRepository: Repository<EventTypeEntity>,
+
+    private readonly caseTypeService: CaseTypeService,
   ) {}
 
   async createEventType(
@@ -23,8 +26,8 @@ export class EventTypeService {
     const eventTypes = await this.eventTypeRepository.findOne({
       where: {
         eve_t_name: createEventTypeDto.eve_t_name,
-        eve_t_casetype_id_FK: createEventTypeDto.eve_t_casetype_id_FK
-      }
+        eve_t_casetype_id_FK: createEventTypeDto.eve_t_casetype_id_FK,
+      },
     });
 
     if (eventTypes) {
@@ -33,6 +36,10 @@ export class EventTypeService {
         HttpStatus.NO_CONTENT,
       );
     }
+
+    await this.caseTypeService.findOneCaseType(
+      createEventTypeDto.eve_t_casetype_id_FK,
+    );
 
     const eventType = this.eventTypeRepository.create(createEventTypeDto);
     return await this.eventTypeRepository.save(eventType);

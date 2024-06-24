@@ -10,5 +10,6 @@ import { CaseType } from './entities/case-type.entity';
   ],
   controllers: [CaseTypeController],
   providers: [CaseTypeService],
+  exports: [CaseTypeService]
 })
 export class CaseTypeModule {}
