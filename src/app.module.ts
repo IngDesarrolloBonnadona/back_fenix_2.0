@@ -23,6 +23,7 @@ import { ResearchersModule } from './modules/researchers/researchers.module';
 import { PatientModule } from './modules/patient/patient.module';
 import { SynergyModule } from './modules/synergy/synergy.module';
 import { PriorityModule } from './modules/priority/priority.module';
+import { CharacterizationCasesModule } from './modules/characterization-cases/characterization-cases.module';
 
 require('dotenv').config();
 
@@ -61,6 +62,7 @@ require('dotenv').config();
     PatientModule,
     SynergyModule,
     PriorityModule,
+    CharacterizationCasesModule,
   ],
   controllers: [],
   providers: [],
