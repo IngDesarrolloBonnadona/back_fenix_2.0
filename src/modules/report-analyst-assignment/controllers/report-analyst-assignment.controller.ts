@@ -65,7 +65,7 @@ export class ReportAnalystAssignmentController {
     return this.reportAnalisysAssignmentService.findOneAssignedAnalyst(id);
   }
 
-  @Get('findInfoAnalyst/:code')
+  @Get('findInfoAnalystByCode/:code')
   findInfoAnalyst(@Param('code') code?: number) {
     return this.reportAnalisysAssignmentService.findOneAnalyst(code);
   }
