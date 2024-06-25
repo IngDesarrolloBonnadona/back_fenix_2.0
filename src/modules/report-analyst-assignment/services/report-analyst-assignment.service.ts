@@ -9,7 +9,7 @@ import { ReportAnalystAssignmentDto } from '../dto/analyst-assignment.dto';
 import { UpdateReportAnalystAssignmentDto } from '../dto/update-report-analyst-assignment.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ReportAnalystAssignment as ReportAnalystAssignmentEntity } from '../entities/report-analyst-assignment.entity';
-import { FindOptionsWhere, Repository } from 'typeorm';
+import { FindOptionsWhere, Like, Repository } from 'typeorm';
 import { LogService } from 'src/modules/log/services/log.service';
 import { logReports } from 'src/enums/logs.enum';
 import { CaseReportValidateService } from 'src/modules/case-report-validate/services/case-report-validate.service';
@@ -36,7 +36,7 @@ export class ReportAnalystAssignmentService {
     private readonly caseReportValidateService: CaseReportValidateService,
   ) {}
 
-  async findOneAnalyst(code?: number) {
+  async findInfoAnalystByCode(code?: number) {
     const externalData = await this.httpPositionService.getPositionData(code);
     const analyst = externalData.data.data;
 
@@ -135,12 +135,12 @@ export class ReportAnalystAssignmentService {
     updateReportAnalystAssignmentDto: UpdateReportAnalystAssignmentDto,
     clientIp: string,
     idValidator: number,
+    idCaseReportValidate: string,
   ) {
     const reportAssignmentFind =
       await this.reportAnalystAssignmentRepository.findOne({
         where: {
-          ass_ra_validatedcase_id_fk:
-            updateReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
+          ass_ra_validatedcase_id_fk: idCaseReportValidate,
           ass_ra_status: true,
         },
       });
@@ -153,7 +153,7 @@ export class ReportAnalystAssignmentService {
     }
 
     await this.caseReportValidateService.findOneReportValidate(
-      updateReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
+      idCaseReportValidate,
     );
 
     await this.positionService.findOnePosition(
@@ -175,7 +175,7 @@ export class ReportAnalystAssignmentService {
     }
 
     const updateStatusMovement = await this.caseReportValidateRepository.update(
-      updateReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
+      idCaseReportValidate,
       {
         val_cr_statusmovement_id_fk: movementReportFound.id,
       },
@@ -206,7 +206,7 @@ export class ReportAnalystAssignmentService {
     }
 
     await this.logService.createLog(
-      updateReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
+      idCaseReportValidate,
       idValidator,
       clientIp,
       logReports.LOG_REASSIGNMENT_ANALYST,
@@ -216,56 +216,6 @@ export class ReportAnalystAssignmentService {
       `¡Analista reasignado correctamente!`,
       HttpStatus.ACCEPTED,
     );
-  }
-
-  async findAssignedAnalystsByPosition(
-    positionId?: number,
-  ): Promise<ReportAnalystAssignmentEntity[]> {
-    const where: FindOptionsWhere<ReportAnalystAssignmentEntity> = {};
-
-    if (positionId) {
-      where.ass_ra_position_id_fk = positionId;
-    }
-
-    where.ass_ra_status = true;
-
-    const analystReporters = await this.reportAnalystAssignmentRepository.find({
-      where,
-      relations: {
-        caseReportValidate: true,
-        position: true,
-      },
-    });
-
-    if (analystReporters.length === 0) {
-      throw new HttpException(
-        '¡No hay reportes asignados para mostrar.!',
-        HttpStatus.NO_CONTENT,
-      );
-    }
-
-    return analystReporters;
-  }
-
-  async findOneAssignedAnalyst(
-    id: number,
-  ): Promise<ReportAnalystAssignmentEntity> {
-    const analystReporter =
-      await this.reportAnalystAssignmentRepository.findOne({
-        where: { id, ass_ra_status: true },
-        relations: {
-          caseReportValidate: true,
-          position: true,
-        },
-      });
-
-    if (!analystReporter) {
-      throw new HttpException(
-        'No se encontró el analista',
-        HttpStatus.NO_CONTENT,
-      );
-    }
-    return analystReporter;
   }
 
   async returnCaseBetweenAnalyst(
@@ -362,6 +312,115 @@ export class ReportAnalystAssignmentService {
     }
 
     return assigned;
+  }
+
+  async summaryReportsForAssignCases(
+    filingNumber?: string,
+    statusMovementId?: number,
+    caseTypeId?: number,
+    eventId?: number,
+    priorityId?: number,
+  ): Promise<CaseReportValidateEntity[]> {
+    const query = this.caseReportValidateRepository
+      .createQueryBuilder('crv')
+      .innerJoinAndSelect('crv.reportAnalystAssignment', 'raa')
+      .leftJoinAndSelect('crv.movementReport', 'movementReport')
+      .leftJoinAndSelect('crv.caseType', 'caseType')
+      .leftJoinAndSelect('crv.event', 'event')
+      .leftJoinAndSelect('crv.priority', 'priority')
+      .leftJoinAndSelect('crv.researcher', 'researcher')
+      .where('crv.val_cr_validated = :validated', { validated: false });
+
+    if (filingNumber) {
+      query.andWhere('crv.val_cr_filingnumber LIKE :filingNumber', {
+        filingNumber: `%${filingNumber}%`,
+      });
+    }
+
+    if (statusMovementId) {
+      query.andWhere('crv.val_cr_statusmovement_id_fk = :statusMovementId', {
+        statusMovementId,
+      });
+    }
+
+    if (caseTypeId) {
+      query.andWhere('crv.val_cr_casetype_id_fk = :caseTypeId', { caseTypeId });
+    }
+
+    if (eventId) {
+      query.andWhere('crv.val_cr_event_id_fk = :eventId', { eventId });
+    }
+
+    if (priorityId) {
+      query.andWhere('crv.val_cr_priority_id_fk = :priorityId', { priorityId });
+    }
+
+    query.andWhere('raa.ass_ra_status = :statusBool', {
+      statusBool: true,
+    });
+
+    const caseReportsValidate = await query
+      .orderBy('raa.createdAt', 'DESC')
+      .getMany();
+
+    if (caseReportsValidate.length === 0) {
+      throw new HttpException(
+        'No hay reportes para mostrar.',
+        HttpStatus.NO_CONTENT,
+      );
+    }
+
+    return caseReportsValidate;
+  }
+
+  async findAssignedAnalystsByPosition(
+    positionId?: number,
+  ): Promise<ReportAnalystAssignmentEntity[]> {
+    const where: FindOptionsWhere<ReportAnalystAssignmentEntity> = {};
+
+    if (positionId) {
+      where.ass_ra_position_id_fk = positionId;
+    }
+
+    where.ass_ra_status = true;
+
+    const analystReporters = await this.reportAnalystAssignmentRepository.find({
+      where,
+      relations: {
+        caseReportValidate: true,
+        position: true,
+      },
+    });
+
+    if (analystReporters.length === 0) {
+      throw new HttpException(
+        '¡No hay reportes asignados para mostrar.!',
+        HttpStatus.NO_CONTENT,
+      );
+    }
+
+    return analystReporters;
+  }
+
+  async findOneAssignedAnalyst(
+    id: number,
+  ): Promise<ReportAnalystAssignmentEntity> {
+    const analystReporter =
+      await this.reportAnalystAssignmentRepository.findOne({
+        where: { id, ass_ra_status: true },
+        relations: {
+          caseReportValidate: true,
+          position: true,
+        },
+      });
+
+    if (!analystReporter) {
+      throw new HttpException(
+        'No se encontró el analista',
+        HttpStatus.NO_CONTENT,
+      );
+    }
+    return analystReporter;
   }
 
   async deleteAssignedAnalyst(id: number) {

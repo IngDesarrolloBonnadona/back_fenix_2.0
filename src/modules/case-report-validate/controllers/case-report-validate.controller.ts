@@ -117,24 +117,6 @@ export class CaseReportValidateController {
     );
   }
 
-  @Get('/summaryReportsForAssignCases')
-  async summaryReportsForAssignCases(
-    @Query('filingNumber') filingNumber?: string,
-    @Query('statusMovementId') statusMovementId?: number,
-    @Query('caseTypeId') caseTypeId?: number,
-    @Query('eventId') eventId?: number,
-    @Query('priorityId') priorityId?: number,
-  ): Promise<CaseReportValidate[]> {
-
-    return await this.caseReportValidateService.summaryReportsForAssignCases(
-      filingNumber,
-      statusMovementId,
-      caseTypeId,
-      eventId,
-      priorityId,
-    );
-  }
-
   @Get('/listReportsValidate')
   listReportsValidate(): Promise<CaseReportValidate[]> {
     return this.caseReportValidateService.findAllReportsValidate();

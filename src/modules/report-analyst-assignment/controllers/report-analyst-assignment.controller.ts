@@ -65,21 +65,40 @@ export class ReportAnalystAssignmentController {
     return this.reportAnalisysAssignmentService.findOneAssignedAnalyst(id);
   }
 
-  @Get('findInfoAnalyst/:code')
-  findInfoAnalyst(@Param('code') code?: number) {
-    return this.reportAnalisysAssignmentService.findOneAnalyst(code);
+  @Get('findInfoAnalystByCode/:code')
+  findInfoAnalystByCode(@Param('code') code?: number) {
+    return this.reportAnalisysAssignmentService.findInfoAnalystByCode(code);
   }
 
-  @Put('updateReAssignedAnalyst/:idValidator')
+  @Get('/summaryReportsForAssignCases')
+  async summaryReportsForAssignCases(
+    @Query('filingNumber') filingNumber?: string,
+    @Query('statusMovementId') statusMovementId?: number,
+    @Query('caseTypeId') caseTypeId?: number,
+    @Query('eventId') eventId?: number,
+    @Query('priorityId') priorityId?: number,
+  ) {
+    return await this.reportAnalisysAssignmentService.summaryReportsForAssignCases(
+      filingNumber,
+      statusMovementId,
+      caseTypeId,
+      eventId,
+      priorityId,
+    );
+  }
+
+  @Put('updateReAssignedAnalyst/:idValidator/:idCaseReportValidate')
   updateReAssignedAnalyst(
     @Body() updateReportAnalystAssignmentDto: UpdateReportAnalystAssignmentDto,
     @Ip() clientIp: string,
     @Param('idValidator') idValidator: number,
+    @Param('idCaseReportValidate') idCaseReportValidate: string,
   ): Promise<HttpException> {
     return this.reportAnalisysAssignmentService.reAssingAnalyst(
       updateReportAnalystAssignmentDto,
       clientIp,
       idValidator,
+      idCaseReportValidate,
     );
   }
 

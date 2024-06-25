@@ -126,6 +126,120 @@ export class ResearchersService {
     return assigned;
   }
 
+  async summaryReportsMyAssignedCases(
+    filingNumber?: string,
+    patientDoc?: string,
+    caseTypeId?: number,
+    eventId?: number,
+    priorityId?: number,
+  ): Promise<CaseReportValidateEntity[]> {
+    const query = this.caseReportValidateRepository
+      .createQueryBuilder('crv')
+      .innerJoinAndSelect('crv.researcher', 'res')
+      .leftJoinAndSelect('crv.caseType', 'caseType')
+      .leftJoinAndSelect('crv.event', 'event')
+      .leftJoinAndSelect('crv.priority', 'priority')
+      .leftJoinAndSelect('crv.reportAnalystAssignment', 'reportAnalystAssignment')
+      .where('crv.val_cr_validated = :validated', { validated: false });
+
+    if (filingNumber) {
+      query.andWhere('crv.val_cr_filingnumber LIKE :filingNumber', {
+        filingNumber: `%${filingNumber}%`,
+      });
+    }
+
+    if (patientDoc) {
+      query.andWhere('crv.val_cr_documentpatient LIKE :patientDoc', {
+        patientDoc: `%${patientDoc}%`,
+      });
+    }
+
+    if (caseTypeId) {
+      query.andWhere('crv.val_cr_casetype_id_fk = :caseTypeId', { caseTypeId });
+    }
+
+    if (eventId) {
+      query.andWhere('crv.val_cr_event_id_fk = :eventId', { eventId });
+    }
+
+    if (priorityId) {
+      query.andWhere('crv.val_cr_priority_id_fk = :priorityId', { priorityId });
+    }
+
+    query.andWhere('res.res_status = :statusBool', {
+      statusBool: true,
+    });
+
+    const caseReportsValidate = await query
+      .orderBy('res.createdAt', 'DESC')
+      .getMany();
+
+    if (caseReportsValidate.length === 0) {
+      throw new HttpException(
+        'No hay reportes para mostrar.',
+        HttpStatus.NO_CONTENT,
+      );
+    }
+
+    return caseReportsValidate;
+  }
+
+  async summaryReportsMyCasesByCharacterization(
+    filingNumber?: string,
+    statusMovementId?: number,
+    caseTypeId?: number,
+    eventId?: number,
+    priorityId?: number,
+  ): Promise<CaseReportValidateEntity[]> {
+    const query = this.caseReportValidateRepository
+      .createQueryBuilder('crv')
+      .innerJoinAndSelect('crv.researcher', 'res')
+      .leftJoinAndSelect('crv.caseType', 'caseType')
+      .leftJoinAndSelect('crv.event', 'event')
+      .leftJoinAndSelect('crv.priority', 'priority')
+      .leftJoinAndSelect('crv.reportAnalystAssignment', 'reportAnalystAssignment')
+      .where('crv.val_cr_validated = :validated', { validated: false });
+
+    if (filingNumber) {
+      query.andWhere('crv.val_cr_filingnumber LIKE :filingNumber', {
+        filingNumber: `%${filingNumber}%`,
+      });
+    }
+
+    if (statusMovementId) {
+      query.andWhere('crv.val_cr_statusmovement_id_fk = :statusMovementId', { statusMovementId });
+    }
+
+    if (caseTypeId) {
+      query.andWhere('crv.val_cr_casetype_id_fk = :caseTypeId', { caseTypeId });
+    }
+
+    if (eventId) {
+      query.andWhere('crv.val_cr_event_id_fk = :eventId', { eventId });
+    }
+
+    if (priorityId) {
+      query.andWhere('crv.val_cr_priority_id_fk = :priorityId', { priorityId });
+    }
+
+    query.andWhere('res.res_status = :statusBool', {
+      statusBool: true,
+    });
+
+    const caseReportsValidate = await query
+      .orderBy('res.createdAt', 'DESC')
+      .getMany();
+
+    if (caseReportsValidate.length === 0) {
+      throw new HttpException(
+        'No hay reportes para mostrar.',
+        HttpStatus.NO_CONTENT,
+      );
+    }
+
+    return caseReportsValidate;
+  }
+
   async findOneAssignedResearch(id: number): Promise<ResearcherEntity> {
     const research = await this.researcherRepository.findOne({
       where: { id, res_status: true },
