@@ -366,58 +366,6 @@ export class ReportAnalystAssignmentService {
     if (caseReportsValidate.length === 0) {
       throw new HttpException(
         'No hay reportes para mostrar.',
-        HttpStatus.NOT_FOUND,
-      );
-    }
-
-    return caseReportsValidate;
-  }
-
-  async summaryOfMyAssignedCases(
-    filingNumber?: string,
-    patientDoc?: string,
-    caseTypeId?: number,
-    eventId?: number,
-    priorityId?: number,
-  ): Promise<CaseReportValidateEntity[]> {
-    const where: FindOptionsWhere<CaseReportValidateEntity> = {};
-
-    if (filingNumber) {
-      where.val_cr_filingnumber = Like(`%${filingNumber}%`);
-    }
-
-    if (patientDoc) {
-      where.val_cr_documentpatient = Like(`%${patientDoc}%`);
-    }
-
-    if (caseTypeId) {
-      where.val_cr_casetype_id_fk = caseTypeId;
-    }
-
-    if (eventId) {
-      where.val_cr_event_id_fk = eventId;
-    }
-
-    if (priorityId) {
-      where.val_cr_priority_id_fk = priorityId;
-    }
-
-    where.val_cr_validated = false;
-
-    const caseReportsValidate = await this.caseReportValidateRepository.find({
-      where,
-      relations: {
-        caseType: true,
-        event: true,
-        priority: true,
-        researcher: true,
-        reportAnalystAssignment: true,
-      },
-    });
-
-    if (caseReportsValidate.length === 0) {
-      throw new HttpException(
-        'No hay reportes para mostrar.',
         HttpStatus.NO_CONTENT,
       );
     }

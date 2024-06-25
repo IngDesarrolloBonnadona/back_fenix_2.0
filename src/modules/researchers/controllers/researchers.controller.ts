@@ -37,6 +37,23 @@ export class ResearchersController {
     return this.researchersService.findOneAssignedResearch(id);
   }
 
+  @Get('/summaryReportsMyAssignedCases')
+  async summaryReportsMyAssignedCases(
+    @Query('filingNumber') filingNumber?: string,
+    @Query('patientDoc') patientDoc?: string,
+    @Query('caseTypeId') caseTypeId?: number,
+    @Query('eventId') eventId?: number,
+    @Query('priorityId') priorityId?: number,
+  ) {
+    return await this.researchersService.summaryReportsMyAssignedCases(
+      filingNumber,
+      patientDoc,
+      caseTypeId,
+      eventId,
+      priorityId,
+    );
+  }
+
   @Post('assingResearcher/:idAnalyst')
   createResearch(
     @Body() createResearcherDto: CreateResearcherDto,
