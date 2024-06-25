@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { CaseReportValidate } from 'src/modules/case-report-validate/entities/case-report-validate.entity';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity()
 export class CharacterizationCase {
@@ -22,4 +23,7 @@ export class CharacterizationCase {
 
   @DeleteDateColumn()
   deletedAt: Date;
+
+  @OneToMany(() => CaseReportValidate, (caseReportValidate) => caseReportValidate.characterizationCase)
+    caseReportValidate: CaseReportValidate[];
 }
