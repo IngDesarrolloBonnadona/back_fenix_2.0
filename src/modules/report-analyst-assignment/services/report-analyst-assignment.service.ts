@@ -218,6 +218,102 @@ export class ReportAnalystAssignmentService {
     );
   }
 
+  async returnCaseBetweenAnalyst(
+    createReportAnalystAssignmentDto: ReportAnalystAssignmentDto,
+    clientIp: string,
+    idAnalyst: number,
+  ): Promise<ReportAnalystAssignmentEntity> {
+    const reportAssignmentFind =
+      await this.reportAnalystAssignmentRepository.findOne({
+        where: {
+          ass_ra_validatedcase_id_fk:
+            createReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
+          ass_ra_status: true,
+        },
+      });
+
+    if (!reportAssignmentFind) {
+      throw new HttpException(
+        'No se encontró el reporte asignado a analista',
+        HttpStatus.NO_CONTENT,
+      );
+    }
+
+    const analystAssignedFind =
+      await this.reportAnalystAssignmentRepository.findOne({
+        where: {
+          ass_ra_useranalyst_id:
+            createReportAnalystAssignmentDto.ass_ra_useranalyst_id,
+          ass_ra_validatedcase_id_fk:
+            createReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
+          ass_ra_position_id_fk:
+            createReportAnalystAssignmentDto.ass_ra_position_id_fk,
+        },
+      });
+
+    if (analystAssignedFind) {
+      throw new HttpException(
+        'El analista ya se encuentra asignado con ese reporte.',
+        HttpStatus.NO_CONTENT,
+      );
+    }
+
+    await this.caseReportValidateService.findOneReportValidate(
+      createReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
+    );
+
+    await this.positionService.findOnePosition(
+      createReportAnalystAssignmentDto.ass_ra_position_id_fk,
+    );
+
+    reportAssignmentFind.ass_ra_status = false;
+    await this.reportAnalystAssignmentRepository.save(reportAssignmentFind);
+
+    const movementReportFound = await this.movementReportRepository.findOne({
+      where: {
+        mov_r_name: movementReport.RETURN_CASE_ANALYST,
+        mov_r_status: true,
+      },
+    });
+
+    if (!movementReportFound) {
+      throw new HttpException(
+        `El movimiento ${movementReport.RETURN_CASE_ANALYST} no existe.`,
+        HttpStatus.NO_CONTENT,
+      );
+    }
+
+    const analyst = this.reportAnalystAssignmentRepository.create({
+      ...createReportAnalystAssignmentDto,
+      ass_ra_uservalidator_id: reportAssignmentFind.ass_ra_uservalidator_id,
+    });
+
+    const assigned = await this.reportAnalystAssignmentRepository.save(analyst);
+
+    await this.logService.createLog(
+      assigned.ass_ra_validatedcase_id_fk,
+      idAnalyst,
+      clientIp,
+      logReports.LOG_RETURN_CASE_ANALYST,
+    );
+
+    const updateStatusMovement = await this.caseReportValidateRepository.update(
+      assigned.ass_ra_validatedcase_id_fk,
+      {
+        val_cr_statusmovement_id_fk: movementReportFound.id,
+      },
+    );
+
+    if (updateStatusMovement.affected === 0) {
+      throw new HttpException(
+        `No se pudo actualizar el moviemiento del reporte.`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    return assigned;
+  }
+
   async summaryReportsForAssignCases(
     filingNumber?: string,
     statusMovementId?: number,
@@ -225,46 +321,52 @@ export class ReportAnalystAssignmentService {
     eventId?: number,
     priorityId?: number,
   ): Promise<CaseReportValidateEntity[]> {
-    const where: FindOptionsWhere<CaseReportValidateEntity> = {};
+    const query = this.caseReportValidateRepository
+      .createQueryBuilder('crv')
+      .innerJoinAndSelect('crv.reportAnalystAssignment', 'raa')
+      .leftJoinAndSelect('crv.movementReport', 'movementReport')
+      .leftJoinAndSelect('crv.caseType', 'caseType')
+      .leftJoinAndSelect('crv.event', 'event')
+      .leftJoinAndSelect('crv.priority', 'priority')
+      .leftJoinAndSelect('crv.researcher', 'researcher')
+      .where('crv.val_cr_validated = :validated', { validated: false });
 
     if (filingNumber) {
-      where.val_cr_filingnumber = Like(`%${filingNumber}%`);
+      query.andWhere('crv.val_cr_filingnumber LIKE :filingNumber', {
+        filingNumber: `%${filingNumber}%`,
+      });
     }
 
     if (statusMovementId) {
-      where.val_cr_statusmovement_id_fk = statusMovementId;
+      query.andWhere('crv.val_cr_statusmovement_id_fk = :statusMovementId', {
+        statusMovementId,
+      });
     }
 
     if (caseTypeId) {
-      where.val_cr_casetype_id_fk = caseTypeId;
+      query.andWhere('crv.val_cr_casetype_id_fk = :caseTypeId', { caseTypeId });
     }
 
     if (eventId) {
-      where.val_cr_event_id_fk = eventId;
+      query.andWhere('crv.val_cr_event_id_fk = :eventId', { eventId });
     }
 
     if (priorityId) {
-      where.val_cr_priority_id_fk = priorityId;
+      query.andWhere('crv.val_cr_priority_id_fk = :priorityId', { priorityId });
     }
 
-    where.val_cr_validated = false;
-
-    const caseReportsValidate = await this.caseReportValidateRepository.find({
-      where,
-      relations: {
-        movementReport: true,
-        caseType: true,
-        event: true,
-        priority: true,
-        researcher: true,
-        reportAnalystAssignment: true,
-      },
+    query.andWhere('raa.ass_ra_status = :statusBool', {
+      statusBool: true,
     });
+
+    const caseReportsValidate = await query
+      .orderBy('raa.createdAt', 'DESC')
+      .getMany();
 
     if (caseReportsValidate.length === 0) {
       throw new HttpException(
         'No hay reportes para mostrar.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -371,102 +473,6 @@ export class ReportAnalystAssignmentService {
       );
     }
     return analystReporter;
-  }
-
-  async returnCaseBetweenAnalyst(
-    createReportAnalystAssignmentDto: ReportAnalystAssignmentDto,
-    clientIp: string,
-    idAnalyst: number,
-  ): Promise<ReportAnalystAssignmentEntity> {
-    const reportAssignmentFind =
-      await this.reportAnalystAssignmentRepository.findOne({
-        where: {
-          ass_ra_validatedcase_id_fk:
-            createReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
-          ass_ra_status: true,
-        },
-      });
-
-    if (!reportAssignmentFind) {
-      throw new HttpException(
-        'No se encontró el reporte asignado a analista',
-        HttpStatus.NO_CONTENT,
-      );
-    }
-
-    const analystAssignedFind =
-      await this.reportAnalystAssignmentRepository.findOne({
-        where: {
-          ass_ra_useranalyst_id:
-            createReportAnalystAssignmentDto.ass_ra_useranalyst_id,
-          ass_ra_validatedcase_id_fk:
-            createReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
-          ass_ra_position_id_fk:
-            createReportAnalystAssignmentDto.ass_ra_position_id_fk,
-        },
-      });
-
-    if (analystAssignedFind) {
-      throw new HttpException(
-        'El analista ya se encuentra asignado con ese reporte.',
-        HttpStatus.NO_CONTENT,
-      );
-    }
-
-    await this.caseReportValidateService.findOneReportValidate(
-      createReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
-    );
-
-    await this.positionService.findOnePosition(
-      createReportAnalystAssignmentDto.ass_ra_position_id_fk,
-    );
-
-    reportAssignmentFind.ass_ra_status = false;
-    await this.reportAnalystAssignmentRepository.save(reportAssignmentFind);
-
-    const movementReportFound = await this.movementReportRepository.findOne({
-      where: {
-        mov_r_name: movementReport.RETURN_CASE_ANALYST,
-        mov_r_status: true,
-      },
-    });
-
-    if (!movementReportFound) {
-      throw new HttpException(
-        `El movimiento ${movementReport.RETURN_CASE_ANALYST} no existe.`,
-        HttpStatus.NO_CONTENT,
-      );
-    }
-
-    const analyst = this.reportAnalystAssignmentRepository.create({
-      ...createReportAnalystAssignmentDto,
-      ass_ra_uservalidator_id: reportAssignmentFind.ass_ra_uservalidator_id,
-    });
-
-    const assigned = await this.reportAnalystAssignmentRepository.save(analyst);
-
-    await this.logService.createLog(
-      assigned.ass_ra_validatedcase_id_fk,
-      idAnalyst,
-      clientIp,
-      logReports.LOG_RETURN_CASE_ANALYST,
-    );
-
-    const updateStatusMovement = await this.caseReportValidateRepository.update(
-      assigned.ass_ra_validatedcase_id_fk,
-      {
-        val_cr_statusmovement_id_fk: movementReportFound.id,
-      },
-    );
-
-    if (updateStatusMovement.affected === 0) {
-      throw new HttpException(
-        `No se pudo actualizar el moviemiento del reporte.`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-
-    return assigned;
   }
 
   async deleteAssignedAnalyst(id: number) {
