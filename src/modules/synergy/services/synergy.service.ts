@@ -53,6 +53,7 @@ export class SynergyService {
     const existingCaseValidate = await this.caseReportValidateRepository.find({
       where: {
         id: In(synergyValidateCaseIds),
+        val_cr_validated: false,
       },
     });
 
@@ -90,16 +91,16 @@ export class SynergyService {
       );
     }
 
-    const invalidSynergyIds = existingCaseValidate
+    const invalidSynergyCodes = existingCaseValidate
       .filter(
         (caseType) => caseType.val_cr_casetype_id_fk !== adverseEventType.id,
       )
-      .map((caseValidateId) => caseValidateId.id);
+      .map((caseValidateCode) => caseValidateCode.val_cr_filingnumber);
 
-    if (invalidSynergyIds.length > 0) {
+    if (invalidSynergyCodes.length > 0) {
       return {
-        message: `Algunos tipos de caso no coinciden con el tipo de caso ${caseTypeReport.ADVERSE_EVENT}`,
-        invalidSynergyIds,
+        message: `Algunos reportes no coinciden con el tipo de caso ${caseTypeReport.ADVERSE_EVENT}`,
+        invalidSynergyCodes,
       };
     }
 
