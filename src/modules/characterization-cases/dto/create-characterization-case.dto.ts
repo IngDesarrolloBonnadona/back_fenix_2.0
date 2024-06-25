@@ -1,11 +1,11 @@
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 export class CreateCharacterizationCaseDto {
     @IsNotEmpty()
     @IsString()
     cha_c_name: string;
 
-    @IsNotEmpty()
+    @IsOptional()
     @IsString()
     cha_c_description: string;
 }

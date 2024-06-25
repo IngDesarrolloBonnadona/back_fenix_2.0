@@ -2,14 +2,16 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { CharacterizationCasesService } from '../services/characterization-cases.service';
 import { CreateCharacterizationCaseDto } from '../dto/create-characterization-case.dto';
 import { UpdateCharacterizationCaseDto } from '../dto/update-characterization-case.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('characterization-cases')
 @Controller('characterization-cases')
 export class CharacterizationCasesController {
   constructor(private readonly characterizationCasesService: CharacterizationCasesService) {}
 
-  @Post()
+  @Post('/createCharacterizationCases')
   create(@Body() createCharacterizationCaseDto: CreateCharacterizationCaseDto) {
-    return this.characterizationCasesService.create(createCharacterizationCaseDto);
+    return this.characterizationCasesService.createCharacterization(createCharacterizationCaseDto);
   }
 
   @Get()
