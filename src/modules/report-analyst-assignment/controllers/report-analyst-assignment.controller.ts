@@ -66,8 +66,8 @@ export class ReportAnalystAssignmentController {
   }
 
   @Get('findInfoAnalystByCode/:code')
-  findInfoAnalyst(@Param('code') code?: number) {
-    return this.reportAnalisysAssignmentService.findOneAnalyst(code);
+  findInfoAnalystByCode(@Param('code') code?: number) {
+    return this.reportAnalisysAssignmentService.findInfoAnalystByCode(code);
   }
 
   @Get('/summaryReportsForAssignCases')
@@ -98,7 +98,7 @@ export class ReportAnalystAssignmentController {
       updateReportAnalystAssignmentDto,
       clientIp,
       idValidator,
-      idCaseReportValidate
+      idCaseReportValidate,
     );
   }
 
