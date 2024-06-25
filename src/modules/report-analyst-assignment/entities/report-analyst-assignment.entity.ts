@@ -29,7 +29,10 @@ export class ReportAnalystAssignment {
   ass_ra_useranalyst_id: number;
 
   @Column()
-  ass_ra_uservalidator_id: number
+  ass_ra_uservalidator_id: number;
+
+  @Column()
+  ass_ra_days: number;
 
   @Column({ default: true })
   ass_ra_status: boolean;

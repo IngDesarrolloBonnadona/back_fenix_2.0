@@ -87,16 +87,18 @@ export class ReportAnalystAssignmentController {
     );
   }
 
-  @Put('updateReAssignedAnalyst/:idValidator')
+  @Put('updateReAssignedAnalyst/:idValidator/:idCaseReportValidate')
   updateReAssignedAnalyst(
     @Body() updateReportAnalystAssignmentDto: UpdateReportAnalystAssignmentDto,
     @Ip() clientIp: string,
     @Param('idValidator') idValidator: number,
+    @Param('idCaseReportValidate') idCaseReportValidate: string,
   ): Promise<HttpException> {
     return this.reportAnalisysAssignmentService.reAssingAnalyst(
       updateReportAnalystAssignmentDto,
       clientIp,
       idValidator,
+      idCaseReportValidate
     );
   }
 

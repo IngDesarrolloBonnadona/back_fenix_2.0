@@ -135,12 +135,12 @@ export class ReportAnalystAssignmentService {
     updateReportAnalystAssignmentDto: UpdateReportAnalystAssignmentDto,
     clientIp: string,
     idValidator: number,
+    idCaseReportValidate: string,
   ) {
     const reportAssignmentFind =
       await this.reportAnalystAssignmentRepository.findOne({
         where: {
-          ass_ra_validatedcase_id_fk:
-            updateReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
+          ass_ra_validatedcase_id_fk: idCaseReportValidate,
           ass_ra_status: true,
         },
       });
@@ -153,7 +153,7 @@ export class ReportAnalystAssignmentService {
     }
 
     await this.caseReportValidateService.findOneReportValidate(
-      updateReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
+      idCaseReportValidate,
     );
 
     await this.positionService.findOnePosition(
@@ -175,7 +175,7 @@ export class ReportAnalystAssignmentService {
     }
 
     const updateStatusMovement = await this.caseReportValidateRepository.update(
-      updateReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
+      idCaseReportValidate,
       {
         val_cr_statusmovement_id_fk: movementReportFound.id,
       },
@@ -206,7 +206,7 @@ export class ReportAnalystAssignmentService {
     }
 
     await this.logService.createLog(
-      updateReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
+      idCaseReportValidate,
       idValidator,
       clientIp,
       logReports.LOG_REASSIGNMENT_ANALYST,
