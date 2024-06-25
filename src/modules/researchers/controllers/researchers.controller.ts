@@ -54,6 +54,23 @@ export class ResearchersController {
     );
   }
 
+  @Get('/summaryReportsMyCasesByCharacterization')
+  async summaryReportsMyCasesByCharacterization(
+    @Query('filingNumber') filingNumber?: string,
+    @Query('statusMovementId') statusMovementId?: number,
+    @Query('caseTypeId') caseTypeId?: number,
+    @Query('eventId') eventId?: number,
+    @Query('priorityId') priorityId?: number,
+  ) {
+    return await this.researchersService.summaryReportsMyCasesByCharacterization(
+      filingNumber,
+      statusMovementId,
+      caseTypeId,
+      eventId,
+      priorityId,
+    );
+  }
+
   @Post('assingResearcher/:idAnalyst')
   createResearch(
     @Body() createResearcherDto: CreateResearcherDto,
