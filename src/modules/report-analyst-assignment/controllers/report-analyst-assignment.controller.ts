@@ -70,6 +70,23 @@ export class ReportAnalystAssignmentController {
     return this.reportAnalisysAssignmentService.findOneAnalyst(code);
   }
 
+  @Get('/summaryReportsForAssignCases')
+  async summaryReportsForAssignCases(
+    @Query('filingNumber') filingNumber?: string,
+    @Query('statusMovementId') statusMovementId?: number,
+    @Query('caseTypeId') caseTypeId?: number,
+    @Query('eventId') eventId?: number,
+    @Query('priorityId') priorityId?: number,
+  ) {
+    return await this.reportAnalisysAssignmentService.summaryReportsForAssignCases(
+      filingNumber,
+      statusMovementId,
+      caseTypeId,
+      eventId,
+      priorityId,
+    );
+  }
+
   @Put('updateReAssignedAnalyst/:idValidator')
   updateReAssignedAnalyst(
     @Body() updateReportAnalystAssignmentDto: UpdateReportAnalystAssignmentDto,

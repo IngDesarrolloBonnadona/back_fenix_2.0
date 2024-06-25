@@ -9,7 +9,7 @@ import { ReportAnalystAssignmentDto } from '../dto/analyst-assignment.dto';
 import { UpdateReportAnalystAssignmentDto } from '../dto/update-report-analyst-assignment.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ReportAnalystAssignment as ReportAnalystAssignmentEntity } from '../entities/report-analyst-assignment.entity';
-import { FindOptionsWhere, Repository } from 'typeorm';
+import { FindOptionsWhere, Like, Repository } from 'typeorm';
 import { LogService } from 'src/modules/log/services/log.service';
 import { logReports } from 'src/enums/logs.enum';
 import { CaseReportValidateService } from 'src/modules/case-report-validate/services/case-report-validate.service';
@@ -216,6 +216,59 @@ export class ReportAnalystAssignmentService {
       `¡Analista reasignado correctamente!`,
       HttpStatus.ACCEPTED,
     );
+  }
+
+  async summaryReportsForAssignCases(
+    filingNumber?: string,
+    statusMovementId?: number,
+    caseTypeId?: number,
+    eventId?: number,
+    priorityId?: number,
+  ): Promise<CaseReportValidateEntity[]> {
+    const where: FindOptionsWhere<CaseReportValidateEntity> = {};
+
+    if (filingNumber) {
+      where.val_cr_filingnumber = Like(`%${filingNumber}%`);
+    }
+
+    if (statusMovementId) {
+      where.val_cr_statusmovement_id_fk = statusMovementId;
+    }
+
+    if (caseTypeId) {
+      where.val_cr_casetype_id_fk = caseTypeId;
+    }
+
+    if (eventId) {
+      where.val_cr_event_id_fk = eventId;
+    }
+
+    if (priorityId) {
+      where.val_cr_priority_id_fk = priorityId;
+    }
+
+    where.val_cr_validated = false;
+
+    const caseReportsValidate = await this.caseReportValidateRepository.find({
+      where,
+      relations: {
+        movementReport: true,
+        caseType: true,
+        event: true,
+        priority: true,
+        researcher: true,
+        reportAnalystAssignment: true,
+      },
+    });
+
+    if (caseReportsValidate.length === 0) {
+      throw new HttpException(
+        'No hay reportes para mostrar.',
+        HttpStatus.NO_CONTENT,
+      );
+    }
+
+    return caseReportsValidate;
   }
 
   async findAssignedAnalystsByPosition(
