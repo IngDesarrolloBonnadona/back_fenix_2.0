@@ -109,6 +109,22 @@ export class CreateCaseReportValidateDto {
     @IsNotEmpty()
     val_cr_statusmovement_id_fk: number;
 
+    @IsNumber()
+    @IsOptional()
+    val_cr_characterization_id_fk: number
+
+    @IsBoolean()
+    @IsOptional()
+    val_cr_infoprovidedfamily: boolean
+
+    @IsBoolean()
+    @IsOptional()
+    val_cr_clinicalfollowrequired: boolean
+
+    @IsString()
+    @IsOptional()
+    val_cr_observationscharacterization: string;
+
     @IsNotEmpty()
     @IsString()
     val_cr_description: string;
