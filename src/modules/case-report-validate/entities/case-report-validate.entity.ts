@@ -114,6 +114,18 @@ export class CaseReportValidate {
   @Column({ nullable: true })
   val_cr_statusmovement_id_fk: number;
 
+  @Column({ nullable: true })
+  val_cr_characterization_id_fk: number
+
+  @Column({ nullable: true })
+  val_cr_infoprovidedfamily: boolean
+
+  @Column({ nullable: true })
+  val_cr_clinicalfollowrequired: boolean
+
+  @Column({ type: 'varchar', nullable: true })
+  val_cr_observationscharacterization: string;
+
   @Column({ type: 'varchar', nullable: true }) //
   val_cr_description: string;
 
