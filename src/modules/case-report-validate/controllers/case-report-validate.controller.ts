@@ -136,7 +136,7 @@ export class CaseReportValidateController {
     );
   }
 
-  @Put('/updateReportValidate/:id')
+  @Patch('/updateReportValidate/:id')
   updateReportValidate(
     @Param('id') id: string,
     @Body() updateCaseReportValidateDto: UpdateCaseReportValidateDto,
