@@ -41,7 +41,7 @@ export class CaseReportOriginalService {
     createReportOriDto: any,
     clientIp: string,
   ): Promise<any> {
-    await OriDtoValidator(createReportOriDto);
+    await OriDtoValidator(createReportOriDto, this.caseTypeRepository);
 
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
