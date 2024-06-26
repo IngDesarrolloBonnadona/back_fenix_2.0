@@ -15,6 +15,7 @@ import { SynergyModule } from '../synergy/synergy.module';
 import { Researcher } from '../researchers/entities/researchers.entity';
 import { ResearchersModule } from '../researchers/researchers.module';
 import { CharacterizationCase } from '../characterization-cases/entities/characterization-case.entity';
+import { CharacterizationCasesModule } from '../characterization-cases/characterization-cases.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { CharacterizationCase } from '../characterization-cases/entities/charact
     DeviceModule,
     LogModule,
     SynergyModule,
+    CharacterizationCasesModule,
     forwardRef(() => ResearchersModule),
     forwardRef(() => ReportAnalystAssignmentModule),
   ],

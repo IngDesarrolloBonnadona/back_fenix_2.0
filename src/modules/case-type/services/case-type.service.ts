@@ -39,6 +39,7 @@ export class CaseTypeService {
 
   async findAllCaseTypes(): Promise<CaseTypeEntity[]> {
     const caseTypes = await this.caseTypeRepository.find({
+      where: { cas_t_status: true }
       // relations: {
       //   eventType: true,
       //   caseReportValidate: true,
@@ -57,7 +58,7 @@ export class CaseTypeService {
 
   async findOneCaseType(id: number): Promise<CaseTypeEntity> {
     const caseType = await this.caseTypeRepository.findOne({
-      where: { id },
+      where: { id, cas_t_status: true },
       // relations: {
       //   eventType: {
       //     event: true

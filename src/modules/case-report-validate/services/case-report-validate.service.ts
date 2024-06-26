@@ -40,6 +40,7 @@ import { CreateValIncidentReportDto } from '../dto/create-val-incident-report.dt
 import { CreateValIndicatingUnsafeCareReportDto } from '../dto/create-val-indicating-unsafe-care-report.dto';
 import { CreateValComplicationsReportDto } from '../dto/create-val-complications-report.dto';
 import { CharacterizationCase as CharacterizationCaseEntity } from 'src/modules/characterization-cases/entities/characterization-case.entity';
+import { CharacterizationCasesService } from 'src/modules/characterization-cases/services/characterization-cases.service';
 
 @Injectable()
 export class CaseReportValidateService {
@@ -64,6 +65,7 @@ export class CaseReportValidateService {
     private readonly deviceService: DeviceService,
     private readonly logService: LogService,
     private readonly synergyService: SynergyService,
+    private readonly characterizationCasesService: CharacterizationCasesService,
     @Inject(forwardRef(() => ResearchersService))
     private readonly researchService: ResearchersService,
     @Inject(forwardRef(() => ReportAnalystAssignmentService))
@@ -108,31 +110,9 @@ export class CaseReportValidateService {
     await queryRunner.startTransaction();
 
     try {
-      const caseTypeFound = await this.caseTypeRepository.findOne({
-        where: {
-          id: createReportValDto.val_cr_casetype_id_fk,
-        },
-      });
-
-      if (!caseTypeFound) {
-        throw new HttpException(
-          `El tipo de caso no existe.`,
-          HttpStatus.NO_CONTENT,
-        );
-      }
-
-      const characterizationFound = await this.characterizationCaseRepository.findOne({
-        where: {
-          id: createReportValDto.val_cr_characterization_id_fk
-        }
-      })
-
-      if (!characterizationFound) {
-        throw new HttpException(
-          `La caracterización de los casos no existe.`,
-          HttpStatus.NO_CONTENT,
-        );
-      }
+      await this.characterizationCasesService.findOneCharacterization(
+        createReportValDto.val_cr_characterization_id_fk,
+      );
 
       const previousReport = await this.caseReportValidateRepository.findOne({
         where: {
@@ -153,6 +133,12 @@ export class CaseReportValidateService {
 
         await queryRunner.manager.save(previousReport);
       }
+
+      const caseTypeFound = await this.caseTypeRepository.findOne({
+        where: {
+          id: createReportValDto.val_cr_casetype_id_fk,
+        },
+      });
 
       let caseReportValidate: any;
 
@@ -404,65 +390,6 @@ export class CaseReportValidateService {
 
     return caseReportsValidate;
   }
-
-  // async summaryReportsForValidator(
-  //   filingNumber?: string,
-  //   statusMovementId?: number,
-  //   caseTypeId?: number,
-  //   patientDoc?: string,
-  //   priorityId?: number,
-  //   creationDate?: Date,
-  // ): Promise<CaseReportValidateEntity[]> {
-  //   const where: FindOptionsWhere<CaseReportValidateEntity> = {};
-
-  //   if (creationDate) {
-  //     const nextDay = new Date(creationDate);
-  //     nextDay.setDate(creationDate.getDate() + 1);
-
-  //     where.createdAt = Between(creationDate, nextDay);
-  //   }
-
-  //   if (filingNumber) {
-  //     where.val_cr_filingnumber = Like(`%${filingNumber}%`);
-  //   }
-
-  //   if (patientDoc) {
-  //     where.val_cr_documentpatient = patientDoc;
-  //   }
-
-  //   if (caseTypeId) {
-  //     where.val_cr_casetype_id_fk = caseTypeId;
-  //   }
-
-  //   if (priorityId) {
-  //     where.val_cr_priority_id_fk = priorityId;
-  //   }
-
-  //   if (statusMovementId) {
-  //     where.val_cr_statusmovement_id_fk = statusMovementId;
-  //   }
-
-  //   where.val_cr_validated = false;
-
-  //   const caseReportsValidate = await this.caseReportValidateRepository.find({
-  //     where,
-  //     relations: {
-  //       movementReport: true,
-  //       caseType: true,
-  //       event: true,
-  //       priority: true,
-  //     },
-  //   });
-
-  //   if (caseReportsValidate.length === 0) {
-  //     throw new HttpException(
-  //       'No hay reportes para mostrar.',
-  //       HttpStatus.NO_CONTENT,
-  //     );
-  //   }
-
-  //   return caseReportsValidate;
-  // }
 
   async summaryReportsForReview(
     filingNumber?: string,

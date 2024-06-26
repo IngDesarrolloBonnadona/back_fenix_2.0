@@ -36,7 +36,11 @@ export class CharacterizationCasesService {
   }
 
   async findAllCharacterizations() {
-    const characterization = await this.characterizationCaseRepository.find();
+    const characterization = await this.characterizationCaseRepository.find({
+      where: {
+        cha_c_status: true,
+      },
+    });
 
     if (characterization.length === 0) {
       throw new HttpException(
@@ -49,13 +53,13 @@ export class CharacterizationCasesService {
 
   async findOneCharacterization(id: number) {
     const characterization = await this.characterizationCaseRepository.findOne({
-      where: { id },
+      where: { id, cha_c_status: true },
     });
 
     if (!characterization) {
       throw new HttpException(
         'No se encontró la caracterización de los casos',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -90,13 +94,13 @@ export class CharacterizationCasesService {
       characterization.id,
     );
 
-    if ( result.affected === 0 ) {
+    if (result.affected === 0) {
       return new HttpException(
         `No se pudo eliminar la caracterización de los casos`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-    
+
     return new HttpException(
       `¡Datos eliminados correctamente!`,
       HttpStatus.ACCEPTED,
