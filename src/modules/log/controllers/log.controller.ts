@@ -41,7 +41,7 @@ export class LogController {
     return this.logService.findOneLog(id);
   }
 
-  @Put('/updateLog/:id')
+  @Patch('/updateLog/:id')
   updateLog(
     @Param('id') id: number,
     @Body() updateLogDto: UpdateLogDto,
@@ -50,7 +50,7 @@ export class LogController {
   }
 
   @Delete('/deleteLog/:id')
-  async deleteLog(@Param('id') id: number): Promise<HttpException> {
-    return await this.logService.deleteLog(id);
+  deleteLog(@Param('id') id: number): Promise<HttpException> {
+    return this.logService.deleteLog(id);
   }
 }

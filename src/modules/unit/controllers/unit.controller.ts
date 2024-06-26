@@ -30,13 +30,13 @@ export class UnitController {
     return this.unitService.findUnitByService(serviceId);
   }
 
-  @Put('/updateUnit/:id')
+  @Patch('/updateUnit/:id')
   updateUnit(@Param('id') id: number, @Body() updateUnitDto: UpdateUnitDto): Promise<HttpException> {
     return this.unitService.updateUnit(id, updateUnitDto);
   }
 
   @Delete('/deleteUnit/:id')
-  async deleteUnit(@Param('id') id: number): Promise<HttpException> {
-    return await this.unitService.deleteUnit(id);
+  deleteUnit(@Param('id') id: number): Promise<HttpException> {
+    return this.unitService.deleteUnit(id);
   }
 }

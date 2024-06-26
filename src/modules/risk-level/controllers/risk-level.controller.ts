@@ -25,13 +25,13 @@ export class RiskLevelController {
     return this.riskLevelService.findOneRiskLevel(id);
   }
 
-  @Put('/updateRiskLevel/:id')
+  @Patch('/updateRiskLevel/:id')
   updateRiskLevel(@Param('id') id: number, @Body() updateRiskLevelDto: UpdateRiskLevelDto): Promise<HttpException> {
     return this.riskLevelService.updateRiskLevel(id, updateRiskLevelDto);
   }
 
   @Delete('/deleteRiskLevel/:id')
-  async deleteRiskLevel(@Param('id') id: number): Promise<HttpException> {
-    return await this.riskLevelService.deleteRiskLevel(id);
+  deleteRiskLevel(@Param('id') id: number): Promise<HttpException> {
+    return this.riskLevelService.deleteRiskLevel(id);
   }
 }

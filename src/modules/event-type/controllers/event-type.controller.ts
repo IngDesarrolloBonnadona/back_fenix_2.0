@@ -30,13 +30,13 @@ export class EventTypeController {
     return this.eventTypeService.findEvenTypeByCaseType(caseTypeId);
   }
 
-  @Put('/updateEventType/:id')
+  @Patch('/updateEventType/:id')
   updateEventType(@Param('id') id: number, @Body() updateEventTypeDto: UpdateEventTypeDto): Promise<HttpException> {
     return this.eventTypeService.updateEventType(id, updateEventTypeDto);
   }
 
   @Delete('/deleteEventType/:id')
-  async deleteEventType(@Param('id') id: number): Promise<HttpException> {
-    return await this.eventTypeService.deleteEventType(id);
+  deleteEventType(@Param('id') id: number): Promise<HttpException> {
+    return this.eventTypeService.deleteEventType(id);
   }
 }

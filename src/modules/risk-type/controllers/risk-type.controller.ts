@@ -25,13 +25,13 @@ export class RiskTypeController {
     return this.riskTypeService.findOneRiskType(id);
   }
 
-  @Put('/updateRisktype/:id')
+  @Patch('/updateRisktype/:id')
   updateRisktype(@Param('id') id: number, @Body() updateRiskTypeDto: UpdateRiskTypeDto): Promise<HttpException> {
     return this.riskTypeService.updateRiskType(id, updateRiskTypeDto);
   }
 
   @Delete('/deleteRisktype/:id')
-  async deleteRisktype(@Param('id') id: number): Promise<HttpException> {
-    return await this.riskTypeService.deleteRiskType(id);
+  deleteRisktype(@Param('id') id: number): Promise<HttpException> {
+    return this.riskTypeService.deleteRiskType(id);
   }
 }

@@ -42,7 +42,7 @@ export class SeverityClasificationController {
     return this.severityClasificationService.findOneSeverityClasification(id);
   }
 
-  @Put('/updateSeverityClasification/:id')
+  @Patch('/updateSeverityClasification/:id')
   updateSeverityClasification(
     @Param('id') id: number,
     @Body() updateSeverityClasificationDto: UpdateSeverityClasificationDto,
@@ -54,7 +54,7 @@ export class SeverityClasificationController {
   }
 
   @Delete('/deleteSeverityClasification/:id')
-  async deleteSeverityClasification(@Param('id') id: number): Promise<HttpException> {
-    return await this.severityClasificationService.deleteSeverityClasification(id);
+  deleteSeverityClasification(@Param('id') id: number): Promise<HttpException> {
+    return this.severityClasificationService.deleteSeverityClasification(id);
   }
 }

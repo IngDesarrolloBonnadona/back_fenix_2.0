@@ -49,7 +49,7 @@ export class PriorityController {
   }
 
   @Delete('/deletePriority/:id')
-  deletePriority(@Param('id') id: string): Promise<HttpException> {
-    return this.priorityService.deletePriority(+id);
+  deletePriority(@Param('id') id: number): Promise<HttpException> {
+    return this.priorityService.deletePriority(id);
   }
 }

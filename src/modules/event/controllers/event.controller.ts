@@ -30,13 +30,13 @@ export class EventController {
     return this.eventService.findEventByEventTypeId(eventTypeId );
   }
 
-  @Put('/updateEvent/:id')
+  @Patch('/updateEvent/:id')
   updateEvent(@Param('id') id: number, @Body() updateEventDto: UpdateEventDto): Promise<HttpException> {
     return this.eventService.updateEvent(id, updateEventDto);
   }
 
   @Delete('/deleteEvent/:id')
-  async deleteEvent(@Param('id') id: number): Promise<HttpException> {
-    return await this.eventService.deleteEvent(id);
+  deleteEvent(@Param('id') id: number): Promise<HttpException> {
+    return this.eventService.deleteEvent(id);
   }
 }

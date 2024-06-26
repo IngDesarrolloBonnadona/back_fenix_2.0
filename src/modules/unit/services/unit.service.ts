@@ -96,6 +96,9 @@ export class UnitService {
 
   async updateUnit(id: number, updateUnitDto: UpdateUnitDto) {
     const unit = await this.findOneUnit(id);
+    
+    await this.serviceService.findOneService(updateUnitDto.unit_service_id_FK)
+
     const result = await this.unitRepository.update(unit.id, updateUnitDto);
 
     if (result.affected === 0) {

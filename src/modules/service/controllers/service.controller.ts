@@ -25,13 +25,13 @@ export class ServiceController {
     return this.serviceService.findOneService(id);
   }
 
-  @Put('/updateService/:id')
+  @Patch('/updateService/:id')
   updateService(@Param('id') id: number, @Body() updateServiceDto: UpdateServiceDto): Promise<HttpException> {
     return this.serviceService.updateService(id, updateServiceDto);
   }
 
   @Delete('/deleteService/:id')
-  async deleteService(@Param('id') id: number): Promise<HttpException> {
-    return await this.serviceService.deleteService(id);
+  deleteService(@Param('id') id: number): Promise<HttpException> {
+    return this.serviceService.deleteService(id);
   }
 }
