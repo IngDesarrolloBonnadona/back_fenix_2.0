@@ -14,12 +14,17 @@ import { Synergy } from '../synergy/entities/synergy.entity';
 import { SynergyModule } from '../synergy/synergy.module';
 import { Researcher } from '../researchers/entities/researchers.entity';
 import { ResearchersModule } from '../researchers/researchers.module';
-import { CharacterizationCase } from '../characterization-cases/entities/characterization-case.entity';
 import { CharacterizationCasesModule } from '../characterization-cases/characterization-cases.module';
 import { RiskTypeModule } from '../risk-type/risk-type.module';
 import { EventTypeModule } from '../event-type/event-type.module';
 import { ServiceModule } from '../service/service.module';
 import { EventModule } from '../event/event.module';
+import { SeverityClasificationModule } from '../severity-clasification/severity-clasification.module';
+import { OriginModule } from '../origin/origin.module';
+import { SubOriginModule } from '../sub-origin/sub-origin.module';
+import { RiskLevelModule } from '../risk-level/risk-level.module';
+import { UnitModule } from '../unit/unit.module';
+import { PriorityModule } from '../priority/priority.module';
 
 @Module({
   imports: [
@@ -40,6 +45,12 @@ import { EventModule } from '../event/event.module';
     EventTypeModule,
     EventModule,
     ServiceModule,
+    SeverityClasificationModule,
+    OriginModule,
+    SubOriginModule,
+    RiskLevelModule,
+    UnitModule,
+    PriorityModule,
     forwardRef(() => ResearchersModule),
     forwardRef(() => ReportAnalystAssignmentModule),
   ],

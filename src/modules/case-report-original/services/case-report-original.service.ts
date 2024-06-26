@@ -24,6 +24,12 @@ import { RiskTypeService } from 'src/modules/risk-type/services/risk-type.servic
 import { EventTypeService } from 'src/modules/event-type/services/event-type.service';
 import { ServiceService } from 'src/modules/service/services/service.service';
 import { EventService } from 'src/modules/event/services/event.service';
+import { SeverityClasificationService } from 'src/modules/severity-clasification/services/severity-clasification.service';
+import { OriginService } from 'src/modules/origin/services/origin.service';
+import { SubOriginService } from 'src/modules/sub-origin/services/sub-origin.service';
+import { RiskLevelService } from 'src/modules/risk-level/services/risk-level.service';
+import { UnitService } from 'src/modules/unit/services/unit.service';
+import { PriorityService } from 'src/modules/priority/services/priority.service';
 
 @Injectable()
 export class CaseReportOriginalService {
@@ -44,6 +50,12 @@ export class CaseReportOriginalService {
     private readonly eventTypeService: EventTypeService,
     private readonly eventService: EventService,
     private readonly serviceService: ServiceService,
+    private readonly severityClasificationService: SeverityClasificationService,
+    private readonly originService: OriginService,
+    private readonly subOriginService: SubOriginService,
+    private readonly riskLevelService: RiskLevelService,
+    private readonly unitService: UnitService,
+    private readonly priorityService: PriorityService,
     private dataSource: DataSource,
   ) {}
 
@@ -74,9 +86,35 @@ export class CaseReportOriginalService {
         createReportOriDto.ori_cr_service_id_fk,
       );
 
+      await this.originService.findOneOrigin(
+        createReportOriDto.ori_cr_origin_id_fk,
+      );
+
+      await this.subOriginService.findOneSubOrigin(
+        createReportOriDto.ori_cr_suborigin_id_fk,
+      );
+
+      await this.unitService.findOneUnit(createReportOriDto.ori_cr_unit_id_fk);
+
+      await this.priorityService.findOnePriority(
+        createReportOriDto.ori_cr_priority_id_fk,
+      );
+
       if (createReportOriDto.ori_cr_risktype_id_fk) {
         await this.riskTypeService.findOneRiskType(
           createReportOriDto.ori_cr_risktype_id_fk,
+        );
+      }
+
+      if (createReportOriDto.ori_cr_severityclasif_id_fk) {
+        await this.severityClasificationService.findOneSeverityClasification(
+          createReportOriDto.ori_cr_severityclasif_id_fk,
+        );
+      }
+
+      if (createReportOriDto.ori_cr_risklevel_id_fk) {
+        await this.riskLevelService.findOneRiskLevel(
+          createReportOriDto.ori_cr_risklevel_id_fk,
         );
       }
 

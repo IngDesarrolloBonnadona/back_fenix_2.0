@@ -42,6 +42,9 @@ export class SeverityClasificationService {
 
   async findAllSeverityClasifications(): Promise<SeverityClasifEntity[]> {
     const severityClasifs = await this.severityClasifRepository.find({
+      where: {
+        sev_c_status: true,
+      },
       // relations: {
       //   caseReportValidate: true,
       // },
@@ -61,7 +64,7 @@ export class SeverityClasificationService {
     id: number,
   ): Promise<SeverityClasifEntity> {
     const severityClasif = await this.severityClasifRepository.findOne({
-      where: { id },
+      where: { id, sev_c_status: true },
       // relations: {
       //   caseReportValidate: true,
       // },

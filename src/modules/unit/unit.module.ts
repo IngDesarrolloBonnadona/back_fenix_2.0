@@ -9,5 +9,6 @@ import { ServiceModule } from '../service/service.module';
   imports: [TypeOrmModule.forFeature([Unit]), ServiceModule],
   controllers: [UnitController],
   providers: [UnitService],
+  exports: [UnitService],
 })
 export class UnitModule {}

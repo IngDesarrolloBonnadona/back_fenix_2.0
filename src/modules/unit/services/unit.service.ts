@@ -44,6 +44,9 @@ export class UnitService {
 
   async findAllUnits(): Promise<UnitEntity[]> {
     const units = await this.unitRepository.find({
+      where: {
+        unit_status: true,
+      },
       // relations: {
       //   service: true,
       //   caseReportValidate: true,
@@ -62,7 +65,7 @@ export class UnitService {
 
   async findOneUnit(id: number): Promise<UnitEntity> {
     const unit = await this.unitRepository.findOne({
-      where: { id },
+      where: { id, unit_status: true },
       // relations: {
       //   service: true,
       //   caseReportValidate: true,

@@ -10,5 +10,6 @@ import { Priority } from './entities/priority.entity';
   ],
   controllers: [PriorityController],
   providers: [PriorityService],
+  exports: [PriorityService],
 })
 export class PriorityModule {}
