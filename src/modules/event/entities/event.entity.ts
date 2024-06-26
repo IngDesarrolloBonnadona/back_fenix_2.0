@@ -19,7 +19,7 @@ export class Event {
   id: number;
 
   @Column()
-  eve_eventtype_id_FK: number;
+  eve_eventtype_id_fk: number;
 
   @Column({ type: 'varchar' })
   eve_name: string;
@@ -40,7 +40,7 @@ export class Event {
   deletedAt: Date;
 
   @ManyToOne(() => EventType, (eventType) => eventType.event)
-  @JoinColumn({ name: 'eve_eventtype_id_FK' })
+  @JoinColumn({ name: 'eve_eventtype_id_fk' })
   eventType: EventType;
 
   @OneToMany(

@@ -24,7 +24,7 @@ export class EventService {
     const events = await this.eventRepository.findOne({
       where: {
         eve_name: createEventDto.eve_name,
-        eve_eventtype_id_FK: createEventDto.eve_eventtype_id_FK,
+        eve_eventtype_id_fk: createEventDto.eve_eventtype_id_fk,
         eve_status: true,
       },
     });
@@ -37,7 +37,7 @@ export class EventService {
     }
 
     await this.eventTypeService.findOneEventType(
-      createEventDto.eve_eventtype_id_FK,
+      createEventDto.eve_eventtype_id_fk,
     );
 
     const event = this.eventRepository.create(createEventDto);
@@ -46,6 +46,9 @@ export class EventService {
 
   async findAllEvents(): Promise<EventEntity[]> {
     const events = await this.eventRepository.find({
+      where: {
+        eve_status: true,
+      },
       relations: {
         eventType: true,
         // caseReportValidate: true,
@@ -64,7 +67,7 @@ export class EventService {
 
   async findOneEvent(id: number): Promise<EventEntity> {
     const event = await this.eventRepository.findOne({
-      where: { id },
+      where: { id, eve_status: true },
       relations: {
         eventType: true,
         // caseReportValidate: true,
@@ -83,7 +86,7 @@ export class EventService {
 
   async findEventByEventTypeId(eventTypeId: number): Promise<EventEntity[]> {
     const events = await this.eventRepository.find({
-      where: { eve_eventtype_id_FK: eventTypeId },
+      where: { eve_eventtype_id_fk: eventTypeId },
     });
 
     if (events.length === 0) {

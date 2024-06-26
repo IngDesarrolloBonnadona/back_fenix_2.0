@@ -19,7 +19,7 @@ export class SubOrigin {
   id: number;
 
   @Column()
-  sub_o_origin_id_FK: number;
+  sub_o_origin_id_fk: number;
 
   @Column({ type: 'varchar' })
   sub_o_name: string;
@@ -40,7 +40,7 @@ export class SubOrigin {
   deletedAt: Date;
 
   @ManyToOne(() => Origin, (origin) => origin.subOrigins)
-  @JoinColumn({ name: 'sub_o_origin_id_FK' })
+  @JoinColumn({ name: 'sub_o_origin_id_fk' })
   origin: Origin;
 
   @OneToMany(

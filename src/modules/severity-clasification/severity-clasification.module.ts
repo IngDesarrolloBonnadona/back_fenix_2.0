@@ -10,5 +10,6 @@ import { SeverityClasification } from './entities/severity-clasification.entity'
   ],
   controllers: [SeverityClasificationController],
   providers: [SeverityClasificationService],
+  exports: [SeverityClasificationService],
 })
 export class SeverityClasificationModule {}

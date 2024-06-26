@@ -34,6 +34,9 @@ export class RiskLevelService {
 
   async findAllRiskLevel(): Promise<RiskLevelEntity[]> {
     const riskLevels = await this.riskLevelRepository.find({
+      where: {
+        ris_l_status: true,
+      },
       // relations: {
       //   caseReportValidate: true,
       // },
@@ -51,7 +54,7 @@ export class RiskLevelService {
 
   async findOneRiskLevel(id: number): Promise<RiskLevelEntity> {
     const riskLevel = await this.riskLevelRepository.findOne({
-      where: { id },
+      where: { id, ris_l_status: true },
       // relations: {
       //   caseReportValidate: true,
       // },

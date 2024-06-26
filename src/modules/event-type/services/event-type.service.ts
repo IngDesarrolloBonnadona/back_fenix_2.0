@@ -26,7 +26,7 @@ export class EventTypeService {
     const findEventType = await this.eventTypeRepository.findOne({
       where: {
         eve_t_name: createEventTypeDto.eve_t_name,
-        eve_t_casetype_id_FK: createEventTypeDto.eve_t_casetype_id_FK,
+        eve_t_casetype_id_fk: createEventTypeDto.eve_t_casetype_id_fk,
       },
     });
 
@@ -38,7 +38,7 @@ export class EventTypeService {
     }
 
     await this.caseTypeService.findOneCaseType(
-      createEventTypeDto.eve_t_casetype_id_FK,
+      createEventTypeDto.eve_t_casetype_id_fk,
     );
 
     const eventType = this.eventTypeRepository.create(createEventTypeDto);
@@ -47,6 +47,9 @@ export class EventTypeService {
 
   async findAllEventTypes(): Promise<EventTypeEntity[]> {
     const eventTypes = await this.eventTypeRepository.find({
+      where: {
+        eve_t_status: true
+      },
       relations: {
         event: true,
         // caseType: true,
@@ -65,7 +68,7 @@ export class EventTypeService {
 
   async findOneEventType(id: number): Promise<EventTypeEntity> {
     const eventType = await this.eventTypeRepository.findOne({
-      where: { id },
+      where: { id, eve_t_status: true },
       relations: {
         event: true,
         // caseType: true,
@@ -86,7 +89,7 @@ export class EventTypeService {
   async findEvenTypeByCaseType(caseTypeId: number) {
     const eventTypesByCaseType = await this.eventTypeRepository.find({
       where: {
-        eve_t_casetype_id_FK: caseTypeId,
+        eve_t_casetype_id_fk: caseTypeId,
         eve_t_status: true,
       },
     });
@@ -103,7 +106,9 @@ export class EventTypeService {
 
   async updateEventType(id: number, updateEventTypeDto: UpdateEventTypeDto) {
     const eventType = await this.findOneEventType(id);
-    await this.caseTypeService.findOneCaseType(updateEventTypeDto.eve_t_casetype_id_FK)
+    await this.caseTypeService.findOneCaseType(
+      updateEventTypeDto.eve_t_casetype_id_fk,
+    );
 
     const result = await this.eventTypeRepository.update(
       eventType.id,

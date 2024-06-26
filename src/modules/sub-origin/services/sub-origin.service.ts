@@ -17,7 +17,7 @@ export class SubOriginService {
     @InjectRepository(SubOriginEntity)
     private readonly subOriginRepository: Repository<SubOriginEntity>,
 
-    private readonly originService: OriginService
+    private readonly originService: OriginService,
   ) {}
 
   async createSubOrigin(
@@ -26,13 +26,16 @@ export class SubOriginService {
     const FindSubOrigin = await this.subOriginRepository.findOne({
       where: {
         sub_o_name: createSubOriginDto.sub_o_name,
-        sub_o_origin_id_FK: createSubOriginDto.sub_o_origin_id_FK,
+        sub_o_origin_id_fk: createSubOriginDto.sub_o_origin_id_fk,
         sub_o_status: true,
       },
     });
 
     if (FindSubOrigin) {
-      throw new HttpException('El sub origen ya existe con el origen seleccionado.', HttpStatus.CONFLICT);
+      throw new HttpException(
+        'El sub origen ya existe con el origen seleccionado.',
+        HttpStatus.CONFLICT,
+      );
     }
 
     const subOrigin = this.subOriginRepository.create(createSubOriginDto);
@@ -41,6 +44,9 @@ export class SubOriginService {
 
   async findAllSubOrigins(): Promise<SubOriginEntity[]> {
     const subOrigins = await this.subOriginRepository.find({
+      where: {
+        sub_o_status: true,
+      },
       // relations: {
       //   origin: true,
       //   caseReportValidate: true,
@@ -59,7 +65,7 @@ export class SubOriginService {
 
   async findOneSubOrigin(id: number): Promise<SubOriginEntity> {
     const subOrigin = await this.subOriginRepository.findOne({
-      where: { id },
+      where: { id, sub_o_status: true },
       // relations: {
       //   origin: true,
       //   caseReportValidate: true,
@@ -79,7 +85,7 @@ export class SubOriginService {
   async findSubOriginByOriginId(originId: number) {
     const subOriginByOrigin = await this.subOriginRepository.find({
       where: {
-        sub_o_origin_id_FK: originId,
+        sub_o_origin_id_fk: originId,
         sub_o_status: true,
       },
     });
@@ -96,7 +102,9 @@ export class SubOriginService {
 
   async updateSubOrigin(id: number, updateSubOriginDto: UpdateSubOriginDto) {
     const subOrigin = await this.findOneSubOrigin(id);
-    await this.originService.findOneOrigin(updateSubOriginDto.sub_o_origin_id_FK)
+    await this.originService.findOneOrigin(
+      updateSubOriginDto.sub_o_origin_id_fk,
+    );
 
     const result = await this.subOriginRepository.update(
       subOrigin.id,

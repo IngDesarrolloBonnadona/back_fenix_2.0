@@ -8,5 +8,6 @@ import { CharacterizationCase } from './entities/characterization-case.entity';
   imports: [TypeOrmModule.forFeature([CharacterizationCase])],
   controllers: [CharacterizationCasesController],
   providers: [CharacterizationCasesService],
+  exports: [CharacterizationCasesService],
 })
 export class CharacterizationCasesModule {}

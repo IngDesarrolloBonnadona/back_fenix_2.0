@@ -30,7 +30,7 @@ export async function ValDtoValidator(
   });
 
   if (!caseTypeFound) {
-    throw new HttpException(`El tipo de caso no existe.`, HttpStatus.NOT_FOUND);
+    throw new HttpException(`El tipo de caso no existe.`, HttpStatus.NO_CONTENT);
   }
 
   switch (caseTypeFound.cas_t_name) {

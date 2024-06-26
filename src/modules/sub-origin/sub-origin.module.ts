@@ -12,5 +12,6 @@ import { OriginModule } from '../origin/origin.module';
   ],
   controllers: [SubOriginController],
   providers: [SubOriginService],
+  exports: [SubOriginService],
 })
 export class SubOriginModule {}

@@ -80,7 +80,7 @@ export class CaseReportValidate {
   val_cr_admconsecutivepatient: number;
 
   @Column({ nullable: true })
-  val_cr_reporter_id_fk: number;
+  val_cr_reporter_id: number;
 
   @Column({ nullable: true })
   val_cr_eventtype_id_fk: number;
@@ -116,13 +116,13 @@ export class CaseReportValidate {
   val_cr_statusmovement_id_fk: number;
 
   @Column({ nullable: true })
-  val_cr_characterization_id_fk: number
+  val_cr_characterization_id_fk: number;
 
   @Column({ nullable: true })
-  val_cr_infoprovidedfamily: boolean
+  val_cr_infoprovidedfamily: boolean;
 
   @Column({ nullable: true })
-  val_cr_clinicalfollowrequired: boolean
+  val_cr_clinicalfollowrequired: boolean;
 
   @Column({ type: 'varchar', nullable: true })
   val_cr_observationscharacterization: string;
@@ -208,13 +208,19 @@ export class CaseReportValidate {
   @JoinColumn({ name: 'val_cr_priority_id_fk' })
   priority: Priority;
 
-  @ManyToOne(() => MovementReport, (movementReport) => movementReport.caseReportValidate)
+  @ManyToOne(
+    () => MovementReport,
+    (movementReport) => movementReport.caseReportValidate,
+  )
   @JoinColumn({ name: 'val_cr_statusmovement_id_fk' })
-  movementReport: MovementReport
+  movementReport: MovementReport;
 
-  @ManyToOne(() => CharacterizationCase, (characterizationCase) => characterizationCase.caseReportValidate)
+  @ManyToOne(
+    () => CharacterizationCase,
+    (characterizationCase) => characterizationCase.caseReportValidate,
+  )
   @JoinColumn({ name: 'val_cr_characterization_id_fk' })
-  characterizationCase: CharacterizationCase
+  characterizationCase: CharacterizationCase;
 
   @OneToMany(() => Log, (log) => log.caseReportValidate)
   log: Log[];

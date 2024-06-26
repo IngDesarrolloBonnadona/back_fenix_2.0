@@ -19,6 +19,17 @@ import { CreateOriAdverseEventReportDto } from '../dto/create-ori-adverse-event-
 import { CreateOriIncidentReportDto } from '../dto/create-ori-incident-report.dto';
 import { CreateOriIndicatingUnsafeCareReportDto } from '../dto/create-ori-indicating-unsafe-care-report.dto';
 import { CreateOriComplicationsReportDto } from '../dto/create-ori-complications-report.dto';
+import { CaseTypeService } from 'src/modules/case-type/services/case-type.service';
+import { RiskTypeService } from 'src/modules/risk-type/services/risk-type.service';
+import { EventTypeService } from 'src/modules/event-type/services/event-type.service';
+import { ServiceService } from 'src/modules/service/services/service.service';
+import { EventService } from 'src/modules/event/services/event.service';
+import { SeverityClasificationService } from 'src/modules/severity-clasification/services/severity-clasification.service';
+import { OriginService } from 'src/modules/origin/services/origin.service';
+import { SubOriginService } from 'src/modules/sub-origin/services/sub-origin.service';
+import { RiskLevelService } from 'src/modules/risk-level/services/risk-level.service';
+import { UnitService } from 'src/modules/unit/services/unit.service';
+import { PriorityService } from 'src/modules/priority/services/priority.service';
 
 @Injectable()
 export class CaseReportOriginalService {
@@ -34,6 +45,17 @@ export class CaseReportOriginalService {
     private readonly logService: LogService,
     private readonly medicineService: MedicineService,
     private readonly deviceService: DeviceService,
+    private readonly caseTypeService: CaseTypeService,
+    private readonly riskTypeService: RiskTypeService,
+    private readonly eventTypeService: EventTypeService,
+    private readonly eventService: EventService,
+    private readonly serviceService: ServiceService,
+    private readonly severityClasificationService: SeverityClasificationService,
+    private readonly originService: OriginService,
+    private readonly subOriginService: SubOriginService,
+    private readonly riskLevelService: RiskLevelService,
+    private readonly unitService: UnitService,
+    private readonly priorityService: PriorityService,
     private dataSource: DataSource,
   ) {}
 
@@ -41,25 +63,73 @@ export class CaseReportOriginalService {
     createReportOriDto: any,
     clientIp: string,
   ): Promise<any> {
-    await OriDtoValidator(createReportOriDto);
+    await OriDtoValidator(createReportOriDto, this.caseTypeRepository);
 
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
     try {
-      const caseTypeFound = await this.caseTypeRepository.findOne({
-        where: {
-          id: createReportOriDto.ori_cr_casetype_id_fk,
-        },
-      });
+      // await this.eventTypeService.findOneEventType(
+      //   createReportOriDto.ori_cr_eventtype_id_fk,
+      // );
 
-      if (!caseTypeFound) {
-        throw new HttpException(
-          `El tipo de caso no existe.`,
-          HttpStatus.NO_CONTENT,
-        );
-      }
+      // await this.eventService.findOneEvent(
+      //   createReportOriDto.ori_cr_event_id_fk,
+      // );
+
+      // await this.serviceService.findOneService(
+      //   createReportOriDto.ori_cr_service_id_fk,
+      // );
+
+      // await this.originService.findOneOrigin(
+      //   createReportOriDto.ori_cr_origin_id_fk,
+      // );
+
+      // await this.subOriginService.findOneSubOrigin(
+      //   createReportOriDto.ori_cr_suborigin_id_fk,
+      // );
+
+      // await this.unitService.findOneUnit(createReportOriDto.ori_cr_unit_id_fk);
+
+      // await this.priorityService.findOnePriority(
+      //   createReportOriDto.ori_cr_priority_id_fk,
+      // );
+
+      // if (createReportOriDto.ori_cr_risktype_id_fk) {
+      //   await this.riskTypeService.findOneRiskType(
+      //     createReportOriDto.ori_cr_risktype_id_fk,
+      //   );
+      // }
+
+      // if (createReportOriDto.ori_cr_severityclasif_id_fk) {
+      //   await this.severityClasificationService.findOneSeverityClasification(
+      //     createReportOriDto.ori_cr_severityclasif_id_fk,
+      //   );
+      // }
+
+      // if (createReportOriDto.ori_cr_risklevel_id_fk) {
+      //   await this.riskLevelService.findOneRiskLevel(
+      //     createReportOriDto.ori_cr_risklevel_id_fk,
+      //   );
+      // }
+
+      await Promise.all([
+        this.eventTypeService.findOneEventType(createReportOriDto.ori_cr_eventtype_id_fk),
+        this.eventService.findOneEvent(createReportOriDto.ori_cr_event_id_fk),
+        this.serviceService.findOneService(createReportOriDto.ori_cr_service_id_fk ),
+        this.originService.findOneOrigin(createReportOriDto.ori_cr_origin_id_fk),
+        this.subOriginService.findOneSubOrigin(createReportOriDto.ori_cr_suborigin_id_fk),
+        this.unitService.findOneUnit(createReportOriDto.ori_cr_unit_id_fk),
+        this.priorityService.findOnePriority(createReportOriDto.ori_cr_priority_id_fk),
+        createReportOriDto.ori_cr_risktype_id_fk && this.riskTypeService.findOneRiskType(createReportOriDto.ori_cr_risktype_id_fk),
+        createReportOriDto.ori_cr_severityclasif_id_fk && this.severityClasificationService.findOneSeverityClasification(createReportOriDto.ori_cr_severityclasif_id_fk),
+        createReportOriDto.ori_cr_risklevel_id_fk && this.riskLevelService.findOneRiskLevel(createReportOriDto.ori_cr_risklevel_id_fk),
+      ])
+
+      const caseTypeFound = await this.caseTypeService.findOneCaseType(
+        createReportOriDto.ori_cr_casetype_id_fk,
+      );
 
       let caseReportOriginal: any;
 
@@ -86,7 +156,9 @@ export class CaseReportOriginalService {
           caseReportOriginal = this.caseReportOriginalRepository.create(
             createReportOriDto as CreateOriIndicatingUnsafeCareReportDto,
           );
-          console.log(`Se creó reporte ${caseTypeReport.INDICATING_UNSAFE_CARE}`);
+          console.log(
+            `Se creó reporte ${caseTypeReport.INDICATING_UNSAFE_CARE}`,
+          );
           break;
         case caseTypeReport.COMPLICATIONS:
           caseReportOriginal = this.caseReportOriginalRepository.create(
@@ -94,7 +166,7 @@ export class CaseReportOriginalService {
           );
           console.log(`Se creó reporte ${caseTypeReport.COMPLICATIONS}`);
           break;
-          // agregar un tipo de caso nuevo
+        // agregar un tipo de caso nuevo
         default:
           throw new HttpException(
             'Tipo de caso no reconocido.',
@@ -121,7 +193,7 @@ export class CaseReportOriginalService {
       }
 
       caseReportOriginal.ori_cr_filingnumber = filingNumber;
-      caseReportOriginal.ori_cr_statusmovement_id_fk = movementReportFound.id
+      caseReportOriginal.ori_cr_statusmovement_id_fk = movementReportFound.id;
 
       await queryRunner.manager.save(caseReportOriginal);
 
@@ -157,7 +229,7 @@ export class CaseReportOriginalService {
       const log = await this.logService.createLogTransaction(
         queryRunner,
         caseReportValidate.id,
-        caseReportOriginal.ori_cr_reporter_id_fk,
+        caseReportOriginal.ori_cr_reporter_id,
         clientIp,
         logReports.LOG_CREATION,
       );
@@ -220,7 +292,8 @@ export class CaseReportOriginalService {
   }
 
   async findOneReportOriginal(id: string): Promise<CaseReportOriginalEntity> {
-    const caseReportsOriginal = await this.caseReportOriginalRepository.findOne({
+    const caseReportsOriginal = await this.caseReportOriginalRepository.findOne(
+      {
         where: { id },
         relations: {
           caseReportValidate: true,
@@ -237,9 +310,10 @@ export class CaseReportOriginalService {
           eventType: true,
           service: true,
           unit: true,
-          priority: true
+          priority: true,
         },
-      });
+      },
+    );
 
     if (!caseReportsOriginal) {
       throw new HttpException(

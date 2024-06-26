@@ -10,7 +10,7 @@ export class CreateOriRiskReportDto {
 
     @IsNumber()
     @IsNotEmpty()
-    ori_cr_reporter_id_fk: number;
+    ori_cr_reporter_id: number;
 
     @IsNumber()
     @IsNotEmpty()

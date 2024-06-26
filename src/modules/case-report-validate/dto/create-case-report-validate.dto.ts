@@ -15,7 +15,7 @@ export class CreateCaseReportValidateDto {
 
     @IsNumber()
     @IsNotEmpty()
-    val_cr_reporter_id_fk: number;
+    val_cr_reporter_id: number;
 
     @IsNumber()
     @IsNotEmpty()

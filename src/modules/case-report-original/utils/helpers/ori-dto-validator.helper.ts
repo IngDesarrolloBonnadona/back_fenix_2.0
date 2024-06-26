@@ -1,50 +1,82 @@
-import { plainToInstance } from "class-transformer";
-import { CreateOriAdverseEventReportDto } from "../../dto/create-ori-adverse-event-report.dto";
-import { CreateOriComplicationsReportDto } from "../../dto/create-ori-complications-report.dto";
-import { CreateOriIncidentReportDto } from "../../dto/create-ori-incident-report.dto";
-import { CreateOriIndicatingUnsafeCareReportDto } from "../../dto/create-ori-indicating-unsafe-care-report.dto";
-import { CreateOriRiskReportDto } from "../../dto/create-ori-risk-report.dto";
-import { HttpException, HttpStatus } from "@nestjs/common";
-import { validate } from "class-validator";
+import { plainToInstance } from 'class-transformer';
+import { CreateOriAdverseEventReportDto } from '../../dto/create-ori-adverse-event-report.dto';
+import { CreateOriComplicationsReportDto } from '../../dto/create-ori-complications-report.dto';
+import { CreateOriIncidentReportDto } from '../../dto/create-ori-incident-report.dto';
+import { CreateOriIndicatingUnsafeCareReportDto } from '../../dto/create-ori-indicating-unsafe-care-report.dto';
+import { CreateOriRiskReportDto } from '../../dto/create-ori-risk-report.dto';
+import { HttpException, HttpStatus } from '@nestjs/common';
+import { validate } from 'class-validator';
+import { Repository } from 'typeorm';
+import { CaseType } from 'src/modules/case-type/entities/case-type.entity';
+import { caseTypeReport } from 'src/enums/caseType-report.enum';
 
 export type CreateReportOriDto = //Discriminador que define los Dto
-    CreateOriAdverseEventReportDto
-  | CreateOriComplicationsReportDto
-  | CreateOriIncidentReportDto
-  | CreateOriIndicatingUnsafeCareReportDto
-  | CreateOriRiskReportDto;
 
-export async function OriDtoValidator(createReportDto: any): Promise<CreateReportOriDto> {
-    let dtoInstance: CreateReportOriDto;
+    | CreateOriAdverseEventReportDto
+    | CreateOriComplicationsReportDto
+    | CreateOriIncidentReportDto
+    | CreateOriIndicatingUnsafeCareReportDto
+    | CreateOriRiskReportDto;
 
-    switch (createReportDto.ori_cr_casetype_id_fk) {
-        case 1:
-          dtoInstance = plainToInstance(CreateOriRiskReportDto, createReportDto);
-          break
-        case 2:
-          dtoInstance = plainToInstance(CreateOriAdverseEventReportDto, createReportDto);
-          break;
-        case 3:
-          dtoInstance = plainToInstance(CreateOriIncidentReportDto, createReportDto);
-          break;
-        case 4:
-          dtoInstance = plainToInstance(CreateOriIndicatingUnsafeCareReportDto, createReportDto);
-          break;
-        case 5:
-          dtoInstance = plainToInstance(CreateOriComplicationsReportDto, createReportDto);
-          break;
-        default:
-          throw new HttpException('Tipo de caso no reconocido.', HttpStatus.BAD_REQUEST);
-      }
+export async function OriDtoValidator(
+  createReportDto: any,
+  caseTypeRepository: Repository<CaseType>
+): Promise<CreateReportOriDto> {
+  let dtoInstance: CreateReportOriDto;
 
-      const errors = await validate(dtoInstance);
+  const caseTypeFound = await caseTypeRepository.findOne({
+    where: {
+      id: createReportDto.ori_cr_casetype_id_fk,
+    },
+  });
 
-    if (errors.length > 0) {
+  if (!caseTypeFound) {
+    throw new HttpException(`El tipo de caso no existe.`, HttpStatus.NO_CONTENT);
+  }
+
+  switch (caseTypeFound.cas_t_name) {
+    case caseTypeReport.RISK:
+      dtoInstance = plainToInstance(CreateOriRiskReportDto, createReportDto);
+      break;
+    case caseTypeReport.ADVERSE_EVENT:
+      dtoInstance = plainToInstance(
+        CreateOriAdverseEventReportDto,
+        createReportDto,
+      );
+      break;
+    case caseTypeReport.INCIDENT:
+      dtoInstance = plainToInstance(
+        CreateOriIncidentReportDto,
+        createReportDto,
+      );
+      break;
+    case caseTypeReport.INDICATING_UNSAFE_CARE:
+      dtoInstance = plainToInstance(
+        CreateOriIndicatingUnsafeCareReportDto,
+        createReportDto,
+      );
+      break;
+    case caseTypeReport.COMPLICATIONS:
+      dtoInstance = plainToInstance(
+        CreateOriComplicationsReportDto,
+        createReportDto,
+      );
+      break;
+    default:
       throw new HttpException(
-        `Validación fallida: ${errors.map(error => error.toString()).join(', ')}`,
+        'Tipo de caso no reconocido.',
         HttpStatus.BAD_REQUEST,
       );
-    }
+  }
 
-    return dtoInstance
+  const errors = await validate(dtoInstance);
+
+  if (errors.length > 0) {
+    throw new HttpException(
+      `Validación fallida: ${errors.map((error) => error.toString()).join(', ')}`,
+      HttpStatus.BAD_REQUEST,
+    );
+  }
+
+  return dtoInstance;
 }

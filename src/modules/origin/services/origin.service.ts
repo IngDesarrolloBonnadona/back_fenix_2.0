@@ -34,6 +34,9 @@ export class OriginService {
 
   async findAllOrigins(): Promise<OriginEntity[]> {
     const origins = await this.originRepository.find({
+      where: {
+        orig_status: true
+      },
       relations: {
         subOrigins: true,
         // caseReportValidate: true,
@@ -52,7 +55,7 @@ export class OriginService {
 
   async findOneOrigin(id: number): Promise<OriginEntity> {
     const origin = await this.originRepository.findOne({
-      where: { id },
+      where: { id, orig_status: true },
       relations: {
         subOrigins: true,
         // caseReportValidate: true,
