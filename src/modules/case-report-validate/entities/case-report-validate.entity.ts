@@ -27,6 +27,7 @@ import { Unit } from 'src/modules/unit/entities/unit.entity';
 import { Researcher } from 'src/modules/researchers/entities/researchers.entity';
 import { Priority } from 'src/modules/priority/entities/priority.entity';
 import { MovementReport } from 'src/modules/movement-report/entities/movement-report.entity';
+import { CharacterizationCase } from 'src/modules/characterization-cases/entities/characterization-case.entity';
 
 @Entity()
 export class CaseReportValidate {
@@ -114,6 +115,18 @@ export class CaseReportValidate {
   @Column({ nullable: true })
   val_cr_statusmovement_id_fk: number;
 
+  @Column({ nullable: true })
+  val_cr_characterization_id_fk: number
+
+  @Column({ nullable: true })
+  val_cr_infoprovidedfamily: boolean
+
+  @Column({ nullable: true })
+  val_cr_clinicalfollowrequired: boolean
+
+  @Column({ type: 'varchar', nullable: true })
+  val_cr_observationscharacterization: string;
+
   @Column({ type: 'varchar', nullable: true }) //
   val_cr_description: string;
 
@@ -198,6 +211,10 @@ export class CaseReportValidate {
   @ManyToOne(() => MovementReport, (movementReport) => movementReport.caseReportValidate)
   @JoinColumn({ name: 'val_cr_statusmovement_id_fk' })
   movementReport: MovementReport
+
+  @ManyToOne(() => CharacterizationCase, (characterizationCase) => characterizationCase.caseReportValidate)
+  @JoinColumn({ name: 'val_cr_characterization_id_fk' })
+  characterizationCase: CharacterizationCase
 
   @OneToMany(() => Log, (log) => log.caseReportValidate)
   log: Log[];

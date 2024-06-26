@@ -26,13 +26,13 @@ export class CaseTypeController {
   }
 
   @Put('/updateCaseType/:id')
-  async updateCaseType(@Param('id') id: number, @Body() updateCaseTypeDto: UpdateCaseTypeDto): Promise<HttpException> {
-    return await this.caseTypeService.updateCaseType(id, updateCaseTypeDto);
+  updateCaseType(@Param('id') id: number, @Body() updateCaseTypeDto: UpdateCaseTypeDto): Promise<HttpException> {
+    return this.caseTypeService.updateCaseType(id, updateCaseTypeDto);
   }
 
   @Delete('/deleteCaseType/:id')
-  async deleteCaseType(@Param('id') id: number): Promise<HttpException> {
-    return await this.caseTypeService.deleteCaseType(id);
+  deleteCaseType(@Param('id') id: number): Promise<HttpException> {
+    return this.caseTypeService.deleteCaseType(id);
 
   }
 }

@@ -39,6 +39,7 @@ import { CreateValAdverseEventReportDto } from '../dto/create-val-adverse-event-
 import { CreateValIncidentReportDto } from '../dto/create-val-incident-report.dto';
 import { CreateValIndicatingUnsafeCareReportDto } from '../dto/create-val-indicating-unsafe-care-report.dto';
 import { CreateValComplicationsReportDto } from '../dto/create-val-complications-report.dto';
+import { CharacterizationCase as CharacterizationCaseEntity } from 'src/modules/characterization-cases/entities/characterization-case.entity';
 
 @Injectable()
 export class CaseReportValidateService {
@@ -55,6 +56,8 @@ export class CaseReportValidateService {
     private readonly synergyRepository: Repository<SynergyEntity>,
     @InjectRepository(ResearcherEntity)
     private readonly researchRepository: Repository<ResearcherEntity>,
+    @InjectRepository(CharacterizationCaseEntity)
+    private readonly characterizationCaseRepository: Repository<CaseReportValidateEntity>,
 
     private dataSource: DataSource,
     private readonly medicineService: MedicineService,
@@ -114,6 +117,19 @@ export class CaseReportValidateService {
       if (!caseTypeFound) {
         throw new HttpException(
           `El tipo de caso no existe.`,
+          HttpStatus.NO_CONTENT,
+        );
+      }
+
+      const characterizationFound = await this.characterizationCaseRepository.findOne({
+        where: {
+          id: createReportValDto.val_cr_characterization_id_fk
+        }
+      })
+
+      if (!characterizationFound) {
+        throw new HttpException(
+          `La caracterización de los casos no existe.`,
           HttpStatus.NO_CONTENT,
         );
       }

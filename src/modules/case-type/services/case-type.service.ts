@@ -20,16 +20,16 @@ export class CaseTypeService {
   async createCaseType(
     createCaseTypeDto: CreateCaseTypeDto,
   ): Promise<CaseTypeEntity> {
-    const FindCaseType = await this.caseTypeRepository.findOne({
+    const findCaseType = await this.caseTypeRepository.findOne({
       where: {
         cas_t_name: createCaseTypeDto.cas_t_name,
         cas_t_status: true,
       },
     });
 
-    if (FindCaseType) {
+    if (findCaseType) {
       throw new HttpException(
-        'El  tipo de caso ya existe.',
+        'El tipo de caso ya existe.',
         HttpStatus.CONFLICT,
       );
     }
@@ -39,10 +39,10 @@ export class CaseTypeService {
 
   async findAllCaseTypes(): Promise<CaseTypeEntity[]> {
     const caseTypes = await this.caseTypeRepository.find({
-      relations: {
-        eventType: true,
-        caseReportValidate: true,
-      },
+      // relations: {
+      //   eventType: true,
+      //   caseReportValidate: true,
+      // },
     });
 
     if (caseTypes.length === 0) {

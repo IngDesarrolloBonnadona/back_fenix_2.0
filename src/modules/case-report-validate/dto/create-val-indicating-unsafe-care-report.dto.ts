@@ -1,4 +1,4 @@
-import { IsArray, IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
+import { IsArray, IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
 import { Type } from "class-transformer";
 import { CreateDeviceDto } from "src/modules/device/dto/create-device.dto";
 import { CreateMedicineDto } from "src/modules/medicine/dto/create-medicine.dto";
@@ -92,6 +92,22 @@ export class CreateValIndicatingUnsafeCareReportDto {
     @IsNumber()
     @IsNotEmpty()
     val_cr_priority_id_fk: number;
+
+    @IsNumber()
+    @IsOptional()
+    val_cr_characterization_id_fk: number
+
+    @IsBoolean()
+    @IsOptional()
+    val_cr_infoprovidedfamily: boolean
+
+    @IsBoolean()
+    @IsOptional()
+    val_cr_clinicalfollowrequired: boolean
+
+    @IsString()
+    @IsOptional()
+    val_cr_observationscharacterization: string;
 
     @IsOptional()
     @IsArray()

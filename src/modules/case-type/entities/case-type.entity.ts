@@ -11,7 +11,7 @@ export class CaseType {
     @Column({ type: 'varchar' })
     cas_t_name: string;
 
-    @Column({ type: 'text', nullable: true })
+    @Column({ type: 'varchar', nullable: true })
     cas_t_description: string;
 
     @Column({ type: 'boolean', default: true })

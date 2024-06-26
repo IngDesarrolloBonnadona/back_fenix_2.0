@@ -14,6 +14,7 @@ import { Synergy } from '../synergy/entities/synergy.entity';
 import { SynergyModule } from '../synergy/synergy.module';
 import { Researcher } from '../researchers/entities/researchers.entity';
 import { ResearchersModule } from '../researchers/researchers.module';
+import { CharacterizationCase } from '../characterization-cases/entities/characterization-case.entity';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { ResearchersModule } from '../researchers/researchers.module';
       ReportAnalystAssignment,
       Synergy,
       Researcher,
+      CharacterizationCase,
     ]),
     MedicineModule,
     DeviceModule,

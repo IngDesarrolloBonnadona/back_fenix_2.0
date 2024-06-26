@@ -98,6 +98,22 @@ export class CreateCaseReportOriginalDto {
     @IsNotEmpty()
     ori_cr_statusmovement_id_fk: number;
 
+    @IsNumber()
+    @IsOptional()
+    ori_cr_characterization_id_fk: number
+
+    @IsBoolean()
+    @IsOptional()
+    ori_cr_infoprovidedfamily: boolean
+
+    @IsBoolean()
+    @IsOptional()
+    ori_cr_clinicalfollowrequired: boolean
+
+    @IsString()
+    @IsOptional()
+    ori_cr_observationscharacterization: string;
+
     @IsString()
     @IsOptional()
     ori_cr_description: string;

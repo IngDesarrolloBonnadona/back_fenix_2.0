@@ -101,6 +101,18 @@ export class CaseReportOriginal {
   
   @Column({ nullable: true })
   ori_cr_statusmovement_id_fk: number;
+  
+  @Column({ nullable: true })
+  ori_cr_characterization_id_fk: number
+
+  @Column({ nullable: true })
+  ori_cr_infoprovidedfamily: boolean
+
+  @Column({ nullable: true })
+  ori_cr_clinicalfollowrequired: boolean
+
+  @Column({ type: 'varchar', nullable: true })
+  ori_cr_observationscharacterization: string;
 
   @Column({ type: 'varchar', nullable: true })
   ori_cr_description: string;
