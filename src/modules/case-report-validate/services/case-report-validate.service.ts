@@ -239,7 +239,7 @@ export class CaseReportValidateService {
       await this.logService.createLogTransaction(
         queryRunner,
         caseReportValidate.id,
-        caseReportValidate.val_cr_reporter_id_fk,
+        caseReportValidate.val_cr_reporter_id,
         clientIp,
         logReports.LOG_VALIDATION,
       );
@@ -292,7 +292,7 @@ export class CaseReportValidateService {
       val_cr_epspatient: caseReportOriginal.ori_cr_epspatient,
       val_cr_admconsecutivepatient:
         caseReportOriginal.ori_cr_admconsecutivepatient,
-      val_cr_reporter_id_fk: caseReportOriginal.ori_cr_reporter_id_fk,
+      val_cr_reporter_id: caseReportOriginal.ori_cr_reporter_id,
       val_cr_eventtype_id_fk: caseReportOriginal.ori_cr_eventtype_id_fk,
       val_cr_service_id_fk: caseReportOriginal.ori_cr_service_id_fk,
       val_cr_event_id_fk: caseReportOriginal.ori_cr_event_id_fk,
@@ -640,7 +640,7 @@ export class CaseReportValidateService {
 
     await this.logService.createLog(
       caseReportValidate.id,
-      caseReportValidate.val_cr_reporter_id_fk,
+      caseReportValidate.val_cr_reporter_id,
       clientIp,
       logReports.LOG_ANULATION,
     );

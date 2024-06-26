@@ -157,7 +157,7 @@ export class CaseReportOriginalService {
       const log = await this.logService.createLogTransaction(
         queryRunner,
         caseReportValidate.id,
-        caseReportOriginal.ori_cr_reporter_id_fk,
+        caseReportOriginal.ori_cr_reporter_id,
         clientIp,
         logReports.LOG_CREATION,
       );
