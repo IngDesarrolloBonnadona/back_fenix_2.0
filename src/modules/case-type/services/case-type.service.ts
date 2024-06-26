@@ -39,10 +39,10 @@ export class CaseTypeService {
 
   async findAllCaseTypes(): Promise<CaseTypeEntity[]> {
     const caseTypes = await this.caseTypeRepository.find({
-      relations: {
-        eventType: true,
-        caseReportValidate: true,
-      },
+      // relations: {
+      //   eventType: true,
+      //   caseReportValidate: true,
+      // },
     });
 
     if (caseTypes.length === 0) {

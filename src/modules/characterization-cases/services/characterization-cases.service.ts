@@ -14,7 +14,7 @@ export class CharacterizationCasesService {
 
   async createCharacterization(
     createCharacterizationCaseDto: CreateCharacterizationCaseDto,
-  ) {
+  ): Promise<CharacterizationCaseEntity> {
     const findCharacterization =
       await this.characterizationCaseRepository.findOne({
         where: {
@@ -35,22 +35,71 @@ export class CharacterizationCasesService {
     return await this.characterizationCaseRepository.save(characterization);
   }
 
-  findAll() {
-    return `This action returns all characterizationCases`;
+  async findAllCharacterizations() {
+    const characterization = await this.characterizationCaseRepository.find();
+
+    if (characterization.length === 0) {
+      throw new HttpException(
+        'No se encontró la lista de caracterización de los casos',
+        HttpStatus.NO_CONTENT,
+      );
+    }
+    return characterization;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} characterizationCase`;
+  async findOneCharacterization(id: number) {
+    const characterization = await this.characterizationCaseRepository.findOne({
+      where: { id },
+    });
+
+    if (!characterization) {
+      throw new HttpException(
+        'No se encontró la caracterización de los casos',
+        HttpStatus.NO_CONTENT,
+      );
+    }
+
+    return characterization;
   }
 
-  update(
+  async updateCharacterization(
     id: number,
     updateCharacterizationCaseDto: UpdateCharacterizationCaseDto,
   ) {
-    return `This action updates a #${id} characterizationCase`;
+    const characterization = await this.findOneCharacterization(id);
+    const result = await this.characterizationCaseRepository.update(
+      characterization.id,
+      updateCharacterizationCaseDto,
+    );
+
+    if (result.affected === 0) {
+      return new HttpException(
+        `No se pudo actualizar la caracterización de los casos`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+    return new HttpException(
+      `¡Datos actualizados correctamente!`,
+      HttpStatus.ACCEPTED,
+    );
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} characterizationCase`;
+  async deleteCharacterization(id: number) {
+    const characterization = await this.findOneCharacterization(id);
+    const result = await this.characterizationCaseRepository.softDelete(
+      characterization.id,
+    );
+
+    if ( result.affected === 0 ) {
+      return new HttpException(
+        `No se pudo eliminar la caracterización de los casos`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+    
+    return new HttpException(
+      `¡Datos eliminados correctamente!`,
+      HttpStatus.ACCEPTED,
+    );
   }
 }
