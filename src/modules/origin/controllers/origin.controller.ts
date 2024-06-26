@@ -25,13 +25,13 @@ export class OriginController {
     return this.originService.findOneOrigin(id);
   }
 
-  @Put('/updateOrigin/:id')
+  @Patch('/updateOrigin/:id')
   updateOrigin(@Param('id') id: number, @Body() updateOriginDto: UpdateOriginDto): Promise<HttpException> {
     return this.originService.updateOrigin(id, updateOriginDto);
   }
 
   @Delete('/deleteOrigin/:id')
-  async deleteOrigin(@Param('id') id: number): Promise<HttpException> {
-    return await this.originService.deleteOrigin(id);
+  deleteOrigin(@Param('id') id: number): Promise<HttpException> {
+    return this.originService.deleteOrigin(id);
   }
 }

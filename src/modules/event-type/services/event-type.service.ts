@@ -103,6 +103,8 @@ export class EventTypeService {
 
   async updateEventType(id: number, updateEventTypeDto: UpdateEventTypeDto) {
     const eventType = await this.findOneEventType(id);
+    await this.caseTypeService.findOneCaseType(updateEventTypeDto.eve_t_casetype_id_FK)
+
     const result = await this.eventTypeRepository.update(
       eventType.id,
       updateEventTypeDto,

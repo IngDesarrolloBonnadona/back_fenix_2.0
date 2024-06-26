@@ -30,7 +30,7 @@ export class SubOriginController {
     return this.subOriginService.findSubOriginByOriginId(originId);
   }
 
-  @Put('/updateSubOrigin/:id')
+  @Patch('/updateSubOrigin/:id')
   updateSubOrigin(@Param('id') id: number, @Body() updateSubOriginDto: UpdateSubOriginDto): Promise<HttpException> {
     return this.subOriginService.updateSubOrigin(id, updateSubOriginDto);
   }

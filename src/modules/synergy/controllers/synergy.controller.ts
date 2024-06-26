@@ -43,7 +43,7 @@ export class SynergyController {
     return this.synergyService.findOneSynergy(id);
   }
 
-  @Put('/rescheduleSynergy/:id/:idValidator')
+  @Patch('/rescheduleSynergy/:id/:idValidator')
   rescheduleSynergy(
     @Param('id') id: number,
     @Ip() clientIp: string,

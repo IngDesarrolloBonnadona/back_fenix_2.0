@@ -25,7 +25,7 @@ export class CaseTypeController {
     return this.caseTypeService.findOneCaseType(id);
   }
 
-  @Put('/updateCaseType/:id')
+  @Patch('/updateCaseType/:id')
   updateCaseType(@Param('id') id: number, @Body() updateCaseTypeDto: UpdateCaseTypeDto): Promise<HttpException> {
     return this.caseTypeService.updateCaseType(id, updateCaseTypeDto);
   }

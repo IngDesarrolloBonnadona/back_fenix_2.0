@@ -9,12 +9,15 @@ import { UpdateSubOriginDto } from '../dto/update-sub-origin.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SubOrigin as SubOriginEntity } from '../entities/sub-origin.entity';
 import { Repository } from 'typeorm';
+import { OriginService } from 'src/modules/origin/services/origin.service';
 
 @Injectable()
 export class SubOriginService {
   constructor(
     @InjectRepository(SubOriginEntity)
     private readonly subOriginRepository: Repository<SubOriginEntity>,
+
+    private readonly originService: OriginService
   ) {}
 
   async createSubOrigin(
@@ -93,6 +96,8 @@ export class SubOriginService {
 
   async updateSubOrigin(id: number, updateSubOriginDto: UpdateSubOriginDto) {
     const subOrigin = await this.findOneSubOrigin(id);
+    await this.originService.findOneOrigin(updateSubOriginDto.sub_o_origin_id_FK)
+
     const result = await this.subOriginRepository.update(
       subOrigin.id,
       updateSubOriginDto,

@@ -25,13 +25,13 @@ export class MovementReportController {
     return this.movementReportService.findOneMovementReport(id);
   }
 
-  @Put('/updateMovementReport/:id')
+  @Patch('/updateMovementReport/:id')
   updateMovementReport(@Param('id') id: number, @Body() updateMovementReportDto: UpdateMovementReportDto): Promise<HttpException> {
     return this.movementReportService.updateMovementReport(id, updateMovementReportDto);
   }
 
   @Delete('/deleteMovementReport/:id')
-  async deleteMovementReport(@Param('id') id: number): Promise<HttpException> {
-    return await this.movementReportService.deleteMovementReport(id);
+  deleteMovementReport(@Param('id') id: number): Promise<HttpException> {
+    return this.movementReportService.deleteMovementReport(id);
   }
 }

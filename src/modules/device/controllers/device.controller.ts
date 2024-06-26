@@ -35,7 +35,7 @@ export class DeviceController {
     return this.deviceService.findOneDevice(id);
   }
 
-  @Put('/updateDevice/:id')
+  @Patch('/updateDevice/:id')
   updateDevice(
     @Param('id') id: number,
     @Body() updateDeviceDto: UpdateDeviceDto,
@@ -44,7 +44,7 @@ export class DeviceController {
   }
 
   @Delete('/deleteDevice/:id')
-  async deleteDevice(@Param('id') id: number): Promise<HttpException> {
-    return await this.deviceService.deleteDevice(id);
+  deleteDevice(@Param('id') id: number): Promise<HttpException> {
+    return this.deviceService.deleteDevice(id);
   }
 }

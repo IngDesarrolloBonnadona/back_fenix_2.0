@@ -25,13 +25,13 @@ export class MedicineController {
     return this.medicineService.findOneMedicine(id);
   }
 
-  @Put('/updateMedicine/:id')
+  @Patch('/updateMedicine/:id')
   updateMedicine(@Param('id') id: number, @Body() updateMedicineDto: UpdateMedicineDto): Promise<HttpException> {
-    return this.medicineService.updateMedicine(+id, updateMedicineDto);
+    return this.medicineService.updateMedicine(id, updateMedicineDto);
   }
 
   @Delete('/DeleteMedicine/:id')
-  async DeleteMedicine(@Param('id') id: number): Promise<HttpException> {
-    return await this.medicineService.deleteMedicine(id);
+  DeleteMedicine(@Param('id') id: number): Promise<HttpException> {
+    return this.medicineService.deleteMedicine(id);
   }
 }

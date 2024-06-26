@@ -6,9 +6,10 @@ import { Origin } from './entities/origin.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Origin])
+    TypeOrmModule.forFeature([Origin]),
   ],
   controllers: [OriginController],
   providers: [OriginService],
+  exports: [OriginService],
 })
 export class OriginModule {}
