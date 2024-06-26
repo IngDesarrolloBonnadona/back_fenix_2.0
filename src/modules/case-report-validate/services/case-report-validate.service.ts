@@ -128,53 +128,67 @@ export class CaseReportValidateService {
     await queryRunner.startTransaction();
 
     try {
-      await this.characterizationCasesService.findOneCharacterization(
-        createReportValDto.val_cr_characterization_id_fk,
-      );
+      // await this.characterizationCasesService.findOneCharacterization(
+      //   createReportValDto.val_cr_characterization_id_fk,
+      // );
 
-      await this.eventTypeService.findOneEventType(
-        createReportValDto.val_cr_eventtype_id_fk,
-      );
+      // await this.eventTypeService.findOneEventType(
+      //   createReportValDto.val_cr_eventtype_id_fk,
+      // );
 
-      await this.eventService.findOneEvent(
-        createReportValDto.val_cr_event_id_fk,
-      );
+      // await this.eventService.findOneEvent(
+      //   createReportValDto.val_cr_event_id_fk,
+      // );
 
-      await this.serviceService.findOneService(
-        createReportValDto.val_cr_service_id_fk,
-      );
+      // await this.serviceService.findOneService(
+      //   createReportValDto.val_cr_service_id_fk,
+      // );
 
-      await this.originService.findOneOrigin(
-        createReportValDto.val_cr_origin_id_fk,
-      );
+      // await this.originService.findOneOrigin(
+      //   createReportValDto.val_cr_origin_id_fk,
+      // );
 
-      await this.subOriginService.findOneSubOrigin(
-        createReportValDto.val_cr_suborigin_id_fk,
-      );
+      // await this.subOriginService.findOneSubOrigin(
+      //   createReportValDto.val_cr_suborigin_id_fk,
+      // );
 
-      await this.unitService.findOneUnit(createReportValDto.val_cr_unit_id_fk);
+      // await this.unitService.findOneUnit(createReportValDto.val_cr_unit_id_fk);
 
-      await this.priorityService.findOnePriority(
-        createReportValDto.val_cr_priority_id_fk,
-      );
+      // await this.priorityService.findOnePriority(
+      //   createReportValDto.val_cr_priority_id_fk,
+      // );
 
-      if (createReportValDto.val_cr_risktype_id_fk) {
-        await this.riskTypeService.findOneRiskType(
-          createReportValDto.val_cr_risktype_id_fk,
-        );
-      }
+      // if (createReportValDto.val_cr_risktype_id_fk) {
+      //   await this.riskTypeService.findOneRiskType(
+      //     createReportValDto.val_cr_risktype_id_fk,
+      //   );
+      // }
 
-      if (createReportValDto.val_cr_severityclasif_id_fk) {
-        await this.severityClasificationService.findOneSeverityClasification(
-          createReportValDto.val_cr_severityclasif_id_fk,
-        );
-      }
+      // if (createReportValDto.val_cr_severityclasif_id_fk) {
+      //   await this.severityClasificationService.findOneSeverityClasification(
+      //     createReportValDto.val_cr_severityclasif_id_fk,
+      //   );
+      // }
 
-      if (createReportValDto.val_cr_risklevel_id_fk) {
-        await this.riskLevelService.findOneRiskLevel(
-          createReportValDto.val_cr_risklevel_id_fk,
-        );
-      }
+      // if (createReportValDto.val_cr_risklevel_id_fk) {
+      //   await this.riskLevelService.findOneRiskLevel(
+      //     createReportValDto.val_cr_risklevel_id_fk,
+      //   );
+      // }
+
+      await Promise.all([
+        this.characterizationCasesService.findOneCharacterization(createReportValDto.val_cr_characterization_id_fk),
+        this.eventTypeService.findOneEventType(createReportValDto.val_cr_eventtype_id_fk),
+        this.eventService.findOneEvent(createReportValDto.val_cr_event_id_fk),
+        this.serviceService.findOneService(createReportValDto.val_cr_service_id_fk),
+        this.originService.findOneOrigin(createReportValDto.val_cr_origin_id_fk),
+        this.subOriginService.findOneSubOrigin(createReportValDto.val_cr_suborigin_id_fk),
+        this.unitService.findOneUnit(createReportValDto.val_cr_unit_id_fk),
+        this.priorityService.findOnePriority(createReportValDto.val_cr_priority_id_fk),
+        createReportValDto.val_cr_risktype_id_fk && this.riskTypeService.findOneRiskType(createReportValDto.ori_cr_risktype_id_fk),
+        createReportValDto.val_cr_severityclasif_id_fk && this.severityClasificationService.findOneSeverityClasification(createReportValDto.val_cr_severityclasif_id_fk),
+        createReportValDto.val_cr_risklevel_id_fk && this.riskLevelService.findOneRiskLevel(createReportValDto.val_cr_risklevel_id_fk),
+      ])
 
       const previousReport = await this.caseReportValidateRepository.findOne({
         where: {

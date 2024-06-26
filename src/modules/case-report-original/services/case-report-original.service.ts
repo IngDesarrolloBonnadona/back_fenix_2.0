@@ -70,53 +70,66 @@ export class CaseReportOriginalService {
     await queryRunner.startTransaction();
 
     try {
+      // await this.eventTypeService.findOneEventType(
+      //   createReportOriDto.ori_cr_eventtype_id_fk,
+      // );
+
+      // await this.eventService.findOneEvent(
+      //   createReportOriDto.ori_cr_event_id_fk,
+      // );
+
+      // await this.serviceService.findOneService(
+      //   createReportOriDto.ori_cr_service_id_fk,
+      // );
+
+      // await this.originService.findOneOrigin(
+      //   createReportOriDto.ori_cr_origin_id_fk,
+      // );
+
+      // await this.subOriginService.findOneSubOrigin(
+      //   createReportOriDto.ori_cr_suborigin_id_fk,
+      // );
+
+      // await this.unitService.findOneUnit(createReportOriDto.ori_cr_unit_id_fk);
+
+      // await this.priorityService.findOnePriority(
+      //   createReportOriDto.ori_cr_priority_id_fk,
+      // );
+
+      // if (createReportOriDto.ori_cr_risktype_id_fk) {
+      //   await this.riskTypeService.findOneRiskType(
+      //     createReportOriDto.ori_cr_risktype_id_fk,
+      //   );
+      // }
+
+      // if (createReportOriDto.ori_cr_severityclasif_id_fk) {
+      //   await this.severityClasificationService.findOneSeverityClasification(
+      //     createReportOriDto.ori_cr_severityclasif_id_fk,
+      //   );
+      // }
+
+      // if (createReportOriDto.ori_cr_risklevel_id_fk) {
+      //   await this.riskLevelService.findOneRiskLevel(
+      //     createReportOriDto.ori_cr_risklevel_id_fk,
+      //   );
+      // }
+
+      await Promise.all([
+        this.eventTypeService.findOneEventType(createReportOriDto.ori_cr_eventtype_id_fk),
+        this.eventService.findOneEvent(createReportOriDto.ori_cr_event_id_fk),
+        this.serviceService.findOneService(createReportOriDto.ori_cr_service_id_fk ),
+        this.originService.findOneOrigin(createReportOriDto.ori_cr_origin_id_fk),
+        this.subOriginService.findOneSubOrigin(createReportOriDto.ori_cr_suborigin_id_fk),
+        this.unitService.findOneUnit(createReportOriDto.ori_cr_unit_id_fk),
+        this.priorityService.findOnePriority(createReportOriDto.ori_cr_priority_id_fk),
+        createReportOriDto.ori_cr_risktype_id_fk && this.riskTypeService.findOneRiskType(createReportOriDto.ori_cr_risktype_id_fk),
+        createReportOriDto.ori_cr_severityclasif_id_fk && this.severityClasificationService.findOneSeverityClasification(createReportOriDto.ori_cr_severityclasif_id_fk),
+        createReportOriDto.ori_cr_risklevel_id_fk && this.riskLevelService.findOneRiskLevel(createReportOriDto.ori_cr_risklevel_id_fk),
+      ])
+
       const caseTypeFound = await this.caseTypeService.findOneCaseType(
         createReportOriDto.ori_cr_casetype_id_fk,
       );
-
-      await this.eventTypeService.findOneEventType(
-        createReportOriDto.ori_cr_eventtype_id_fk,
-      );
-
-      await this.eventService.findOneEvent(
-        createReportOriDto.ori_cr_event_id_fk,
-      );
-
-      await this.serviceService.findOneService(
-        createReportOriDto.ori_cr_service_id_fk,
-      );
-
-      await this.originService.findOneOrigin(
-        createReportOriDto.ori_cr_origin_id_fk,
-      );
-
-      await this.subOriginService.findOneSubOrigin(
-        createReportOriDto.ori_cr_suborigin_id_fk,
-      );
-
-      await this.unitService.findOneUnit(createReportOriDto.ori_cr_unit_id_fk);
-
-      await this.priorityService.findOnePriority(
-        createReportOriDto.ori_cr_priority_id_fk,
-      );
-
-      if (createReportOriDto.ori_cr_risktype_id_fk) {
-        await this.riskTypeService.findOneRiskType(
-          createReportOriDto.ori_cr_risktype_id_fk,
-        );
-      }
-
-      if (createReportOriDto.ori_cr_severityclasif_id_fk) {
-        await this.severityClasificationService.findOneSeverityClasification(
-          createReportOriDto.ori_cr_severityclasif_id_fk,
-        );
-      }
-
-      if (createReportOriDto.ori_cr_risklevel_id_fk) {
-        await this.riskLevelService.findOneRiskLevel(
-          createReportOriDto.ori_cr_risklevel_id_fk,
-        );
-      }
 
       let caseReportOriginal: any;
 
