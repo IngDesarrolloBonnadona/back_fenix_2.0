@@ -38,6 +38,9 @@ export class RiskTypeService {
 
   async findAllRiskTypes(): Promise<RiskTypeEntity[]> {
     const riskTypes = await this.riskTypeRepository.find({
+      where: {
+        ris_t_status: true,
+      }
       // relations: {
       //   caseReportValidate: true,
       // },
@@ -55,7 +58,7 @@ export class RiskTypeService {
 
   async findOneRiskType(id: number): Promise<RiskTypeEntity> {
     const riskType = await this.riskTypeRepository.findOne({
-      where: { id },
+      where: { id, ris_t_status: true },
       // relations: {
       //   caseReportValidate: true,
       // },

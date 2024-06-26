@@ -41,6 +41,7 @@ import { CreateValIndicatingUnsafeCareReportDto } from '../dto/create-val-indica
 import { CreateValComplicationsReportDto } from '../dto/create-val-complications-report.dto';
 import { CharacterizationCase as CharacterizationCaseEntity } from 'src/modules/characterization-cases/entities/characterization-case.entity';
 import { CharacterizationCasesService } from 'src/modules/characterization-cases/services/characterization-cases.service';
+import { RiskTypeService } from 'src/modules/risk-type/services/risk-type.service';
 
 @Injectable()
 export class CaseReportValidateService {
@@ -66,6 +67,7 @@ export class CaseReportValidateService {
     private readonly logService: LogService,
     private readonly synergyService: SynergyService,
     private readonly characterizationCasesService: CharacterizationCasesService,
+    private readonly riskTypeService: RiskTypeService,
     @Inject(forwardRef(() => ResearchersService))
     private readonly researchService: ResearchersService,
     @Inject(forwardRef(() => ReportAnalystAssignmentService))
@@ -113,6 +115,12 @@ export class CaseReportValidateService {
       await this.characterizationCasesService.findOneCharacterization(
         createReportValDto.val_cr_characterization_id_fk,
       );
+
+      if (createReportValDto.val_cr_risktype_id_fk){
+        await this.riskTypeService.findOneRiskType(
+          createReportValDto.val_cr_risktype_id_fk,
+        );
+      }
 
       const previousReport = await this.caseReportValidateRepository.findOne({
         where: {

@@ -19,6 +19,8 @@ import { CreateOriAdverseEventReportDto } from '../dto/create-ori-adverse-event-
 import { CreateOriIncidentReportDto } from '../dto/create-ori-incident-report.dto';
 import { CreateOriIndicatingUnsafeCareReportDto } from '../dto/create-ori-indicating-unsafe-care-report.dto';
 import { CreateOriComplicationsReportDto } from '../dto/create-ori-complications-report.dto';
+import { CaseTypeService } from 'src/modules/case-type/services/case-type.service';
+import { RiskTypeService } from 'src/modules/risk-type/services/risk-type.service';
 
 @Injectable()
 export class CaseReportOriginalService {
@@ -34,6 +36,8 @@ export class CaseReportOriginalService {
     private readonly logService: LogService,
     private readonly medicineService: MedicineService,
     private readonly deviceService: DeviceService,
+    private readonly caseTypeService: CaseTypeService,
+    private readonly riskTypeService: RiskTypeService,
     private dataSource: DataSource,
   ) {}
 
@@ -48,16 +52,13 @@ export class CaseReportOriginalService {
     await queryRunner.startTransaction();
 
     try {
-      const caseTypeFound = await this.caseTypeRepository.findOne({
-        where: {
-          id: createReportOriDto.ori_cr_casetype_id_fk,
-        },
-      });
+      const caseTypeFound = await this.caseTypeService.findOneCaseType(
+        createReportOriDto.ori_cr_casetype_id_fk,
+      );
 
-      if (!caseTypeFound) {
-        throw new HttpException(
-          `El tipo de caso no existe.`,
-          HttpStatus.NO_CONTENT,
+      if (createReportOriDto.ori_cr_risktype_id_fk){
+        await this.riskTypeService.findOneRiskType(
+          createReportOriDto.ori_cr_risktype_id_fk,
         );
       }
 
@@ -86,7 +87,9 @@ export class CaseReportOriginalService {
           caseReportOriginal = this.caseReportOriginalRepository.create(
             createReportOriDto as CreateOriIndicatingUnsafeCareReportDto,
           );
-          console.log(`Se creó reporte ${caseTypeReport.INDICATING_UNSAFE_CARE}`);
+          console.log(
+            `Se creó reporte ${caseTypeReport.INDICATING_UNSAFE_CARE}`,
+          );
           break;
         case caseTypeReport.COMPLICATIONS:
           caseReportOriginal = this.caseReportOriginalRepository.create(
@@ -94,7 +97,7 @@ export class CaseReportOriginalService {
           );
           console.log(`Se creó reporte ${caseTypeReport.COMPLICATIONS}`);
           break;
-          // agregar un tipo de caso nuevo
+        // agregar un tipo de caso nuevo
         default:
           throw new HttpException(
             'Tipo de caso no reconocido.',
@@ -121,7 +124,7 @@ export class CaseReportOriginalService {
       }
 
       caseReportOriginal.ori_cr_filingnumber = filingNumber;
-      caseReportOriginal.ori_cr_statusmovement_id_fk = movementReportFound.id
+      caseReportOriginal.ori_cr_statusmovement_id_fk = movementReportFound.id;
 
       await queryRunner.manager.save(caseReportOriginal);
 
@@ -220,7 +223,8 @@ export class CaseReportOriginalService {
   }
 
   async findOneReportOriginal(id: string): Promise<CaseReportOriginalEntity> {
-    const caseReportsOriginal = await this.caseReportOriginalRepository.findOne({
+    const caseReportsOriginal = await this.caseReportOriginalRepository.findOne(
+      {
         where: { id },
         relations: {
           caseReportValidate: true,
@@ -237,9 +241,10 @@ export class CaseReportOriginalService {
           eventType: true,
           service: true,
           unit: true,
-          priority: true
+          priority: true,
         },
-      });
+      },
+    );
 
     if (!caseReportsOriginal) {
       throw new HttpException(

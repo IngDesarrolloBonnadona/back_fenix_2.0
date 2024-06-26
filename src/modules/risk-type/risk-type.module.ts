@@ -10,5 +10,6 @@ import { RiskType } from './entities/risk-type.entity';
   ],
   controllers: [RiskTypeController],
   providers: [RiskTypeService],
+  exports: [RiskTypeService],
 })
 export class RiskTypeModule {}

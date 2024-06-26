@@ -9,6 +9,8 @@ import { LogModule } from '../log/log.module';
 import { MedicineModule } from '../medicine/medicine.module';
 import { DeviceModule } from '../device/device.module';
 import { MovementReport } from '../movement-report/entities/movement-report.entity';
+import { CaseTypeModule } from '../case-type/case-type.module';
+import { RiskTypeModule } from '../risk-type/risk-type.module';
 
 @Module({
   imports: [
@@ -20,7 +22,9 @@ import { MovementReport } from '../movement-report/entities/movement-report.enti
     CaseReportValidateModule,
     LogModule,
     MedicineModule,
-    DeviceModule
+    DeviceModule,
+    CaseTypeModule,
+    RiskTypeModule,
   ],
   controllers: [CaseReportOriginalController],
   providers: [CaseReportOriginalService],

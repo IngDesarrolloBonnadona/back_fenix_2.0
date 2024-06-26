@@ -16,6 +16,7 @@ import { Researcher } from '../researchers/entities/researchers.entity';
 import { ResearchersModule } from '../researchers/researchers.module';
 import { CharacterizationCase } from '../characterization-cases/entities/characterization-case.entity';
 import { CharacterizationCasesModule } from '../characterization-cases/characterization-cases.module';
+import { RiskTypeModule } from '../risk-type/risk-type.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { CharacterizationCasesModule } from '../characterization-cases/character
     LogModule,
     SynergyModule,
     CharacterizationCasesModule,
+    RiskTypeModule,
     forwardRef(() => ResearchersModule),
     forwardRef(() => ReportAnalystAssignmentModule),
   ],
