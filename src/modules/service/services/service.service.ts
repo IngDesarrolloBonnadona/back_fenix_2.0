@@ -35,6 +35,9 @@ export class ServiceService {
 
   async findAllServices(): Promise<Service[]> {
     const services = await this.serviceRepository.find({
+      where: {
+        serv_status: true,
+      },
       relations: {
         unit: true,
         // caseReportValidate: true,
@@ -52,7 +55,7 @@ export class ServiceService {
 
   async findOneService(id: number): Promise<Service> {
     const service = await this.serviceRepository.findOne({
-      where: { id },
+      where: { id, serv_status: true },
       relations: {
         unit: true,
         // caseReportValidate: true,

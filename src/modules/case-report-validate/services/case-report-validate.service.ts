@@ -42,6 +42,9 @@ import { CreateValComplicationsReportDto } from '../dto/create-val-complications
 import { CharacterizationCase as CharacterizationCaseEntity } from 'src/modules/characterization-cases/entities/characterization-case.entity';
 import { CharacterizationCasesService } from 'src/modules/characterization-cases/services/characterization-cases.service';
 import { RiskTypeService } from 'src/modules/risk-type/services/risk-type.service';
+import { EventTypeService } from 'src/modules/event-type/services/event-type.service';
+import { ServiceService } from 'src/modules/service/services/service.service';
+import { EventService } from 'src/modules/event/services/event.service';
 
 @Injectable()
 export class CaseReportValidateService {
@@ -58,8 +61,6 @@ export class CaseReportValidateService {
     private readonly synergyRepository: Repository<SynergyEntity>,
     @InjectRepository(ResearcherEntity)
     private readonly researchRepository: Repository<ResearcherEntity>,
-    @InjectRepository(CharacterizationCaseEntity)
-    private readonly characterizationCaseRepository: Repository<CaseReportValidateEntity>,
 
     private dataSource: DataSource,
     private readonly medicineService: MedicineService,
@@ -68,6 +69,9 @@ export class CaseReportValidateService {
     private readonly synergyService: SynergyService,
     private readonly characterizationCasesService: CharacterizationCasesService,
     private readonly riskTypeService: RiskTypeService,
+    private readonly eventTypeService: EventTypeService,
+    private readonly eventService: EventService,
+    private readonly serviceService: ServiceService,
     @Inject(forwardRef(() => ResearchersService))
     private readonly researchService: ResearchersService,
     @Inject(forwardRef(() => ReportAnalystAssignmentService))
@@ -116,7 +120,19 @@ export class CaseReportValidateService {
         createReportValDto.val_cr_characterization_id_fk,
       );
 
-      if (createReportValDto.val_cr_risktype_id_fk){
+      await this.eventTypeService.findOneEventType(
+        createReportValDto.val_cr_eventtype_id_fk,
+      );
+
+      await this.eventService.findOneEvent(
+        createReportValDto.val_cr_event_id_fk
+      )
+
+      await this.serviceService.findOneService(
+        createReportValDto.ori_cr_service_id_fk,
+      );
+
+      if (createReportValDto.val_cr_risktype_id_fk) {
         await this.riskTypeService.findOneRiskType(
           createReportValDto.val_cr_risktype_id_fk,
         );

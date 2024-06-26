@@ -21,6 +21,9 @@ import { CreateOriIndicatingUnsafeCareReportDto } from '../dto/create-ori-indica
 import { CreateOriComplicationsReportDto } from '../dto/create-ori-complications-report.dto';
 import { CaseTypeService } from 'src/modules/case-type/services/case-type.service';
 import { RiskTypeService } from 'src/modules/risk-type/services/risk-type.service';
+import { EventTypeService } from 'src/modules/event-type/services/event-type.service';
+import { ServiceService } from 'src/modules/service/services/service.service';
+import { EventService } from 'src/modules/event/services/event.service';
 
 @Injectable()
 export class CaseReportOriginalService {
@@ -38,6 +41,9 @@ export class CaseReportOriginalService {
     private readonly deviceService: DeviceService,
     private readonly caseTypeService: CaseTypeService,
     private readonly riskTypeService: RiskTypeService,
+    private readonly eventTypeService: EventTypeService,
+    private readonly eventService: EventService,
+    private readonly serviceService: ServiceService,
     private dataSource: DataSource,
   ) {}
 
@@ -56,7 +62,19 @@ export class CaseReportOriginalService {
         createReportOriDto.ori_cr_casetype_id_fk,
       );
 
-      if (createReportOriDto.ori_cr_risktype_id_fk){
+      await this.eventTypeService.findOneEventType(
+        createReportOriDto.ori_cr_eventtype_id_fk,
+      );
+
+      await this.eventService.findOneEvent(
+        createReportOriDto.ori_cr_event_id_fk,
+      );
+
+      await this.serviceService.findOneService(
+        createReportOriDto.ori_cr_service_id_fk,
+      );
+
+      if (createReportOriDto.ori_cr_risktype_id_fk) {
         await this.riskTypeService.findOneRiskType(
           createReportOriDto.ori_cr_risktype_id_fk,
         );

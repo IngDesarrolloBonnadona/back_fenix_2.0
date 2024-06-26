@@ -47,6 +47,9 @@ export class EventTypeService {
 
   async findAllEventTypes(): Promise<EventTypeEntity[]> {
     const eventTypes = await this.eventTypeRepository.find({
+      where: {
+        eve_t_status: true
+      },
       relations: {
         event: true,
         // caseType: true,
@@ -65,7 +68,7 @@ export class EventTypeService {
 
   async findOneEventType(id: number): Promise<EventTypeEntity> {
     const eventType = await this.eventTypeRepository.findOne({
-      where: { id },
+      where: { id, eve_t_status: true },
       relations: {
         event: true,
         // caseType: true,

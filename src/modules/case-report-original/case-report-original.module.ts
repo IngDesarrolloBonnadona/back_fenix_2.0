@@ -11,6 +11,9 @@ import { DeviceModule } from '../device/device.module';
 import { MovementReport } from '../movement-report/entities/movement-report.entity';
 import { CaseTypeModule } from '../case-type/case-type.module';
 import { RiskTypeModule } from '../risk-type/risk-type.module';
+import { EventTypeModule } from '../event-type/event-type.module';
+import { ServiceModule } from '../service/service.module';
+import { EventModule } from '../event/event.module';
 
 @Module({
   imports: [
@@ -25,6 +28,9 @@ import { RiskTypeModule } from '../risk-type/risk-type.module';
     DeviceModule,
     CaseTypeModule,
     RiskTypeModule,
+    EventTypeModule,
+    EventModule,
+    ServiceModule,
   ],
   controllers: [CaseReportOriginalController],
   providers: [CaseReportOriginalService],

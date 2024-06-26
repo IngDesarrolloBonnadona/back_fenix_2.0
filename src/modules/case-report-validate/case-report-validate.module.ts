@@ -17,6 +17,9 @@ import { ResearchersModule } from '../researchers/researchers.module';
 import { CharacterizationCase } from '../characterization-cases/entities/characterization-case.entity';
 import { CharacterizationCasesModule } from '../characterization-cases/characterization-cases.module';
 import { RiskTypeModule } from '../risk-type/risk-type.module';
+import { EventTypeModule } from '../event-type/event-type.module';
+import { ServiceModule } from '../service/service.module';
+import { EventModule } from '../event/event.module';
 
 @Module({
   imports: [
@@ -27,7 +30,6 @@ import { RiskTypeModule } from '../risk-type/risk-type.module';
       ReportAnalystAssignment,
       Synergy,
       Researcher,
-      CharacterizationCase,
     ]),
     MedicineModule,
     DeviceModule,
@@ -35,6 +37,9 @@ import { RiskTypeModule } from '../risk-type/risk-type.module';
     SynergyModule,
     CharacterizationCasesModule,
     RiskTypeModule,
+    EventTypeModule,
+    EventModule,
+    ServiceModule,
     forwardRef(() => ResearchersModule),
     forwardRef(() => ReportAnalystAssignmentModule),
   ],
