@@ -19,7 +19,7 @@ export class Unit {
   id: number;
 
   @Column()
-  unit_service_id_FK: number;
+  unit_service_id_fk: number;
 
   @Column({ type: 'varchar' })
   unit_name: string;
@@ -40,7 +40,7 @@ export class Unit {
   deletedAt: Date;
 
   @ManyToOne(() => Service, (service) => service.unit)
-  @JoinColumn({ name: 'unit_service_id_FK' })
+  @JoinColumn({ name: 'unit_service_id_fk' })
   service: Service;
 
   @OneToMany(

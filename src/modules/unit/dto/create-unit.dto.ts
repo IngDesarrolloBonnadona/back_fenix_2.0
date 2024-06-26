@@ -1,15 +1,15 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateUnitDto {
-    @IsNumber()
-    @IsNotEmpty()
-    unit_service_id_FK: number
+  @IsNumber()
+  @IsNotEmpty()
+  unit_service_id_fk: number;
 
-    @IsNotEmpty()
-    @IsString()
-    unit_name: string;
+  @IsNotEmpty()
+  @IsString()
+  unit_name: string;
 
-    @IsOptional()
-    @IsString()
-    unit_description: string;
+  @IsOptional()
+  @IsString()
+  unit_description: string;
 }

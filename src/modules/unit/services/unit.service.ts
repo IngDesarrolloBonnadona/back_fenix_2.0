@@ -24,15 +24,18 @@ export class UnitService {
     const FindUnit = await this.unitRepository.findOne({
       where: {
         unit_name: createUnitDto.unit_name,
-        unit_service_id_FK: createUnitDto.unit_service_id_FK,
+        unit_service_id_fk: createUnitDto.unit_service_id_fk,
         unit_status: true,
       },
     });
 
-    await this.serviceService.findOneService(createUnitDto.unit_service_id_FK);
+    await this.serviceService.findOneService(createUnitDto.unit_service_id_fk);
 
     if (FindUnit) {
-      throw new HttpException('La unidad ya existe con el servicio seleccionado.', HttpStatus.CONFLICT);
+      throw new HttpException(
+        'La unidad ya existe con el servicio seleccionado.',
+        HttpStatus.CONFLICT,
+      );
     }
 
     const unit = this.unitRepository.create(createUnitDto);
@@ -79,7 +82,7 @@ export class UnitService {
   async findUnitByService(serviceId: number) {
     const unitByService = await this.unitRepository.find({
       where: {
-        unit_service_id_FK: serviceId,
+        unit_service_id_fk: serviceId,
         unit_status: true,
       },
     });
@@ -96,8 +99,8 @@ export class UnitService {
 
   async updateUnit(id: number, updateUnitDto: UpdateUnitDto) {
     const unit = await this.findOneUnit(id);
-    
-    await this.serviceService.findOneService(updateUnitDto.unit_service_id_FK)
+
+    await this.serviceService.findOneService(updateUnitDto.unit_service_id_fk);
 
     const result = await this.unitRepository.update(unit.id, updateUnitDto);
 

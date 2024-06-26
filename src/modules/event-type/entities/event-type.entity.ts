@@ -20,7 +20,7 @@ export class EventType {
   id: number;
 
   @Column()
-  eve_t_casetype_id_FK: number;
+  eve_t_casetype_id_fk: number;
 
   @Column({ type: 'varchar' })
   eve_t_name: string;
@@ -44,7 +44,7 @@ export class EventType {
   event: Event[];
 
   @ManyToOne(() => CaseType, (caseType) => caseType.eventType)
-  @JoinColumn({ name: 'eve_t_casetype_id_FK' })
+  @JoinColumn({ name: 'eve_t_casetype_id_fk' })
   caseType: CaseType;
 
   @OneToMany(
