@@ -1,8 +1,8 @@
 export enum caseTypeReport {
-    RISK = 'Riesgo',
-    ADVERSE_EVENT = 'Evento Adverso',
-    INCIDENT = 'Incidente',
-    INDICATING_UNSAFE_CARE = 'Indicio de Atención Insegura',
-    COMPLICATIONS = 'Complicaciones'
+    RISK = 'RIESGO',
+    ADVERSE_EVENT = 'EVENTO ADVERSO',
+    INCIDENT = 'INCIDENTE',
+    INDICATING_UNSAFE_CARE = 'INDICIO DE ATENCION INSEGURA',
+    COMPLICATIONS = 'COMPLICACIONES'
     // agregar un tipo de caso nuevo
 };
