@@ -29,7 +29,7 @@ import { OriginService } from 'src/modules/origin/services/origin.service';
 import { SubOriginService } from 'src/modules/sub-origin/services/sub-origin.service';
 import { RiskLevelService } from 'src/modules/risk-level/services/risk-level.service';
 import { UnitService } from 'src/modules/unit/services/unit.service';
-import { PriorityService } from 'src/modules/priority/services/priority.service';
+import { Priority as PriorityEntity } from 'src/modules/priority/entities/priority.entity';
 
 @Injectable()
 export class CaseReportOriginalService {
@@ -40,6 +40,8 @@ export class CaseReportOriginalService {
     private readonly caseTypeRepository: Repository<CaseTypeEntity>,
     @InjectRepository(MovementReportEntity)
     private readonly movementReportRepository: Repository<MovementReportEntity>,
+    @InjectRepository(PriorityEntity)
+    private readonly priorityRepository: Repository<PriorityEntity>,
 
     private readonly caseReportValidateService: CaseReportValidateService,
     private readonly logService: LogService,
@@ -55,7 +57,6 @@ export class CaseReportOriginalService {
     private readonly subOriginService: SubOriginService,
     private readonly riskLevelService: RiskLevelService,
     private readonly unitService: UnitService,
-    private readonly priorityService: PriorityService,
     private dataSource: DataSource,
   ) {}
 
@@ -70,62 +71,34 @@ export class CaseReportOriginalService {
     await queryRunner.startTransaction();
 
     try {
-      // await this.eventTypeService.findOneEventType(
-      //   createReportOriDto.ori_cr_eventtype_id_fk,
-      // );
-
-      // await this.eventService.findOneEvent(
-      //   createReportOriDto.ori_cr_event_id_fk,
-      // );
-
-      // await this.serviceService.findOneService(
-      //   createReportOriDto.ori_cr_service_id_fk,
-      // );
-
-      // await this.originService.findOneOrigin(
-      //   createReportOriDto.ori_cr_origin_id_fk,
-      // );
-
-      // await this.subOriginService.findOneSubOrigin(
-      //   createReportOriDto.ori_cr_suborigin_id_fk,
-      // );
-
-      // await this.unitService.findOneUnit(createReportOriDto.ori_cr_unit_id_fk);
-
-      // await this.priorityService.findOnePriority(
-      //   createReportOriDto.ori_cr_priority_id_fk,
-      // );
-
-      // if (createReportOriDto.ori_cr_risktype_id_fk) {
-      //   await this.riskTypeService.findOneRiskType(
-      //     createReportOriDto.ori_cr_risktype_id_fk,
-      //   );
-      // }
-
-      // if (createReportOriDto.ori_cr_severityclasif_id_fk) {
-      //   await this.severityClasificationService.findOneSeverityClasification(
-      //     createReportOriDto.ori_cr_severityclasif_id_fk,
-      //   );
-      // }
-
-      // if (createReportOriDto.ori_cr_risklevel_id_fk) {
-      //   await this.riskLevelService.findOneRiskLevel(
-      //     createReportOriDto.ori_cr_risklevel_id_fk,
-      //   );
-      // }
-
       await Promise.all([
-        this.eventTypeService.findOneEventType(createReportOriDto.ori_cr_eventtype_id_fk),
+        this.eventTypeService.findOneEventType(
+          createReportOriDto.ori_cr_eventtype_id_fk,
+        ),
         this.eventService.findOneEvent(createReportOriDto.ori_cr_event_id_fk),
-        this.serviceService.findOneService(createReportOriDto.ori_cr_service_id_fk ),
-        this.originService.findOneOrigin(createReportOriDto.ori_cr_origin_id_fk),
-        this.subOriginService.findOneSubOrigin(createReportOriDto.ori_cr_suborigin_id_fk),
+        this.serviceService.findOneService(
+          createReportOriDto.ori_cr_service_id_fk,
+        ),
+        this.originService.findOneOrigin(
+          createReportOriDto.ori_cr_origin_id_fk,
+        ),
+        this.subOriginService.findOneSubOrigin(
+          createReportOriDto.ori_cr_suborigin_id_fk,
+        ),
         this.unitService.findOneUnit(createReportOriDto.ori_cr_unit_id_fk),
-        this.priorityService.findOnePriority(createReportOriDto.ori_cr_priority_id_fk),
-        createReportOriDto.ori_cr_risktype_id_fk && this.riskTypeService.findOneRiskType(createReportOriDto.ori_cr_risktype_id_fk),
-        createReportOriDto.ori_cr_severityclasif_id_fk && this.severityClasificationService.findOneSeverityClasification(createReportOriDto.ori_cr_severityclasif_id_fk),
-        createReportOriDto.ori_cr_risklevel_id_fk && this.riskLevelService.findOneRiskLevel(createReportOriDto.ori_cr_risklevel_id_fk),
-      ])
+        createReportOriDto.ori_cr_risktype_id_fk &&
+          this.riskTypeService.findOneRiskType(
+            createReportOriDto.ori_cr_risktype_id_fk,
+          ),
+        createReportOriDto.ori_cr_severityclasif_id_fk &&
+          this.severityClasificationService.findOneSeverityClasification(
+            createReportOriDto.ori_cr_severityclasif_id_fk,
+          ),
+        createReportOriDto.ori_cr_risklevel_id_fk &&
+          this.riskLevelService.findOneRiskLevel(
+            createReportOriDto.ori_cr_risklevel_id_fk,
+          ),
+      ]);
 
       const caseTypeFound = await this.caseTypeService.findOneCaseType(
         createReportOriDto.ori_cr_casetype_id_fk,
@@ -192,6 +165,25 @@ export class CaseReportOriginalService {
         );
       }
 
+      if (
+        createReportOriDto.ori_cr_severityclasif_id_fk !== undefined &&
+        createReportOriDto.ori_cr_severityclasif_id_fk !== null
+      ) {
+        const priorityFind = await this.priorityRepository.findOne({
+          where: {
+            prior_severityclasif_id_fk:
+              createReportOriDto.ori_cr_severityclasif_id_fk,
+          },
+        });
+
+        if (!priorityFind) {
+          throw new HttpException(
+            `La prioridad no existe`,
+            HttpStatus.NO_CONTENT,
+          );
+        }
+        caseReportOriginal.ori_cr_priority_id_fk = priorityFind.id;
+      }
       caseReportOriginal.ori_cr_filingnumber = filingNumber;
       caseReportOriginal.ori_cr_statusmovement_id_fk = movementReportFound.id;
 
@@ -302,6 +294,7 @@ export class CaseReportOriginalService {
           movementReport: true,
           caseType: true,
           riskType: true,
+          priority: true,
           severityClasification: true,
           origin: true,
           subOrigin: true,
@@ -310,7 +303,6 @@ export class CaseReportOriginalService {
           eventType: true,
           service: true,
           unit: true,
-          priority: true,
         },
       },
     );

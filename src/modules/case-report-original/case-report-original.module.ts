@@ -20,13 +20,15 @@ import { SubOriginModule } from '../sub-origin/sub-origin.module';
 import { RiskLevelModule } from '../risk-level/risk-level.module';
 import { UnitModule } from '../unit/unit.module';
 import { PriorityModule } from '../priority/priority.module';
+import { Priority } from '../priority/entities/priority.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
-      CaseReportOriginal, 
+      CaseReportOriginal,
       CaseType,
       MovementReport,
+      Priority,
     ]),
     CaseReportValidateModule,
     LogModule,
@@ -42,7 +44,6 @@ import { PriorityModule } from '../priority/priority.module';
     SubOriginModule,
     RiskLevelModule,
     UnitModule,
-    PriorityModule,
   ],
   controllers: [CaseReportOriginalController],
   providers: [CaseReportOriginalService],
