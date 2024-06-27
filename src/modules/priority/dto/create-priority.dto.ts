@@ -8,4 +8,8 @@ export class CreatePriorityDto {
   @IsNumber()
   @IsNotEmpty()
   prior_severityclasif_id_fk: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  prior_responsetime: number;
 }

@@ -27,6 +27,9 @@ export class Priority {
   @Column({ nullable: true })
   prior_description: string;
 
+  @Column()
+  prior_responsetime: number;
+
   @Column({ default: true })
   prior_status: boolean;
 
@@ -51,8 +54,10 @@ export class Priority {
   )
   caseReportValidate: CaseReportValidate[];
 
-  @OneToOne(() => SeverityClasification, (severityClasification) => severityClasification.priority)
+  @OneToOne(
+    () => SeverityClasification,
+    (severityClasification) => severityClasification.priority,
+  )
   @JoinColumn({ name: 'prior_severityclasif_id_fk' })
   severityClasification: SeverityClasification;
-
 }
