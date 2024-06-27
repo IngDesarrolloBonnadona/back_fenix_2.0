@@ -45,9 +45,10 @@ export class SeverityClasificationService {
       where: {
         sev_c_status: true,
       },
-      // relations: {
-      //   caseReportValidate: true,
-      // },
+      relations: {
+        // caseReportValidate: true,
+        priority: true,
+      },
     });
 
     if (severityClasifs.length === 0) {
@@ -65,15 +66,16 @@ export class SeverityClasificationService {
   ): Promise<SeverityClasifEntity> {
     const severityClasif = await this.severityClasifRepository.findOne({
       where: { id, sev_c_status: true },
-      // relations: {
-      //   caseReportValidate: true,
-      // },
+      relations: {
+        // caseReportValidate: true,
+        priority: true
+      },
     });
 
     if (!severityClasif) {
       throw new HttpException(
         'No se encontró la clasificacion de severidad',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 

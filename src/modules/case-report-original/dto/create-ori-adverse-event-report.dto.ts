@@ -72,7 +72,7 @@ export class CreateOriAdverseEventReportDto {
     @IsNumber()
     @IsNotEmpty()
     ori_cr_severityclasif_id_fk: number; 
-    
+
     @IsNumber()
     @IsNotEmpty()
     ori_cr_eventtype_id_fk: number;
