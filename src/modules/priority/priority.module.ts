@@ -3,11 +3,10 @@ import { PriorityService } from './services/priority.service';
 import { PriorityController } from './controllers/priority.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Priority } from './entities/priority.entity';
+import { SeverityClasificationModule } from '../severity-clasification/severity-clasification.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Priority])
-  ],
+  imports: [TypeOrmModule.forFeature([Priority]), SeverityClasificationModule],
   controllers: [PriorityController],
   providers: [PriorityService],
   exports: [PriorityService],

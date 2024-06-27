@@ -1,6 +1,7 @@
 import { CaseReportOriginal } from "src/modules/case-report-original/entities/case-report-original.entity";
 import { CaseReportValidate } from "src/modules/case-report-validate/entities/case-report-validate.entity";
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Priority } from "src/modules/priority/entities/priority.entity";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
 export class SeverityClasification {
@@ -30,4 +31,7 @@ export class SeverityClasification {
 
     @OneToMany(() => CaseReportValidate, (caseReportValidate) => caseReportValidate.severityClasification)
     caseReportValidate: CaseReportValidate[];
+
+    @OneToOne(() => Priority, (priority) => priority.severityClasification)
+    priority: Priority
 }

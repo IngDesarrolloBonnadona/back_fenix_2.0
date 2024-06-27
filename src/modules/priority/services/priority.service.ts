@@ -4,17 +4,24 @@ import { UpdatePriorityDto } from '../dto/update-priority.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Priority as PriorityEntity } from '../entities/priority.entity';
 import { Repository } from 'typeorm';
+import { SeverityClasificationService } from 'src/modules/severity-clasification/services/severity-clasification.service';
 
 @Injectable()
 export class PriorityService {
   constructor(
     @InjectRepository(PriorityEntity)
     private readonly priorityRepository: Repository<PriorityEntity>,
+
+    private readonly severityClasificationService: SeverityClasificationService,
   ) {}
 
   async createPriority(
     createPriorityDto: CreatePriorityDto,
   ): Promise<PriorityEntity> {
+    await this.severityClasificationService.findOneSeverityClasification(
+      createPriorityDto.prior_severityclasif_id_fk,
+    );
+
     const FindPriority = await this.priorityRepository.findOne({
       where: {
         prior_name: createPriorityDto.prior_name,
