@@ -24,6 +24,7 @@ import { PatientModule } from './modules/patient/patient.module';
 import { SynergyModule } from './modules/synergy/synergy.module';
 import { PriorityModule } from './modules/priority/priority.module';
 import { CharacterizationCasesModule } from './modules/characterization-cases/characterization-cases.module';
+import { CaseResponseTimeModule } from './modules/case-response-time/case-response-time.module';
 
 require('dotenv').config();
 
@@ -63,6 +64,7 @@ require('dotenv').config();
     SynergyModule,
     PriorityModule,
     CharacterizationCasesModule,
+    CaseResponseTimeModule,
   ],
   controllers: [],
   providers: [],
