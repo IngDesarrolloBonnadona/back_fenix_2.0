@@ -51,6 +51,7 @@ import { SubOriginService } from 'src/modules/sub-origin/services/sub-origin.ser
 import { RiskLevelService } from 'src/modules/risk-level/services/risk-level.service';
 import { UnitService } from 'src/modules/unit/services/unit.service';
 import { PriorityService } from 'src/modules/priority/services/priority.service';
+import { Priority as PriorityEntity } from 'src/modules/priority/entities/priority.entity';
 
 @Injectable()
 export class CaseReportValidateService {
@@ -67,6 +68,8 @@ export class CaseReportValidateService {
     private readonly synergyRepository: Repository<SynergyEntity>,
     @InjectRepository(ResearcherEntity)
     private readonly researchRepository: Repository<ResearcherEntity>,
+    @InjectRepository(PriorityEntity)
+    private readonly priorityRepository: Repository<PriorityEntity>,
 
     private dataSource: DataSource,
     private readonly medicineService: MedicineService,
@@ -83,7 +86,6 @@ export class CaseReportValidateService {
     private readonly subOriginService: SubOriginService,
     private readonly riskLevelService: RiskLevelService,
     private readonly unitService: UnitService,
-    private readonly priorityService: PriorityService,
     @Inject(forwardRef(() => ResearchersService))
     private readonly researchService: ResearchersService,
     @Inject(forwardRef(() => ReportAnalystAssignmentService))
@@ -128,67 +130,37 @@ export class CaseReportValidateService {
     await queryRunner.startTransaction();
 
     try {
-      // await this.characterizationCasesService.findOneCharacterization(
-      //   createReportValDto.val_cr_characterization_id_fk,
-      // );
-
-      // await this.eventTypeService.findOneEventType(
-      //   createReportValDto.val_cr_eventtype_id_fk,
-      // );
-
-      // await this.eventService.findOneEvent(
-      //   createReportValDto.val_cr_event_id_fk,
-      // );
-
-      // await this.serviceService.findOneService(
-      //   createReportValDto.val_cr_service_id_fk,
-      // );
-
-      // await this.originService.findOneOrigin(
-      //   createReportValDto.val_cr_origin_id_fk,
-      // );
-
-      // await this.subOriginService.findOneSubOrigin(
-      //   createReportValDto.val_cr_suborigin_id_fk,
-      // );
-
-      // await this.unitService.findOneUnit(createReportValDto.val_cr_unit_id_fk);
-
-      // await this.priorityService.findOnePriority(
-      //   createReportValDto.val_cr_priority_id_fk,
-      // );
-
-      // if (createReportValDto.val_cr_risktype_id_fk) {
-      //   await this.riskTypeService.findOneRiskType(
-      //     createReportValDto.val_cr_risktype_id_fk,
-      //   );
-      // }
-
-      // if (createReportValDto.val_cr_severityclasif_id_fk) {
-      //   await this.severityClasificationService.findOneSeverityClasification(
-      //     createReportValDto.val_cr_severityclasif_id_fk,
-      //   );
-      // }
-
-      // if (createReportValDto.val_cr_risklevel_id_fk) {
-      //   await this.riskLevelService.findOneRiskLevel(
-      //     createReportValDto.val_cr_risklevel_id_fk,
-      //   );
-      // }
-
       await Promise.all([
-        this.characterizationCasesService.findOneCharacterization(createReportValDto.val_cr_characterization_id_fk),
-        this.eventTypeService.findOneEventType(createReportValDto.val_cr_eventtype_id_fk),
+        this.characterizationCasesService.findOneCharacterization(
+          createReportValDto.val_cr_characterization_id_fk,
+        ),
+        this.eventTypeService.findOneEventType(
+          createReportValDto.val_cr_eventtype_id_fk,
+        ),
         this.eventService.findOneEvent(createReportValDto.val_cr_event_id_fk),
-        this.serviceService.findOneService(createReportValDto.val_cr_service_id_fk),
-        this.originService.findOneOrigin(createReportValDto.val_cr_origin_id_fk),
-        this.subOriginService.findOneSubOrigin(createReportValDto.val_cr_suborigin_id_fk),
+        this.serviceService.findOneService(
+          createReportValDto.val_cr_service_id_fk,
+        ),
+        this.originService.findOneOrigin(
+          createReportValDto.val_cr_origin_id_fk,
+        ),
+        this.subOriginService.findOneSubOrigin(
+          createReportValDto.val_cr_suborigin_id_fk,
+        ),
         this.unitService.findOneUnit(createReportValDto.val_cr_unit_id_fk),
-        this.priorityService.findOnePriority(createReportValDto.val_cr_priority_id_fk),
-        createReportValDto.val_cr_risktype_id_fk && this.riskTypeService.findOneRiskType(createReportValDto.ori_cr_risktype_id_fk),
-        createReportValDto.val_cr_severityclasif_id_fk && this.severityClasificationService.findOneSeverityClasification(createReportValDto.val_cr_severityclasif_id_fk),
-        createReportValDto.val_cr_risklevel_id_fk && this.riskLevelService.findOneRiskLevel(createReportValDto.val_cr_risklevel_id_fk),
-      ])
+        createReportValDto.val_cr_risktype_id_fk &&
+          this.riskTypeService.findOneRiskType(
+            createReportValDto.ori_cr_risktype_id_fk,
+          ),
+        createReportValDto.val_cr_severityclasif_id_fk &&
+          this.severityClasificationService.findOneSeverityClasification(
+            createReportValDto.val_cr_severityclasif_id_fk,
+          ),
+        createReportValDto.val_cr_risklevel_id_fk &&
+          this.riskLevelService.findOneRiskLevel(
+            createReportValDto.val_cr_risklevel_id_fk,
+          ),
+      ]);
 
       const previousReport = await this.caseReportValidateRepository.findOne({
         where: {
@@ -278,6 +250,30 @@ export class CaseReportValidateService {
           `El movimiento ${movementReport.VALIDATION} no existe.`,
           HttpStatus.NO_CONTENT,
         );
+      }
+
+      if (
+        createReportValDto.val_cr_severityclasif_id_fk !== null &&
+        createReportValDto.val_cr_severityclasif_id_fk !== undefined
+      ) {
+        const priorityFind = await this.priorityRepository.findOne({
+          where: {
+            prior_severityclasif_id_fk:
+              createReportValDto.val_cr_severityclasif_id_fk,
+            prior_status: true,
+          },
+        });
+
+        if (!priorityFind) {
+          throw new HttpException(
+            `La prioridad no existe`,
+            HttpStatus.NO_CONTENT,
+          );
+        }
+
+        caseReportValidate.val_cr_priority_id_fk = priorityFind.id;
+      }else {
+        caseReportValidate.val_cr_priority_id_fk = null;
       }
 
       caseReportValidate.val_cr_filingnumber =

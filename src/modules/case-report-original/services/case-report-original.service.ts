@@ -173,6 +173,7 @@ export class CaseReportOriginalService {
           where: {
             prior_severityclasif_id_fk:
               createReportOriDto.ori_cr_severityclasif_id_fk,
+            prior_status: true,
           },
         });
 
