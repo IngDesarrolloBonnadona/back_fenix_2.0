@@ -40,7 +40,7 @@ export class RoleResponseTimeController {
     return this.roleResponseTimeService.findOnefindAllRoleResponseTime(id);
   }
 
-  @Patch('/updateCreateRoleResponseTime/:id')
+  @Patch('/updateRoleResponseTime/:id')
   updateCreateRoleResponseTime(
     @Param('id') id: number,
     @Body() updateCaseResponseTimeDto: UpdateRoleResponseTimeDto,
@@ -51,7 +51,7 @@ export class RoleResponseTimeController {
     );
   }
 
-  @Delete('/deleteCreateRoleResponseTime/:id')
+  @Delete('/deleteRoleResponseTime/:id')
   deleteCreateRoleResponseTime(
     @Param('id') id: number,
   ): Promise<HttpException> {

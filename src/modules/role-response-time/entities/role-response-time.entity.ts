@@ -21,7 +21,7 @@ export class RoleResponseTime {
   @Column({ type: 'varchar' })
   rest_r_role: string;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', nullable: true })
   rest_r_description: string;
 
   @Column()
