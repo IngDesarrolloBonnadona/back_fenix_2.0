@@ -48,6 +48,7 @@ export class SeverityClasificationService {
       relations: {
         // caseReportValidate: true,
         priority: true,
+        roleResponseTime: true,
       },
     });
 
@@ -68,7 +69,8 @@ export class SeverityClasificationService {
       where: { id, sev_c_status: true },
       relations: {
         // caseReportValidate: true,
-        priority: true
+        priority: true,
+        roleResponseTime: true,
       },
     });
 
