@@ -89,10 +89,6 @@ export class CreateValIncidentReportDto {
     @IsOptional()
     @IsString()
     val_cr_inmediateaction: string;
-    
-    @IsNumber()
-    @IsNotEmpty()
-    val_cr_priority_id_fk: number;
 
     @IsNumber()
     @IsOptional()

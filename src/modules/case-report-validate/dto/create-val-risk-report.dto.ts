@@ -92,10 +92,6 @@ export class CreateValRiskReportDto {
     @IsBoolean()
     @IsNotEmpty()
     val_cr_associatedpatient: boolean;
-    
-    @IsNumber()
-    @IsNotEmpty()
-    val_cr_priority_id_fk: number;
 
     @IsNumber()
     @IsOptional()

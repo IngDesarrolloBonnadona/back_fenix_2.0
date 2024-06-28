@@ -103,10 +103,6 @@ export class CreateCaseReportValidateDto {
 
     @IsNumber()
     @IsNotEmpty()
-    val_cr_priority_id_fk: number;
-
-    @IsNumber()
-    @IsNotEmpty()
     val_cr_statusmovement_id_fk: number;
 
     @IsNumber()

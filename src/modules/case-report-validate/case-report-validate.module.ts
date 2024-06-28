@@ -25,6 +25,7 @@ import { SubOriginModule } from '../sub-origin/sub-origin.module';
 import { RiskLevelModule } from '../risk-level/risk-level.module';
 import { UnitModule } from '../unit/unit.module';
 import { PriorityModule } from '../priority/priority.module';
+import { Priority } from '../priority/entities/priority.entity';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { PriorityModule } from '../priority/priority.module';
       ReportAnalystAssignment,
       Synergy,
       Researcher,
+      Priority,
     ]),
     MedicineModule,
     DeviceModule,
@@ -50,7 +52,6 @@ import { PriorityModule } from '../priority/priority.module';
     SubOriginModule,
     RiskLevelModule,
     UnitModule,
-    PriorityModule,
     forwardRef(() => ResearchersModule),
     forwardRef(() => ReportAnalystAssignmentModule),
   ],
