@@ -16,19 +16,19 @@ export class RoleResponseTime {
   id: number;
 
   @Column()
-  rest_c_severityclasif_id_fk: number;
+  rest_r_severityclasif_id_fk: number;
 
   @Column({ type: 'varchar' })
-  rest_c_role: string;
+  rest_r_role: string;
 
   @Column({ type: 'varchar' })
-  rest_c_description: string;
+  rest_r_description: string;
 
   @Column()
-  rest_c_responsetime: number;
+  rest_r_responsetime: number;
 
   @Column({ type: 'boolean', default: true })
-  rest_c_status: boolean;
+  rest_r_status: boolean;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -43,6 +43,6 @@ export class RoleResponseTime {
     () => SeverityClasification,
     (severityClasification) => severityClasification.roleResponseTime,
   )
-  @JoinColumn({ name: 'rest_c_severityclasif_id_fk' })
+  @JoinColumn({ name: 'rest_r_severityclasif_id_fk' })
   severityClasification: SeverityClasification;
 }

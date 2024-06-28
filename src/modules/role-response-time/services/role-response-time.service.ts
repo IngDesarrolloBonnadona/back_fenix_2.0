@@ -19,10 +19,10 @@ export class RoleResponseTimeService {
   ): Promise<RoleResponseTimeResponseTimeEntity> {
     const findRoleResponseTime = await this.roleResponseTimeRepository.findOne({
       where: {
-        rest_c_role: createRoleResponseTimeDto.rest_c_role,
-        rest_c_responsetime: createRoleResponseTimeDto.rest_c_responsetime,
-        rest_c_severityclasif_id_fk:
-          createRoleResponseTimeDto.rest_c_severityclasif_id_fk,
+        rest_r_role: createRoleResponseTimeDto.rest_r_role,
+        rest_r_responsetime: createRoleResponseTimeDto.rest_r_responsetime,
+        rest_r_severityclasif_id_fk:
+          createRoleResponseTimeDto.rest_r_severityclasif_id_fk,
       },
     });
 
@@ -34,7 +34,7 @@ export class RoleResponseTimeService {
     }
 
     await this.severityClasificationService.findOneSeverityClasification(
-      createRoleResponseTimeDto.rest_c_severityclasif_id_fk,
+      createRoleResponseTimeDto.rest_r_severityclasif_id_fk,
     );
 
     const roleResponseTime = this.roleResponseTimeRepository.create(
@@ -43,9 +43,11 @@ export class RoleResponseTimeService {
     return await this.roleResponseTimeRepository.save(roleResponseTime);
   }
 
-  async findAllRoleResponseTimes(): Promise<RoleResponseTimeResponseTimeEntity[]> {
+  async findAllRoleResponseTimes(): Promise<
+    RoleResponseTimeResponseTimeEntity[]
+  > {
     const roleResponseTimes = await this.roleResponseTimeRepository.find({
-      where: { rest_c_status: true },
+      where: { rest_r_status: true },
     });
 
     if (roleResponseTimes.length === 0) {
@@ -62,7 +64,7 @@ export class RoleResponseTimeService {
     id: number,
   ): Promise<RoleResponseTimeResponseTimeEntity> {
     const roleResponseTime = await this.roleResponseTimeRepository.findOne({
-      where: { id, rest_c_status: true },
+      where: { id, rest_r_status: true },
     });
 
     if (!roleResponseTime) {

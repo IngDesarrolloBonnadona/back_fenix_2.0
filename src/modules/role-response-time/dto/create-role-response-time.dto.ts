@@ -3,17 +3,17 @@ import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 export class CreateRoleResponseTimeDto {
   @IsNotEmpty()
   @IsNumber()
-  rest_c_severityclasif_id_fk: number;
+  rest_r_severityclasif_id_fk: number;
 
   @IsNotEmpty()
   @IsString()
-  rest_c_role: string;
+  rest_r_role: string;
 
   @IsNotEmpty()
   @IsNumber()
-  rest_c_responsetime: number;
+  rest_r_responsetime: number;
 
   @IsOptional()
   @IsString()
-  rest_c_description: string;
+  rest_r_description: string;
 }
