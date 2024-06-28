@@ -25,6 +25,7 @@ import { SynergyModule } from './modules/synergy/synergy.module';
 import { PriorityModule } from './modules/priority/priority.module';
 import { CharacterizationCasesModule } from './modules/characterization-cases/characterization-cases.module';
 import { RoleResponseTimeModule } from './modules/role-response-time/role-response-time.module';
+import { ReasonReturnCaseModule } from './modules/reason-return-case/reason-return-case.module';
 
 require('dotenv').config();
 
@@ -65,6 +66,7 @@ require('dotenv').config();
     PriorityModule,
     CharacterizationCasesModule,
     RoleResponseTimeModule,
+    ReasonReturnCaseModule,
   ],
   controllers: [],
   providers: [],
