@@ -11,7 +11,7 @@ import {
 } from 'typeorm';
 
 @Entity()
-export class CaseResponseTime {
+export class RoleResponseTime {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -41,7 +41,7 @@ export class CaseResponseTime {
 
   @ManyToOne(
     () => SeverityClasification,
-    (severityClasification) => severityClasification.caseResponseTime,
+    (severityClasification) => severityClasification.roleResponseTime,
   )
   @JoinColumn({ name: 'rest_c_severityclasif_id_fk' })
   severityClasification: SeverityClasification;
