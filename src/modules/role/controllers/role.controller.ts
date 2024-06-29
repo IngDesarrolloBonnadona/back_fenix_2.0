@@ -33,6 +33,11 @@ export class RoleController {
     return this.roleService.findOneRole(id);
   }
 
+  @Get('/findRoleByName')
+  findRoleByName(@Body() createRoleDto: CreateRoleDto) {
+    return this.roleService.findRoleByName(createRoleDto);
+  }
+
   @Patch('/updateRole/:id')
   updateRole(@Param('id') id: number, @Body() updateRoleDto: UpdateRoleDto) {
     return this.roleService.updateRole(id, updateRoleDto);

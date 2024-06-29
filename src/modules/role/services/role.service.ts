@@ -55,6 +55,21 @@ export class RoleService {
     return role;
   }
 
+  async findRoleByName(createRoleDto: CreateRoleDto) {
+    const roleName = await this.roleRepository.findOne({
+      where: { role_name: createRoleDto.role_name, role_status: true },
+    });
+
+    if (!roleName) {
+      throw new HttpException(
+        'No se encontró el nombre del rol',
+        HttpStatus.NO_CONTENT,
+      );
+    }
+
+    return roleName;
+  }
+
   async updateRole(id: number, updateRoleDto: UpdateRoleDto) {
     const role = await this.findOneRole(id);
     const result = await this.roleRepository.update(role.id, updateRoleDto);
