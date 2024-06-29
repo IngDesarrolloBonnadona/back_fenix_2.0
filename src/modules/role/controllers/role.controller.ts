@@ -10,33 +10,36 @@ import {
 import { RoleService } from '../services/role.service';
 import { CreateRoleDto } from '../dto/create-role.dto';
 import { UpdateRoleDto } from '../dto/update-role.dto';
+import { ApiTags } from '@nestjs/swagger';
+import { Role } from '../entities/role.entity';
 
+@ApiTags('role')
 @Controller('role')
 export class RoleController {
   constructor(private readonly roleService: RoleService) {}
 
-  @Post()
-  create(@Body() createRoleDto: CreateRoleDto) {
+  @Post('/createRole')
+  createRole(@Body() createRoleDto: CreateRoleDto): Promise<Role> {
     return this.roleService.createRole(createRoleDto);
   }
 
-  @Get()
-  findAll() {
-    return this.roleService.findAll();
+  @Get('/listRoles')
+  listRoles(): Promise<Role[]> {
+    return this.roleService.findAllRoles();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.roleService.findOne(+id);
+  @Get('/findRole/:id')
+  findRole(@Param('id') id: number) {
+    return this.roleService.findOneRole(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRoleDto: UpdateRoleDto) {
-    return this.roleService.update(+id, updateRoleDto);
+  @Patch('/updateRole/:id')
+  updateRole(@Param('id') id: number, @Body() updateRoleDto: UpdateRoleDto) {
+    return this.roleService.updateRole(id, updateRoleDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.roleService.remove(+id);
+  @Delete('/deleteRole/:id')
+  deleteRole(@Param('id') id: number) {
+    return this.roleService.deleteRole(id);
   }
 }
