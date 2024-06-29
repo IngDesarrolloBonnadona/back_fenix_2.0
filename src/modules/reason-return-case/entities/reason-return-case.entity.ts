@@ -1,12 +1,22 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Role } from 'src/modules/role/entities/role.entity';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class ReasonReturnCase {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar' })
-  rec_r_actor: string;
+  @Column()
+  rec_r_role_id_fk: number;
 
   @Column({ type: 'varchar' })
   rec_r_cause: string;
@@ -25,4 +35,8 @@ export class ReasonReturnCase {
 
   @DeleteDateColumn()
   deletedAt: Date;
+
+  @ManyToOne(() => Role, (role) => role.reasonReturnCase)
+  @JoinColumn({ name: 'rec_r_role_id_fk' })
+  role: Role
 }

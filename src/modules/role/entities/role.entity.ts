@@ -1,8 +1,10 @@
+import { ReasonReturnCase } from 'src/modules/reason-return-case/entities/reason-return-case.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -29,4 +31,9 @@ export class Role {
 
   @DeleteDateColumn()
   deletedAt: Date;
+
+  @OneToMany(() => ReasonReturnCase, (reasonReturnCase) => reasonReturnCase.role)
+  reasonReturnCase: ReasonReturnCase[];
+
+  
 }
