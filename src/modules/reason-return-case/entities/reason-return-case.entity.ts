@@ -1,3 +1,4 @@
+import { ObservationReturnCase } from 'src/modules/observation-return-case/entities/observation-return-case.entity';
 import { Role } from 'src/modules/role/entities/role.entity';
 import {
   Column,
@@ -6,6 +7,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -38,5 +40,11 @@ export class ReasonReturnCase {
 
   @ManyToOne(() => Role, (role) => role.reasonReturnCase)
   @JoinColumn({ name: 'rec_r_role_id_fk' })
-  role: Role
+  role: Role;
+
+  @OneToMany(
+    () => ObservationReturnCase,
+    (observationReturnCase) => observationReturnCase.reasonReturnCase,
+  )
+  observationReturnCase: ObservationReturnCase[];
 }
