@@ -6,8 +6,8 @@ export class CreateRoleResponseTimeDto {
   rest_r_severityclasif_id_fk: number;
 
   @IsNotEmpty()
-  @IsString()
-  rest_r_role: string;
+  @IsNumber()
+  rest_r_role_id_fk: number;
 
   @IsNotEmpty()
   @IsNumber()

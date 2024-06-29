@@ -4,12 +4,15 @@ import { UpdateReasonReturnCaseDto } from '../dto/update-reason-return-case.dto'
 import { InjectRepository } from '@nestjs/typeorm';
 import { ReasonReturnCase as ReasonReturnCaseEntity } from '../entities/reason-return-case.entity';
 import { Repository } from 'typeorm';
+import { RoleService } from 'src/modules/role/services/role.service';
 
 @Injectable()
 export class ReasonReturnCaseService {
   constructor(
     @InjectRepository(ReasonReturnCaseEntity)
     private readonly reasonReturnCaseRepository: Repository<ReasonReturnCaseEntity>,
+
+    private readonly roleService: RoleService,
   ) {}
 
   async createReasonReturnCase(
@@ -17,7 +20,7 @@ export class ReasonReturnCaseService {
   ) {
     const findReasonReturnCase = await this.reasonReturnCaseRepository.findOne({
       where: {
-        rec_r_actor: createReasonReturnCaseDto.rec_r_actor,
+        rec_r_role_id_fk: createReasonReturnCaseDto.rec_r_role_id_fk,
         rec_r_cause: createReasonReturnCaseDto.rec_r_cause,
         rec_r_status: true,
       },
@@ -25,10 +28,14 @@ export class ReasonReturnCaseService {
 
     if (findReasonReturnCase) {
       throw new HttpException(
-        `El motivo de devolución para ${createReasonReturnCaseDto.rec_r_actor} ya existe.`,
+        `El motivo de devolución para este rol ya existe.`,
         HttpStatus.CONFLICT,
       );
     }
+
+    await this.roleService.findOneRole(
+      createReasonReturnCaseDto.rec_r_role_id_fk,
+    );
 
     const reasonReturnCase = this.reasonReturnCaseRepository.create(
       createReasonReturnCaseDto,
@@ -36,9 +43,10 @@ export class ReasonReturnCaseService {
     return await this.reasonReturnCaseRepository.save(reasonReturnCase);
   }
 
-  async findAlReasonReturnCases() {
+  async findAllReasonReturnCases() {
     const reasonReturnCases = await this.reasonReturnCaseRepository.find({
       where: { rec_r_status: true },
+      relations: { role: true },
     });
 
     if (reasonReturnCases.length === 0) {
@@ -53,6 +61,7 @@ export class ReasonReturnCaseService {
   async findOneReasonReturnCase(id: number) {
     const reasonReturnCase = await this.reasonReturnCaseRepository.findOne({
       where: { id, rec_r_status: true },
+      relations: { role: true },
     });
 
     if (!reasonReturnCase) {
@@ -99,7 +108,7 @@ export class ReasonReturnCaseService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-    
+
     return new HttpException(
       `¡Datos eliminados correctamente!`,
       HttpStatus.ACCEPTED,

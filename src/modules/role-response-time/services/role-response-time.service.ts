@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { RoleResponseTime as RoleResponseTimeResponseTimeEntity } from '../entities/role-response-time.entity';
 import { Repository } from 'typeorm';
 import { SeverityClasificationService } from 'src/modules/severity-clasification/services/severity-clasification.service';
+import { RoleService } from 'src/modules/role/services/role.service';
 
 @Injectable()
 export class RoleResponseTimeService {
@@ -13,13 +14,14 @@ export class RoleResponseTimeService {
     private readonly roleResponseTimeRepository: Repository<RoleResponseTimeResponseTimeEntity>,
 
     private readonly severityClasificationService: SeverityClasificationService,
+    private readonly roleService: RoleService,
   ) {}
   async createRoleResponseTime(
     createRoleResponseTimeDto: CreateRoleResponseTimeDto,
   ): Promise<RoleResponseTimeResponseTimeEntity> {
     const findRoleResponseTime = await this.roleResponseTimeRepository.findOne({
       where: {
-        rest_r_role: createRoleResponseTimeDto.rest_r_role,
+        rest_r_role_id_fk: createRoleResponseTimeDto.rest_r_role_id_fk,
         rest_r_responsetime: createRoleResponseTimeDto.rest_r_responsetime,
         rest_r_severityclasif_id_fk:
           createRoleResponseTimeDto.rest_r_severityclasif_id_fk,
@@ -37,6 +39,10 @@ export class RoleResponseTimeService {
       createRoleResponseTimeDto.rest_r_severityclasif_id_fk,
     );
 
+    await this.roleService.findOneRole(
+      createRoleResponseTimeDto.rest_r_role_id_fk,
+    );
+
     const roleResponseTime = this.roleResponseTimeRepository.create(
       createRoleResponseTimeDto,
     );
@@ -48,6 +54,7 @@ export class RoleResponseTimeService {
   > {
     const roleResponseTimes = await this.roleResponseTimeRepository.find({
       where: { rest_r_status: true },
+      relations: { role: true },
     });
 
     if (roleResponseTimes.length === 0) {
@@ -65,6 +72,7 @@ export class RoleResponseTimeService {
   ): Promise<RoleResponseTimeResponseTimeEntity> {
     const roleResponseTime = await this.roleResponseTimeRepository.findOne({
       where: { id, rest_r_status: true },
+      relations: { role: true },
     });
 
     if (!roleResponseTime) {
