@@ -1,4 +1,5 @@
 import { ReasonReturnCase } from 'src/modules/reason-return-case/entities/reason-return-case.entity';
+import { RoleResponseTime } from 'src/modules/role-response-time/entities/role-response-time.entity';
 import {
   Column,
   CreateDateColumn,
@@ -35,5 +36,6 @@ export class Role {
   @OneToMany(() => ReasonReturnCase, (reasonReturnCase) => reasonReturnCase.role)
   reasonReturnCase: ReasonReturnCase[];
 
-  
+  @OneToMany(() => RoleResponseTime, (roleResponseTime) => roleResponseTime.role)
+  roleResponseTime: RoleResponseTime[];
 }

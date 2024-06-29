@@ -1,3 +1,4 @@
+import { Role } from 'src/modules/role/entities/role.entity';
 import { SeverityClasification } from 'src/modules/severity-clasification/entities/severity-clasification.entity';
 import {
   Column,
@@ -18,8 +19,8 @@ export class RoleResponseTime {
   @Column()
   rest_r_severityclasif_id_fk: number;
 
-  @Column({ type: 'varchar' })
-  rest_r_role: string;
+  @Column()
+  rest_r_role_id_fk: number;
 
   @Column({ type: 'varchar', nullable: true })
   rest_r_description: string;
@@ -45,4 +46,8 @@ export class RoleResponseTime {
   )
   @JoinColumn({ name: 'rest_r_severityclasif_id_fk' })
   severityClasification: SeverityClasification;
+
+  @ManyToOne(() => Role, (role) => role.roleResponseTime)
+  @JoinColumn({ name: 'rest_r_role_id_fk' })
+  role: Role
 }

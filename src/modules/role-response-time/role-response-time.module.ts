@@ -4,11 +4,13 @@ import { RoleResponseTimeController } from './controllers/role-response-time.con
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RoleResponseTime } from './entities/role-response-time.entity';
 import { SeverityClasificationModule } from '../severity-clasification/severity-clasification.module';
+import { RoleModule } from '../role/role.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([RoleResponseTime]),
     SeverityClasificationModule,
+    RoleModule
   ],
   controllers: [RoleResponseTimeController],
   providers: [RoleResponseTimeService],
