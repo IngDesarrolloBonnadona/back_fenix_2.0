@@ -43,7 +43,7 @@ export class ReasonReturnCaseService {
     return await this.reasonReturnCaseRepository.save(reasonReturnCase);
   }
 
-  async findAlReasonReturnCases() {
+  async findAllReasonReturnCases() {
     const reasonReturnCases = await this.reasonReturnCaseRepository.find({
       where: { rec_r_status: true },
       relations: { role: true },

@@ -28,7 +28,7 @@ export class ReasonReturnCaseController {
 
   @Get('/listReasonReturnCases')
   listReasonReturnCases() {
-    return this.reasonReturnCaseService.findAlReasonReturnCases();
+    return this.reasonReturnCaseService.findAllReasonReturnCases();
   }
 
   @Get('/findReasonReturnCase/:id')
