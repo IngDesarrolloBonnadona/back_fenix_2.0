@@ -26,6 +26,7 @@ import { PriorityModule } from './modules/priority/priority.module';
 import { CharacterizationCasesModule } from './modules/characterization-cases/characterization-cases.module';
 import { RoleResponseTimeModule } from './modules/role-response-time/role-response-time.module';
 import { ReasonReturnCaseModule } from './modules/reason-return-case/reason-return-case.module';
+import { RoleModule } from './modules/role/role.module';
 
 require('dotenv').config();
 
@@ -67,6 +68,7 @@ require('dotenv').config();
     CharacterizationCasesModule,
     RoleResponseTimeModule,
     ReasonReturnCaseModule,
+    RoleModule,
   ],
   controllers: [],
   providers: [],
