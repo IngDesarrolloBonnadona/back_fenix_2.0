@@ -28,6 +28,7 @@ import { Researcher } from 'src/modules/researchers/entities/researchers.entity'
 import { Priority } from 'src/modules/priority/entities/priority.entity';
 import { MovementReport } from 'src/modules/movement-report/entities/movement-report.entity';
 import { CharacterizationCase } from 'src/modules/characterization-cases/entities/characterization-case.entity';
+import { ObservationReturnCase } from 'src/modules/observation-return-case/entities/observation-return-case.entity';
 
 @Entity()
 export class CaseReportValidate {
@@ -236,4 +237,7 @@ export class CaseReportValidate {
 
   @OneToOne(() => Researcher, (researcher) => researcher.caseReportValidate)
   researcher: Researcher[];
+
+  @OneToMany(() => ObservationReturnCase, (observationReturnCase) => observationReturnCase.caseReportValidate)
+  observationReturnCase: ObservationReturnCase[];
 }

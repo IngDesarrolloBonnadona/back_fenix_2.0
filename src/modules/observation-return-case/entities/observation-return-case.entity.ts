@@ -1,3 +1,4 @@
+import { CaseReportValidate } from 'src/modules/case-report-validate/entities/case-report-validate.entity';
 import { ReasonReturnCase } from 'src/modules/reason-return-case/entities/reason-return-case.entity';
 import {
   Column,
@@ -42,4 +43,8 @@ export class ObservationReturnCase {
   @ManyToOne(() => ReasonReturnCase, (reasonReturnCase) => reasonReturnCase.observationReturnCase)
   @JoinColumn({ name: 'rec_o_reasonreturn_id_fk' })
   reasonReturnCase: ReasonReturnCase;
+
+  @ManyToOne(() => CaseReportValidate, (caseReportValidate) => caseReportValidate.observationReturnCase)
+  @JoinColumn({ name: 'rec_o_validatedcase_id_fk' })
+  caseReportValidate: CaseReportValidate;
 }
