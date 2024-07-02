@@ -12,10 +12,6 @@ export class ReportAnalystAssignmentDto {
   @IsNotEmpty()
   @IsNumber()
   ass_ra_useranalyst_id: number;
-
-  @IsNotEmpty()
-  @IsNumber()
-  ass_ra_days: number;
   
   @IsString()
   @IsOptional()
