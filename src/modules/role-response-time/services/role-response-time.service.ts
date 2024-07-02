@@ -22,7 +22,6 @@ export class RoleResponseTimeService {
     const findRoleResponseTime = await this.roleResponseTimeRepository.findOne({
       where: {
         rest_r_role_id_fk: createRoleResponseTimeDto.rest_r_role_id_fk,
-        rest_r_responsetime: createRoleResponseTimeDto.rest_r_responsetime,
         rest_r_severityclasif_id_fk:
           createRoleResponseTimeDto.rest_r_severityclasif_id_fk,
       },
@@ -30,7 +29,7 @@ export class RoleResponseTimeService {
 
     if (findRoleResponseTime) {
       throw new HttpException(
-        'Ya existe un tiempo de respuesta de caso con el rol, el tiempo de respuesta y la clasificación de severidad especificados.',
+        'Ya existe un tiempo de respuesta de caso con el rol y la clasificación de severidad especificados.',
         HttpStatus.CONFLICT,
       );
     }
