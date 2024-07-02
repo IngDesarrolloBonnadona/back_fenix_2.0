@@ -505,7 +505,7 @@ export class CaseReportValidateService {
     } else {
       const namesMovement = [
         movementReport.ANULATION,
-        movementReport.RETURN_CASE_ANALYST,
+        movementReport.RETURN_CASE_VALIDATOR,
       ];
 
       const findMovementNames = await this.movementReportRepository.find({
