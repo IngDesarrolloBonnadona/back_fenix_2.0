@@ -39,7 +39,6 @@ import { CreateValAdverseEventReportDto } from '../dto/create-val-adverse-event-
 import { CreateValIncidentReportDto } from '../dto/create-val-incident-report.dto';
 import { CreateValIndicatingUnsafeCareReportDto } from '../dto/create-val-indicating-unsafe-care-report.dto';
 import { CreateValComplicationsReportDto } from '../dto/create-val-complications-report.dto';
-import { CharacterizationCase as CharacterizationCaseEntity } from 'src/modules/characterization-cases/entities/characterization-case.entity';
 import { CharacterizationCasesService } from 'src/modules/characterization-cases/services/characterization-cases.service';
 import { RiskTypeService } from 'src/modules/risk-type/services/risk-type.service';
 import { EventTypeService } from 'src/modules/event-type/services/event-type.service';
@@ -50,8 +49,9 @@ import { OriginService } from 'src/modules/origin/services/origin.service';
 import { SubOriginService } from 'src/modules/sub-origin/services/sub-origin.service';
 import { RiskLevelService } from 'src/modules/risk-level/services/risk-level.service';
 import { UnitService } from 'src/modules/unit/services/unit.service';
-import { PriorityService } from 'src/modules/priority/services/priority.service';
 import { Priority as PriorityEntity } from 'src/modules/priority/entities/priority.entity';
+import { ObservationReturnCase as ObservationReturnCaseEntity } from 'src/modules/observation-return-case/entities/observation-return-case.entity';
+import { ObservationReturnCaseService } from 'src/modules/observation-return-case/services/observation-return-case.service';
 
 @Injectable()
 export class CaseReportValidateService {
@@ -70,6 +70,8 @@ export class CaseReportValidateService {
     private readonly researchRepository: Repository<ResearcherEntity>,
     @InjectRepository(PriorityEntity)
     private readonly priorityRepository: Repository<PriorityEntity>,
+    @InjectRepository(ObservationReturnCaseEntity)
+    private readonly observationReturnCaseRepository: Repository<ObservationReturnCaseEntity>,
 
     private dataSource: DataSource,
     private readonly medicineService: MedicineService,
@@ -86,6 +88,8 @@ export class CaseReportValidateService {
     private readonly subOriginService: SubOriginService,
     private readonly riskLevelService: RiskLevelService,
     private readonly unitService: UnitService,
+    @Inject(forwardRef(() => ObservationReturnCaseService))
+    private readonly observationReturnCaseService: ObservationReturnCaseService,
     @Inject(forwardRef(() => ResearchersService))
     private readonly researchService: ResearchersService,
     @Inject(forwardRef(() => ReportAnalystAssignmentService))
@@ -272,7 +276,7 @@ export class CaseReportValidateService {
         }
 
         caseReportValidate.val_cr_priority_id_fk = priorityFind.id;
-      }else {
+      } else {
         caseReportValidate.val_cr_priority_id_fk = null;
       }
 
@@ -749,6 +753,19 @@ export class CaseReportValidateService {
     if (findResearchAssignment) {
       await this.researchService.deleteAssignedResearcher(
         findResearchAssignment.id,
+      );
+    }
+
+    const findObservationReturnCase =
+      await this.observationReturnCaseRepository.findOne({
+        where: {
+          rec_o_validatedcase_id_fk: caseReportValidate.id,
+        },
+      });
+
+    if (findObservationReturnCase) {
+      await this.observationReturnCaseService.deleteObservationReturnCase(
+        findObservationReturnCase.id,
       );
     }
 

@@ -24,8 +24,9 @@ import { OriginModule } from '../origin/origin.module';
 import { SubOriginModule } from '../sub-origin/sub-origin.module';
 import { RiskLevelModule } from '../risk-level/risk-level.module';
 import { UnitModule } from '../unit/unit.module';
-import { PriorityModule } from '../priority/priority.module';
 import { Priority } from '../priority/entities/priority.entity';
+import { ObservationReturnCase } from '../observation-return-case/entities/observation-return-case.entity';
+import { ObservationReturnCaseModule } from '../observation-return-case/observation-return-case.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { Priority } from '../priority/entities/priority.entity';
       Synergy,
       Researcher,
       Priority,
+      ObservationReturnCase,
     ]),
     MedicineModule,
     DeviceModule,
@@ -54,6 +56,7 @@ import { Priority } from '../priority/entities/priority.entity';
     UnitModule,
     forwardRef(() => ResearchersModule),
     forwardRef(() => ReportAnalystAssignmentModule),
+    forwardRef(() => ObservationReturnCaseModule),
   ],
   controllers: [CaseReportValidateController],
   providers: [CaseReportValidateService],
