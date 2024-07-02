@@ -325,6 +325,7 @@ export class ReportAnalystAssignmentService {
     const analyst = this.reportAnalystAssignmentRepository.create({
       ...createReportAnalystAssignmentDto,
       ass_ra_uservalidator_id: reportAssignmentFind.ass_ra_uservalidator_id,
+      ass_ra_days: reportAssignmentFind.ass_ra_days
     });
 
     const assigned = await this.reportAnalystAssignmentRepository.save(analyst);
