@@ -31,7 +31,7 @@ import { RiskLevelService } from 'src/modules/risk-level/services/risk-level.ser
 import { UnitService } from 'src/modules/unit/services/unit.service';
 import { Priority as PriorityEntity } from 'src/modules/priority/entities/priority.entity';
 import { SeverityClasification as SeverityClasificationEntity } from 'src/modules/severity-clasification/entities/severity-clasification.entity';
-import { severityClasification } from 'src/enums/severiry-clasif.enum';
+import { severityClasification } from 'src/enums/severity-clasif.enum';
 
 @Injectable()
 export class CaseReportOriginalService {

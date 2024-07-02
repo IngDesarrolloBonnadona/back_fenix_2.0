@@ -12,6 +12,8 @@ import { MovementReport } from '../movement-report/entities/movement-report.enti
 import { CaseReportValidate } from '../case-report-validate/entities/case-report-validate.entity';
 import { RoleResponseTime } from '../role-response-time/entities/role-response-time.entity';
 import { Role } from '../role/entities/role.entity';
+import { CaseType } from '../case-type/entities/case-type.entity';
+import { SeverityClasification } from '../severity-clasification/entities/severity-clasification.entity';
 
 @Module({
   imports: [
@@ -21,6 +23,8 @@ import { Role } from '../role/entities/role.entity';
       CaseReportValidate,
       Role,
       RoleResponseTime,
+      CaseType,
+      SeverityClasification,
     ]),
     LogModule,
     PositionModule,
