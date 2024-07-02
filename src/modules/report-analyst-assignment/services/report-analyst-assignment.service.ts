@@ -18,6 +18,13 @@ import { HttpPositionService } from 'src/modules/position/http/http-position.ser
 import { MovementReport as MovementReportEntity } from 'src/modules/movement-report/entities/movement-report.entity';
 import { movementReport } from 'src/enums/movement-report.enum';
 import { CaseReportValidate as CaseReportValidateEntity } from 'src/modules/case-report-validate/entities/case-report-validate.entity';
+import { RoleResponseTime as RoleResponseTimeEntity } from 'src/modules/role-response-time/entities/role-response-time.entity';
+import { Role as RoleEntity } from 'src/modules/role/entities/role.entity';
+import { userRoles } from 'src/enums/user-roles.enum';
+import { CaseType as CaseTypeEntity } from 'src/modules/case-type/entities/case-type.entity';
+import { caseTypeReport } from 'src/enums/caseType-report.enum';
+import { SeverityClasification as SeverityClasificationEntity } from 'src/modules/severity-clasification/entities/severity-clasification.entity';
+import { severityClasification } from 'src/enums/severity-clasif.enum';
 
 @Injectable()
 export class ReportAnalystAssignmentService {
@@ -28,6 +35,14 @@ export class ReportAnalystAssignmentService {
     private readonly movementReportRepository: Repository<MovementReportEntity>,
     @InjectRepository(CaseReportValidateEntity)
     private readonly caseReportValidateRepository: Repository<CaseReportValidateEntity>,
+    @InjectRepository(RoleEntity)
+    private readonly roleRepository: Repository<RoleEntity>,
+    @InjectRepository(RoleResponseTimeEntity)
+    private readonly roleResponseTime: Repository<RoleResponseTimeEntity>,
+    @InjectRepository(CaseTypeEntity)
+    private readonly caseTypeRepository: Repository<CaseTypeEntity>,
+    @InjectRepository(SeverityClasificationEntity)
+    private readonly severityClasificationRepository: Repository<SeverityClasificationEntity>,
 
     private readonly logService: LogService,
     private readonly positionService: PositionService,
@@ -78,9 +93,10 @@ export class ReportAnalystAssignmentService {
       );
     }
 
-    await this.caseReportValidateService.findOneReportValidate(
-      createReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
-    );
+    const caseValidateFound =
+      await this.caseReportValidateService.findOneReportValidate(
+        createReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
+      );
 
     await this.positionService.findOnePosition(
       createReportAnalystAssignmentDto.ass_ra_position_id_fk,
@@ -100,9 +116,76 @@ export class ReportAnalystAssignmentService {
       );
     }
 
+    const findIdRole = await this.roleRepository.findOne({
+      where: {
+        role_name: userRoles.ANALYST,
+        role_status: true,
+      },
+    });
+
+    if (!findIdRole) {
+      throw new HttpException(
+        `El rol ${userRoles.ANALYST} no existe.`,
+        HttpStatus.NO_CONTENT,
+      );
+    }
+
+    const findRoleResponseTime = await this.roleResponseTime.findOne({
+      where: {
+        rest_r_role_id_fk: findIdRole.id,
+        rest_r_severityclasif_id_fk:
+          caseValidateFound.val_cr_severityclasif_id_fk,
+        rest_r_status: true,
+      },
+    });
+
+    if (!findRoleResponseTime) {
+      throw new HttpException(
+        `El tiempo de respuesta del rol ${userRoles.ANALYST} no existe.`,
+        HttpStatus.NO_CONTENT,
+      );
+    }
+
+    const findCaseType = await this.caseTypeRepository.findOne({
+      where: {
+        cas_t_name: caseTypeReport.ADVERSE_EVENT,
+        cas_t_status: true,
+      },
+    });
+
+    if (!findCaseType) {
+      throw new HttpException(
+        `El tipo de caso ${caseTypeReport.ADVERSE_EVENT} no existe.`,
+        HttpStatus.NO_CONTENT,
+      );
+    }
+
+    const findSeverityClasification =
+      await this.severityClasificationRepository.findOne({
+        where: {
+          sev_c_name: severityClasification.SERIOUS_SEVERITY,
+        },
+      });
+
+    if (!findSeverityClasification) {
+      throw new HttpException(
+        `La clasificacion de severidad ${severityClasification.SERIOUS_SEVERITY} no existe.`,
+        HttpStatus.NO_CONTENT,
+      );
+    }
+
+    if (
+      findCaseType.id === caseValidateFound.val_cr_casetype_id_fk &&
+      findSeverityClasification.id ===
+        caseValidateFound.val_cr_severityclasif_id_fk
+    ) {
+      //agregar validacion
+    }
+
     const analyst = this.reportAnalystAssignmentRepository.create({
       ...createReportAnalystAssignmentDto,
       ass_ra_uservalidator_id: idValidator,
+      ass_ra_days: findRoleResponseTime.rest_r_responsetime,
     });
 
     const assigned = await this.reportAnalystAssignmentRepository.save(analyst);
@@ -286,6 +369,7 @@ export class ReportAnalystAssignmentService {
     const analyst = this.reportAnalystAssignmentRepository.create({
       ...createReportAnalystAssignmentDto,
       ass_ra_uservalidator_id: reportAssignmentFind.ass_ra_uservalidator_id,
+      ass_ra_days: reportAssignmentFind.ass_ra_days,
     });
 
     const assigned = await this.reportAnalystAssignmentRepository.save(analyst);

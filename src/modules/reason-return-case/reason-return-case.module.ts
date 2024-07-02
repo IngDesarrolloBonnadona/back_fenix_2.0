@@ -9,5 +9,6 @@ import { RoleModule } from '../role/role.module';
   imports: [TypeOrmModule.forFeature([ReasonReturnCase]), RoleModule],
   controllers: [ReasonReturnCaseController],
   providers: [ReasonReturnCaseService],
+  exports: [ReasonReturnCaseService]
 })
 export class ReasonReturnCaseModule {}

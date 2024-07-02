@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class ReportAnalystAssignmentDto {
   @IsNotEmpty()
@@ -12,8 +12,8 @@ export class ReportAnalystAssignmentDto {
   @IsNotEmpty()
   @IsNumber()
   ass_ra_useranalyst_id: number;
-
-  @IsNotEmpty()
-  @IsNumber()
-  ass_ra_days: number;
+  
+  @IsString()
+  @IsOptional()
+  ass_ra_justifications: string
 }

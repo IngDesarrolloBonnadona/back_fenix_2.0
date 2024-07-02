@@ -21,6 +21,7 @@ import { RiskLevelModule } from '../risk-level/risk-level.module';
 import { UnitModule } from '../unit/unit.module';
 import { PriorityModule } from '../priority/priority.module';
 import { Priority } from '../priority/entities/priority.entity';
+import { SeverityClasification } from '../severity-clasification/entities/severity-clasification.entity';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { Priority } from '../priority/entities/priority.entity';
       CaseType,
       MovementReport,
       Priority,
+      SeverityClasification
     ]),
     CaseReportValidateModule,
     LogModule,

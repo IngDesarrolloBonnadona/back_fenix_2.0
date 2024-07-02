@@ -30,6 +30,8 @@ import { SubOriginService } from 'src/modules/sub-origin/services/sub-origin.ser
 import { RiskLevelService } from 'src/modules/risk-level/services/risk-level.service';
 import { UnitService } from 'src/modules/unit/services/unit.service';
 import { Priority as PriorityEntity } from 'src/modules/priority/entities/priority.entity';
+import { SeverityClasification as SeverityClasificationEntity } from 'src/modules/severity-clasification/entities/severity-clasification.entity';
+import { severityClasification } from 'src/enums/severity-clasif.enum';
 
 @Injectable()
 export class CaseReportOriginalService {
@@ -42,6 +44,8 @@ export class CaseReportOriginalService {
     private readonly movementReportRepository: Repository<MovementReportEntity>,
     @InjectRepository(PriorityEntity)
     private readonly priorityRepository: Repository<PriorityEntity>,
+    @InjectRepository(SeverityClasificationEntity)
+    private readonly severityClasificationRepository: Repository<SeverityClasificationEntity>,
 
     private readonly caseReportValidateService: CaseReportValidateService,
     private readonly logService: LogService,
@@ -165,26 +169,43 @@ export class CaseReportOriginalService {
         );
       }
 
-      if (
-        createReportOriDto.ori_cr_severityclasif_id_fk !== undefined &&
-        createReportOriDto.ori_cr_severityclasif_id_fk !== null
-      ) {
-        const priorityFind = await this.priorityRepository.findOne({
-          where: {
-            prior_severityclasif_id_fk:
-              createReportOriDto.ori_cr_severityclasif_id_fk,
-            prior_status: true,
-          },
+      const severityClasificationFound =
+        await this.severityClasificationRepository.findOne({
+          where: { sev_c_name: severityClasification.MODERATE_SEVERITY },
         });
 
-        if (!priorityFind) {
-          throw new HttpException(
-            `La prioridad no existe`,
-            HttpStatus.NO_CONTENT,
-          );
-        }
-        caseReportOriginal.ori_cr_priority_id_fk = priorityFind.id;
+      if (!severityClasificationFound) {
+        throw new HttpException(
+          `La clasificación de severidad no existe`,
+          HttpStatus.NO_CONTENT,
+        );
       }
+
+      if (
+        createReportOriDto.ori_cr_severityclasif_id_fk === undefined ||
+        createReportOriDto.ori_cr_severityclasif_id_fk === null
+      ) {
+        createReportOriDto.ori_cr_severityclasif_id_fk =
+          severityClasificationFound.id;
+      }
+
+      const priorityFind = await this.priorityRepository.findOne({
+        where: {
+          prior_severityclasif_id_fk:
+            createReportOriDto.ori_cr_severityclasif_id_fk,
+          prior_status: true,
+        },
+      });
+      if (!priorityFind) {
+        throw new HttpException(
+          `La prioridad no existe`,
+          HttpStatus.NO_CONTENT,
+        );
+      }
+
+      caseReportOriginal.ori_cr_severityclasif_id_fk =
+        createReportOriDto.ori_cr_severityclasif_id_fk;
+      caseReportOriginal.ori_cr_priority_id_fk = priorityFind.id;
       caseReportOriginal.ori_cr_filingnumber = filingNumber;
       caseReportOriginal.ori_cr_statusmovement_id_fk = movementReportFound.id;
 
