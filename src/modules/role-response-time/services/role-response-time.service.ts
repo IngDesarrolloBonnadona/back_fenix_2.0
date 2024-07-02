@@ -54,7 +54,7 @@ export class RoleResponseTimeService {
   > {
     const roleResponseTimes = await this.roleResponseTimeRepository.find({
       where: { rest_r_status: true },
-      relations: { role: true },
+      relations: { role: true, severityClasification: true },
     });
 
     if (roleResponseTimes.length === 0) {
@@ -72,7 +72,7 @@ export class RoleResponseTimeService {
   ): Promise<RoleResponseTimeResponseTimeEntity> {
     const roleResponseTime = await this.roleResponseTimeRepository.findOne({
       where: { id, rest_r_status: true },
-      relations: { role: true },
+      relations: { role: true, severityClasification: true },
     });
 
     if (!roleResponseTime) {
