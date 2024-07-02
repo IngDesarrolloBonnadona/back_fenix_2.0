@@ -31,7 +31,7 @@ export class ReportAnalystAssignment {
   @Column()
   ass_ra_uservalidator_id: number;
 
-  @Column()
+  @Column({ nullable: true })
   ass_ra_days: number;
 
   @Column({ nullable: true })

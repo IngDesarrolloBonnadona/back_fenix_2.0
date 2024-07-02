@@ -10,6 +10,8 @@ import { HttpPositionService } from '../position/http/http-position.service';
 import { HttpModule } from '@nestjs/axios';
 import { MovementReport } from '../movement-report/entities/movement-report.entity';
 import { CaseReportValidate } from '../case-report-validate/entities/case-report-validate.entity';
+import { RoleResponseTime } from '../role-response-time/entities/role-response-time.entity';
+import { Role } from '../role/entities/role.entity';
 
 @Module({
   imports: [
@@ -17,6 +19,8 @@ import { CaseReportValidate } from '../case-report-validate/entities/case-report
       ReportAnalystAssignment,
       MovementReport,
       CaseReportValidate,
+      Role,
+      RoleResponseTime,
     ]),
     LogModule,
     PositionModule,
