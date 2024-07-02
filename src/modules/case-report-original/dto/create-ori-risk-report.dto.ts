@@ -80,6 +80,10 @@ export class CreateOriRiskReportDto {
     @IsOptional()
     ori_cr_risktype_id_fk: number; 
 
+    @IsNumber()
+    @IsOptional()
+    ori_cr_severityclasif_id_fk: number; 
+
     @IsNotEmpty()
     @IsString()
     ori_cr_description: string;
