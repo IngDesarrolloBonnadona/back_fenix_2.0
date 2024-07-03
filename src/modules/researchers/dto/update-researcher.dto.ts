@@ -6,4 +6,8 @@ export class UpdateResearcherDto extends PartialType(CreateResearcherDto) {
   @IsOptional()
   @IsBoolean()
   res_status?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  res_isreturned?: boolean;
 }

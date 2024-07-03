@@ -13,6 +13,7 @@ import { CaseType } from '../case-type/entities/case-type.entity';
 import { SeverityClasification } from '../severity-clasification/entities/severity-clasification.entity';
 import { Role } from '../role/entities/role.entity';
 import { RoleResponseTime } from '../role-response-time/entities/role-response-time.entity';
+import { ReportAnalystAssignment } from '../report-analyst-assignment/entities/report-analyst-assignment.entity';
 
 @Module({
   imports: [
@@ -23,7 +24,8 @@ import { RoleResponseTime } from '../role-response-time/entities/role-response-t
       CaseType,
       SeverityClasification,
       Role,
-      RoleResponseTime
+      RoleResponseTime,
+      ReportAnalystAssignment,
     ]),
     HttpModule,
     LogModule,

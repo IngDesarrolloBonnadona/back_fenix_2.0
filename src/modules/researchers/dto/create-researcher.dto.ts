@@ -7,5 +7,5 @@ export class CreateResearcherDto {
  
     @IsNotEmpty()
     @IsNumber()
-    res_ra_userresearch_id: number;
+    res_userresearch_id: number;
 }

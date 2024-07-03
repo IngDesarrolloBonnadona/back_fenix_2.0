@@ -93,11 +93,24 @@ export class ResearchersController {
     @Param('idAnalyst') idAnalyst: number,
     @Param('idCaseReportValidate') idCaseReportValidate: string,
   ) {
-    return this.researchersService.reAssingInvestigator(
+    return this.researchersService.reAssingResearcher(
       updateResearcherDto,
       clientIp,
       idAnalyst,
       idCaseReportValidate,
+    );
+  }
+
+  @Patch('updateReturnCaseToAnalyst/:idResearcher/:idCaseReportValidate')
+  updateReturnCaseToAnalyst(
+    @Param('idResearcher') idResearcher: number,
+    @Param('idCaseReportValidate') idCaseReportValidate: string,
+    @Ip() clientIp: string,
+  ) {
+    return this.researchersService.returnCaseToAnalyst(
+      idCaseReportValidate,
+      clientIp,
+      idResearcher,
     );
   }
 
