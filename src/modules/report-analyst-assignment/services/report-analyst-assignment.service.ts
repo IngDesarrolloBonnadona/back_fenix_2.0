@@ -84,6 +84,7 @@ export class ReportAnalystAssignmentService {
           ass_ra_validatedcase_id_fk:
             createReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
           ass_ra_status: true,
+          ass_ra_isreturned: false,
         },
       });
 
@@ -228,6 +229,7 @@ export class ReportAnalystAssignmentService {
         where: {
           ass_ra_validatedcase_id_fk: idCaseReportValidate,
           ass_ra_status: true,
+          ass_ra_isreturned: false,
         },
       });
 
@@ -307,7 +309,7 @@ export class ReportAnalystAssignmentService {
   async returnCaseBetweenAnalyst(
     createReportAnalystAssignmentDto: ReportAnalystAssignmentDto,
     clientIp: string,
-    idAnalyst: number,
+    idAnalystCurrent: number,
   ): Promise<ReportAnalystAssignmentEntity> {
     const reportAssignmentFind =
       await this.reportAnalystAssignmentRepository.findOne({
@@ -315,13 +317,21 @@ export class ReportAnalystAssignmentService {
           ass_ra_validatedcase_id_fk:
             createReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
           ass_ra_status: true,
+          ass_ra_isreturned: false,
         },
       });
 
     if (!reportAssignmentFind) {
       throw new HttpException(
-        'No se encontró el reporte asignado a analista',
+        'No se encontró el caso asignado',
         HttpStatus.NO_CONTENT,
+      );
+    }
+
+    if (reportAssignmentFind.ass_ra_amountreturns === 2) {
+      throw new HttpException(
+        'No se pueden hacer más devoluciones para este caso.',
+        HttpStatus.CONFLICT,
       );
     }
 
@@ -339,7 +349,7 @@ export class ReportAnalystAssignmentService {
 
     if (analystAssignedFind) {
       throw new HttpException(
-        'El analista ya se encuentra asignado con ese reporte.',
+        'El analista que intentas devolver el caso ya se encuentra asignado con ese reporte.',
         HttpStatus.NO_CONTENT,
       );
     }
@@ -373,6 +383,7 @@ export class ReportAnalystAssignmentService {
       ...createReportAnalystAssignmentDto,
       ass_ra_uservalidator_id: reportAssignmentFind.ass_ra_uservalidator_id,
       ass_ra_days: reportAssignmentFind.ass_ra_days,
+      ass_ra_amountreturns: reportAssignmentFind.ass_ra_amountreturns += 1
     });
 
     const assigned = await this.reportAnalystAssignmentRepository.save(analyst);
@@ -393,7 +404,7 @@ export class ReportAnalystAssignmentService {
 
     await this.logService.createLog(
       assigned.ass_ra_validatedcase_id_fk,
-      idAnalyst,
+      idAnalystCurrent,
       clientIp,
       logReports.LOG_RETURN_CASE_ANALYST,
     );
@@ -446,6 +457,10 @@ export class ReportAnalystAssignmentService {
       statusBool: true,
     });
 
+    query.andWhere('raa.ass_ra_isreturned = :isReturnedBool', {
+      isReturnedBool: false,
+    });
+
     const caseReportsValidate = await query
       .orderBy('raa.createdAt', 'DESC')
       .getMany();
@@ -470,6 +485,7 @@ export class ReportAnalystAssignmentService {
     }
 
     where.ass_ra_status = true;
+    where.ass_ra_isreturned = false;
 
     const analystReporters = await this.reportAnalystAssignmentRepository.find({
       where,
@@ -494,7 +510,7 @@ export class ReportAnalystAssignmentService {
   ): Promise<ReportAnalystAssignmentEntity> {
     const analystReporter =
       await this.reportAnalystAssignmentRepository.findOne({
-        where: { id, ass_ra_status: true },
+        where: { id, ass_ra_status: true, ass_ra_isreturned: false },
         relations: {
           caseReportValidate: true,
           position: true,

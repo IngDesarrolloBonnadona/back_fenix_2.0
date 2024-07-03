@@ -37,16 +37,16 @@ export class ReportAnalystAssignmentController {
     );
   }
 
-  @Post('returnCaseBetweenAnalyst/:idAnalyst')
+  @Post('returnCaseBetweenAnalyst/:idAnalystCurrent')
   createReturnCaseBetweenAnalyst(
     @Body() createAnalystReporterDto: ReportAnalystAssignmentDto,
     @Ip() clientIp: string,
-    @Param('idAnalyst') idAnalyst: number,
+    @Param('idAnalystCurrent') idAnalystCurrent: number,
   ): Promise<ReportAnalystAssignment> {
     return this.reportAnalisysAssignmentService.returnCaseBetweenAnalyst(
       createAnalystReporterDto,
       clientIp,
-      idAnalyst,
+      idAnalystCurrent,
     );
   }
 
