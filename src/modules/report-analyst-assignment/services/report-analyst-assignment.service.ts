@@ -39,7 +39,7 @@ export class ReportAnalystAssignmentService {
     @InjectRepository(RoleEntity)
     private readonly roleRepository: Repository<RoleEntity>,
     @InjectRepository(RoleResponseTimeEntity)
-    private readonly roleResponseTime: Repository<RoleResponseTimeEntity>,
+    private readonly roleResponseTimeRepository: Repository<RoleResponseTimeEntity>,
     @InjectRepository(CaseTypeEntity)
     private readonly caseTypeRepository: Repository<CaseTypeEntity>,
     @InjectRepository(SeverityClasificationEntity)
@@ -131,7 +131,7 @@ export class ReportAnalystAssignmentService {
       );
     }
 
-    const findRoleResponseTime = await this.roleResponseTime.findOne({
+    const findRoleResponseTime = await this.roleResponseTimeRepository.findOne({
       where: {
         rest_r_role_id_fk: findIdRole.id,
         rest_r_severityclasif_id_fk:

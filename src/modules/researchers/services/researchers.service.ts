@@ -17,6 +17,14 @@ import { logReports } from 'src/enums/logs.enum';
 import { MovementReport as MovementReportEntity } from 'src/modules/movement-report/entities/movement-report.entity';
 import { movementReport } from 'src/enums/movement-report.enum';
 import { CaseReportValidate as CaseReportValidateEntity } from 'src/modules/case-report-validate/entities/case-report-validate.entity';
+import { CaseType as CaseTypeEntity } from 'src/modules/case-type/entities/case-type.entity';
+import { caseTypeReport } from 'src/enums/caseType-report.enum';
+import { SeverityClasification as SeverityClasificationEntity } from 'src/modules/severity-clasification/entities/severity-clasification.entity';
+import { severityClasification } from 'src/enums/severity-clasif.enum';
+import { Role as RoleEntity } from 'src/modules/role/entities/role.entity';
+import { userRoles } from 'src/enums/user-roles.enum';
+import { RoleResponseTime as RoleResponseTimeEntity } from 'src/modules/role-response-time/entities/role-response-time.entity';
+import { sentinelTime } from 'src/enums/sentinel-time.enum';
 
 @Injectable()
 export class ResearchersService {
@@ -27,6 +35,14 @@ export class ResearchersService {
     private readonly movementReportRepository: Repository<MovementReportEntity>,
     @InjectRepository(CaseReportValidateEntity)
     private readonly caseReportValidateRepository: Repository<CaseReportValidateEntity>,
+    @InjectRepository(CaseTypeEntity)
+    private readonly caseTypeRepository: Repository<CaseTypeEntity>,
+    @InjectRepository(SeverityClasificationEntity)
+    private readonly severityClasificationRepository: Repository<SeverityClasificationEntity>,
+    @InjectRepository(RoleEntity)
+    private readonly roleRepository: Repository<RoleEntity>,
+    @InjectRepository(RoleResponseTimeEntity)
+    private readonly roleResponseTimeRepository: Repository<RoleResponseTimeEntity>,
 
     private readonly httpResearchersService: HttpResearchersService,
     private readonly logService: LogService,
@@ -76,9 +92,68 @@ export class ResearchersService {
       );
     }
 
-    await this.caseReportValidateService.findOneReportValidate(
-      createResearcherDto.res_validatedcase_id_fk,
-    );
+    const findCaseValidate =
+      await this.caseReportValidateService.findOneReportValidate(
+        createResearcherDto.res_validatedcase_id_fk,
+      );
+
+    const findCaseType = await this.caseTypeRepository.findOne({
+      where: {
+        cas_t_name: caseTypeReport.ADVERSE_EVENT,
+        cas_t_status: true,
+      },
+    });
+
+    if (!findCaseType) {
+      throw new HttpException(
+        `El tipo de caso ${caseTypeReport.ADVERSE_EVENT} no existe.`,
+        HttpStatus.NO_CONTENT,
+      );
+    }
+
+    const findSeverityClasification =
+      await this.severityClasificationRepository.findOne({
+        where: {
+          sev_c_name: severityClasification.SERIOUS_SEVERITY,
+        },
+      });
+
+    if (!findSeverityClasification) {
+      throw new HttpException(
+        `La clasificacion de severidad ${severityClasification.SERIOUS_SEVERITY} no existe.`,
+        HttpStatus.NO_CONTENT,
+      );
+    }
+
+    const findIdRole = await this.roleRepository.findOne({
+      where: {
+        role_name: userRoles.INVESTIGATOR,
+        role_status: true,
+      },
+    });
+
+    if (!findIdRole) {
+      throw new HttpException(
+        `El rol ${userRoles.INVESTIGATOR} no existe.`,
+        HttpStatus.NO_CONTENT,
+      );
+    }
+
+    const findRoleResponseTime = await this.roleResponseTimeRepository.findOne({
+      where: {
+        rest_r_role_id_fk: findIdRole.id,
+        rest_r_severityclasif_id_fk:
+          findCaseValidate.val_cr_severityclasif_id_fk,
+        rest_r_status: true,
+      },
+    });
+
+    if (!findRoleResponseTime) {
+      throw new HttpException(
+        `El tiempo de respuesta del rol ${userRoles.INVESTIGATOR} no existe.`,
+        HttpStatus.NO_CONTENT,
+      );
+    }
 
     const movementReportFound = await this.movementReportRepository.findOne({
       where: {
@@ -109,9 +184,20 @@ export class ResearchersService {
       );
     }
 
+    let responseTime = findRoleResponseTime.rest_r_responsetime;
+
+    if (
+      findCaseType.id === findCaseValidate.val_cr_casetype_id_fk &&
+      findSeverityClasification.id ===
+        findCaseValidate.val_cr_severityclasif_id_fk
+    ) {
+      responseTime = sentinelTime.SENTINEL_TIME
+    }
+
     const research = this.researcherRepository.create({
       ...createResearcherDto,
       res_ra_useranalyst_id: idAnalyst,
+      res_ra_days: responseTime,
     });
 
     const assigned = await this.researcherRepository.save(research);
@@ -139,7 +225,10 @@ export class ResearchersService {
       .leftJoinAndSelect('crv.caseType', 'caseType')
       .leftJoinAndSelect('crv.event', 'event')
       .leftJoinAndSelect('crv.priority', 'priority')
-      .leftJoinAndSelect('crv.reportAnalystAssignment', 'reportAnalystAssignment')
+      .leftJoinAndSelect(
+        'crv.reportAnalystAssignment',
+        'reportAnalystAssignment',
+      )
       .where('crv.val_cr_validated = :validated', { validated: false });
 
     if (filingNumber) {
@@ -197,7 +286,10 @@ export class ResearchersService {
       .leftJoinAndSelect('crv.caseType', 'caseType')
       .leftJoinAndSelect('crv.event', 'event')
       .leftJoinAndSelect('crv.priority', 'priority')
-      .leftJoinAndSelect('crv.reportAnalystAssignment', 'reportAnalystAssignment')
+      .leftJoinAndSelect(
+        'crv.reportAnalystAssignment',
+        'reportAnalystAssignment',
+      )
       .where('crv.val_cr_validated = :validated', { validated: false });
 
     if (filingNumber) {
@@ -207,7 +299,9 @@ export class ResearchersService {
     }
 
     if (statusMovementId) {
-      query.andWhere('crv.val_cr_statusmovement_id_fk = :statusMovementId', { statusMovementId });
+      query.andWhere('crv.val_cr_statusmovement_id_fk = :statusMovementId', {
+        statusMovementId,
+      });
     }
 
     if (caseTypeId) {

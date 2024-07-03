@@ -8,12 +8,4 @@ export class CreateResearcherDto {
     @IsNotEmpty()
     @IsNumber()
     res_ra_userresearch_id: number;
-    
-    @IsNotEmpty()
-    @IsNumber()
-    res_ra_days: number
-
-    // @IsNotEmpty()
-    // @IsNumber()
-    // ass_ra_useranalyst_id: number;
 }
