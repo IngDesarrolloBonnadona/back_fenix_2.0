@@ -246,14 +246,14 @@ export class ReportAnalystAssignmentService {
       updateReportAnalystAssignmentDto.ass_ra_position_id_fk,
     );
 
-    const movementReportFound = await this.movementReportRepository.findOne({
+    const findMovementReport = await this.movementReportRepository.findOne({
       where: {
         mov_r_name: movementReport.REASSIGNMENT_ANALYST,
         mov_r_status: true,
       },
     });
 
-    if (!movementReportFound) {
+    if (!findMovementReport) {
       throw new HttpException(
         `El movimiento ${movementReport.REASSIGNMENT_ANALYST} no existe.`,
         HttpStatus.NO_CONTENT,
@@ -263,7 +263,7 @@ export class ReportAnalystAssignmentService {
     const updateStatusMovement = await this.caseReportValidateRepository.update(
       idCaseReportValidate,
       {
-        val_cr_statusmovement_id_fk: movementReportFound.id,
+        val_cr_statusmovement_id_fk: findMovementReport.id,
       },
     );
 

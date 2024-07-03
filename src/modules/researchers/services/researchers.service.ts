@@ -25,6 +25,7 @@ import { Role as RoleEntity } from 'src/modules/role/entities/role.entity';
 import { userRoles } from 'src/enums/user-roles.enum';
 import { RoleResponseTime as RoleResponseTimeEntity } from 'src/modules/role-response-time/entities/role-response-time.entity';
 import { sentinelTime } from 'src/enums/sentinel-time.enum';
+import { UpdateResearcherDto } from '../dto/update-researcher.dto';
 
 @Injectable()
 export class ResearchersService {
@@ -191,7 +192,7 @@ export class ResearchersService {
       findSeverityClasification.id ===
         findCaseValidate.val_cr_severityclasif_id_fk
     ) {
-      responseTime = sentinelTime.SENTINEL_TIME
+      responseTime = sentinelTime.SENTINEL_TIME;
     }
 
     const research = this.researcherRepository.create({
@@ -346,6 +347,88 @@ export class ResearchersService {
       );
     }
     return research;
+  }
+
+  async reAssingInvestigator(
+    updateResearcherDto: UpdateResearcherDto,
+    clientIp: string,
+    idAnalyst: number,
+    idCaseReportValidate: string,
+  ) {
+    const findResearcherAssined = await this.researcherRepository.findOne({
+      where: {
+        res_validatedcase_id_fk: idCaseReportValidate,
+        res_status: true,
+      },
+    });
+
+    if (!findResearcherAssined) {
+      throw new HttpException(
+        'No se encontró el reporte asignado a investigador.',
+        HttpStatus.NO_CONTENT,
+      );
+    }
+
+    await this.caseReportValidateService.findOneReportValidate(
+      idCaseReportValidate,
+    );
+
+    const findMovementReport = await this.movementReportRepository.findOne({
+      where: {
+        mov_r_name: movementReport.REASSIGNMENT_INVESTIGATOR,
+        mov_r_status: true,
+      },
+    });
+
+    if (!findMovementReport) {
+      throw new HttpException(
+        `El movimiento ${movementReport.REASSIGNMENT_INVESTIGATOR} no existe.`,
+        HttpStatus.NO_CONTENT,
+      );
+    }
+
+    const updateStatusMovement = await this.caseReportValidateRepository.update(
+      idCaseReportValidate,
+      {
+        val_cr_statusmovement_id_fk: findMovementReport.id,
+      },
+    );
+
+    if (updateStatusMovement.affected === 0) {
+      throw new HttpException(
+        `No se pudo actualizar el moviemiento del reporte.`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    if (findResearcherAssined) {
+      const result = await this.researcherRepository.update(
+        findResearcherAssined.id,
+        {
+          ...updateResearcherDto,
+          res_ra_useranalyst_id: idAnalyst,
+        },
+      );
+
+      if (result.affected === 0) {
+        return new HttpException(
+          `No se pudo reasignar el analista`,
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
+    }
+
+    await this.logService.createLog(
+      idCaseReportValidate,
+      idAnalyst,
+      clientIp,
+      logReports.LOG_REASSIGNMENT_INVESTIGATOR,
+    );
+
+    return new HttpException(
+      `Investigador reasignado correctamente!`,
+      HttpStatus.ACCEPTED,
+    );
   }
 
   async deleteAssignedResearcher(id: number) {
