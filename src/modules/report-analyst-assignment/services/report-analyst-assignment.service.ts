@@ -246,6 +246,23 @@ export class ReportAnalystAssignmentService {
       updateReportAnalystAssignmentDto.ass_ra_position_id_fk,
     );
 
+    if (reportAssignmentFind) {
+      const result = await this.reportAnalystAssignmentRepository.update(
+        reportAssignmentFind.id,
+        {
+          ...updateReportAnalystAssignmentDto,
+          ass_ra_uservalidator_id: idValidator,
+        },
+      );
+
+      if (result.affected === 0) {
+        return new HttpException(
+          `No se pudo reasignar el analista`,
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
+    }
+
     const findMovementReport = await this.movementReportRepository.findOne({
       where: {
         mov_r_name: movementReport.REASSIGNMENT_ANALYST,
@@ -272,23 +289,6 @@ export class ReportAnalystAssignmentService {
         `No se pudo actualizar el moviemiento del reporte.`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
-    }
-
-    if (reportAssignmentFind) {
-      const result = await this.reportAnalystAssignmentRepository.update(
-        reportAssignmentFind.id,
-        {
-          ...updateReportAnalystAssignmentDto,
-          ass_ra_uservalidator_id: idValidator,
-        },
-      );
-
-      if (result.affected === 0) {
-        return new HttpException(
-          `No se pudo reasignar el analista`,
-          HttpStatus.INTERNAL_SERVER_ERROR,
-        );
-      }
     }
 
     await this.logService.createLog(
@@ -377,13 +377,6 @@ export class ReportAnalystAssignmentService {
 
     const assigned = await this.reportAnalystAssignmentRepository.save(analyst);
 
-    await this.logService.createLog(
-      assigned.ass_ra_validatedcase_id_fk,
-      idAnalyst,
-      clientIp,
-      logReports.LOG_RETURN_CASE_ANALYST,
-    );
-
     const updateStatusMovement = await this.caseReportValidateRepository.update(
       assigned.ass_ra_validatedcase_id_fk,
       {
@@ -397,6 +390,13 @@ export class ReportAnalystAssignmentService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
+
+    await this.logService.createLog(
+      assigned.ass_ra_validatedcase_id_fk,
+      idAnalyst,
+      clientIp,
+      logReports.LOG_RETURN_CASE_ANALYST,
+    );
 
     return assigned;
   }
