@@ -9,6 +9,7 @@ import {
   Ip,
   Query,
   HttpException,
+  Patch,
 } from '@nestjs/common';
 import { ReportAnalystAssignmentService } from '../services/report-analyst-assignment.service';
 import { ReportAnalystAssignmentDto } from '../dto/analyst-assignment.dto';
@@ -36,16 +37,16 @@ export class ReportAnalystAssignmentController {
     );
   }
 
-  @Post('returnCaseBetweenAnalyst/:idAnalyst')
+  @Post('returnCaseBetweenAnalyst/:idAnalystCurrent')
   createReturnCaseBetweenAnalyst(
     @Body() createAnalystReporterDto: ReportAnalystAssignmentDto,
     @Ip() clientIp: string,
-    @Param('idAnalyst') idAnalyst: number,
+    @Param('idAnalystCurrent') idAnalystCurrent: number,
   ): Promise<ReportAnalystAssignment> {
     return this.reportAnalisysAssignmentService.returnCaseBetweenAnalyst(
       createAnalystReporterDto,
       clientIp,
-      idAnalyst,
+      idAnalystCurrent,
     );
   }
 
@@ -87,7 +88,7 @@ export class ReportAnalystAssignmentController {
     );
   }
 
-  @Put('updateReAssignedAnalyst/:idValidator/:idCaseReportValidate')
+  @Patch('updateReAssignedAnalyst/:idValidator/:idCaseReportValidate')
   updateReAssignedAnalyst(
     @Body() updateReportAnalystAssignmentDto: UpdateReportAnalystAssignmentDto,
     @Ip() clientIp: string,

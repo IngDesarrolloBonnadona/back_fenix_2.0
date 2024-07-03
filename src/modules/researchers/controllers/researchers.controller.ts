@@ -6,6 +6,7 @@ import {
   HttpException,
   Ip,
   Param,
+  Patch,
   Post,
   Query,
 } from '@nestjs/common';
@@ -14,6 +15,7 @@ import { FilterResearcherDto } from '../dto/filter-researcher.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateResearcherDto } from '../dto/create-researcher.dto';
 import { Researcher } from '../entities/researchers.entity';
+import { UpdateResearcherDto } from '../dto/update-researcher.dto';
 
 @ApiTags('researchers')
 @Controller('researchers')
@@ -81,6 +83,34 @@ export class ResearchersController {
       createResearcherDto,
       clientIp,
       idAnalyst,
+    );
+  }
+
+  @Patch('updateReAssignedResearch/:idAnalyst/:idCaseReportValidate')
+  updateReAssignedResearch(
+    @Body() updateResearcherDto: UpdateResearcherDto,
+    @Ip() clientIp: string,
+    @Param('idAnalyst') idAnalyst: number,
+    @Param('idCaseReportValidate') idCaseReportValidate: string,
+  ) {
+    return this.researchersService.reAssingResearcher(
+      updateResearcherDto,
+      clientIp,
+      idAnalyst,
+      idCaseReportValidate,
+    );
+  }
+
+  @Patch('updateReturnCaseToAnalyst/:idResearcher/:idCaseReportValidate')
+  updateReturnCaseToAnalyst(
+    @Param('idResearcher') idResearcher: number,
+    @Param('idCaseReportValidate') idCaseReportValidate: string,
+    @Ip() clientIp: string,
+  ) {
+    return this.researchersService.returnCaseToAnalyst(
+      idCaseReportValidate,
+      clientIp,
+      idResearcher,
     );
   }
 

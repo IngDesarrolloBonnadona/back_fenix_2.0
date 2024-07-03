@@ -25,6 +25,7 @@ import { CaseType as CaseTypeEntity } from 'src/modules/case-type/entities/case-
 import { caseTypeReport } from 'src/enums/caseType-report.enum';
 import { SeverityClasification as SeverityClasificationEntity } from 'src/modules/severity-clasification/entities/severity-clasification.entity';
 import { severityClasification } from 'src/enums/severity-clasif.enum';
+import { sentinelTime } from '../../../enums/sentinel-time.enum';
 
 @Injectable()
 export class ReportAnalystAssignmentService {
@@ -38,7 +39,7 @@ export class ReportAnalystAssignmentService {
     @InjectRepository(RoleEntity)
     private readonly roleRepository: Repository<RoleEntity>,
     @InjectRepository(RoleResponseTimeEntity)
-    private readonly roleResponseTime: Repository<RoleResponseTimeEntity>,
+    private readonly roleResponseTimeRepository: Repository<RoleResponseTimeEntity>,
     @InjectRepository(CaseTypeEntity)
     private readonly caseTypeRepository: Repository<CaseTypeEntity>,
     @InjectRepository(SeverityClasificationEntity)
@@ -83,6 +84,7 @@ export class ReportAnalystAssignmentService {
           ass_ra_validatedcase_id_fk:
             createReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
           ass_ra_status: true,
+          ass_ra_isreturned: false,
         },
       });
 
@@ -130,7 +132,7 @@ export class ReportAnalystAssignmentService {
       );
     }
 
-    const findRoleResponseTime = await this.roleResponseTime.findOne({
+    const findRoleResponseTime = await this.roleResponseTimeRepository.findOne({
       where: {
         rest_r_role_id_fk: findIdRole.id,
         rest_r_severityclasif_id_fk:
@@ -174,18 +176,20 @@ export class ReportAnalystAssignmentService {
       );
     }
 
+    let responseTime = findRoleResponseTime.rest_r_responsetime;
+
     if (
       findCaseType.id === caseValidateFound.val_cr_casetype_id_fk &&
       findSeverityClasification.id ===
         caseValidateFound.val_cr_severityclasif_id_fk
     ) {
-      //agregar validacion
+      responseTime = sentinelTime.SENTINEL_TIME;
     }
 
     const analyst = this.reportAnalystAssignmentRepository.create({
       ...createReportAnalystAssignmentDto,
       ass_ra_uservalidator_id: idValidator,
-      ass_ra_days: findRoleResponseTime.rest_r_responsetime,
+      ass_ra_days: responseTime,
     });
 
     const assigned = await this.reportAnalystAssignmentRepository.save(analyst);
@@ -225,6 +229,7 @@ export class ReportAnalystAssignmentService {
         where: {
           ass_ra_validatedcase_id_fk: idCaseReportValidate,
           ass_ra_status: true,
+          ass_ra_isreturned: false,
         },
       });
 
@@ -243,34 +248,6 @@ export class ReportAnalystAssignmentService {
       updateReportAnalystAssignmentDto.ass_ra_position_id_fk,
     );
 
-    const movementReportFound = await this.movementReportRepository.findOne({
-      where: {
-        mov_r_name: movementReport.REASSIGNMENT_ANALYST,
-        mov_r_status: true,
-      },
-    });
-
-    if (!movementReportFound) {
-      throw new HttpException(
-        `El movimiento ${movementReport.REASSIGNMENT_ANALYST} no existe.`,
-        HttpStatus.NO_CONTENT,
-      );
-    }
-
-    const updateStatusMovement = await this.caseReportValidateRepository.update(
-      idCaseReportValidate,
-      {
-        val_cr_statusmovement_id_fk: movementReportFound.id,
-      },
-    );
-
-    if (updateStatusMovement.affected === 0) {
-      throw new HttpException(
-        `No se pudo actualizar el moviemiento del reporte.`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-
     if (reportAssignmentFind) {
       const result = await this.reportAnalystAssignmentRepository.update(
         reportAssignmentFind.id,
@@ -286,6 +263,34 @@ export class ReportAnalystAssignmentService {
           HttpStatus.INTERNAL_SERVER_ERROR,
         );
       }
+    }
+
+    const findMovementReport = await this.movementReportRepository.findOne({
+      where: {
+        mov_r_name: movementReport.REASSIGNMENT_ANALYST,
+        mov_r_status: true,
+      },
+    });
+
+    if (!findMovementReport) {
+      throw new HttpException(
+        `El movimiento ${movementReport.REASSIGNMENT_ANALYST} no existe.`,
+        HttpStatus.NO_CONTENT,
+      );
+    }
+
+    const updateStatusMovement = await this.caseReportValidateRepository.update(
+      idCaseReportValidate,
+      {
+        val_cr_statusmovement_id_fk: findMovementReport.id,
+      },
+    );
+
+    if (updateStatusMovement.affected === 0) {
+      throw new HttpException(
+        `No se pudo actualizar el moviemiento del reporte.`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
 
     await this.logService.createLog(
@@ -304,7 +309,7 @@ export class ReportAnalystAssignmentService {
   async returnCaseBetweenAnalyst(
     createReportAnalystAssignmentDto: ReportAnalystAssignmentDto,
     clientIp: string,
-    idAnalyst: number,
+    idAnalystCurrent: number,
   ): Promise<ReportAnalystAssignmentEntity> {
     const reportAssignmentFind =
       await this.reportAnalystAssignmentRepository.findOne({
@@ -312,13 +317,21 @@ export class ReportAnalystAssignmentService {
           ass_ra_validatedcase_id_fk:
             createReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
           ass_ra_status: true,
+          ass_ra_isreturned: false,
         },
       });
 
     if (!reportAssignmentFind) {
       throw new HttpException(
-        'No se encontró el reporte asignado a analista',
+        'No se encontró el caso asignado',
         HttpStatus.NO_CONTENT,
+      );
+    }
+
+    if (reportAssignmentFind.ass_ra_amountreturns === 2) {
+      throw new HttpException(
+        'No se pueden hacer más devoluciones para este caso.',
+        HttpStatus.CONFLICT,
       );
     }
 
@@ -336,7 +349,7 @@ export class ReportAnalystAssignmentService {
 
     if (analystAssignedFind) {
       throw new HttpException(
-        'El analista ya se encuentra asignado con ese reporte.',
+        'El analista que intentas devolver el caso ya se encuentra asignado con ese reporte.',
         HttpStatus.NO_CONTENT,
       );
     }
@@ -370,16 +383,10 @@ export class ReportAnalystAssignmentService {
       ...createReportAnalystAssignmentDto,
       ass_ra_uservalidator_id: reportAssignmentFind.ass_ra_uservalidator_id,
       ass_ra_days: reportAssignmentFind.ass_ra_days,
+      ass_ra_amountreturns: reportAssignmentFind.ass_ra_amountreturns += 1
     });
 
     const assigned = await this.reportAnalystAssignmentRepository.save(analyst);
-
-    await this.logService.createLog(
-      assigned.ass_ra_validatedcase_id_fk,
-      idAnalyst,
-      clientIp,
-      logReports.LOG_RETURN_CASE_ANALYST,
-    );
 
     const updateStatusMovement = await this.caseReportValidateRepository.update(
       assigned.ass_ra_validatedcase_id_fk,
@@ -394,6 +401,13 @@ export class ReportAnalystAssignmentService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
+
+    await this.logService.createLog(
+      assigned.ass_ra_validatedcase_id_fk,
+      idAnalystCurrent,
+      clientIp,
+      logReports.LOG_RETURN_CASE_ANALYST,
+    );
 
     return assigned;
   }
@@ -443,6 +457,10 @@ export class ReportAnalystAssignmentService {
       statusBool: true,
     });
 
+    query.andWhere('raa.ass_ra_isreturned = :isReturnedBool', {
+      isReturnedBool: false,
+    });
+
     const caseReportsValidate = await query
       .orderBy('raa.createdAt', 'DESC')
       .getMany();
@@ -467,6 +485,7 @@ export class ReportAnalystAssignmentService {
     }
 
     where.ass_ra_status = true;
+    where.ass_ra_isreturned = false;
 
     const analystReporters = await this.reportAnalystAssignmentRepository.find({
       where,
@@ -491,7 +510,7 @@ export class ReportAnalystAssignmentService {
   ): Promise<ReportAnalystAssignmentEntity> {
     const analystReporter =
       await this.reportAnalystAssignmentRepository.findOne({
-        where: { id, ass_ra_status: true },
+        where: { id, ass_ra_status: true, ass_ra_isreturned: false },
         relations: {
           caseReportValidate: true,
           position: true,
