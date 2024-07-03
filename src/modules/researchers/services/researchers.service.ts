@@ -177,8 +177,7 @@ export class ResearchersService {
     const updateStatusMovement = await this.caseReportValidateRepository.update(
       createResearcherDto.res_validatedcase_id_fk,
       {
-        val_cr_statusmovement_id_fk: movementReportFound.id,
-        val_cr_status: false,
+        val_cr_statusmovement_id_fk: movementReportFound.id
       },
     );
 
