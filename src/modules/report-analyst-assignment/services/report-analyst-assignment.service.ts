@@ -25,6 +25,7 @@ import { CaseType as CaseTypeEntity } from 'src/modules/case-type/entities/case-
 import { caseTypeReport } from 'src/enums/caseType-report.enum';
 import { SeverityClasification as SeverityClasificationEntity } from 'src/modules/severity-clasification/entities/severity-clasification.entity';
 import { severityClasification } from 'src/enums/severity-clasif.enum';
+import { sentinelTime } from '../../../enums/sentinel-time.enum';
 
 @Injectable()
 export class ReportAnalystAssignmentService {
@@ -174,18 +175,20 @@ export class ReportAnalystAssignmentService {
       );
     }
 
+    let responseTime = findRoleResponseTime.rest_r_responsetime;
+
     if (
       findCaseType.id === caseValidateFound.val_cr_casetype_id_fk &&
       findSeverityClasification.id ===
         caseValidateFound.val_cr_severityclasif_id_fk
     ) {
-      //agregar validacion
+      responseTime = sentinelTime.SENTINEL_TIME;
     }
 
     const analyst = this.reportAnalystAssignmentRepository.create({
       ...createReportAnalystAssignmentDto,
       ass_ra_uservalidator_id: idValidator,
-      ass_ra_days: findRoleResponseTime.rest_r_responsetime,
+      ass_ra_days: responseTime,
     });
 
     const assigned = await this.reportAnalystAssignmentRepository.save(analyst);
