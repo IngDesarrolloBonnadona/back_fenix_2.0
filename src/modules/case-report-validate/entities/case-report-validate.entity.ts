@@ -9,7 +9,6 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -235,7 +234,7 @@ export class CaseReportValidate {
   @OneToMany(() => Synergy, (synergy) => synergy.caseReportValidate)
   synergy: Synergy[];
 
-  @OneToOne(() => Researcher, (researcher) => researcher.caseReportValidate)
+  @OneToMany(() => Researcher, (researcher) => researcher.caseReportValidate)
   researcher: Researcher[];
 
   @OneToMany(() => ObservationReturnCase, (observationReturnCase) => observationReturnCase.caseReportValidate)

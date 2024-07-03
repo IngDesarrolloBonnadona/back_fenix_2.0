@@ -7,7 +7,6 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -21,13 +20,16 @@ export class Researcher {
   res_validatedcase_id_fk: string;
 
   @Column()
-  res_ra_useranalyst_id: number;
+  res_useranalyst_id: number;
 
   @Column()
-  res_ra_userresearch_id: number;
+  res_userresearch_id: number;
 
   @Column()
-  res_ra_days: number
+  res_days: number;
+
+  @Column({ default: false })
+  res_isreturned: boolean;
 
   @Column({ default: true })
   res_status: boolean;
@@ -41,7 +43,7 @@ export class Researcher {
   @DeleteDateColumn()
   deletedAt: Date;
 
-  @OneToOne(
+  @ManyToOne(
     () => CaseReportValidate,
     (caseReportValidate) => caseReportValidate.researcher,
   )
