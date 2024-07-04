@@ -257,6 +257,7 @@ export class ReportAnalystAssignmentService {
         {
           ...updateReportAnalystAssignmentDto,
           ass_ra_uservalidator_id: idValidator,
+          ass_ra_amountreturns: 0,
         },
       );
 
@@ -415,7 +416,7 @@ export class ReportAnalystAssignmentService {
     );
 
     return new HttpException(
-      `EL analista fue reasignado correctamente!`,
+      `EL caso fue devuelto a otro analista correctamente!`,
       HttpStatus.CREATED,
     );
   }
