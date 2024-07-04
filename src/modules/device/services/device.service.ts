@@ -37,10 +37,10 @@ export class DeviceService {
     }
   }
 
-  async createDevice(createDeviceDto: CreateDeviceDto): Promise<DeviceEntity> {
-    const device = this.deviceRepository.create(createDeviceDto);
-    return await this.deviceRepository.save(device);
-  }
+  // async createDevice(createDeviceDto: CreateDeviceDto): Promise<DeviceEntity> {
+  //   const device = this.deviceRepository.create(createDeviceDto);
+  //   return await this.deviceRepository.save(device);
+  // }
 
   async findAllDevices(): Promise<DeviceEntity[]> {
     const devices = await this.deviceRepository.find({

@@ -23,7 +23,7 @@ export class PositionController {
   @Post('/createPosition')
   createPosition(
     @Body() createPositionDto: CreatePositionDto,
-  ): Promise<Position> {
+  ): Promise<HttpException> {
     return this.positionService.createPosition(createPositionDto);
   }
 

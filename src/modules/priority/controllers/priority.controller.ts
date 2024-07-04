@@ -23,7 +23,7 @@ export class PriorityController {
   @Post('/createPriority')
   createPriority(
     @Body() createPriorityDto: CreatePriorityDto,
-  ): Promise<Priority> {
+  ): Promise<HttpException> {
     return this.priorityService.createPriority(createPriorityDto);
   }
 

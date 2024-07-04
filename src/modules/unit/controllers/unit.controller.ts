@@ -11,7 +11,7 @@ export class UnitController {
   constructor(private readonly unitService: UnitService) {}
 
   @Post('/createUnit')
-  createUnit(@Body() createUnitDto: CreateUnitDto): Promise<Unit> {
+  createUnit(@Body() createUnitDto: CreateUnitDto): Promise<HttpException> {
     return this.unitService.createUnit(createUnitDto);
   }
 

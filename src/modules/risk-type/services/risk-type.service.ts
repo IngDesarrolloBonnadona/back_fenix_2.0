@@ -17,11 +17,11 @@ export class RiskTypeService {
     private readonly riskTypeRepository: Repository<RiskTypeEntity>,
   ) {}
 
-  async createRiskType(createRiskTypeDto: CreateRiskTypeDto): Promise<RiskTypeEntity> {
+  async createRiskType(createRiskTypeDto: CreateRiskTypeDto) {
     const FindRiskType = await this.riskTypeRepository.findOne({
       where: {
         ris_t_name: createRiskTypeDto.ris_t_name,
-        ris_t_status: true
+        ris_t_status: true,
       },
     });
 
@@ -33,14 +33,20 @@ export class RiskTypeService {
     }
 
     const riskType = this.riskTypeRepository.create(createRiskTypeDto);
-    return await this.riskTypeRepository.save(riskType);
+
+    await this.riskTypeRepository.save(riskType);
+
+    return new HttpException(
+      `¡El tipo de riesgo ${riskType.ris_t_name} se creó correctamente!`,
+      HttpStatus.CREATED,
+    );
   }
 
-  async findAllRiskTypes(): Promise<RiskTypeEntity[]> {
+  async findAllRiskTypes() {
     const riskTypes = await this.riskTypeRepository.find({
       where: {
         ris_t_status: true,
-      }
+      },
       // relations: {
       //   caseReportValidate: true,
       // },
@@ -56,7 +62,7 @@ export class RiskTypeService {
     return riskTypes;
   }
 
-  async findOneRiskType(id: number): Promise<RiskTypeEntity> {
+  async findOneRiskType(id: number) {
     const riskType = await this.riskTypeRepository.findOne({
       where: { id, ris_t_status: true },
       // relations: {

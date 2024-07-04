@@ -20,7 +20,7 @@ export class UnitService {
     private readonly serviceService: ServiceService,
   ) {}
 
-  async createUnit(createUnitDto: CreateUnitDto): Promise<UnitEntity> {
+  async createUnit(createUnitDto: CreateUnitDto) {
     const FindUnit = await this.unitRepository.findOne({
       where: {
         unit_name: createUnitDto.unit_name,
@@ -39,10 +39,15 @@ export class UnitService {
     }
 
     const unit = this.unitRepository.create(createUnitDto);
-    return await this.unitRepository.save(unit);
+    await this.unitRepository.save(unit);
+    
+    return new HttpException(
+      `¡La unidad ${unit.unit_name} se creó correctamente!`,
+      HttpStatus.CREATED,
+    ); 
   }
 
-  async findAllUnits(): Promise<UnitEntity[]> {
+  async findAllUnits() {
     const units = await this.unitRepository.find({
       where: {
         unit_status: true,
@@ -63,7 +68,7 @@ export class UnitService {
     return units;
   }
 
-  async findOneUnit(id: number): Promise<UnitEntity> {
+  async findOneUnit(id: number) {
     const unit = await this.unitRepository.findOne({
       where: { id, unit_status: true },
       // relations: {

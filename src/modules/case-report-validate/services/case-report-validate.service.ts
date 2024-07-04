@@ -322,16 +322,10 @@ export class CaseReportValidateService {
 
       await queryRunner.commitTransaction();
 
-      const reportData = {
-        caseReportValidate,
-        createdMedicine: createReportValDto.medicines,
-        createdDevice: createReportValDto.devices,
-      };
-
-      return {
-        message: `Reporte ${caseReportValidate.val_cr_filingnumber} se validó satisfactoriamente.`,
-        data: reportData,
-      };
+      return new HttpException(
+        `¡Reporte ${caseReportValidate.val_cr_filingnumber} se validó satisfactoriamente.!`,
+        HttpStatus.CREATED,
+      );
     } catch (error) {
       await queryRunner.rollbackTransaction();
 

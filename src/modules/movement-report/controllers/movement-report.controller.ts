@@ -11,7 +11,7 @@ export class MovementReportController {
   constructor(private readonly movementReportService: MovementReportService) {}
 
   @Post('/createMovementReport')
-  createMovementReport(@Body() createMovementReportDto: CreateMovementReportDto): Promise<MovementReport> {
+  createMovementReport(@Body() createMovementReportDto: CreateMovementReportDto): Promise<HttpException> {
     return this.movementReportService.createMovementReport(createMovementReportDto);
   }
 

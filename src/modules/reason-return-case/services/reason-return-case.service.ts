@@ -40,7 +40,12 @@ export class ReasonReturnCaseService {
     const reasonReturnCase = this.reasonReturnCaseRepository.create(
       createReasonReturnCaseDto,
     );
-    return await this.reasonReturnCaseRepository.save(reasonReturnCase);
+    await this.reasonReturnCaseRepository.save(reasonReturnCase);
+
+    return new HttpException(
+      `¡El motivo de devolución ${reasonReturnCase.rec_r_cause} se creó correctamente!`,
+      HttpStatus.CREATED,
+    );
   }
 
   async findAllReasonReturnCases() {

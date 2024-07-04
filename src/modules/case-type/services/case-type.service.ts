@@ -2,7 +2,6 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
-  NotFoundException,
 } from '@nestjs/common';
 import { CreateCaseTypeDto } from '../dto/create-case-type.dto';
 import { UpdateCaseTypeDto } from '../dto/update-case-type.dto';
@@ -19,7 +18,7 @@ export class CaseTypeService {
 
   async createCaseType(
     createCaseTypeDto: CreateCaseTypeDto,
-  ): Promise<CaseTypeEntity> {
+  ) {
     const findCaseType = await this.caseTypeRepository.findOne({
       where: {
         cas_t_name: createCaseTypeDto.cas_t_name,
@@ -34,10 +33,15 @@ export class CaseTypeService {
       );
     }
     const caseType = this.caseTypeRepository.create(createCaseTypeDto);
-    return await this.caseTypeRepository.save(caseType);
+    await this.caseTypeRepository.save(caseType);
+    
+    return new HttpException(
+      `¡el tipo de caso ${caseType.cas_t_name} se creó correctamente!`,
+      HttpStatus.CREATED,
+    );
   }
 
-  async findAllCaseTypes(): Promise<CaseTypeEntity[]> {
+  async findAllCaseTypes() {
     const caseTypes = await this.caseTypeRepository.find({
       where: { cas_t_status: true }
       // relations: {
@@ -56,7 +60,7 @@ export class CaseTypeService {
     return caseTypes;
   }
 
-  async findOneCaseType(id: number): Promise<CaseTypeEntity> {
+  async findOneCaseType(id: number) {
     const caseType = await this.caseTypeRepository.findOne({
       where: { id, cas_t_status: true },
       // relations: {

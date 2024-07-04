@@ -73,12 +73,12 @@ export class ResearchersController {
     );
   }
 
-  @Post('assingResearcher/:idAnalyst')
-  createResearch(
+  @Post('createAssingResearcher/:idAnalyst')
+  createAssingResearcher(
     @Body() createResearcherDto: CreateResearcherDto,
     @Ip() clientIp: string,
     @Param('idAnalyst') idAnalyst: number,
-  ) {
+  ): Promise<HttpException> {
     return this.researchersService.assingResearcher(
       createResearcherDto,
       clientIp,
@@ -92,7 +92,7 @@ export class ResearchersController {
     @Ip() clientIp: string,
     @Param('idAnalyst') idAnalyst: number,
     @Param('idCaseReportValidate') idCaseReportValidate: string,
-  ) {
+  ): Promise<HttpException> {
     return this.researchersService.reAssingResearcher(
       updateResearcherDto,
       clientIp,
@@ -106,7 +106,7 @@ export class ResearchersController {
     @Param('idResearcher') idResearcher: number,
     @Param('idCaseReportValidate') idCaseReportValidate: string,
     @Ip() clientIp: string,
-  ) {
+  ): Promise<HttpException> {
     return this.researchersService.returnCaseToAnalyst(
       idCaseReportValidate,
       clientIp,

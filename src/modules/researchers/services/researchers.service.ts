@@ -81,7 +81,7 @@ export class ResearchersService {
     createResearcherDto: CreateResearcherDto,
     clientIp: string,
     idAnalyst: number,
-  ): Promise<ResearcherEntity> {
+  ) {
     const reportAssignmentFind = await this.researcherRepository.findOne({
       where: {
         res_validatedcase_id_fk: createResearcherDto.res_validatedcase_id_fk,
@@ -213,7 +213,10 @@ export class ResearchersService {
       logReports.LOG_ASSIGNMENT_RESEARCHER,
     );
 
-    return assigned;
+    return new HttpException(
+      `¡El investigador se asignó correctamente!`,
+      HttpStatus.CREATED,
+    );
   }
 
   async summaryReportsMyAssignedCases(
@@ -222,7 +225,7 @@ export class ResearchersService {
     caseTypeId?: number,
     eventId?: number,
     priorityId?: number,
-  ): Promise<CaseReportValidateEntity[]> {
+  ) {
     const query = this.caseReportValidateRepository
       .createQueryBuilder('crv')
       .innerJoinAndSelect('crv.researcher', 'res')
@@ -287,7 +290,7 @@ export class ResearchersService {
     caseTypeId?: number,
     eventId?: number,
     priorityId?: number,
-  ): Promise<CaseReportValidateEntity[]> {
+  ) {
     const query = this.caseReportValidateRepository
       .createQueryBuilder('crv')
       .innerJoinAndSelect('crv.researcher', 'res')
@@ -346,7 +349,7 @@ export class ResearchersService {
     return caseReportsValidate;
   }
 
-  async findOneAssignedResearch(id: number): Promise<ResearcherEntity> {
+  async findOneAssignedResearch(id: number) {
     const research = await this.researcherRepository.findOne({
       where: { id, res_status: true, res_isreturned: false },
     });

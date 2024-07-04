@@ -67,7 +67,7 @@ export class CaseReportOriginalService {
   async createReportOriginal(
     createReportOriDto: any,
     clientIp: string,
-  ): Promise<any> {
+  ) {
     await OriDtoValidator(createReportOriDto, this.caseTypeRepository);
 
     const queryRunner = this.dataSource.createQueryRunner();
@@ -250,18 +250,10 @@ export class CaseReportOriginalService {
 
       await queryRunner.commitTransaction(); // registro
 
-      const reportData = {
-        caseReportOriginal,
-        caseReportValidate,
-        createdMedicine: createReportOriDto.medicines,
-        createdDevice: createReportOriDto.devices,
-        log,
-      };
-
-      return {
-        message: `Reporte ${caseReportOriginal.ori_cr_filingnumber} se creó satisfactoriamente.`,
-        data: reportData,
-      };
+      return new HttpException(
+        `¡Has generado tu reporte ${caseReportOriginal.ori_cr_filingnumber} exitosamente.!`,
+        HttpStatus.CREATED,
+      );
     } catch (error) {
       await queryRunner.rollbackTransaction();
 
@@ -274,7 +266,7 @@ export class CaseReportOriginalService {
     }
   }
 
-  async findAllReportsOriginal(): Promise<CaseReportOriginalEntity[]> {
+  async findAllReportsOriginal() {
     const caseReportsOriginal = await this.caseReportOriginalRepository.find({
       relations: {
         caseReportValidate: true,
@@ -305,7 +297,7 @@ export class CaseReportOriginalService {
     return caseReportsOriginal;
   }
 
-  async findOneReportOriginal(id: string): Promise<CaseReportOriginalEntity> {
+  async findOneReportOriginal(id: string) {
     const caseReportsOriginal = await this.caseReportOriginalRepository.findOne(
       {
         where: { id },

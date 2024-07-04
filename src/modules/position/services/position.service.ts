@@ -17,7 +17,7 @@ export class PositionService {
 
   async createPosition(
     createPositionDto: CreatePositionDto,
-  ): Promise<PositionEntity> {
+  ) {
     const FindPosition = await this.positionRepository.findOne({
       where: {
         pos_name: createPositionDto.pos_name,
@@ -32,7 +32,12 @@ export class PositionService {
       );
     }
     const position = this.positionRepository.create(createPositionDto);
-    return await this.positionRepository.save(position);
+    await this.positionRepository.save(position);
+    
+    return new HttpException(
+      `¡La posición ${position.pos_name} se creó correctamente!`,
+      HttpStatus.CREATED,
+    ); 
   }
 
   async synchronizePositions() {
@@ -76,7 +81,7 @@ export class PositionService {
     return createPosition.length;
   }
 
-  async findAllPosition(): Promise<PositionEntity[]> {
+  async findAllPosition() {
     const positions = await this.positionRepository.find({
       where: { pos_enabled: true },
     });
@@ -91,7 +96,7 @@ export class PositionService {
     return positions;
   }
 
-  async findOnePosition(id: number): Promise<PositionEntity> {
+  async findOnePosition(id: number) {
     const position = await this.positionRepository.findOne({
       where: { id, pos_enabled: true },
     });

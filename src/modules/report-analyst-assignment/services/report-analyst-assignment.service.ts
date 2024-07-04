@@ -215,7 +215,10 @@ export class ReportAnalystAssignmentService {
       );
     }
 
-    return assigned;
+    return new HttpException(
+      `¡El analista se asignó correctamente!`,
+      HttpStatus.CREATED,
+    );
   }
 
   async reAssingAnalyst(
@@ -310,7 +313,7 @@ export class ReportAnalystAssignmentService {
     createReportAnalystAssignmentDto: ReportAnalystAssignmentDto,
     clientIp: string,
     idAnalystCurrent: number,
-  ): Promise<ReportAnalystAssignmentEntity> {
+  ){
     const reportAssignmentFind =
       await this.reportAnalystAssignmentRepository.findOne({
         where: {
@@ -411,7 +414,10 @@ export class ReportAnalystAssignmentService {
       logReports.LOG_RETURN_CASE_ANALYST,
     );
 
-    return assigned;
+    return new HttpException(
+      `EL analista fue reasignado correctamente!`,
+      HttpStatus.CREATED,
+    );
   }
 
   async summaryReportsForAssignCases(

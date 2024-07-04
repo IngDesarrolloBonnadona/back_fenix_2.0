@@ -24,7 +24,7 @@ export class RoleResponseTimeController {
   @Post('/createRoleResponseTime')
   createRoleResponseTime(
     @Body() createRoleResponseTimeDto: CreateRoleResponseTimeDto,
-  ): Promise<RoleResponseTime> {
+  ): Promise<HttpException> {
     return this.roleResponseTimeService.createRoleResponseTime(
       createRoleResponseTimeDto,
     );

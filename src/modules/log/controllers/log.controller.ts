@@ -22,7 +22,7 @@ export class LogController {
   constructor(private readonly logService: LogService) {}
 
   @Post('/createLog')
-  createLog(@Body() createLogDto: CreateLogDto): Promise<Log> {
+  createLog(@Body() createLogDto: CreateLogDto): Promise<HttpException> {
     return this.logService.createLog(
       createLogDto.log_validatedcase_id_fk,
       createLogDto.log_user_id,

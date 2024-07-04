@@ -22,7 +22,7 @@ export class EventTypeService {
 
   async createEventType(
     createEventTypeDto: CreateEventTypeDto,
-  ): Promise<EventTypeEntity> {
+  ) {
     const findEventType = await this.eventTypeRepository.findOne({
       where: {
         eve_t_name: createEventTypeDto.eve_t_name,
@@ -42,10 +42,15 @@ export class EventTypeService {
     );
 
     const eventType = this.eventTypeRepository.create(createEventTypeDto);
-    return await this.eventTypeRepository.save(eventType);
+    await this.eventTypeRepository.save(eventType);
+    
+    return new HttpException(
+      `¡El tipo de suceso ${eventType.eve_t_name} se creó correctamente!`,
+      HttpStatus.CREATED,
+    ); 
   }
 
-  async findAllEventTypes(): Promise<EventTypeEntity[]> {
+  async findAllEventTypes() {
     const eventTypes = await this.eventTypeRepository.find({
       where: {
         eve_t_status: true
@@ -66,7 +71,7 @@ export class EventTypeService {
     return eventTypes;
   }
 
-  async findOneEventType(id: number): Promise<EventTypeEntity> {
+  async findOneEventType(id: number) {
     const eventType = await this.eventTypeRepository.findOne({
       where: { id, eve_t_status: true },
       relations: {

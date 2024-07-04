@@ -14,7 +14,7 @@ export class CharacterizationCasesService {
 
   async createCharacterization(
     createCharacterizationCaseDto: CreateCharacterizationCaseDto,
-  ): Promise<CharacterizationCaseEntity> {
+  ) {
     const findCharacterization =
       await this.characterizationCaseRepository.findOne({
         where: {
@@ -32,7 +32,13 @@ export class CharacterizationCasesService {
     const characterization = this.characterizationCaseRepository.create(
       createCharacterizationCaseDto,
     );
-    return await this.characterizationCaseRepository.save(characterization);
+
+    await this.characterizationCaseRepository.save(characterization);
+
+    return new HttpException(
+      `¡La caracterización ${characterization.cha_c_name} se creó correctamente!`,
+      HttpStatus.CREATED,
+    );
   }
 
   async findAllCharacterizations() {

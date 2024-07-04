@@ -17,7 +17,7 @@ export class OriginService {
     private readonly originRepository: Repository<OriginEntity>,
   ) {}
 
-  async createOrigin(createOriginDto: CreateOriginDto): Promise<OriginEntity> {
+  async createOrigin(createOriginDto: CreateOriginDto) {
     const FindOrigin = await this.originRepository.findOne({
       where: {
         orig_name: createOriginDto.orig_name,
@@ -29,10 +29,15 @@ export class OriginService {
       throw new HttpException('El origen ya existe.', HttpStatus.CONFLICT);
     }
     const origin = this.originRepository.create(createOriginDto);
-    return await this.originRepository.save(origin);
+    await this.originRepository.save(origin);
+
+    return new HttpException(
+      `¡El origen ${origin.orig_name} se creó correctamente!`,
+      HttpStatus.CREATED,
+    ); 
   }
 
-  async findAllOrigins(): Promise<OriginEntity[]> {
+  async findAllOrigins() {
     const origins = await this.originRepository.find({
       where: {
         orig_status: true
@@ -53,7 +58,7 @@ export class OriginService {
     return origins;
   }
 
-  async findOneOrigin(id: number): Promise<OriginEntity> {
+  async findOneOrigin(id: number) {
     const origin = await this.originRepository.findOne({
       where: { id, orig_status: true },
       relations: {

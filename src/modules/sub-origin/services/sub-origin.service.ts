@@ -22,7 +22,7 @@ export class SubOriginService {
 
   async createSubOrigin(
     createSubOriginDto: CreateSubOriginDto,
-  ): Promise<SubOriginEntity> {
+  ) {
     const FindSubOrigin = await this.subOriginRepository.findOne({
       where: {
         sub_o_name: createSubOriginDto.sub_o_name,
@@ -39,10 +39,16 @@ export class SubOriginService {
     }
 
     const subOrigin = this.subOriginRepository.create(createSubOriginDto);
-    return await this.subOriginRepository.save(subOrigin);
+    await this.subOriginRepository.save(subOrigin);
+    
+    return new HttpException(
+      `¡El sub origen ${subOrigin.sub_o_name} se creó correctamente!`,
+      HttpStatus.CREATED,
+    );
+    
   }
 
-  async findAllSubOrigins(): Promise<SubOriginEntity[]> {
+  async findAllSubOrigins() {
     const subOrigins = await this.subOriginRepository.find({
       where: {
         sub_o_status: true,
@@ -63,7 +69,7 @@ export class SubOriginService {
     return subOrigins;
   }
 
-  async findOneSubOrigin(id: number): Promise<SubOriginEntity> {
+  async findOneSubOrigin(id: number) {
     const subOrigin = await this.subOriginRepository.findOne({
       where: { id, sub_o_status: true },
       // relations: {

@@ -37,12 +37,12 @@ export class MedicineService {
     }
   }
 
-  async createMedicine(
-    createMedicineDto: CreateMedicineDto,
-  ): Promise<MedicineEntity> {
-    const medicine = this.medicineRepository.create(createMedicineDto);
-    return await this.medicineRepository.save(medicine);
-  }
+  // async createMedicine(
+  //   createMedicineDto: CreateMedicineDto,
+  // ): Promise<MedicineEntity> {
+  //   const medicine = this.medicineRepository.create(createMedicineDto);
+  //   return await this.medicineRepository.save(medicine);
+  // }
 
   async findAllMedicines(): Promise<MedicineEntity[]> {
     const medicines = await this.medicineRepository.find({

@@ -10,10 +10,10 @@ import { ApiTags } from '@nestjs/swagger';
 export class MedicineController {
   constructor(private readonly medicineService: MedicineService) {}
 
-  @Post('/createMedicine')
-  createMedicine(@Body() createMedicineDto: CreateMedicineDto): Promise<Medicine> {
-    return this.medicineService.createMedicine(createMedicineDto);
-  }
+  // @Post('/createMedicine')
+  // createMedicine(@Body() createMedicineDto: CreateMedicineDto): Promise<Medicine> {
+  //   return this.medicineService.createMedicine(createMedicineDto);
+  // }
 
   @Get('/listMedicines')
   listMedicines(): Promise<Medicine[]> {

@@ -17,7 +17,7 @@ export class ServiceService {
     private readonly serviceRepository: Repository<ServiceEntity>,
   ) {}
 
-  async createService(createServiceDto: CreateServiceDto): Promise<Service> {
+  async createService(createServiceDto: CreateServiceDto) {
     const FindService = await this.serviceRepository.findOne({
       where: {
         serv_name: createServiceDto.serv_name,
@@ -30,10 +30,15 @@ export class ServiceService {
     }
 
     const service = this.serviceRepository.create(createServiceDto);
-    return await this.serviceRepository.save(service);
+    await this.serviceRepository.save(service);
+
+    return new HttpException(
+      `¡El servicio ${service.serv_name} se creó correctamente!`,
+      HttpStatus.CREATED,
+    );
   }
 
-  async findAllServices(): Promise<Service[]> {
+  async findAllServices() {
     const services = await this.serviceRepository.find({
       where: {
         serv_status: true,
@@ -53,7 +58,7 @@ export class ServiceService {
     return services;
   }
 
-  async findOneService(id: number): Promise<Service> {
+  async findOneService(id: number) {
     const service = await this.serviceRepository.findOne({
       where: { id, serv_status: true },
       relations: {

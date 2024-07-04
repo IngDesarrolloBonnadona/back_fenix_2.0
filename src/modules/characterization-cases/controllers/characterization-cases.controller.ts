@@ -13,6 +13,7 @@ import { CharacterizationCasesService } from '../services/characterization-cases
 import { CreateCharacterizationCaseDto } from '../dto/create-characterization-case.dto';
 import { UpdateCharacterizationCaseDto } from '../dto/update-characterization-case.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { CharacterizationCase } from '../entities/characterization-case.entity';
 
 @ApiTags('characterization-cases')
 @Controller('characterization-cases')
@@ -22,19 +23,21 @@ export class CharacterizationCasesController {
   ) {}
 
   @Post('/createCharacterizationCases')
-  create(@Body() createCharacterizationCaseDto: CreateCharacterizationCaseDto) {
+  create(
+    @Body() createCharacterizationCaseDto: CreateCharacterizationCaseDto,
+  ): Promise<HttpException> {
     return this.characterizationCasesService.createCharacterization(
       createCharacterizationCaseDto,
     );
   }
 
   @Get('/listCharacterizations')
-  listCharacterizations() {
+  listCharacterizations(): Promise<CharacterizationCase[]> {
     return this.characterizationCasesService.findAllCharacterizations();
   }
 
   @Get('/findCharacterization/:id')
-  findCharacterization(@Param('id') id: number) {
+  findCharacterization(@Param('id') id: number): Promise<CharacterizationCase> {
     return this.characterizationCasesService.findOneCharacterization(id);
   }
 
