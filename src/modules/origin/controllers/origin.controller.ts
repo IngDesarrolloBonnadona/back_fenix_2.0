@@ -11,7 +11,7 @@ export class OriginController {
   constructor(private readonly originService: OriginService) {}
 
   @Post('/createOrigin')
-  createOrigin(@Body() createOriginDto: CreateOriginDto): Promise<Origin> {
+  createOrigin(@Body() createOriginDto: CreateOriginDto): Promise<HttpException> {
     return this.originService.createOrigin(createOriginDto);
   }
 

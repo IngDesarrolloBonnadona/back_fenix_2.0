@@ -11,7 +11,7 @@ export class EventController {
   constructor(private readonly eventService: EventService) {}
 
   @Post('/createEvent')
-  createEvent(@Body() createEventDto: CreateEventDto): Promise<Event> {
+  createEvent(@Body() createEventDto: CreateEventDto): Promise<HttpException> {
     return this.eventService.createEvent(createEventDto);
   }
 

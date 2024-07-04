@@ -20,10 +20,10 @@ import { ApiTags } from '@nestjs/swagger';
 export class DeviceController {
   constructor(private readonly deviceService: DeviceService) {}
 
-  @Post('/createDevice')
-  createDevice(@Body() createDeviceDto: CreateDeviceDto): Promise<Device> {
-    return this.deviceService.createDevice(createDeviceDto);
-  }
+  // @Post('/createDevice')
+  // createDevice(@Body() createDeviceDto: CreateDeviceDto): Promise<Device> {
+  //   return this.deviceService.createDevice(createDeviceDto);
+  // }
 
   @Get('/listDevice')
   listDevice(): Promise<Device[]> {

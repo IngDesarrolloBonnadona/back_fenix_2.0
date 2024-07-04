@@ -12,7 +12,7 @@ export class RoleService {
     private readonly roleRepository: Repository<RoleEntity>,
   ) {}
 
-  async createRole(createRoleDto: CreateRoleDto): Promise<RoleEntity> {
+  async createRole(createRoleDto: CreateRoleDto) {
     const findRole = await this.roleRepository.findOne({
       where: {
         role_name: createRoleDto.role_name,
@@ -24,7 +24,12 @@ export class RoleService {
       throw new HttpException('El rol ya existe.', HttpStatus.CONFLICT);
     }
     const role = this.roleRepository.create(createRoleDto);
-    return await this.roleRepository.save(role);
+    await this.roleRepository.save(role);
+
+    return new HttpException(
+      `¡El rol ${role.role_name} se creó correctamente!`,
+      HttpStatus.CREATED,
+    );
   }
 
   async findAllRoles() {
@@ -82,7 +87,7 @@ export class RoleService {
     }
     return new HttpException(
       `¡Datos actualizados correctamente!`,
-      HttpStatus.ACCEPTED,
+      HttpStatus.OK,
     );
   }
 
@@ -97,9 +102,6 @@ export class RoleService {
       );
     }
 
-    return new HttpException(
-      `¡Datos eliminados correctamente!`,
-      HttpStatus.ACCEPTED,
-    );
+    return new HttpException(`¡Datos eliminados correctamente!`, HttpStatus.OK);
   }
 }

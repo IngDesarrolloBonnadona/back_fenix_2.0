@@ -1,4 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus, Put } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  HttpException,
+  HttpStatus,
+  Put,
+} from '@nestjs/common';
 import { RiskTypeService } from '../services/risk-type.service';
 import { CreateRiskTypeDto } from '../dto/create-risk-type.dto';
 import { UpdateRiskTypeDto } from '../dto/update-risk-type.dto';
@@ -11,7 +22,9 @@ export class RiskTypeController {
   constructor(private readonly riskTypeService: RiskTypeService) {}
 
   @Post('/createRisktype')
-  createRisktype(@Body() createRiskTypeDto: CreateRiskTypeDto): Promise<RiskType> {
+  createRisktype(
+    @Body() createRiskTypeDto: CreateRiskTypeDto,
+  ): Promise<HttpException> {
     return this.riskTypeService.createRiskType(createRiskTypeDto);
   }
 
@@ -26,7 +39,10 @@ export class RiskTypeController {
   }
 
   @Patch('/updateRisktype/:id')
-  updateRisktype(@Param('id') id: number, @Body() updateRiskTypeDto: UpdateRiskTypeDto): Promise<HttpException> {
+  updateRisktype(
+    @Param('id') id: number,
+    @Body() updateRiskTypeDto: UpdateRiskTypeDto,
+  ): Promise<HttpException> {
     return this.riskTypeService.updateRiskType(id, updateRiskTypeDto);
   }
 

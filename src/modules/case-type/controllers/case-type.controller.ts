@@ -11,7 +11,7 @@ export class CaseTypeController {
   constructor(private readonly caseTypeService: CaseTypeService) {}
 
   @Post('/createCaseType')
-  createCaseType(@Body() createCaseTypeDto: CreateCaseTypeDto): Promise<CaseType> {
+  createCaseType(@Body() createCaseTypeDto: CreateCaseTypeDto): Promise<HttpException> {
     return this.caseTypeService.createCaseType(createCaseTypeDto);
   }
 

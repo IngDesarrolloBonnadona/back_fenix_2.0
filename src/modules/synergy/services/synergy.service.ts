@@ -140,10 +140,13 @@ export class SynergyService {
       }
     }
 
-    return savedSynergies;
+    return new HttpException(
+      `¡Los casos se elevaron a sinergia correctamente!`,
+      HttpStatus.CREATED,
+    );
   }
 
-  async findAllSynergy(): Promise<SynergyEntity[]> {
+  async findAllSynergy() {
     const synergies = await this.synergyRepository.find({
       relations: {
         caseReportValidate: true,
@@ -163,7 +166,7 @@ export class SynergyService {
     return synergies;
   }
 
-  async findOneSynergy(id: number): Promise<SynergyEntity> {
+  async findOneSynergy(id: number) {
     const synergy = await this.synergyRepository.findOne({
       where: { id, syn_status: false },
       relations: {
@@ -233,7 +236,7 @@ export class SynergyService {
 
     return new HttpException(
       `¡Caso reprogramado correctamente!`,
-      HttpStatus.ACCEPTED,
+      HttpStatus.OK,
     );
   }
 
@@ -254,9 +257,12 @@ export class SynergyService {
       );
     }
 
-    const updateStatusSynergy = await this.synergyRepository.update(synergy.id, {
-      syn_status: true,
-    });
+    const updateStatusSynergy = await this.synergyRepository.update(
+      synergy.id,
+      {
+        syn_status: true,
+      },
+    );
 
     if (updateStatusSynergy.affected === 0) {
       throw new HttpException(
@@ -299,7 +305,7 @@ export class SynergyService {
 
     return new HttpException(
       `¡Caso resuelto y registrado correctamente!`,
-      HttpStatus.ACCEPTED,
+      HttpStatus.CREATED,
     );
   }
 
@@ -313,9 +319,6 @@ export class SynergyService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-    return new HttpException(
-      `¡Datos eliminados correctamente!`,
-      HttpStatus.ACCEPTED,
-    );
+    return new HttpException(`¡Datos eliminados correctamente!`, HttpStatus.OK);
   }
 }

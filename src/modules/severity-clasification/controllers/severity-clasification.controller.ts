@@ -7,8 +7,6 @@ import {
   Param,
   Delete,
   HttpException,
-  HttpStatus,
-  Put,
 } from '@nestjs/common';
 import { SeverityClasificationService } from '../services/severity-clasification.service';
 import { CreateSeverityClasificationDto } from '../dto/create-severity-clasification.dto';
@@ -26,7 +24,7 @@ export class SeverityClasificationController {
   @Post('/createSeverityClasification')
   createSeverityClasification(
     @Body() createSeverityClasificationDto: CreateSeverityClasificationDto,
-  ): Promise<SeverityClasification> {
+  ): Promise<HttpException> {
     return this.severityClasificationService.createSeverityClasification(
       createSeverityClasificationDto,
     );

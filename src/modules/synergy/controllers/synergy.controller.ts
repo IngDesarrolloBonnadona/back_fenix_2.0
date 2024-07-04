@@ -25,7 +25,13 @@ export class SynergyController {
     @Body() createSynergyDto: CreateSynergyDto[],
     @Ip() clientIp: string,
     @Param('idValidator') idValidator: number,
-  ) {
+  ): Promise<
+    | HttpException
+    | {
+        message: string;
+        invalidSynergyCodes: string[];
+      }
+  > {
     return this.synergyService.createSynergy(
       createSynergyDto,
       clientIp,

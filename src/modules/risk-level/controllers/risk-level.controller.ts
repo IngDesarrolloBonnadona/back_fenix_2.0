@@ -11,7 +11,7 @@ export class RiskLevelController {
   constructor(private readonly riskLevelService: RiskLevelService) {}
 
   @Post('/createRiskLevel')
-  createRiskLevel(@Body() createRiskLevelDto: CreateRiskLevelDto): Promise<RiskLevel> {
+  createRiskLevel(@Body() createRiskLevelDto: CreateRiskLevelDto): Promise<HttpException> {
     return this.riskLevelService.createRiskLevel(createRiskLevelDto);
   }
 

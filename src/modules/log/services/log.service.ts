@@ -18,7 +18,7 @@ export class LogService {
     reporterId: number,
     clientIp: string,
     action: string,
-  ): Promise<void> {
+  ) {
     const log = this.logRepository.create({
       log_validatedcase_id_fk: caseReportValidateId,
       log_user_id: reporterId,
@@ -34,7 +34,7 @@ export class LogService {
     userId: number,
     clientIp: string,
     action: string,
-  ): Promise<LogEntity> {
+  ) {
     const createLogDto: CreateLogDto = {
       log_validatedcase_id_fk: caseReportValidateId,
       log_user_id: userId,
@@ -43,10 +43,15 @@ export class LogService {
     };
 
     const log = this.logRepository.create(createLogDto);
-    return await this.logRepository.save(log);
+    await this.logRepository.save(log);
+
+    return new HttpException(
+      `¡El log se creó correctamente!`,
+      HttpStatus.CREATED,
+    );
   }
 
-  async findAllLogs(): Promise<LogEntity[]> {
+  async findAllLogs() {
     const logs = await this.logRepository.find({
       relations: {
         caseReportValidate: true,
@@ -62,7 +67,7 @@ export class LogService {
     return logs;
   }
 
-  async findOneLog(id: number): Promise<LogEntity> {
+  async findOneLog(id: number) {
     const log = await this.logRepository.findOne({
       where: { id },
       relations: {
@@ -90,7 +95,7 @@ export class LogService {
 
     return new HttpException(
       `¡Datos actualizados correctamente!`,
-      HttpStatus.ACCEPTED,
+      HttpStatus.OK,
     );
   }
 
@@ -104,9 +109,6 @@ export class LogService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-    return new HttpException(
-      `¡Datos eliminados correctamente!`,
-      HttpStatus.ACCEPTED,
-    );
+    return new HttpException(`¡Datos eliminados correctamente!`, HttpStatus.OK);
   }
 }

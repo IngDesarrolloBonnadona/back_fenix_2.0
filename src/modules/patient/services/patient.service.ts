@@ -1,5 +1,4 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { PatientDto } from '../dto/patient.dto';
 import { HttpPatientService } from '../http/http-patient.service';
 
 @Injectable()

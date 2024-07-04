@@ -29,7 +29,7 @@ export class ReportAnalystAssignmentController {
     @Body() createAnalystReporterDto: ReportAnalystAssignmentDto,
     @Ip() clientIp: string,
     @Param('idValidator') idValidator: number,
-  ): Promise<ReportAnalystAssignment> {
+  ): Promise<HttpException> {
     return this.reportAnalisysAssignmentService.assingAnalyst(
       createAnalystReporterDto,
       clientIp,
@@ -42,7 +42,7 @@ export class ReportAnalystAssignmentController {
     @Body() createAnalystReporterDto: ReportAnalystAssignmentDto,
     @Ip() clientIp: string,
     @Param('idAnalystCurrent') idAnalystCurrent: number,
-  ): Promise<ReportAnalystAssignment> {
+  ): Promise<HttpException> {
     return this.reportAnalisysAssignmentService.returnCaseBetweenAnalyst(
       createAnalystReporterDto,
       clientIp,
@@ -100,6 +100,19 @@ export class ReportAnalystAssignmentController {
       clientIp,
       idValidator,
       idCaseReportValidate,
+    );
+  }
+
+  @Patch('updateReturnCaseToValidator/:idAnalyst/:idCaseReportValidate')
+  updateReturnCaseToValidator(
+    @Param('idCaseReportValidate') idCaseReportValidate: string,
+    @Ip() clientIp: string,
+    @Param('idAnalyst') idAnalyst: number,
+  ) {
+    return this.reportAnalisysAssignmentService.returnCaseToValidator(
+      idCaseReportValidate,
+      clientIp,
+      idAnalyst,
     );
   }
 

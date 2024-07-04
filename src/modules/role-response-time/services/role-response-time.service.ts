@@ -18,7 +18,7 @@ export class RoleResponseTimeService {
   ) {}
   async createRoleResponseTime(
     createRoleResponseTimeDto: CreateRoleResponseTimeDto,
-  ): Promise<RoleResponseTimeResponseTimeEntity> {
+  ) {
     const findRoleResponseTime = await this.roleResponseTimeRepository.findOne({
       where: {
         rest_r_role_id_fk: createRoleResponseTimeDto.rest_r_role_id_fk,
@@ -29,7 +29,7 @@ export class RoleResponseTimeService {
 
     if (findRoleResponseTime) {
       throw new HttpException(
-        'Ya existe un tiempo de respuesta de caso con el rol y la clasificación de severidad especificados.',
+        'Ya existe un tiempo de respuesta caso con el rol y la clasificación de severidad especificados.',
         HttpStatus.CONFLICT,
       );
     }
@@ -38,19 +38,23 @@ export class RoleResponseTimeService {
       createRoleResponseTimeDto.rest_r_severityclasif_id_fk,
     );
 
-    await this.roleService.findOneRole(
+    const findRole = await this.roleService.findOneRole(
       createRoleResponseTimeDto.rest_r_role_id_fk,
     );
 
     const roleResponseTime = this.roleResponseTimeRepository.create(
       createRoleResponseTimeDto,
     );
-    return await this.roleResponseTimeRepository.save(roleResponseTime);
+
+    await this.roleResponseTimeRepository.save(roleResponseTime);
+
+    return new HttpException(
+      `¡El tiempo de respuesta para el rol ${findRole.role_name} se creó correctamente!`,
+      HttpStatus.CREATED,
+    );
   }
 
-  async findAllRoleResponseTimes(): Promise<
-    RoleResponseTimeResponseTimeEntity[]
-  > {
+  async findAllRoleResponseTimes() {
     const roleResponseTimes = await this.roleResponseTimeRepository.find({
       where: { rest_r_status: true },
       relations: { role: true, severityClasification: true },
@@ -66,9 +70,7 @@ export class RoleResponseTimeService {
     return roleResponseTimes;
   }
 
-  async findOnefindAllRoleResponseTime(
-    id: number,
-  ): Promise<RoleResponseTimeResponseTimeEntity> {
+  async findOnefindAllRoleResponseTime(id: number) {
     const roleResponseTime = await this.roleResponseTimeRepository.findOne({
       where: { id, rest_r_status: true },
       relations: { role: true, severityClasification: true },
@@ -102,7 +104,7 @@ export class RoleResponseTimeService {
 
     return new HttpException(
       `¡Datos actualizados correctamente!`,
-      HttpStatus.ACCEPTED,
+      HttpStatus.OK,
     );
   }
 
@@ -119,9 +121,6 @@ export class RoleResponseTimeService {
       );
     }
 
-    return new HttpException(
-      `¡Datos eliminados correctamente!`,
-      HttpStatus.ACCEPTED,
-    );
+    return new HttpException(`¡Datos eliminados correctamente!`, HttpStatus.OK);
   }
 }

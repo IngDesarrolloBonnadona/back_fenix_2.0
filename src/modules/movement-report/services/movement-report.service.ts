@@ -1,14 +1,9 @@
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateMovementReportDto } from '../dto/create-movement-report.dto';
 import { UpdateMovementReportDto } from '../dto/update-movement-report.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MovementReport as MovementReportEntity } from '../entities/movement-report.entity';
-import { In, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class MovementReportService {
@@ -17,9 +12,7 @@ export class MovementReportService {
     private readonly movementReportRepository: Repository<MovementReportEntity>,
   ) {}
 
-  async createMovementReport(
-    createMovementReportDto: CreateMovementReportDto,
-  ): Promise<MovementReportEntity> {
+  async createMovementReport(createMovementReportDto: CreateMovementReportDto) {
     const FindmovementReport = await this.movementReportRepository.findOne({
       where: {
         mov_r_name: createMovementReportDto.mov_r_name,
@@ -37,10 +30,15 @@ export class MovementReportService {
     const movementReport = this.movementReportRepository.create(
       createMovementReportDto,
     );
-    return await this.movementReportRepository.save(movementReport);
+    await this.movementReportRepository.save(movementReport);
+
+    return new HttpException(
+      `¡El movimiviento de reportes ${movementReport.mov_r_name} se creó correctamente!`,
+      HttpStatus.CREATED,
+    );
   }
 
-  async findAllMovementReports(): Promise<MovementReportEntity[]> {
+  async findAllMovementReports() {
     const movementReports = await this.movementReportRepository.find({
       // relations: {
       //   caseReportValidate: true,
@@ -57,7 +55,7 @@ export class MovementReportService {
     return movementReports;
   }
 
-  async findOneMovementReport(id: number): Promise<MovementReportEntity> {
+  async findOneMovementReport(id: number) {
     const movementReport = await this.movementReportRepository.findOne({
       where: { id },
       // relations: {
@@ -94,7 +92,7 @@ export class MovementReportService {
 
     return new HttpException(
       `¡Datos actualizados correctamente!`,
-      HttpStatus.ACCEPTED,
+      HttpStatus.OK,
     );
   }
 
@@ -110,9 +108,6 @@ export class MovementReportService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-    return new HttpException(
-      `¡Datos eliminados correctamente!`,
-      HttpStatus.ACCEPTED,
-    );
+    return new HttpException(`¡Datos eliminados correctamente!`, HttpStatus.OK);
   }
 }

@@ -11,7 +11,7 @@ export class ServiceController {
   constructor(private readonly serviceService: ServiceService) {}
 
   @Post('/createService')
-  createService(@Body() createServiceDto: CreateServiceDto): Promise<Service> {
+  createService(@Body() createServiceDto: CreateServiceDto): Promise<HttpException> {
     return this.serviceService.createService(createServiceDto);
   }
 

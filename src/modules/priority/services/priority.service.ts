@@ -15,9 +15,7 @@ export class PriorityService {
     private readonly severityClasificationService: SeverityClasificationService,
   ) {}
 
-  async createPriority(
-    createPriorityDto: CreatePriorityDto,
-  ): Promise<PriorityEntity> {
+  async createPriority(createPriorityDto: CreatePriorityDto) {
     await this.severityClasificationService.findOneSeverityClasification(
       createPriorityDto.prior_severityclasif_id_fk,
     );
@@ -34,10 +32,15 @@ export class PriorityService {
     }
 
     const priority = this.priorityRepository.create(createPriorityDto);
-    return await this.priorityRepository.save(priority);
+    await this.priorityRepository.save(priority);
+
+    return new HttpException(
+      `¡La prioridad ${priority.prior_name} se creó correctamente!`,
+      HttpStatus.CREATED,
+    );
   }
 
-  async findAllPriorities(): Promise<PriorityEntity[]> {
+  async findAllPriorities() {
     const priorities = await this.priorityRepository.find({
       // relations: {
       //   caseReportValidate: true,
@@ -56,7 +59,7 @@ export class PriorityService {
     return priorities;
   }
 
-  async findOnePriority(id: number): Promise<PriorityEntity> {
+  async findOnePriority(id: number) {
     const priority = await this.priorityRepository.findOne({
       where: { id, prior_status: true },
       // relations: {
@@ -92,7 +95,7 @@ export class PriorityService {
     }
     return new HttpException(
       `¡Datos actualizados correctamente!`,
-      HttpStatus.ACCEPTED,
+      HttpStatus.OK,
     );
   }
 
@@ -107,9 +110,6 @@ export class PriorityService {
       );
     }
 
-    return new HttpException(
-      `¡Datos eliminados correctamente!`,
-      HttpStatus.ACCEPTED,
-    );
+    return new HttpException(`¡Datos eliminados correctamente!`, HttpStatus.OK);
   }
 }

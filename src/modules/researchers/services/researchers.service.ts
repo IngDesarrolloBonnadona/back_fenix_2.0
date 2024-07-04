@@ -81,7 +81,7 @@ export class ResearchersService {
     createResearcherDto: CreateResearcherDto,
     clientIp: string,
     idAnalyst: number,
-  ): Promise<ResearcherEntity> {
+  ) {
     const reportAssignmentFind = await this.researcherRepository.findOne({
       where: {
         res_validatedcase_id_fk: createResearcherDto.res_validatedcase_id_fk,
@@ -177,7 +177,7 @@ export class ResearchersService {
     const updateStatusMovement = await this.caseReportValidateRepository.update(
       createResearcherDto.res_validatedcase_id_fk,
       {
-        val_cr_statusmovement_id_fk: movementReportFound.id
+        val_cr_statusmovement_id_fk: movementReportFound.id,
       },
     );
 
@@ -213,7 +213,10 @@ export class ResearchersService {
       logReports.LOG_ASSIGNMENT_RESEARCHER,
     );
 
-    return assigned;
+    return new HttpException(
+      `¡El investigador se asignó correctamente!`,
+      HttpStatus.CREATED,
+    );
   }
 
   async summaryReportsMyAssignedCases(
@@ -222,7 +225,7 @@ export class ResearchersService {
     caseTypeId?: number,
     eventId?: number,
     priorityId?: number,
-  ): Promise<CaseReportValidateEntity[]> {
+  ) {
     const query = this.caseReportValidateRepository
       .createQueryBuilder('crv')
       .innerJoinAndSelect('crv.researcher', 'res')
@@ -287,7 +290,7 @@ export class ResearchersService {
     caseTypeId?: number,
     eventId?: number,
     priorityId?: number,
-  ): Promise<CaseReportValidateEntity[]> {
+  ) {
     const query = this.caseReportValidateRepository
       .createQueryBuilder('crv')
       .innerJoinAndSelect('crv.researcher', 'res')
@@ -346,7 +349,7 @@ export class ResearchersService {
     return caseReportsValidate;
   }
 
-  async findOneAssignedResearch(id: number): Promise<ResearcherEntity> {
+  async findOneAssignedResearch(id: number) {
     const research = await this.researcherRepository.findOne({
       where: { id, res_status: true, res_isreturned: false },
     });
@@ -439,7 +442,7 @@ export class ResearchersService {
 
     return new HttpException(
       `Investigador reasignado correctamente!`,
-      HttpStatus.ACCEPTED,
+      HttpStatus.OK,
     );
   }
 
@@ -448,17 +451,16 @@ export class ResearchersService {
     clientIp: string,
     idResearcher: number,
   ) {
-    const findReportResearcherAssined = await this.researcherRepository.findOne(
-      {
+    const findReportResearcherAssigned =
+      await this.researcherRepository.findOne({
         where: {
           res_validatedcase_id_fk: idCaseReportValidate,
           res_status: true,
           res_isreturned: false,
         },
-      },
-    );
+      });
 
-    if (!findReportResearcherAssined) {
+    if (!findReportResearcherAssigned) {
       throw new HttpException(
         'No se encontró el reporte asignado a investigador.',
         HttpStatus.NO_CONTENT,
@@ -485,7 +487,7 @@ export class ResearchersService {
     );
 
     const updateStatusReturn = await this.researcherRepository.update(
-      findReportResearcherAssined.id,
+      findReportResearcherAssigned.id,
       {
         res_status: false,
         res_isreturned: true,
@@ -536,7 +538,7 @@ export class ResearchersService {
 
     return new HttpException(
       `¡Reporte devuelto a analista correctamente!`,
-      HttpStatus.ACCEPTED,
+      HttpStatus.OK,
     );
   }
 
@@ -551,9 +553,6 @@ export class ResearchersService {
       );
     }
 
-    return new HttpException(
-      `¡Datos eliminados correctamente!`,
-      HttpStatus.ACCEPTED,
-    );
+    return new HttpException(`¡Datos eliminados correctamente!`, HttpStatus.OK);
   }
 }

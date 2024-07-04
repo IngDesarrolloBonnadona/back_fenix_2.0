@@ -37,12 +37,12 @@ export class MedicineService {
     }
   }
 
-  async createMedicine(
-    createMedicineDto: CreateMedicineDto,
-  ): Promise<MedicineEntity> {
-    const medicine = this.medicineRepository.create(createMedicineDto);
-    return await this.medicineRepository.save(medicine);
-  }
+  // async createMedicine(
+  //   createMedicineDto: CreateMedicineDto,
+  // ): Promise<MedicineEntity> {
+  //   const medicine = this.medicineRepository.create(createMedicineDto);
+  //   return await this.medicineRepository.save(medicine);
+  // }
 
   async findAllMedicines(): Promise<MedicineEntity[]> {
     const medicines = await this.medicineRepository.find({
@@ -95,7 +95,7 @@ export class MedicineService {
 
     return new HttpException(
       `¡Datos actualizados correctamente!`,
-      HttpStatus.ACCEPTED,
+      HttpStatus.OK,
     );
   }
 
@@ -109,10 +109,7 @@ export class MedicineService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-    return new HttpException(
-      `¡Datos eliminados correctamente!`,
-      HttpStatus.ACCEPTED,
-    );
+    return new HttpException(`¡Datos eliminados correctamente!`, HttpStatus.OK);
   }
 
   async deleteMedicinesByCaseId(caseId: string) {

@@ -11,7 +11,7 @@ export class SubOriginController {
   constructor(private readonly subOriginService: SubOriginService) {}
 
   @Post('/createSubOrigin')
-  createSubOrigin(@Body() createSubOriginDto: CreateSubOriginDto): Promise<SubOrigin> {
+  createSubOrigin(@Body() createSubOriginDto: CreateSubOriginDto): Promise<HttpException> {
     return this.subOriginService.createSubOrigin(createSubOriginDto);
   }
 

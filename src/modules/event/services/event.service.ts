@@ -20,7 +20,7 @@ export class EventService {
     private readonly eventTypeService: EventTypeService,
   ) {}
 
-  async createEvent(createEventDto: CreateEventDto): Promise<EventEntity> {
+  async createEvent(createEventDto: CreateEventDto) {
     const events = await this.eventRepository.findOne({
       where: {
         eve_name: createEventDto.eve_name,
@@ -41,10 +41,15 @@ export class EventService {
     );
 
     const event = this.eventRepository.create(createEventDto);
-    return await this.eventRepository.save(event);
+    await this.eventRepository.save(event);
+
+    return new HttpException(
+      `¡El suceso ${event.eve_name} se creó correctamente!`,
+      HttpStatus.CREATED,
+    );
   }
 
-  async findAllEvents(): Promise<EventEntity[]> {
+  async findAllEvents() {
     const events = await this.eventRepository.find({
       where: {
         eve_status: true,
@@ -65,7 +70,7 @@ export class EventService {
     return events;
   }
 
-  async findOneEvent(id: number): Promise<EventEntity> {
+  async findOneEvent(id: number) {
     const event = await this.eventRepository.findOne({
       where: { id, eve_status: true },
       relations: {
@@ -84,7 +89,7 @@ export class EventService {
     return event;
   }
 
-  async findEventByEventTypeId(eventTypeId: number): Promise<EventEntity[]> {
+  async findEventByEventTypeId(eventTypeId: number) {
     const events = await this.eventRepository.find({
       where: { eve_eventtype_id_fk: eventTypeId },
     });
@@ -112,7 +117,7 @@ export class EventService {
 
     return new HttpException(
       `¡Datos actualizados correctamente!`,
-      HttpStatus.ACCEPTED,
+      HttpStatus.OK,
     );
   }
 
@@ -127,9 +132,6 @@ export class EventService {
       );
     }
 
-    return new HttpException(
-      `¡Datos eliminados correctamente!`,
-      HttpStatus.ACCEPTED,
-    );
+    return new HttpException(`¡Datos eliminados correctamente!`, HttpStatus.OK);
   }
 }

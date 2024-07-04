@@ -37,10 +37,10 @@ export class DeviceService {
     }
   }
 
-  async createDevice(createDeviceDto: CreateDeviceDto): Promise<DeviceEntity> {
-    const device = this.deviceRepository.create(createDeviceDto);
-    return await this.deviceRepository.save(device);
-  }
+  // async createDevice(createDeviceDto: CreateDeviceDto): Promise<DeviceEntity> {
+  //   const device = this.deviceRepository.create(createDeviceDto);
+  //   return await this.deviceRepository.save(device);
+  // }
 
   async findAllDevices(): Promise<DeviceEntity[]> {
     const devices = await this.deviceRepository.find({
@@ -93,7 +93,7 @@ export class DeviceService {
 
     return new HttpException(
       `¡Datos actualizados correctamente!`,
-      HttpStatus.ACCEPTED,
+      HttpStatus.OK,
     );
   }
 
@@ -108,10 +108,7 @@ export class DeviceService {
       );
     }
 
-    return new HttpException(
-      `¡Datos eliminados correctamente!`,
-      HttpStatus.ACCEPTED,
-    );
+    return new HttpException(`¡Datos eliminados correctamente!`, HttpStatus.OK);
   }
 
   async deleteDevicesByCaseId(caseId: string) {

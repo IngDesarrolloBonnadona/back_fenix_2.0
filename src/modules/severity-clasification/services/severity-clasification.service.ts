@@ -19,7 +19,7 @@ export class SeverityClasificationService {
 
   async createSeverityClasification(
     createSeverityClasificationDto: CreateSeverityClasificationDto,
-  ): Promise<SeverityClasifEntity> {
+  ) {
     const FindSevClasification = await this.severityClasifRepository.findOne({
       where: {
         sev_c_name: createSeverityClasificationDto.sev_c_name,
@@ -37,10 +37,15 @@ export class SeverityClasificationService {
     const severityClasif = this.severityClasifRepository.create(
       createSeverityClasificationDto,
     );
-    return await this.severityClasifRepository.save(severityClasif);
+    await this.severityClasifRepository.save(severityClasif);
+
+    return new HttpException(
+      `¡La clasificiación de severidad ${severityClasif.sev_c_name} se creó correctamente!`,
+      HttpStatus.CREATED,
+    );
   }
 
-  async findAllSeverityClasifications(): Promise<SeverityClasifEntity[]> {
+  async findAllSeverityClasifications() {
     const severityClasifs = await this.severityClasifRepository.find({
       where: {
         sev_c_status: true,
@@ -103,7 +108,7 @@ export class SeverityClasificationService {
 
     return new HttpException(
       `¡Datos actualizados correctamente!`,
-      HttpStatus.ACCEPTED,
+      HttpStatus.OK,
     );
   }
 
@@ -119,9 +124,6 @@ export class SeverityClasificationService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-    return new HttpException(
-      `¡Datos eliminados correctamente!`,
-      HttpStatus.ACCEPTED,
-    );
+    return new HttpException(`¡Datos eliminados correctamente!`, HttpStatus.OK);
   }
 }

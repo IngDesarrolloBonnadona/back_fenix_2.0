@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  HttpException,
 } from '@nestjs/common';
 import { RoleService } from '../services/role.service';
 import { CreateRoleDto } from '../dto/create-role.dto';
@@ -19,7 +20,7 @@ export class RoleController {
   constructor(private readonly roleService: RoleService) {}
 
   @Post('/createRole')
-  createRole(@Body() createRoleDto: CreateRoleDto): Promise<Role> {
+  createRole(@Body() createRoleDto: CreateRoleDto): Promise<HttpException> {
     return this.roleService.createRole(createRoleDto);
   }
 
@@ -29,22 +30,25 @@ export class RoleController {
   }
 
   @Get('/findRole/:id')
-  findRole(@Param('id') id: number) {
+  findRole(@Param('id') id: number): Promise<Role> {
     return this.roleService.findOneRole(id);
   }
 
   @Get('/findRoleByName')
-  findRoleByName(@Body() createRoleDto: CreateRoleDto) {
+  findRoleByName(@Body() createRoleDto: CreateRoleDto): Promise<Role> {
     return this.roleService.findRoleByName(createRoleDto);
   }
 
   @Patch('/updateRole/:id')
-  updateRole(@Param('id') id: number, @Body() updateRoleDto: UpdateRoleDto) {
+  updateRole(
+    @Param('id') id: number,
+    @Body() updateRoleDto: UpdateRoleDto,
+  ): Promise<HttpException> {
     return this.roleService.updateRole(id, updateRoleDto);
   }
 
   @Delete('/deleteRole/:id')
-  deleteRole(@Param('id') id: number) {
+  deleteRole(@Param('id') id: number): Promise<HttpException> {
     return this.roleService.deleteRole(id);
   }
 }

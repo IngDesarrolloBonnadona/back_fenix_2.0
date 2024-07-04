@@ -1,4 +1,10 @@
-import { HttpException, HttpStatus, Inject, Injectable, forwardRef } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  forwardRef,
+} from '@nestjs/common';
 import { CreateObservationReturnCaseDto } from '../dto/create-observation-return-case.dto';
 import { UpdateObservationReturnCaseDto } from '../dto/update-observation-return-case.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -18,12 +24,16 @@ export class ObservationReturnCaseService {
     private readonly caseReportValidateService: CaseReportValidateService,
   ) {}
 
-  async create(
+  async createObservationReturnCase(
     createObservationReturnCaseDto: CreateObservationReturnCaseDto,
     idUser: number,
     idCaseValidate: string,
   ) {
-    await this.caseReportValidateService.findOneReportValidate(idCaseValidate);
+    const findReportCaseValidate =
+      await this.caseReportValidateService.findOneReportValidate(
+        idCaseValidate,
+      );
+
     await this.reasonReturnCaseService.findOneReasonReturnCase(
       createObservationReturnCaseDto.rec_o_reasonreturn_id_fk,
     );
@@ -33,7 +43,12 @@ export class ObservationReturnCaseService {
       rec_o_user_id: idUser,
       rec_o_validatedcase_id_fk: idCaseValidate,
     });
-    return await this.observationReturnRepository.save(observationReturns);
+    await this.observationReturnRepository.save(observationReturns);
+
+    return new HttpException(
+      `¡La observación del caso #${findReportCaseValidate.val_cr_filingnumber} se creó correctamente!`,
+      HttpStatus.CREATED,
+    );
   }
 
   async findAllObservationReturnCase(): Promise<ObservationReturnCaseEntity[]> {
@@ -52,9 +67,7 @@ export class ObservationReturnCaseService {
     return observationReturns;
   }
 
-  async findOneObservationReturnCase(
-    id: number,
-  ): Promise<ObservationReturnCaseEntity> {
+  async findOneObservationReturnCase(id: number) {
     const observationReturn = await this.observationReturnRepository.findOne({
       where: {
         id,
@@ -84,10 +97,14 @@ export class ObservationReturnCaseService {
     if (result.affected === 0) {
       return new HttpException(
         `No se pudo actualizar la observación de devolución del caso`,
-        HttpStatus.ACCEPTED,
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-    return observationReturn;
+
+    return new HttpException(
+      `¡Datos actualizados correctamente!`,
+      HttpStatus.OK,
+    );
   }
 
   async deleteObservationReturnCase(id: number) {
@@ -102,9 +119,6 @@ export class ObservationReturnCaseService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-    return new HttpException(
-      `¡Datos eliminados correctamente!`,
-      HttpStatus.ACCEPTED,
-    );
+    return new HttpException(`¡Datos eliminados correctamente!`, HttpStatus.OK);
   }
 }
