@@ -12,9 +12,7 @@ export class RiskLevelService {
     private readonly riskLevelRepository: Repository<RiskLevelEntity>,
   ) {}
 
-  async createRiskLevel(
-    createRiskLevelDto: CreateRiskLevelDto,
-  ) {
+  async createRiskLevel(createRiskLevelDto: CreateRiskLevelDto) {
     const FindRiskLevel = await this.riskLevelRepository.findOne({
       where: {
         ris_l_name: createRiskLevelDto.ris_l_name,
@@ -30,11 +28,11 @@ export class RiskLevelService {
     }
     const riskLevel = this.riskLevelRepository.create(createRiskLevelDto);
     await this.riskLevelRepository.save(riskLevel);
-    
+
     return new HttpException(
       `¡El nivel de riesgo ${riskLevel.ris_l_name} se creó correctamente!`,
       HttpStatus.CREATED,
-    ); 
+    );
   }
 
   async findAllRiskLevel() {
@@ -91,7 +89,7 @@ export class RiskLevelService {
 
     return new HttpException(
       `¡Datos actualizados correctamente!`,
-      HttpStatus.ACCEPTED,
+      HttpStatus.OK,
     );
   }
 
@@ -105,9 +103,6 @@ export class RiskLevelService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-    return new HttpException(
-      `¡Datos eliminados correctamente!`,
-      HttpStatus.ACCEPTED,
-    );
+    return new HttpException(`¡Datos eliminados correctamente!`, HttpStatus.OK);
   }
 }

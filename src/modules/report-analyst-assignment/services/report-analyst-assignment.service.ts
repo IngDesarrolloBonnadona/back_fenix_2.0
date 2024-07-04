@@ -305,7 +305,7 @@ export class ReportAnalystAssignmentService {
 
     return new HttpException(
       `¡Analista reasignado correctamente!`,
-      HttpStatus.ACCEPTED,
+      HttpStatus.OK,
     );
   }
 
@@ -313,7 +313,7 @@ export class ReportAnalystAssignmentService {
     createReportAnalystAssignmentDto: ReportAnalystAssignmentDto,
     clientIp: string,
     idAnalystCurrent: number,
-  ){
+  ) {
     const reportAssignmentFind =
       await this.reportAnalystAssignmentRepository.findOne({
         where: {
@@ -612,7 +612,7 @@ export class ReportAnalystAssignmentService {
 
     return new HttpException(
       `¡Reporte devuelto a validador correctamente!`,
-      HttpStatus.ACCEPTED,
+      HttpStatus.OK,
     );
   }
 
@@ -629,9 +629,6 @@ export class ReportAnalystAssignmentService {
       );
     }
 
-    return new HttpException(
-      `¡Datos eliminados correctamente!`,
-      HttpStatus.ACCEPTED,
-    );
+    return new HttpException(`¡Datos eliminados correctamente!`, HttpStatus.OK);
   }
 }

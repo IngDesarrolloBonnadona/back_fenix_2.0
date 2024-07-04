@@ -96,7 +96,7 @@ export class RiskTypeService {
 
     return new HttpException(
       `¡Datos actualizados correctamente!`,
-      HttpStatus.ACCEPTED,
+      HttpStatus.OK,
     );
   }
 
@@ -110,9 +110,6 @@ export class RiskTypeService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-    return new HttpException(
-      `¡Datos eliminados correctamente!`,
-      HttpStatus.ACCEPTED,
-    );
+    return new HttpException(`¡Datos eliminados correctamente!`, HttpStatus.OK);
   }
 }

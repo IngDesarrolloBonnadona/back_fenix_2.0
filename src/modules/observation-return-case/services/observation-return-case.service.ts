@@ -67,9 +67,7 @@ export class ObservationReturnCaseService {
     return observationReturns;
   }
 
-  async findOneObservationReturnCase(
-    id: number,
-  ) {
+  async findOneObservationReturnCase(id: number) {
     const observationReturn = await this.observationReturnRepository.findOne({
       where: {
         id,
@@ -99,13 +97,13 @@ export class ObservationReturnCaseService {
     if (result.affected === 0) {
       return new HttpException(
         `No se pudo actualizar la observación de devolución del caso`,
-        HttpStatus.ACCEPTED,
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-    
+
     return new HttpException(
       `¡Datos actualizados correctamente!`,
-      HttpStatus.ACCEPTED,
+      HttpStatus.OK,
     );
   }
 
@@ -121,9 +119,6 @@ export class ObservationReturnCaseService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-    return new HttpException(
-      `¡Datos eliminados correctamente!`,
-      HttpStatus.ACCEPTED,
-    );
+    return new HttpException(`¡Datos eliminados correctamente!`, HttpStatus.OK);
   }
 }

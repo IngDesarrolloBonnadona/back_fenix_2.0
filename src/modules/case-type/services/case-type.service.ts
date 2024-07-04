@@ -1,8 +1,4 @@
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateCaseTypeDto } from '../dto/create-case-type.dto';
 import { UpdateCaseTypeDto } from '../dto/update-case-type.dto';
 import { Repository } from 'typeorm';
@@ -16,9 +12,7 @@ export class CaseTypeService {
     private readonly caseTypeRepository: Repository<CaseTypeEntity>,
   ) {}
 
-  async createCaseType(
-    createCaseTypeDto: CreateCaseTypeDto,
-  ) {
+  async createCaseType(createCaseTypeDto: CreateCaseTypeDto) {
     const findCaseType = await this.caseTypeRepository.findOne({
       where: {
         cas_t_name: createCaseTypeDto.cas_t_name,
@@ -34,7 +28,7 @@ export class CaseTypeService {
     }
     const caseType = this.caseTypeRepository.create(createCaseTypeDto);
     await this.caseTypeRepository.save(caseType);
-    
+
     return new HttpException(
       `¡el tipo de caso ${caseType.cas_t_name} se creó correctamente!`,
       HttpStatus.CREATED,
@@ -43,7 +37,7 @@ export class CaseTypeService {
 
   async findAllCaseTypes() {
     const caseTypes = await this.caseTypeRepository.find({
-      where: { cas_t_status: true }
+      where: { cas_t_status: true },
       // relations: {
       //   eventType: true,
       //   caseReportValidate: true,
@@ -97,7 +91,7 @@ export class CaseTypeService {
 
     return new HttpException(
       `¡Datos actualizados correctamente!`,
-      HttpStatus.ACCEPTED,
+      HttpStatus.OK,
     );
   }
 
@@ -112,9 +106,6 @@ export class CaseTypeService {
       );
     }
 
-    return new HttpException(
-      `¡Datos eliminados correctamente!`,
-      HttpStatus.ACCEPTED,
-    );
+    return new HttpException(`¡Datos eliminados correctamente!`, HttpStatus.OK);
   }
 }

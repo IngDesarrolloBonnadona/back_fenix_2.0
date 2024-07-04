@@ -40,11 +40,11 @@ export class UnitService {
 
     const unit = this.unitRepository.create(createUnitDto);
     await this.unitRepository.save(unit);
-    
+
     return new HttpException(
       `¡La unidad ${unit.unit_name} se creó correctamente!`,
       HttpStatus.CREATED,
-    ); 
+    );
   }
 
   async findAllUnits() {
@@ -121,7 +121,7 @@ export class UnitService {
 
     return new HttpException(
       `¡Datos actualizados correctamente!`,
-      HttpStatus.ACCEPTED,
+      HttpStatus.OK,
     );
   }
 
@@ -135,9 +135,6 @@ export class UnitService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-    return new HttpException(
-      `¡Datos eliminados correctamente!`,
-      HttpStatus.ACCEPTED,
-    );
+    return new HttpException(`¡Datos eliminados correctamente!`, HttpStatus.OK);
   }
 }

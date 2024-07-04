@@ -42,11 +42,11 @@ export class EventService {
 
     const event = this.eventRepository.create(createEventDto);
     await this.eventRepository.save(event);
-    
+
     return new HttpException(
       `¡El suceso ${event.eve_name} se creó correctamente!`,
       HttpStatus.CREATED,
-    ); 
+    );
   }
 
   async findAllEvents() {
@@ -117,7 +117,7 @@ export class EventService {
 
     return new HttpException(
       `¡Datos actualizados correctamente!`,
-      HttpStatus.ACCEPTED,
+      HttpStatus.OK,
     );
   }
 
@@ -132,9 +132,6 @@ export class EventService {
       );
     }
 
-    return new HttpException(
-      `¡Datos eliminados correctamente!`,
-      HttpStatus.ACCEPTED,
-    );
+    return new HttpException(`¡Datos eliminados correctamente!`, HttpStatus.OK);
   }
 }

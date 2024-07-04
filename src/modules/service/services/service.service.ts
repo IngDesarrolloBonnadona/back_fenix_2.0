@@ -92,7 +92,7 @@ export class ServiceService {
 
     return new HttpException(
       `¡Datos actualizados correctamente!`,
-      HttpStatus.ACCEPTED,
+      HttpStatus.OK,
     );
   }
 
@@ -106,9 +106,6 @@ export class ServiceService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-    return new HttpException(
-      `¡Datos eliminados correctamente!`,
-      HttpStatus.ACCEPTED,
-    );
+    return new HttpException(`¡Datos eliminados correctamente!`, HttpStatus.OK);
   }
 }

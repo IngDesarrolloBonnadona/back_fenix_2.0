@@ -20,9 +20,7 @@ export class EventTypeService {
     private readonly caseTypeService: CaseTypeService,
   ) {}
 
-  async createEventType(
-    createEventTypeDto: CreateEventTypeDto,
-  ) {
+  async createEventType(createEventTypeDto: CreateEventTypeDto) {
     const findEventType = await this.eventTypeRepository.findOne({
       where: {
         eve_t_name: createEventTypeDto.eve_t_name,
@@ -43,17 +41,17 @@ export class EventTypeService {
 
     const eventType = this.eventTypeRepository.create(createEventTypeDto);
     await this.eventTypeRepository.save(eventType);
-    
+
     return new HttpException(
       `¡El tipo de suceso ${eventType.eve_t_name} se creó correctamente!`,
       HttpStatus.CREATED,
-    ); 
+    );
   }
 
   async findAllEventTypes() {
     const eventTypes = await this.eventTypeRepository.find({
       where: {
-        eve_t_status: true
+        eve_t_status: true,
       },
       relations: {
         event: true,
@@ -129,7 +127,7 @@ export class EventTypeService {
 
     return new HttpException(
       `¡Datos actualizados correctamente!`,
-      HttpStatus.ACCEPTED,
+      HttpStatus.OK,
     );
   }
 
@@ -144,9 +142,6 @@ export class EventTypeService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-    return new HttpException(
-      `¡Datos eliminados correctamente!`,
-      HttpStatus.ACCEPTED,
-    );
+    return new HttpException(`¡Datos eliminados correctamente!`, HttpStatus.OK);
   }
 }

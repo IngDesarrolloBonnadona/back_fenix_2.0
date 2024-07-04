@@ -42,7 +42,7 @@ export class SeverityClasificationService {
     return new HttpException(
       `¡La clasificiación de severidad ${severityClasif.sev_c_name} se creó correctamente!`,
       HttpStatus.CREATED,
-    ); 
+    );
   }
 
   async findAllSeverityClasifications() {
@@ -108,7 +108,7 @@ export class SeverityClasificationService {
 
     return new HttpException(
       `¡Datos actualizados correctamente!`,
-      HttpStatus.ACCEPTED,
+      HttpStatus.OK,
     );
   }
 
@@ -124,9 +124,6 @@ export class SeverityClasificationService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-    return new HttpException(
-      `¡Datos eliminados correctamente!`,
-      HttpStatus.ACCEPTED,
-    );
+    return new HttpException(`¡Datos eliminados correctamente!`, HttpStatus.OK);
   }
 }

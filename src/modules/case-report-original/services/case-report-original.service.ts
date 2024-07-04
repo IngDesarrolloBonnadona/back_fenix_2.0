@@ -64,10 +64,7 @@ export class CaseReportOriginalService {
     private dataSource: DataSource,
   ) {}
 
-  async createReportOriginal(
-    createReportOriDto: any,
-    clientIp: string,
-  ) {
+  async createReportOriginal(createReportOriDto: any, clientIp: string) {
     await OriDtoValidator(createReportOriDto, this.caseTypeRepository);
 
     const queryRunner = this.dataSource.createQueryRunner();
@@ -350,7 +347,7 @@ export class CaseReportOriginalService {
 
     return new HttpException(
       `¡Datos actualizados correctamente!`,
-      HttpStatus.ACCEPTED,
+      HttpStatus.OK,
     );
   }
 
@@ -367,9 +364,6 @@ export class CaseReportOriginalService {
       );
     }
 
-    return new HttpException(
-      `¡Datos eliminados correctamente!`,
-      HttpStatus.ACCEPTED,
-    );
+    return new HttpException(`¡Datos eliminados correctamente!`, HttpStatus.OK);
   }
 }

@@ -34,13 +34,13 @@ export class OriginService {
     return new HttpException(
       `¡El origen ${origin.orig_name} se creó correctamente!`,
       HttpStatus.CREATED,
-    ); 
+    );
   }
 
   async findAllOrigins() {
     const origins = await this.originRepository.find({
       where: {
-        orig_status: true
+        orig_status: true,
       },
       relations: {
         subOrigins: true,
@@ -93,7 +93,7 @@ export class OriginService {
 
     return new HttpException(
       `¡Datos actualizados correctamente!`,
-      HttpStatus.ACCEPTED,
+      HttpStatus.OK,
     );
   }
 
@@ -107,9 +107,6 @@ export class OriginService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-    return new HttpException(
-      `¡Datos eliminados correctamente!`,
-      HttpStatus.ACCEPTED,
-    );
+    return new HttpException(`¡Datos eliminados correctamente!`, HttpStatus.OK);
   }
 }

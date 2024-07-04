@@ -236,7 +236,7 @@ export class SynergyService {
 
     return new HttpException(
       `¡Caso reprogramado correctamente!`,
-      HttpStatus.ACCEPTED,
+      HttpStatus.OK,
     );
   }
 
@@ -257,9 +257,12 @@ export class SynergyService {
       );
     }
 
-    const updateStatusSynergy = await this.synergyRepository.update(synergy.id, {
-      syn_status: true,
-    });
+    const updateStatusSynergy = await this.synergyRepository.update(
+      synergy.id,
+      {
+        syn_status: true,
+      },
+    );
 
     if (updateStatusSynergy.affected === 0) {
       throw new HttpException(
@@ -316,9 +319,6 @@ export class SynergyService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-    return new HttpException(
-      `¡Datos eliminados correctamente!`,
-      HttpStatus.ACCEPTED,
-    );
+    return new HttpException(`¡Datos eliminados correctamente!`, HttpStatus.OK);
   }
 }

@@ -654,7 +654,7 @@ export class CaseReportValidateService {
 
     return new HttpException(
       `¡Datos actualizados correctamente!`,
-      HttpStatus.ACCEPTED,
+      HttpStatus.OK,
     );
   }
 
@@ -763,9 +763,6 @@ export class CaseReportValidateService {
       );
     }
 
-    return new HttpException(
-      `¡Datos anulados correctamente!`,
-      HttpStatus.ACCEPTED,
-    );
+    return new HttpException(`¡Datos anulados correctamente!`, HttpStatus.OK);
   }
 }

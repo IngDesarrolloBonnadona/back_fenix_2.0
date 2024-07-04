@@ -20,9 +20,7 @@ export class SubOriginService {
     private readonly originService: OriginService,
   ) {}
 
-  async createSubOrigin(
-    createSubOriginDto: CreateSubOriginDto,
-  ) {
+  async createSubOrigin(createSubOriginDto: CreateSubOriginDto) {
     const FindSubOrigin = await this.subOriginRepository.findOne({
       where: {
         sub_o_name: createSubOriginDto.sub_o_name,
@@ -40,12 +38,11 @@ export class SubOriginService {
 
     const subOrigin = this.subOriginRepository.create(createSubOriginDto);
     await this.subOriginRepository.save(subOrigin);
-    
+
     return new HttpException(
       `¡El sub origen ${subOrigin.sub_o_name} se creó correctamente!`,
       HttpStatus.CREATED,
     );
-    
   }
 
   async findAllSubOrigins() {
@@ -126,7 +123,7 @@ export class SubOriginService {
 
     return new HttpException(
       `¡Datos actualizados correctamente!`,
-      HttpStatus.ACCEPTED,
+      HttpStatus.OK,
     );
   }
 
@@ -140,9 +137,6 @@ export class SubOriginService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-    return new HttpException(
-      `¡Datos eliminados correctamente!`,
-      HttpStatus.ACCEPTED,
-    );
+    return new HttpException(`¡Datos eliminados correctamente!`, HttpStatus.OK);
   }
 }

@@ -1,8 +1,4 @@
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateMovementReportDto } from '../dto/create-movement-report.dto';
 import { UpdateMovementReportDto } from '../dto/update-movement-report.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -16,9 +12,7 @@ export class MovementReportService {
     private readonly movementReportRepository: Repository<MovementReportEntity>,
   ) {}
 
-  async createMovementReport(
-    createMovementReportDto: CreateMovementReportDto,
-  ) {
+  async createMovementReport(createMovementReportDto: CreateMovementReportDto) {
     const FindmovementReport = await this.movementReportRepository.findOne({
       where: {
         mov_r_name: createMovementReportDto.mov_r_name,
@@ -37,11 +31,11 @@ export class MovementReportService {
       createMovementReportDto,
     );
     await this.movementReportRepository.save(movementReport);
-    
+
     return new HttpException(
       `¡El movimiviento de reportes ${movementReport.mov_r_name} se creó correctamente!`,
       HttpStatus.CREATED,
-    ); 
+    );
   }
 
   async findAllMovementReports() {
@@ -98,7 +92,7 @@ export class MovementReportService {
 
     return new HttpException(
       `¡Datos actualizados correctamente!`,
-      HttpStatus.ACCEPTED,
+      HttpStatus.OK,
     );
   }
 
@@ -114,9 +108,6 @@ export class MovementReportService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-    return new HttpException(
-      `¡Datos eliminados correctamente!`,
-      HttpStatus.ACCEPTED,
-    );
+    return new HttpException(`¡Datos eliminados correctamente!`, HttpStatus.OK);
   }
 }

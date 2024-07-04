@@ -15,9 +15,7 @@ export class PositionService {
     private readonly httpPositionService: HttpPositionService,
   ) {}
 
-  async createPosition(
-    createPositionDto: CreatePositionDto,
-  ) {
+  async createPosition(createPositionDto: CreatePositionDto) {
     const FindPosition = await this.positionRepository.findOne({
       where: {
         pos_name: createPositionDto.pos_name,
@@ -26,18 +24,15 @@ export class PositionService {
     });
 
     if (FindPosition) {
-      throw new HttpException(
-        'La posicion ya existe.',
-        HttpStatus.CONFLICT,
-      );
+      throw new HttpException('La posicion ya existe.', HttpStatus.CONFLICT);
     }
     const position = this.positionRepository.create(createPositionDto);
     await this.positionRepository.save(position);
-    
+
     return new HttpException(
       `¡La posición ${position.pos_name} se creó correctamente!`,
       HttpStatus.CREATED,
-    ); 
+    );
   }
 
   async synchronizePositions() {
@@ -127,10 +122,7 @@ export class PositionService {
     return externalData.data.data;
   }
 
-  async updateEnabledPosition(
-    id: number,
-    enabledPosition: UpdatePositionDto,
-  ) {
+  async updateEnabledPosition(id: number, enabledPosition: UpdatePositionDto) {
     const position = await this.findOnePosition(id);
     const result = await this.positionRepository.update(
       position.id,
@@ -146,7 +138,7 @@ export class PositionService {
 
     return new HttpException(
       `¡Datos actualizados correctamente!`,
-      HttpStatus.ACCEPTED,
+      HttpStatus.OK,
     );
   }
 
@@ -161,9 +153,6 @@ export class PositionService {
       );
     }
 
-    return new HttpException(
-      `¡Datos eliminados correctamente!`,
-      HttpStatus.ACCEPTED,
-    );
+    return new HttpException(`¡Datos eliminados correctamente!`, HttpStatus.OK);
   }
 }

@@ -44,11 +44,11 @@ export class LogService {
 
     const log = this.logRepository.create(createLogDto);
     await this.logRepository.save(log);
-    
+
     return new HttpException(
       `¡El log se creó correctamente!`,
       HttpStatus.CREATED,
-    ); 
+    );
   }
 
   async findAllLogs() {
@@ -95,7 +95,7 @@ export class LogService {
 
     return new HttpException(
       `¡Datos actualizados correctamente!`,
-      HttpStatus.ACCEPTED,
+      HttpStatus.OK,
     );
   }
 
@@ -109,9 +109,6 @@ export class LogService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-    return new HttpException(
-      `¡Datos eliminados correctamente!`,
-      HttpStatus.ACCEPTED,
-    );
+    return new HttpException(`¡Datos eliminados correctamente!`, HttpStatus.OK);
   }
 }

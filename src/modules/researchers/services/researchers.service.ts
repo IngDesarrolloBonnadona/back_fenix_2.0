@@ -177,7 +177,7 @@ export class ResearchersService {
     const updateStatusMovement = await this.caseReportValidateRepository.update(
       createResearcherDto.res_validatedcase_id_fk,
       {
-        val_cr_statusmovement_id_fk: movementReportFound.id
+        val_cr_statusmovement_id_fk: movementReportFound.id,
       },
     );
 
@@ -442,7 +442,7 @@ export class ResearchersService {
 
     return new HttpException(
       `Investigador reasignado correctamente!`,
-      HttpStatus.ACCEPTED,
+      HttpStatus.OK,
     );
   }
 
@@ -451,15 +451,14 @@ export class ResearchersService {
     clientIp: string,
     idResearcher: number,
   ) {
-    const findReportResearcherAssigned = await this.researcherRepository.findOne(
-      {
+    const findReportResearcherAssigned =
+      await this.researcherRepository.findOne({
         where: {
           res_validatedcase_id_fk: idCaseReportValidate,
           res_status: true,
           res_isreturned: false,
         },
-      },
-    );
+      });
 
     if (!findReportResearcherAssigned) {
       throw new HttpException(
@@ -539,7 +538,7 @@ export class ResearchersService {
 
     return new HttpException(
       `¡Reporte devuelto a analista correctamente!`,
-      HttpStatus.ACCEPTED,
+      HttpStatus.OK,
     );
   }
 
@@ -554,9 +553,6 @@ export class ResearchersService {
       );
     }
 
-    return new HttpException(
-      `¡Datos eliminados correctamente!`,
-      HttpStatus.ACCEPTED,
-    );
+    return new HttpException(`¡Datos eliminados correctamente!`, HttpStatus.OK);
   }
 }
