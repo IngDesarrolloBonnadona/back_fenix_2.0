@@ -344,6 +344,8 @@ export class ReportAnalystAssignmentService {
             createReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
           ass_ra_position_id_fk:
             createReportAnalystAssignmentDto.ass_ra_position_id_fk,
+          ass_ra_status: true,
+          ass_ra_isreturned: false,
         },
       });
 
@@ -383,7 +385,7 @@ export class ReportAnalystAssignmentService {
       ...createReportAnalystAssignmentDto,
       ass_ra_uservalidator_id: reportAssignmentFind.ass_ra_uservalidator_id,
       ass_ra_days: reportAssignmentFind.ass_ra_days,
-      ass_ra_amountreturns: reportAssignmentFind.ass_ra_amountreturns += 1
+      ass_ra_amountreturns: (reportAssignmentFind.ass_ra_amountreturns += 1),
     });
 
     const assigned = await this.reportAnalystAssignmentRepository.save(analyst);
@@ -524,6 +526,88 @@ export class ReportAnalystAssignmentService {
       );
     }
     return analystReporter;
+  }
+
+  async returnCaseToValidator(
+    idCaseReportValidate: string,
+    clientIp: string,
+    idAnalyst: number,
+  ) {
+    const findReportAnalystAssigned =
+      await this.reportAnalystAssignmentRepository.findOne({
+        where: {
+          ass_ra_validatedcase_id_fk: idCaseReportValidate,
+          ass_ra_status: true,
+          ass_ra_isreturned: false,
+        },
+      });
+
+    if (!findReportAnalystAssigned) {
+      throw new HttpException(
+        'No se encontró el reporte asignado a analista.',
+        HttpStatus.NO_CONTENT,
+      );
+    }
+
+    await this.caseReportValidateService.findOneReportValidate(
+      idCaseReportValidate,
+    );
+
+    const updateStatusReturn =
+      await this.reportAnalystAssignmentRepository.update(
+        findReportAnalystAssigned.id,
+        {
+          ass_ra_status: false,
+          ass_ra_isreturned: true,
+        },
+      );
+
+    if (updateStatusReturn.affected === 0) {
+      throw new HttpException(
+        `No se pudo actualizar el estado.`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    const findMovementReport = await this.movementReportRepository.findOne({
+      where: {
+        mov_r_name: movementReport.RETURN_CASE_VALIDATOR,
+        mov_r_status: true,
+      },
+    });
+
+    if (!findMovementReport) {
+      throw new HttpException(
+        `El movimiento ${movementReport.RETURN_CASE_VALIDATOR} no existe.`,
+        HttpStatus.NO_CONTENT,
+      );
+    }
+
+    const updateStatusMovement = await this.caseReportValidateRepository.update(
+      idCaseReportValidate,
+      {
+        val_cr_statusmovement_id_fk: findMovementReport.id,
+      },
+    );
+
+    if (updateStatusMovement.affected === 0) {
+      throw new HttpException(
+        `No se pudo actualizar el moviemiento del reporte.`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    await this.logService.createLog(
+      idCaseReportValidate,
+      idAnalyst,
+      clientIp,
+      logReports.LOG_RETURN_CASE_VALIDATOR,
+    );
+
+    return new HttpException(
+      `¡Reporte devuelto a validador correctamente!`,
+      HttpStatus.ACCEPTED,
+    );
   }
 
   async deleteAssignedAnalyst(id: number) {

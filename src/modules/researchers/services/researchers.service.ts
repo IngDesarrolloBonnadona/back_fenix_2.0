@@ -448,7 +448,7 @@ export class ResearchersService {
     clientIp: string,
     idResearcher: number,
   ) {
-    const findReportResearcherAssined = await this.researcherRepository.findOne(
+    const findReportResearcherAssigned = await this.researcherRepository.findOne(
       {
         where: {
           res_validatedcase_id_fk: idCaseReportValidate,
@@ -458,7 +458,7 @@ export class ResearchersService {
       },
     );
 
-    if (!findReportResearcherAssined) {
+    if (!findReportResearcherAssigned) {
       throw new HttpException(
         'No se encontró el reporte asignado a investigador.',
         HttpStatus.NO_CONTENT,
@@ -485,7 +485,7 @@ export class ResearchersService {
     );
 
     const updateStatusReturn = await this.researcherRepository.update(
-      findReportResearcherAssined.id,
+      findReportResearcherAssigned.id,
       {
         res_status: false,
         res_isreturned: true,

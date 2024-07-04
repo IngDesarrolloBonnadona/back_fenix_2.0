@@ -103,6 +103,19 @@ export class ReportAnalystAssignmentController {
     );
   }
 
+  @Patch('updateReturnCaseToValidator/:idAnalyst/:idCaseReportValidate')
+  updateReturnCaseToValidator(
+    @Param('idCaseReportValidate') idCaseReportValidate: string,
+    @Ip() clientIp: string,
+    @Param('idAnalyst') idAnalyst: number,
+  ) {
+    return this.reportAnalisysAssignmentService.returnCaseToValidator(
+      idCaseReportValidate,
+      clientIp,
+      idAnalyst,
+    );
+  }
+
   @Delete('deleteAssignedAnalyst/:id')
   deleteAssignedAnalyst(@Param('id') id: number): Promise<HttpException> {
     return this.reportAnalisysAssignmentService.deleteAssignedAnalyst(id);
