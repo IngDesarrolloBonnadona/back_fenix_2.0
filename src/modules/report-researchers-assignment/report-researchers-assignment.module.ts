@@ -1,10 +1,10 @@
 import { Module, forwardRef } from '@nestjs/common';
-import { ResearchersService } from './services/researchers.service';
-import { ResearchersController } from './controllers/researchers.controller';
+import { ResearchersService } from './services/report-researchers-assignment.service';
+import { ReportResearchersAssignmentController } from './controllers/report-researchers-assignment.controller';
 import { HttpModule } from '@nestjs/axios';
 import { HttpResearchersService } from './http/http-researchers.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Researcher } from './entities/researchers.entity';
+import { ReportResearcherAssignment } from './entities/report-researchers-assignment.entity';
 import { CaseReportValidateModule } from '../case-report-validate/case-report-validate.module';
 import { LogModule } from '../log/log.module';
 import { MovementReport } from '../movement-report/entities/movement-report.entity';
@@ -18,7 +18,7 @@ import { ReportAnalystAssignment } from '../report-analyst-assignment/entities/r
 @Module({
   imports: [
     TypeOrmModule.forFeature([
-      Researcher,
+      ReportResearcherAssignment,
       MovementReport,
       CaseReportValidate,
       CaseType,
@@ -31,7 +31,7 @@ import { ReportAnalystAssignment } from '../report-analyst-assignment/entities/r
     LogModule,
     forwardRef(() => CaseReportValidateModule),
   ],
-  controllers: [ResearchersController],
+  controllers: [ReportResearchersAssignmentController],
   providers: [ResearchersService, HttpResearchersService],
   exports: [ResearchersService],
 })

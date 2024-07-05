@@ -12,7 +12,7 @@ import {
   Patch,
 } from '@nestjs/common';
 import { ReportAnalystAssignmentService } from '../services/report-analyst-assignment.service';
-import { ReportAnalystAssignmentDto } from '../dto/analyst-assignment.dto';
+import { CreateReportAnalystAssignmentDto } from '../dto/create-report-analyst-assignment.dto';
 import { UpdateReportAnalystAssignmentDto } from '../dto/update-report-analyst-assignment.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { ReportAnalystAssignment } from '../entities/report-analyst-assignment.entity';
@@ -26,7 +26,7 @@ export class ReportAnalystAssignmentController {
 
   @Post('assingAnalyst/:idValidator')
   createAssingAnalystReporter(
-    @Body() createAnalystReporterDto: ReportAnalystAssignmentDto,
+    @Body() createAnalystReporterDto: CreateReportAnalystAssignmentDto,
     @Ip() clientIp: string,
     @Param('idValidator') idValidator: number,
   ): Promise<HttpException> {
@@ -39,7 +39,7 @@ export class ReportAnalystAssignmentController {
 
   @Post('returnCaseBetweenAnalyst/:idAnalystCurrent')
   createReturnCaseBetweenAnalyst(
-    @Body() createAnalystReporterDto: ReportAnalystAssignmentDto,
+    @Body() createAnalystReporterDto: CreateReportAnalystAssignmentDto,
     @Ip() clientIp: string,
     @Param('idAnalystCurrent') idAnalystCurrent: number,
   ): Promise<HttpException> {

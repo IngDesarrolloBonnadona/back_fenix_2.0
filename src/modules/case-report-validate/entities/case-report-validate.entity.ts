@@ -23,7 +23,7 @@ import { EventType } from 'src/modules/event-type/entities/event-type.entity';
 import { Event } from 'src/modules/event/entities/event.entity';
 import { Service } from 'src/modules/service/entities/service.entity';
 import { Unit } from 'src/modules/unit/entities/unit.entity';
-import { Researcher } from 'src/modules/researchers/entities/researchers.entity';
+import { ReportResearcherAssignment } from 'src/modules/report-researchers-assignment/entities/report-researchers-assignment.entity';
 import { Priority } from 'src/modules/priority/entities/priority.entity';
 import { MovementReport } from 'src/modules/movement-report/entities/movement-report.entity';
 import { CharacterizationCase } from 'src/modules/characterization-cases/entities/characterization-case.entity';
@@ -234,9 +234,15 @@ export class CaseReportValidate {
   @OneToMany(() => Synergy, (synergy) => synergy.caseReportValidate)
   synergy: Synergy[];
 
-  @OneToMany(() => Researcher, (researcher) => researcher.caseReportValidate)
-  researcher: Researcher[];
+  @OneToMany(
+    () => ReportResearcherAssignment,
+    (researcher) => researcher.caseReportValidate,
+  )
+  researcher: ReportResearcherAssignment[];
 
-  @OneToMany(() => ObservationReturnCase, (observationReturnCase) => observationReturnCase.caseReportValidate)
+  @OneToMany(
+    () => ObservationReturnCase,
+    (observationReturnCase) => observationReturnCase.caseReportValidate,
+  )
   observationReturnCase: ObservationReturnCase[];
 }

@@ -19,7 +19,7 @@ import { MovementReportModule } from './modules/movement-report/movement-report.
 import { LogModule } from './modules/log/log.module';
 import { PositionModule } from './modules/position/position.module';
 import { ReportAnalystAssignmentModule } from './modules/report-analyst-assignment/report-analyst-assignment.module';
-import { ResearchersModule } from './modules/researchers/researchers.module';
+import { ResearchersModule } from './modules/report-researchers-assignment/report-researchers-assignment.module';
 import { PatientModule } from './modules/patient/patient.module';
 import { SynergyModule } from './modules/synergy/synergy.module';
 import { PriorityModule } from './modules/priority/priority.module';
