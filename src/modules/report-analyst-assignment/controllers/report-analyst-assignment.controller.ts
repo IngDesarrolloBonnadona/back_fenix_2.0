@@ -16,6 +16,7 @@ import { CreateReportAnalystAssignmentDto } from '../dto/create-report-analyst-a
 import { UpdateReportAnalystAssignmentDto } from '../dto/update-report-analyst-assignment.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { ReportAnalystAssignment } from '../entities/report-analyst-assignment.entity';
+import { QueryReportAnalystAssignmentDto } from '../dto/query-report-analyst-assignment.dto';
 
 @ApiTags('report-analyst-assignment')
 @Controller('report-analyst-assignment')
@@ -71,20 +72,33 @@ export class ReportAnalystAssignmentController {
     return this.reportAnalisysAssignmentService.findInfoAnalystByCode(code);
   }
 
+  // @Get('/summaryReportsForAssignCases')
+  // async summaryReportsForAssignCases(
+  //   @Query('filingNumber') filingNumber?: string,
+  //   @Query('statusMovementId') statusMovementId?: number,
+  //   @Query('caseTypeId') caseTypeId?: number,
+  //   @Query('eventId') eventId?: number,
+  //   @Query('priorityId') priorityId?: number,
+  // ) {
+  //   return await this.reportAnalisysAssignmentService.summaryReportsForAssignCases(
+  //     filingNumber,
+  //     statusMovementId,
+  //     caseTypeId,
+  //     eventId,
+  //     priorityId,
+  //   );
+  // }
+
   @Get('/summaryReportsForAssignCases')
   async summaryReportsForAssignCases(
-    @Query('filingNumber') filingNumber?: string,
-    @Query('statusMovementId') statusMovementId?: number,
-    @Query('caseTypeId') caseTypeId?: number,
-    @Query('eventId') eventId?: number,
-    @Query('priorityId') priorityId?: number,
+  @Query() query: QueryReportAnalystAssignmentDto,
   ) {
     return await this.reportAnalisysAssignmentService.summaryReportsForAssignCases(
-      filingNumber,
-      statusMovementId,
-      caseTypeId,
-      eventId,
-      priorityId,
+      query.filingNumber,
+      query.statusMovementId,
+      query.caseTypeId,
+      query.eventId,
+      query.priorityId,
     );
   }
 
