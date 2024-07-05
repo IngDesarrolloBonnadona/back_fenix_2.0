@@ -1,7 +1,7 @@
 import { Type } from 'class-transformer';
 import { IsNumber, IsOptional, IsString } from 'class-validator';
 
-export class SummaryCaseReportValidateDto {
+export class QueryCaseReportValidateDto {
   @IsString()
   @IsOptional()
   filingNumber: string;

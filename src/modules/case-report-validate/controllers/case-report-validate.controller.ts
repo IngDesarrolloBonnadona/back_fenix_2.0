@@ -18,7 +18,7 @@ import { CaseReportValidate } from '../entities/case-report-validate.entity';
 import { ApiTags } from '@nestjs/swagger';
 import { FindSimilarCaseReportValidateDto } from '../dto/find-similar-case-report-validate';
 import { CreateReportValDto } from '../helper/val-dto-validator.helper';
-import { SummaryCaseReportValidateDto } from '../dto/summary-case-report-validate.dto';
+import { QueryCaseReportValidateDto } from '../dto/query-case-report-validate.dto';
 
 @ApiTags('case-report-validate')
 @Controller('case-report-validate')
@@ -51,9 +51,11 @@ export class CaseReportValidateController {
 
   @Get('/summaryReportsValidate')
   async SummaryReportsValidate(
-    @Query() query: SummaryCaseReportValidateDto,
+    @Query() query: QueryCaseReportValidateDto,
   ): Promise<CaseReportValidate[]> {
-    const creationDateObj = query.creationDate ? new Date(query.creationDate) : undefined;
+    const creationDateObj = query.creationDate
+      ? new Date(query.creationDate)
+      : undefined;
 
     return await this.caseReportValidateService.summaryReportsValidate(
       creationDateObj,
@@ -91,9 +93,11 @@ export class CaseReportValidateController {
 
   @Get('/summaryReportsForReview')
   async summaryReportsForReview(
-    @Query() query: SummaryCaseReportValidateDto,
+    @Query() query: QueryCaseReportValidateDto,
   ): Promise<CaseReportValidate[]> {
-    const creationDateObj = query.creationDate ? new Date(query.creationDate) : undefined;
+    const creationDateObj = query.creationDate
+      ? new Date(query.creationDate)
+      : undefined;
 
     return await this.caseReportValidateService.summaryReportsForReview(
       query.filingNumber,
