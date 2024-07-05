@@ -154,6 +154,9 @@ export class SynergyService {
       where: {
         syn_status: false,
       },
+      order: {
+        createdAt: 'DESC',
+      },
     });
 
     if (synergies.length === 0) {

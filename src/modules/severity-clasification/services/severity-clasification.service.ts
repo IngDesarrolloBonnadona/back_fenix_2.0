@@ -55,6 +55,9 @@ export class SeverityClasificationService {
         priority: true,
         roleResponseTime: true,
       },
+      order: {
+        sev_c_name: 'ASC',
+      },
     });
 
     if (severityClasifs.length === 0) {

@@ -48,6 +48,9 @@ export class PriorityService {
       where: {
         prior_status: true,
       },
+      order: {
+        prior_name: 'ASC',
+      },
     });
 
     if (priorities.length === 0) {

@@ -40,6 +40,9 @@ export class RiskLevelService {
       where: {
         ris_l_status: true,
       },
+      order: {
+        ris_l_name: 'ASC',
+      },
       // relations: {
       //   caseReportValidate: true,
       // },

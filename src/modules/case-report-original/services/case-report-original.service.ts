@@ -282,6 +282,9 @@ export class CaseReportOriginalService {
         unit: true,
         priority: true,
       },
+      order: {
+        createdAt: 'DESC'
+      }
     });
 
     if (!caseReportsOriginal || caseReportsOriginal.length === 0) {

@@ -58,6 +58,9 @@ export class EventService {
         eventType: true,
         // caseReportValidate: true,
       },
+      order: {
+        eve_name: 'ASC',
+      },
     });
 
     if (events.length === 0) {
@@ -92,6 +95,9 @@ export class EventService {
   async findEventByEventTypeId(eventTypeId: number) {
     const events = await this.eventRepository.find({
       where: { eve_eventtype_id_fk: eventTypeId },
+      order: {
+        eve_name: 'ASC',
+      },
     });
 
     if (events.length === 0) {

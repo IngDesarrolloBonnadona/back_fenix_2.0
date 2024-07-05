@@ -56,6 +56,9 @@ export class ObservationReturnCaseService {
       where: {
         rec_o_status: true,
       },
+      order: {
+        createdAt: 'DESC',
+      },
     });
 
     if (observationReturns.length === 0) {

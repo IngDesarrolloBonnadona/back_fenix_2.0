@@ -50,6 +50,9 @@ export class SubOriginService {
       where: {
         sub_o_status: true,
       },
+      order: {
+        sub_o_name: 'ASC',
+      },
       // relations: {
       //   origin: true,
       //   caseReportValidate: true,
@@ -90,6 +93,9 @@ export class SubOriginService {
       where: {
         sub_o_origin_id_fk: originId,
         sub_o_status: true,
+      },
+      order: {
+        sub_o_name: 'ASC',
       },
     });
 

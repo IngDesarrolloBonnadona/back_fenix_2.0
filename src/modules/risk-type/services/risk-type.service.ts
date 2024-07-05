@@ -47,6 +47,9 @@ export class RiskTypeService {
       where: {
         ris_t_status: true,
       },
+      order: {
+        ris_t_name: 'ASC',
+      },
       // relations: {
       //   caseReportValidate: true,
       // },

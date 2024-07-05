@@ -46,6 +46,9 @@ export class CharacterizationCasesService {
       where: {
         cha_c_status: true,
       },
+      order: {
+        cha_c_name: 'ASC'
+      }
     });
 
     if (characterization.length === 0) {

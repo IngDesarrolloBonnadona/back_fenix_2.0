@@ -502,6 +502,9 @@ export class ReportAnalystAssignmentService {
         caseReportValidate: true,
         position: true,
       },
+      order: {
+        createdAt: 'DESC',
+      },
     });
 
     if (analystReporters.length === 0) {

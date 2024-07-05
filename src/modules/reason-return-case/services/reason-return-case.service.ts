@@ -52,6 +52,9 @@ export class ReasonReturnCaseService {
     const reasonReturnCases = await this.reasonReturnCaseRepository.find({
       where: { rec_r_status: true },
       relations: { role: true },
+      order: {
+        rec_r_cause: 'ASC',
+      },
     });
 
     if (reasonReturnCases.length === 0) {

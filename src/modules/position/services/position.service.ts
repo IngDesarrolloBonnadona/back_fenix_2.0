@@ -79,6 +79,9 @@ export class PositionService {
   async findAllPosition() {
     const positions = await this.positionRepository.find({
       where: { pos_enabled: true },
+      order: {
+        pos_name: 'ASC',
+      },
     });
 
     if (positions.length === 0) {

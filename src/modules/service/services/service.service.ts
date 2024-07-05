@@ -47,6 +47,9 @@ export class ServiceService {
         unit: true,
         // caseReportValidate: true,
       },
+      order: {
+        serv_name: 'ASC',
+      },
     });
 
     if (services.length === 0) {

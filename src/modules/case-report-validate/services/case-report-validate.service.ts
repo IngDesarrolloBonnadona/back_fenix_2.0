@@ -110,6 +110,9 @@ export class CaseReportValidateService {
           similarCaseReportValidate.val_cr_eventtype_id_fk,
         val_cr_validated: false,
       },
+      order: {
+        createdAt: 'DESC'
+      }
     });
 
     if (similarReport.length > 0) {
@@ -449,6 +452,9 @@ export class CaseReportValidateService {
         movementReport: true,
       },
       withDeleted: true,
+      order: {
+        createdAt: 'DESC'
+      }
     });
 
     if (caseReportsValidate.length === 0) {
@@ -525,6 +531,9 @@ export class CaseReportValidateService {
         priority: true,
       },
       withDeleted: true,
+      order: {
+        createdAt: 'DESC'
+      }
     });
 
     if (caseReportsValidate.length === 0) {
@@ -556,6 +565,9 @@ export class CaseReportValidateService {
         unit: true,
         priority: true,
       },
+      order: {
+        createdAt: 'DESC'
+      }
     });
 
     if (caseReportValidates.length === 0) {
@@ -623,6 +635,9 @@ export class CaseReportValidateService {
         unit: true,
         priority: true,
       },
+      order: {
+        createdAt: 'DESC'
+      }
     });
 
     if (caseReportValidate.length === 0) {
