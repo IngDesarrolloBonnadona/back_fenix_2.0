@@ -31,8 +31,8 @@ import { ReportAnalystAssignment as ReportAnalystAssignmentEntity } from 'src/mo
 import { ReportAnalystAssignmentService } from 'src/modules/report-analyst-assignment/services/report-analyst-assignment.service';
 import { Synergy as SynergyEntity } from 'src/modules/synergy/entities/synergy.entity';
 import { SynergyService } from 'src/modules/synergy/services/synergy.service';
-import { Researcher as ResearcherEntity } from 'src/modules/researchers/entities/researchers.entity';
-import { ResearchersService } from 'src/modules/researchers/services/researchers.service';
+import { ReportResearcherAssignment as ReportResearcherAssignmentEntity } from 'src/modules/report-researchers-assignment/entities/report-researchers-assignment.entity';
+import { ResearchersService } from 'src/modules/report-researchers-assignment/services/report-researchers-assignment.service';
 import { caseTypeReport } from 'src/enums/caseType-report.enum';
 import { CreateValRiskReportDto } from '../dto/create-val-risk-report.dto';
 import { CreateValAdverseEventReportDto } from '../dto/create-val-adverse-event-report.dto';
@@ -66,8 +66,8 @@ export class CaseReportValidateService {
     private readonly reportAnalystAssignmentRepository: Repository<ReportAnalystAssignmentEntity>,
     @InjectRepository(SynergyEntity)
     private readonly synergyRepository: Repository<SynergyEntity>,
-    @InjectRepository(ResearcherEntity)
-    private readonly researchRepository: Repository<ResearcherEntity>,
+    @InjectRepository(ReportResearcherAssignmentEntity)
+    private readonly researchRepository: Repository<ReportResearcherAssignmentEntity>,
     @InjectRepository(PriorityEntity)
     private readonly priorityRepository: Repository<PriorityEntity>,
     @InjectRepository(ObservationReturnCaseEntity)
@@ -110,6 +110,9 @@ export class CaseReportValidateService {
           similarCaseReportValidate.val_cr_eventtype_id_fk,
         val_cr_validated: false,
       },
+      order: {
+        createdAt: 'DESC'
+      }
     });
 
     if (similarReport.length > 0) {
@@ -449,6 +452,9 @@ export class CaseReportValidateService {
         movementReport: true,
       },
       withDeleted: true,
+      order: {
+        createdAt: 'DESC'
+      }
     });
 
     if (caseReportsValidate.length === 0) {
@@ -525,6 +531,9 @@ export class CaseReportValidateService {
         priority: true,
       },
       withDeleted: true,
+      order: {
+        createdAt: 'DESC'
+      }
     });
 
     if (caseReportsValidate.length === 0) {
@@ -556,6 +565,9 @@ export class CaseReportValidateService {
         unit: true,
         priority: true,
       },
+      order: {
+        createdAt: 'DESC'
+      }
     });
 
     if (caseReportValidates.length === 0) {
@@ -623,6 +635,9 @@ export class CaseReportValidateService {
         unit: true,
         priority: true,
       },
+      order: {
+        createdAt: 'DESC'
+      }
     });
 
     if (caseReportValidate.length === 0) {
@@ -718,7 +733,7 @@ export class CaseReportValidateService {
     const findReportAnalystAssygnment =
       await this.reportAnalystAssignmentRepository.findOne({
         where: {
-          ass_ra_validatedcase_id_fk: caseReportValidate.id,
+          ana_validatedcase_id_fk: caseReportValidate.id,
         },
       });
 

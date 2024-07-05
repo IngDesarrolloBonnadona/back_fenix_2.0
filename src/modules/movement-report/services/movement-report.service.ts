@@ -40,6 +40,12 @@ export class MovementReportService {
 
   async findAllMovementReports() {
     const movementReports = await this.movementReportRepository.find({
+      where: {
+        mov_r_status: true,
+      },
+      order: {
+        mov_r_name: 'ASC'
+      }
       // relations: {
       //   caseReportValidate: true,
       // },
@@ -57,7 +63,7 @@ export class MovementReportService {
 
   async findOneMovementReport(id: number) {
     const movementReport = await this.movementReportRepository.findOne({
-      where: { id },
+      where: { id, mov_r_status: true },
       // relations: {
       //   caseReportValidate: true,
       // },

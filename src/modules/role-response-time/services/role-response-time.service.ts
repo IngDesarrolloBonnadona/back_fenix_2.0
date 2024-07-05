@@ -58,6 +58,9 @@ export class RoleResponseTimeService {
     const roleResponseTimes = await this.roleResponseTimeRepository.find({
       where: { rest_r_status: true },
       relations: { role: true, severityClasification: true },
+      order: {
+        createdAt: 'DESC',
+      },
     });
 
     if (roleResponseTimes.length === 0) {

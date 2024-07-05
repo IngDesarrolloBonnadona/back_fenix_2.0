@@ -12,8 +12,8 @@ import { ReportAnalystAssignment } from '../report-analyst-assignment/entities/r
 import { ReportAnalystAssignmentModule } from '../report-analyst-assignment/report-analyst-assignment.module';
 import { Synergy } from '../synergy/entities/synergy.entity';
 import { SynergyModule } from '../synergy/synergy.module';
-import { Researcher } from '../researchers/entities/researchers.entity';
-import { ResearchersModule } from '../researchers/researchers.module';
+import { ReportResearcherAssignment } from '../report-researchers-assignment/entities/report-researchers-assignment.entity';
+import { ResearchersModule } from '../report-researchers-assignment/report-researchers-assignment.module';
 import { CharacterizationCasesModule } from '../characterization-cases/characterization-cases.module';
 import { RiskTypeModule } from '../risk-type/risk-type.module';
 import { EventTypeModule } from '../event-type/event-type.module';
@@ -36,7 +36,7 @@ import { ObservationReturnCaseModule } from '../observation-return-case/observat
       MovementReport,
       ReportAnalystAssignment,
       Synergy,
-      Researcher,
+      ReportResearcherAssignment,
       Priority,
       ObservationReturnCase,
     ]),
@@ -60,6 +60,6 @@ import { ObservationReturnCaseModule } from '../observation-return-case/observat
   ],
   controllers: [CaseReportValidateController],
   providers: [CaseReportValidateService],
-  exports: [CaseReportValidateService]
+  exports: [CaseReportValidateService],
 })
 export class CaseReportValidateModule {}

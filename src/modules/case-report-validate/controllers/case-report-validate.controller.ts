@@ -18,6 +18,7 @@ import { CaseReportValidate } from '../entities/case-report-validate.entity';
 import { ApiTags } from '@nestjs/swagger';
 import { FindSimilarCaseReportValidateDto } from '../dto/find-similar-case-report-validate';
 import { CreateReportValDto } from '../helper/val-dto-validator.helper';
+import { QueryCaseReportValidateDto } from '../dto/query-case-report-validate.dto';
 
 @ApiTags('case-report-validate')
 @Controller('case-report-validate')
@@ -50,28 +51,22 @@ export class CaseReportValidateController {
 
   @Get('/summaryReportsValidate')
   async SummaryReportsValidate(
-    @Query('creationDate') creationDate?: string,
-    @Query('filingNumber') filingNumber?: string,
-    @Query('statusMovementId') statusMovementId?: number,
-    @Query('patientDoc') patientDoc?: string,
-    @Query('caseTypeId') caseTypeId?: number,
-    @Query('eventTypeId') eventTypeId?: number,
-    @Query('unitId') unitId?: number,
-    @Query('priorityId') priorityId?: number,
-    @Query('severityClasificationId') severityClasificationId?: number,
+    @Query() query: QueryCaseReportValidateDto,
   ): Promise<CaseReportValidate[]> {
-    const creationDateObj = creationDate ? new Date(creationDate) : undefined;
+    const creationDateObj = query.creationDate
+      ? new Date(query.creationDate)
+      : undefined;
 
     return await this.caseReportValidateService.summaryReportsValidate(
       creationDateObj,
-      filingNumber,
-      statusMovementId,
-      patientDoc,
-      caseTypeId,
-      unitId,
-      priorityId,
-      severityClasificationId,
-      eventTypeId,
+      query.filingNumber,
+      query.statusMovementId,
+      query.patientDoc,
+      query.caseTypeId,
+      query.unitId,
+      query.priorityId,
+      query.severityClasificationId,
+      query.eventTypeId,
     );
   }
 
@@ -98,21 +93,18 @@ export class CaseReportValidateController {
 
   @Get('/summaryReportsForReview')
   async summaryReportsForReview(
-    @Query('filingNumber') filingNumber?: string,
-    @Query('statusMovementId') statusMovementId?: number,
-    @Query('caseTypeId') caseTypeId?: number,
-    @Query('patientDoc') patientDoc?: string,
-    @Query('priorityId') priorityId?: number,
-    @Query('creationDate') creationDate?: string,
+    @Query() query: QueryCaseReportValidateDto,
   ): Promise<CaseReportValidate[]> {
-    const creationDateObj = creationDate ? new Date(creationDate) : undefined;
+    const creationDateObj = query.creationDate
+      ? new Date(query.creationDate)
+      : undefined;
 
     return await this.caseReportValidateService.summaryReportsForReview(
-      filingNumber,
-      statusMovementId,
-      caseTypeId,
-      patientDoc,
-      priorityId,
+      query.filingNumber,
+      query.statusMovementId,
+      query.caseTypeId,
+      query.patientDoc,
+      query.priorityId,
       creationDateObj,
     );
   }

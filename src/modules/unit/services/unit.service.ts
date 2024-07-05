@@ -56,6 +56,9 @@ export class UnitService {
       //   service: true,
       //   caseReportValidate: true,
       // },
+      order: {
+        unit_name: 'ASC',
+      },
     });
 
     if (units.length === 0) {
@@ -92,6 +95,9 @@ export class UnitService {
       where: {
         unit_service_id_fk: serviceId,
         unit_status: true,
+      },
+      order: {
+        unit_name: 'ASC',
       },
     });
 

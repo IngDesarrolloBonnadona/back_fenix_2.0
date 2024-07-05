@@ -58,6 +58,9 @@ export class EventTypeService {
         // caseType: true,
         // caseReportValidate: true,
       },
+      order: {
+        eve_t_name: 'ASC'
+      }
     });
 
     if (eventTypes.length === 0) {
@@ -95,6 +98,9 @@ export class EventTypeService {
         eve_t_casetype_id_fk: caseTypeId,
         eve_t_status: true,
       },
+      order: {
+        eve_t_name: 'ASC'
+      }
     });
 
     if (!eventTypesByCaseType) {

@@ -10,24 +10,24 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { ResearchersService } from '../services/researchers.service';
-import { FilterResearcherDto } from '../dto/filter-researcher.dto';
+import { ResearchersService } from '../services/report-researchers-assignment.service';
+import { FilterReportResearcherAssignmentDto } from '../dto/filter-researcher-.dto';
 import { ApiTags } from '@nestjs/swagger';
-import { CreateResearcherDto } from '../dto/create-researcher.dto';
-import { Researcher } from '../entities/researchers.entity';
-import { UpdateResearcherDto } from '../dto/update-researcher.dto';
+import { CreateReportResearcherAssignmentDto } from '../dto/create-report-researcher-assignment.dto';
+import { ReportResearcherAssignment } from '../entities/report-researchers-assignment.entity';
+import { UpdateReportResearcherAssignmentDto } from '../dto/update-report-researcher-assignment.dto';
 
 @ApiTags('researchers')
 @Controller('researchers')
-export class ResearchersController {
+export class ReportResearchersAssignmentController {
   constructor(private readonly researchersService: ResearchersService) {}
 
   @Get('filterResearchers')
   filterResearchers(
     @Query('empImmediateBoss') empImmediateBoss?: string,
     @Query('empPosition') empPosition?: string,
-  ): Promise<FilterResearcherDto[]> {
-    const filter = new FilterResearcherDto();
+  ): Promise<FilterReportResearcherAssignmentDto[]> {
+    const filter = new FilterReportResearcherAssignmentDto();
     filter.empImmediateBoss = empImmediateBoss;
     filter.empPosition = empPosition;
 
@@ -35,7 +35,9 @@ export class ResearchersController {
   }
 
   @Get('findAssignedResearch/:id')
-  findAssignedResearch(@Param('id') id: number): Promise<Researcher> {
+  findAssignedResearch(
+    @Param('id') id: number,
+  ): Promise<ReportResearcherAssignment> {
     return this.researchersService.findOneAssignedResearch(id);
   }
 
@@ -75,7 +77,7 @@ export class ResearchersController {
 
   @Post('createAssingResearcher/:idAnalyst')
   createAssingResearcher(
-    @Body() createResearcherDto: CreateResearcherDto,
+    @Body() createResearcherDto: CreateReportResearcherAssignmentDto,
     @Ip() clientIp: string,
     @Param('idAnalyst') idAnalyst: number,
   ): Promise<HttpException> {
@@ -88,7 +90,7 @@ export class ResearchersController {
 
   @Patch('updateReAssignedResearch/:idAnalyst/:idCaseReportValidate')
   updateReAssignedResearch(
-    @Body() updateResearcherDto: UpdateResearcherDto,
+    @Body() updateResearcherDto: UpdateReportResearcherAssignmentDto,
     @Ip() clientIp: string,
     @Param('idAnalyst') idAnalyst: number,
     @Param('idCaseReportValidate') idCaseReportValidate: string,

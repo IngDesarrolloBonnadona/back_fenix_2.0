@@ -1,19 +1,19 @@
 import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
-export class ReportAnalystAssignmentDto {
+export class CreateReportAnalystAssignmentDto {
   @IsNotEmpty()
   @IsString()
-  ass_ra_validatedcase_id_fk: string;
+  ana_validatedcase_id_fk: string;
 
   @IsNotEmpty()
   @IsNumber()
-  ass_ra_position_id_fk: number;
+  ana_position_id_fk: number;
 
   @IsNotEmpty()
   @IsNumber()
-  ass_ra_useranalyst_id: number;
-  
+  ana_useranalyst_id: number;
+
   @IsString()
   @IsOptional()
-  ass_ra_justifications: string
+  ana_justifications: string;
 }

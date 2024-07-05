@@ -46,6 +46,9 @@ export class OriginService {
         subOrigins: true,
         // caseReportValidate: true,
       },
+      order: {
+        orig_name: 'ASC',
+      },
     });
 
     if (origins.length === 0) {

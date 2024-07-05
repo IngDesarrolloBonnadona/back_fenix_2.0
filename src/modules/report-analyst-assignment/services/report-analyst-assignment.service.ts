@@ -5,7 +5,7 @@ import {
   Injectable,
   forwardRef,
 } from '@nestjs/common';
-import { ReportAnalystAssignmentDto } from '../dto/analyst-assignment.dto';
+import { CreateReportAnalystAssignmentDto } from '../dto/create-report-analyst-assignment.dto';
 import { UpdateReportAnalystAssignmentDto } from '../dto/update-report-analyst-assignment.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ReportAnalystAssignment as ReportAnalystAssignmentEntity } from '../entities/report-analyst-assignment.entity';
@@ -74,17 +74,17 @@ export class ReportAnalystAssignmentService {
   }
 
   async assingAnalyst(
-    createReportAnalystAssignmentDto: ReportAnalystAssignmentDto,
+    createReportAnalystAssignmentDto: CreateReportAnalystAssignmentDto,
     clientIp: string,
     idValidator: number,
   ) {
     const reportAssignmentFind =
       await this.reportAnalystAssignmentRepository.findOne({
         where: {
-          ass_ra_validatedcase_id_fk:
-            createReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
-          ass_ra_status: true,
-          ass_ra_isreturned: false,
+          ana_validatedcase_id_fk:
+            createReportAnalystAssignmentDto.ana_validatedcase_id_fk,
+          ana_status: true,
+          ana_isreturned: false,
         },
       });
 
@@ -97,11 +97,11 @@ export class ReportAnalystAssignmentService {
 
     const caseValidateFound =
       await this.caseReportValidateService.findOneReportValidate(
-        createReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
+        createReportAnalystAssignmentDto.ana_validatedcase_id_fk,
       );
 
     await this.positionService.findOnePosition(
-      createReportAnalystAssignmentDto.ass_ra_position_id_fk,
+      createReportAnalystAssignmentDto.ana_position_id_fk,
     );
 
     const movementReportFound = await this.movementReportRepository.findOne({
@@ -188,21 +188,21 @@ export class ReportAnalystAssignmentService {
 
     const analyst = this.reportAnalystAssignmentRepository.create({
       ...createReportAnalystAssignmentDto,
-      ass_ra_uservalidator_id: idValidator,
-      ass_ra_days: responseTime,
+      ana_uservalidator_id: idValidator,
+      ana_days: responseTime,
     });
 
     const assigned = await this.reportAnalystAssignmentRepository.save(analyst);
 
     await this.logService.createLog(
-      assigned.ass_ra_validatedcase_id_fk,
+      assigned.ana_validatedcase_id_fk,
       idValidator,
       clientIp,
       logReports.LOG_ASSIGNMENT_ANALYST,
     );
 
     const updateStatusMovement = await this.caseReportValidateRepository.update(
-      assigned.ass_ra_validatedcase_id_fk,
+      assigned.ana_validatedcase_id_fk,
       {
         val_cr_statusmovement_id_fk: movementReportFound.id,
       },
@@ -230,9 +230,9 @@ export class ReportAnalystAssignmentService {
     const reportAssignmentFind =
       await this.reportAnalystAssignmentRepository.findOne({
         where: {
-          ass_ra_validatedcase_id_fk: idCaseReportValidate,
-          ass_ra_status: true,
-          ass_ra_isreturned: false,
+          ana_validatedcase_id_fk: idCaseReportValidate,
+          ana_status: true,
+          ana_isreturned: false,
         },
       });
 
@@ -248,7 +248,7 @@ export class ReportAnalystAssignmentService {
     );
 
     await this.positionService.findOnePosition(
-      updateReportAnalystAssignmentDto.ass_ra_position_id_fk,
+      updateReportAnalystAssignmentDto.ana_position_id_fk,
     );
 
     if (reportAssignmentFind) {
@@ -256,8 +256,8 @@ export class ReportAnalystAssignmentService {
         reportAssignmentFind.id,
         {
           ...updateReportAnalystAssignmentDto,
-          ass_ra_uservalidator_id: idValidator,
-          ass_ra_amountreturns: 0,
+          ana_uservalidator_id: idValidator,
+          ana_amountreturns: 0,
         },
       );
 
@@ -311,17 +311,17 @@ export class ReportAnalystAssignmentService {
   }
 
   async returnCaseBetweenAnalyst(
-    createReportAnalystAssignmentDto: ReportAnalystAssignmentDto,
+    createReportAnalystAssignmentDto: CreateReportAnalystAssignmentDto,
     clientIp: string,
     idAnalystCurrent: number,
   ) {
     const reportAssignmentFind =
       await this.reportAnalystAssignmentRepository.findOne({
         where: {
-          ass_ra_validatedcase_id_fk:
-            createReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
-          ass_ra_status: true,
-          ass_ra_isreturned: false,
+          ana_validatedcase_id_fk:
+            createReportAnalystAssignmentDto.ana_validatedcase_id_fk,
+          ana_status: true,
+          ana_isreturned: false,
         },
       });
 
@@ -332,7 +332,7 @@ export class ReportAnalystAssignmentService {
       );
     }
 
-    if (reportAssignmentFind.ass_ra_amountreturns === 2) {
+    if (reportAssignmentFind.ana_amountreturns === 2) {
       throw new HttpException(
         'No se pueden hacer más devoluciones para este caso.',
         HttpStatus.CONFLICT,
@@ -342,14 +342,14 @@ export class ReportAnalystAssignmentService {
     const analystAssignedFind =
       await this.reportAnalystAssignmentRepository.findOne({
         where: {
-          ass_ra_useranalyst_id:
-            createReportAnalystAssignmentDto.ass_ra_useranalyst_id,
-          ass_ra_validatedcase_id_fk:
-            createReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
-          ass_ra_position_id_fk:
-            createReportAnalystAssignmentDto.ass_ra_position_id_fk,
-          ass_ra_status: true,
-          ass_ra_isreturned: false,
+          ana_useranalyst_id:
+            createReportAnalystAssignmentDto.ana_useranalyst_id,
+          ana_validatedcase_id_fk:
+            createReportAnalystAssignmentDto.ana_validatedcase_id_fk,
+          ana_position_id_fk:
+            createReportAnalystAssignmentDto.ana_position_id_fk,
+          ana_status: true,
+          ana_isreturned: false,
         },
       });
 
@@ -361,14 +361,14 @@ export class ReportAnalystAssignmentService {
     }
 
     await this.caseReportValidateService.findOneReportValidate(
-      createReportAnalystAssignmentDto.ass_ra_validatedcase_id_fk,
+      createReportAnalystAssignmentDto.ana_validatedcase_id_fk,
     );
 
     await this.positionService.findOnePosition(
-      createReportAnalystAssignmentDto.ass_ra_position_id_fk,
+      createReportAnalystAssignmentDto.ana_position_id_fk,
     );
 
-    reportAssignmentFind.ass_ra_status = false;
+    reportAssignmentFind.ana_status = false;
     await this.reportAnalystAssignmentRepository.save(reportAssignmentFind);
 
     const movementReportFound = await this.movementReportRepository.findOne({
@@ -387,15 +387,15 @@ export class ReportAnalystAssignmentService {
 
     const analyst = this.reportAnalystAssignmentRepository.create({
       ...createReportAnalystAssignmentDto,
-      ass_ra_uservalidator_id: reportAssignmentFind.ass_ra_uservalidator_id,
-      ass_ra_days: reportAssignmentFind.ass_ra_days,
-      ass_ra_amountreturns: (reportAssignmentFind.ass_ra_amountreturns += 1),
+      ana_uservalidator_id: reportAssignmentFind.ana_uservalidator_id,
+      ana_days: reportAssignmentFind.ana_days,
+      ana_amountreturns: (reportAssignmentFind.ana_amountreturns += 1),
     });
 
     const assigned = await this.reportAnalystAssignmentRepository.save(analyst);
 
     const updateStatusMovement = await this.caseReportValidateRepository.update(
-      assigned.ass_ra_validatedcase_id_fk,
+      assigned.ana_validatedcase_id_fk,
       {
         val_cr_statusmovement_id_fk: movementReportFound.id,
       },
@@ -409,7 +409,7 @@ export class ReportAnalystAssignmentService {
     }
 
     await this.logService.createLog(
-      assigned.ass_ra_validatedcase_id_fk,
+      assigned.ana_validatedcase_id_fk,
       idAnalystCurrent,
       clientIp,
       logReports.LOG_RETURN_CASE_ANALYST,
@@ -462,11 +462,11 @@ export class ReportAnalystAssignmentService {
       query.andWhere('crv.val_cr_priority_id_fk = :priorityId', { priorityId });
     }
 
-    query.andWhere('raa.ass_ra_status = :statusBool', {
+    query.andWhere('raa.ana_status = :statusBool', {
       statusBool: true,
     });
 
-    query.andWhere('raa.ass_ra_isreturned = :isReturnedBool', {
+    query.andWhere('raa.ana_isreturned = :isReturnedBool', {
       isReturnedBool: false,
     });
 
@@ -490,17 +490,20 @@ export class ReportAnalystAssignmentService {
     const where: FindOptionsWhere<ReportAnalystAssignmentEntity> = {};
 
     if (positionId) {
-      where.ass_ra_position_id_fk = positionId;
+      where.ana_position_id_fk = positionId;
     }
 
-    where.ass_ra_status = true;
-    where.ass_ra_isreturned = false;
+    where.ana_status = true;
+    where.ana_isreturned = false;
 
     const analystReporters = await this.reportAnalystAssignmentRepository.find({
       where,
       relations: {
         caseReportValidate: true,
         position: true,
+      },
+      order: {
+        createdAt: 'DESC',
       },
     });
 
@@ -519,7 +522,7 @@ export class ReportAnalystAssignmentService {
   ): Promise<ReportAnalystAssignmentEntity> {
     const analystReporter =
       await this.reportAnalystAssignmentRepository.findOne({
-        where: { id, ass_ra_status: true, ass_ra_isreturned: false },
+        where: { id, ana_status: true, ana_isreturned: false },
         relations: {
           caseReportValidate: true,
           position: true,
@@ -543,9 +546,9 @@ export class ReportAnalystAssignmentService {
     const findReportAnalystAssigned =
       await this.reportAnalystAssignmentRepository.findOne({
         where: {
-          ass_ra_validatedcase_id_fk: idCaseReportValidate,
-          ass_ra_status: true,
-          ass_ra_isreturned: false,
+          ana_validatedcase_id_fk: idCaseReportValidate,
+          ana_status: true,
+          ana_isreturned: false,
         },
       });
 
@@ -564,8 +567,8 @@ export class ReportAnalystAssignmentService {
       await this.reportAnalystAssignmentRepository.update(
         findReportAnalystAssigned.id,
         {
-          ass_ra_status: false,
-          ass_ra_isreturned: true,
+          ana_status: false,
+          ana_isreturned: true,
         },
       );
 

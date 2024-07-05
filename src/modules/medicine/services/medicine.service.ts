@@ -49,6 +49,9 @@ export class MedicineService {
       relations: {
         // caseReportOriginal: true,
       },
+      order: {
+        createdAt: 'DESC'
+      }
     });
 
     if (medicines.length === 0) {

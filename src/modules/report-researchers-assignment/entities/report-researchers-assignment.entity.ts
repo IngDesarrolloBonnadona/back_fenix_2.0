@@ -12,7 +12,7 @@ import {
 } from 'typeorm';
 
 @Entity()
-export class Researcher {
+export class ReportResearcherAssignment {
   @PrimaryGeneratedColumn()
   id: number;
 

@@ -37,6 +37,9 @@ export class RoleService {
       where: {
         role_status: true,
       },
+      order: {
+        role_name: 'ASC',
+      },
     });
 
     if (roles.length === 0) {

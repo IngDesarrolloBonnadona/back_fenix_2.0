@@ -5,11 +5,11 @@ import {
   Injectable,
   forwardRef,
 } from '@nestjs/common';
-import { FilterResearcherDto } from '../dto/filter-researcher.dto';
+import { FilterReportResearcherAssignmentDto } from '../dto/filter-researcher-.dto';
 import { HttpResearchersService } from '../http/http-researchers.service';
-import { CreateResearcherDto } from '../dto/create-researcher.dto';
+import { CreateReportResearcherAssignmentDto } from '../dto/create-report-researcher-assignment.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Researcher as ResearcherEntity } from '../entities/researchers.entity';
+import { ReportResearcherAssignment as ResearcherEntity } from '../entities/report-researchers-assignment.entity';
 import { Repository } from 'typeorm';
 import { CaseReportValidateService } from 'src/modules/case-report-validate/services/case-report-validate.service';
 import { LogService } from 'src/modules/log/services/log.service';
@@ -25,7 +25,7 @@ import { Role as RoleEntity } from 'src/modules/role/entities/role.entity';
 import { userRoles } from 'src/enums/user-roles.enum';
 import { RoleResponseTime as RoleResponseTimeEntity } from 'src/modules/role-response-time/entities/role-response-time.entity';
 import { sentinelTime } from 'src/enums/sentinel-time.enum';
-import { UpdateResearcherDto } from '../dto/update-researcher.dto';
+import { UpdateReportResearcherAssignmentDto } from '../dto/update-report-researcher-assignment.dto';
 import { ReportAnalystAssignment as ReportAnalystAssignmentEntity } from 'src/modules/report-analyst-assignment/entities/report-analyst-assignment.entity';
 
 @Injectable()
@@ -54,9 +54,11 @@ export class ResearchersService {
     private readonly caseReportValidateService: CaseReportValidateService,
   ) {}
 
-  async filterResearchers(resFilter: Partial<FilterResearcherDto>) {
+  async filterResearchers(
+    resFilter: Partial<FilterReportResearcherAssignmentDto>,
+  ) {
     const result = await this.httpResearchersService.getResearchersData();
-    const researchers: FilterResearcherDto[] = result.data.data;
+    const researchers: FilterReportResearcherAssignmentDto[] = result.data.data;
 
     const filteredResearchers = researchers.filter((research) => {
       return (
@@ -78,7 +80,7 @@ export class ResearchersService {
   }
 
   async assingResearcher(
-    createResearcherDto: CreateResearcherDto,
+    createResearcherDto: CreateReportResearcherAssignmentDto,
     clientIp: string,
     idAnalyst: number,
   ) {
@@ -364,7 +366,7 @@ export class ResearchersService {
   }
 
   async reAssingResearcher(
-    updateResearcherDto: UpdateResearcherDto,
+    updateResearcherDto: UpdateReportResearcherAssignmentDto,
     clientIp: string,
     idAnalyst: number,
     idCaseReportValidate: string,
@@ -470,8 +472,8 @@ export class ResearchersService {
     const reportAssignmentFind =
       await this.reportAnalystAssignmentRepository.findOne({
         where: {
-          ass_ra_validatedcase_id_fk: idCaseReportValidate,
-          ass_ra_status: true,
+          ana_validatedcase_id_fk: idCaseReportValidate,
+          ana_status: true,
         },
       });
 
