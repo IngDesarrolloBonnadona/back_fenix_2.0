@@ -25,4 +25,9 @@ export class QueryReportAnalystAssignmentDto {
     @IsOptional()
     @Type(() => Number)
     priorityId: number;
+
+    @IsNumber()
+    @IsOptional()
+    @Type(() => Number)
+    positionId: number;
 }

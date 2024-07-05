@@ -53,10 +53,10 @@ export class ReportAnalystAssignmentController {
 
   @Get('listAssignedAnalystsByPosition')
   async listAssignedAnalystsByPosition(
-    @Query('positionId') positionId?: number,
+    @Query() query: QueryReportAnalystAssignmentDto,
   ): Promise<ReportAnalystAssignment[]> {
     return await this.reportAnalisysAssignmentService.findAssignedAnalystsByPosition(
-      positionId,
+      query.positionId,
     );
   }
 
@@ -71,23 +71,6 @@ export class ReportAnalystAssignmentController {
   findInfoAnalystByCode(@Param('code') code?: number) {
     return this.reportAnalisysAssignmentService.findInfoAnalystByCode(code);
   }
-
-  // @Get('/summaryReportsForAssignCases')
-  // async summaryReportsForAssignCases(
-  //   @Query('filingNumber') filingNumber?: string,
-  //   @Query('statusMovementId') statusMovementId?: number,
-  //   @Query('caseTypeId') caseTypeId?: number,
-  //   @Query('eventId') eventId?: number,
-  //   @Query('priorityId') priorityId?: number,
-  // ) {
-  //   return await this.reportAnalisysAssignmentService.summaryReportsForAssignCases(
-  //     filingNumber,
-  //     statusMovementId,
-  //     caseTypeId,
-  //     eventId,
-  //     priorityId,
-  //   );
-  // }
 
   @Get('/summaryReportsForAssignCases')
   async summaryReportsForAssignCases(
