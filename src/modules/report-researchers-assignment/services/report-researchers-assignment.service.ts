@@ -329,6 +329,8 @@ export class ResearchersService {
       query.andWhere('crv.val_cr_priority_id_fk = :priorityId', { priorityId });
     }
 
+    query.andWhere('crv.val_cr_characterization_id_fk IS NOT NULL');
+
     query.andWhere('res.res_status = :statusBool', {
       statusBool: true,
     });
