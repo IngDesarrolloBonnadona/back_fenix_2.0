@@ -26,6 +26,7 @@ import { caseTypeReport } from 'src/enums/caseType-report.enum';
 import { SeverityClasification as SeverityClasificationEntity } from 'src/modules/severity-clasification/entities/severity-clasification.entity';
 import { severityClasification } from 'src/enums/severity-clasif.enum';
 import { sentinelTime } from '../../../enums/sentinel-time.enum';
+import { QueryReportAnalystAssignmentDto } from '../dto/query-report-analyst-assignment.dto';
 
 @Injectable()
 export class ReportAnalystAssignmentService {
@@ -485,12 +486,12 @@ export class ReportAnalystAssignmentService {
   }
 
   async findAssignedAnalystsByPosition(
-    positionId?: number,
+    query: QueryReportAnalystAssignmentDto,
   ): Promise<ReportAnalystAssignmentEntity[]> {
     const where: FindOptionsWhere<ReportAnalystAssignmentEntity> = {};
 
-    if (positionId) {
-      where.ana_position_id_fk = positionId;
+    if (query.positionId) {
+      where.ana_position_id_fk = query.positionId;
     }
 
     where.ana_status = true;

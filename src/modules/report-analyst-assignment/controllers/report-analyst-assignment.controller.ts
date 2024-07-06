@@ -56,7 +56,7 @@ export class ReportAnalystAssignmentController {
     @Query() query: QueryReportAnalystAssignmentDto,
   ): Promise<ReportAnalystAssignment[]> {
     return await this.reportAnalisysAssignmentService.findAssignedAnalystsByPosition(
-      query.positionId,
+      query
     );
   }
 
