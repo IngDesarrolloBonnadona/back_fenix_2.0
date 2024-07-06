@@ -552,6 +552,7 @@ export class CaseReportValidateService {
       relations: {
         movementReport: true,
         reportAnalystAssignment: true,
+        reportResearcherAssignment: true,
         synergy: true,
         caseType: true,
         riskType: true,
@@ -586,6 +587,7 @@ export class CaseReportValidateService {
       relations: {
         movementReport: true,
         reportAnalystAssignment: true,
+        reportResearcherAssignment: true,
         synergy: true,
         caseType: true,
         riskType: true,
