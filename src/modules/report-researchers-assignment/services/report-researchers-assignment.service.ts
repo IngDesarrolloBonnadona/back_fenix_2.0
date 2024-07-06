@@ -230,7 +230,7 @@ export class ResearchersService {
   ) {
     const query = this.caseReportValidateRepository
       .createQueryBuilder('crv')
-      .innerJoinAndSelect('crv.researcher', 'res')
+      .innerJoinAndSelect('crv.reportResearcherAssignment', 'res')
       .leftJoinAndSelect('crv.caseType', 'caseType')
       .leftJoinAndSelect('crv.event', 'event')
       .leftJoinAndSelect('crv.priority', 'priority')
@@ -295,7 +295,7 @@ export class ResearchersService {
   ) {
     const query = this.caseReportValidateRepository
       .createQueryBuilder('crv')
-      .innerJoinAndSelect('crv.researcher', 'res')
+      .innerJoinAndSelect('crv.reportResearcherAssignment', 'res')
       .leftJoinAndSelect('crv.caseType', 'caseType')
       .leftJoinAndSelect('crv.event', 'event')
       .leftJoinAndSelect('crv.priority', 'priority')

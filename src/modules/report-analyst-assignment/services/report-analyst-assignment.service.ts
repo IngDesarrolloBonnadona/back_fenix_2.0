@@ -436,7 +436,7 @@ export class ReportAnalystAssignmentService {
       .leftJoinAndSelect('crv.caseType', 'caseType')
       .leftJoinAndSelect('crv.event', 'event')
       .leftJoinAndSelect('crv.priority', 'priority')
-      .leftJoinAndSelect('crv.researcher', 'researcher')
+      .leftJoinAndSelect('crv.reportResearcherAssignment', 'reportResearcherAssignment')
       .where('crv.val_cr_validated = :validated', { validated: false });
 
     if (filingNumber) {

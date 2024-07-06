@@ -45,7 +45,7 @@ export class ReportResearcherAssignment {
 
   @ManyToOne(
     () => CaseReportValidate,
-    (caseReportValidate) => caseReportValidate.researcher,
+    (caseReportValidate) => caseReportValidate.reportResearcherAssignment,
   )
   @JoinColumn({ name: 'res_validatedcase_id_fk' })
   caseReportValidate: CaseReportValidate;

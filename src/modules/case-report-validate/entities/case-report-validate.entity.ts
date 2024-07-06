@@ -236,9 +236,9 @@ export class CaseReportValidate {
 
   @OneToMany(
     () => ReportResearcherAssignment,
-    (researcher) => researcher.caseReportValidate,
+    (reportResearcherAssignment) => reportResearcherAssignment.caseReportValidate,
   )
-  researcher: ReportResearcherAssignment[];
+  reportResearcherAssignment: ReportResearcherAssignment[];
 
   @OneToMany(
     () => ObservationReturnCase,
