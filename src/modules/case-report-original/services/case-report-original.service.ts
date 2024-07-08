@@ -11,7 +11,6 @@ import { MedicineService } from 'src/modules/medicine/services/medicine.service'
 import { DeviceService } from 'src/modules/device/services/device.service';
 import { logReports } from 'src/enums/logs.enum';
 import { generateFilingNumber } from '../utils/helpers/generate_filing_number.helper';
-import { MovementReport as MovementReportEntity } from 'src/modules/movement-report/entities/movement-report.entity';
 import { movementReport } from 'src/enums/movement-report.enum';
 import { caseTypeReport } from 'src/enums/caseType-report.enum';
 import { CreateOriRiskReportDto } from '../dto/create-ori-risk-report.dto';
@@ -32,6 +31,7 @@ import { UnitService } from 'src/modules/unit/services/unit.service';
 import { Priority as PriorityEntity } from 'src/modules/priority/entities/priority.entity';
 import { SeverityClasification as SeverityClasificationEntity } from 'src/modules/severity-clasification/entities/severity-clasification.entity';
 import { severityClasification } from 'src/enums/severity-clasif.enum';
+import { MovementReportService } from 'src/modules/movement-report/services/movement-report.service';
 
 @Injectable()
 export class CaseReportOriginalService {
@@ -40,8 +40,6 @@ export class CaseReportOriginalService {
     private readonly caseReportOriginalRepository: Repository<CaseReportOriginalEntity>,
     @InjectRepository(CaseTypeEntity)
     private readonly caseTypeRepository: Repository<CaseTypeEntity>,
-    @InjectRepository(MovementReportEntity)
-    private readonly movementReportRepository: Repository<MovementReportEntity>,
     @InjectRepository(PriorityEntity)
     private readonly priorityRepository: Repository<PriorityEntity>,
     @InjectRepository(SeverityClasificationEntity)
@@ -61,6 +59,7 @@ export class CaseReportOriginalService {
     private readonly subOriginService: SubOriginService,
     private readonly riskLevelService: RiskLevelService,
     private readonly unitService: UnitService,
+    private readonly movementReportService: MovementReportService,
     private dataSource: DataSource,
   ) {}
 
@@ -152,19 +151,10 @@ export class CaseReportOriginalService {
         this.caseReportOriginalRepository,
       );
 
-      const movementReportFound = await this.movementReportRepository.findOne({
-        where: {
-          mov_r_name: movementReport.REPORT_CREATION,
-          mov_r_status: true,
-        },
-      });
-
-      if (!movementReportFound) {
-        throw new HttpException(
-          `El movimiento ${movementReport.REPORT_CREATION} no existe.`,
-          HttpStatus.NO_CONTENT,
+      const movementReportFound =
+        await this.movementReportService.findOneMovementReportByName(
+          movementReport.REPORT_CREATION,
         );
-      }
 
       const severityClasificationFound =
         await this.severityClasificationRepository.findOne({
@@ -283,8 +273,8 @@ export class CaseReportOriginalService {
         priority: true,
       },
       order: {
-        createdAt: 'DESC'
-      }
+        createdAt: 'DESC',
+      },
     });
 
     if (!caseReportsOriginal || caseReportsOriginal.length === 0) {

@@ -8,7 +8,6 @@ import { CaseType } from '../case-type/entities/case-type.entity';
 import { LogModule } from '../log/log.module';
 import { MedicineModule } from '../medicine/medicine.module';
 import { DeviceModule } from '../device/device.module';
-import { MovementReport } from '../movement-report/entities/movement-report.entity';
 import { CaseTypeModule } from '../case-type/case-type.module';
 import { RiskTypeModule } from '../risk-type/risk-type.module';
 import { EventTypeModule } from '../event-type/event-type.module';
@@ -19,16 +18,15 @@ import { OriginModule } from '../origin/origin.module';
 import { SubOriginModule } from '../sub-origin/sub-origin.module';
 import { RiskLevelModule } from '../risk-level/risk-level.module';
 import { UnitModule } from '../unit/unit.module';
-import { PriorityModule } from '../priority/priority.module';
 import { Priority } from '../priority/entities/priority.entity';
 import { SeverityClasification } from '../severity-clasification/entities/severity-clasification.entity';
+import { MovementReportModule } from '../movement-report/movement-report.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       CaseReportOriginal,
       CaseType,
-      MovementReport,
       Priority,
       SeverityClasification
     ]),
@@ -46,6 +44,7 @@ import { SeverityClasification } from '../severity-clasification/entities/severi
     SubOriginModule,
     RiskLevelModule,
     UnitModule,
+    MovementReportModule
   ],
   controllers: [CaseReportOriginalController],
   providers: [CaseReportOriginalService],

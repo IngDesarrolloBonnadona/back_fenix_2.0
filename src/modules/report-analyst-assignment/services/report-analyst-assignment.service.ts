@@ -15,7 +15,6 @@ import { logReports } from 'src/enums/logs.enum';
 import { CaseReportValidateService } from 'src/modules/case-report-validate/services/case-report-validate.service';
 import { PositionService } from 'src/modules/position/services/position.service';
 import { HttpPositionService } from 'src/modules/position/http/http-position.service';
-import { MovementReport as MovementReportEntity } from 'src/modules/movement-report/entities/movement-report.entity';
 import { movementReport } from 'src/enums/movement-report.enum';
 import { CaseReportValidate as CaseReportValidateEntity } from 'src/modules/case-report-validate/entities/case-report-validate.entity';
 import { RoleResponseTime as RoleResponseTimeEntity } from 'src/modules/role-response-time/entities/role-response-time.entity';
@@ -26,14 +25,14 @@ import { caseTypeReport } from 'src/enums/caseType-report.enum';
 import { SeverityClasification as SeverityClasificationEntity } from 'src/modules/severity-clasification/entities/severity-clasification.entity';
 import { severityClasification } from 'src/enums/severity-clasif.enum';
 import { sentinelTime } from '../../../enums/sentinel-time.enum';
+import { QueryReportAnalystAssignmentDto } from '../dto/query-report-analyst-assignment.dto';
+import { MovementReportService } from 'src/modules/movement-report/services/movement-report.service';
 
 @Injectable()
 export class ReportAnalystAssignmentService {
   constructor(
     @InjectRepository(ReportAnalystAssignmentEntity)
     private readonly reportAnalystAssignmentRepository: Repository<ReportAnalystAssignmentEntity>,
-    @InjectRepository(MovementReportEntity)
-    private readonly movementReportRepository: Repository<MovementReportEntity>,
     @InjectRepository(CaseReportValidateEntity)
     private readonly caseReportValidateRepository: Repository<CaseReportValidateEntity>,
     @InjectRepository(RoleEntity)
@@ -48,6 +47,7 @@ export class ReportAnalystAssignmentService {
     private readonly logService: LogService,
     private readonly positionService: PositionService,
     private readonly httpPositionService: HttpPositionService,
+    private readonly movementReportService: MovementReportService,
     @Inject(forwardRef(() => CaseReportValidateService))
     private readonly caseReportValidateService: CaseReportValidateService,
   ) {}
@@ -104,19 +104,10 @@ export class ReportAnalystAssignmentService {
       createReportAnalystAssignmentDto.ana_position_id_fk,
     );
 
-    const movementReportFound = await this.movementReportRepository.findOne({
-      where: {
-        mov_r_name: movementReport.ASSIGNMENT_ANALYST,
-        mov_r_status: true,
-      },
-    });
-
-    if (!movementReportFound) {
-      throw new HttpException(
-        `El movimiento ${movementReport.ASSIGNMENT_ANALYST} no existe.`,
-        HttpStatus.NO_CONTENT,
-      );
-    }
+    const movementReportFound =
+    await this.movementReportService.findOneMovementReportByName(
+      movementReport.ASSIGNMENT_ANALYST,
+    );
 
     const findIdRole = await this.roleRepository.findOne({
       where: {
@@ -269,24 +260,15 @@ export class ReportAnalystAssignmentService {
       }
     }
 
-    const findMovementReport = await this.movementReportRepository.findOne({
-      where: {
-        mov_r_name: movementReport.REASSIGNMENT_ANALYST,
-        mov_r_status: true,
-      },
-    });
-
-    if (!findMovementReport) {
-      throw new HttpException(
-        `El movimiento ${movementReport.REASSIGNMENT_ANALYST} no existe.`,
-        HttpStatus.NO_CONTENT,
-      );
-    }
+    const movementReportFound =
+    await this.movementReportService.findOneMovementReportByName(
+      movementReport.REASSIGNMENT_ANALYST,
+    );
 
     const updateStatusMovement = await this.caseReportValidateRepository.update(
       idCaseReportValidate,
       {
-        val_cr_statusmovement_id_fk: findMovementReport.id,
+        val_cr_statusmovement_id_fk: movementReportFound.id,
       },
     );
 
@@ -371,19 +353,10 @@ export class ReportAnalystAssignmentService {
     reportAssignmentFind.ana_status = false;
     await this.reportAnalystAssignmentRepository.save(reportAssignmentFind);
 
-    const movementReportFound = await this.movementReportRepository.findOne({
-      where: {
-        mov_r_name: movementReport.RETURN_CASE_ANALYST,
-        mov_r_status: true,
-      },
-    });
-
-    if (!movementReportFound) {
-      throw new HttpException(
-        `El movimiento ${movementReport.RETURN_CASE_ANALYST} no existe.`,
-        HttpStatus.NO_CONTENT,
-      );
-    }
+    const movementReportFound =
+    await this.movementReportService.findOneMovementReportByName(
+      movementReport.RETURN_CASE_ANALYST,
+    );
 
     const analyst = this.reportAnalystAssignmentRepository.create({
       ...createReportAnalystAssignmentDto,
@@ -435,7 +408,7 @@ export class ReportAnalystAssignmentService {
       .leftJoinAndSelect('crv.caseType', 'caseType')
       .leftJoinAndSelect('crv.event', 'event')
       .leftJoinAndSelect('crv.priority', 'priority')
-      .leftJoinAndSelect('crv.researcher', 'researcher')
+      .leftJoinAndSelect('crv.reportResearcherAssignment', 'reportResearcherAssignment')
       .where('crv.val_cr_validated = :validated', { validated: false });
 
     if (filingNumber) {
@@ -485,12 +458,12 @@ export class ReportAnalystAssignmentService {
   }
 
   async findAssignedAnalystsByPosition(
-    positionId?: number,
+    query: QueryReportAnalystAssignmentDto,
   ): Promise<ReportAnalystAssignmentEntity[]> {
     const where: FindOptionsWhere<ReportAnalystAssignmentEntity> = {};
 
-    if (positionId) {
-      where.ana_position_id_fk = positionId;
+    if (query.positionId) {
+      where.ana_position_id_fk = query.positionId;
     }
 
     where.ana_status = true;
@@ -579,24 +552,15 @@ export class ReportAnalystAssignmentService {
       );
     }
 
-    const findMovementReport = await this.movementReportRepository.findOne({
-      where: {
-        mov_r_name: movementReport.RETURN_CASE_VALIDATOR,
-        mov_r_status: true,
-      },
-    });
-
-    if (!findMovementReport) {
-      throw new HttpException(
-        `El movimiento ${movementReport.RETURN_CASE_VALIDATOR} no existe.`,
-        HttpStatus.NO_CONTENT,
-      );
-    }
+    const movementReportFound =
+    await this.movementReportService.findOneMovementReportByName(
+      movementReport.RETURN_CASE_VALIDATOR,
+    );
 
     const updateStatusMovement = await this.caseReportValidateRepository.update(
       idCaseReportValidate,
       {
-        val_cr_statusmovement_id_fk: findMovementReport.id,
+        val_cr_statusmovement_id_fk: movementReportFound.id,
       },
     );
 

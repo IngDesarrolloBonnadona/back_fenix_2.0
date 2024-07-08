@@ -16,20 +16,20 @@ import { ApiTags } from '@nestjs/swagger';
 import { CreateReportResearcherAssignmentDto } from '../dto/create-report-researcher-assignment.dto';
 import { ReportResearcherAssignment } from '../entities/report-researchers-assignment.entity';
 import { UpdateReportResearcherAssignmentDto } from '../dto/update-report-researcher-assignment.dto';
+import { QueryReportResearchersAssignmentDto } from '../dto/query-report-researcher-assignment.dto';
 
-@ApiTags('researchers')
-@Controller('researchers')
+@ApiTags('report-researchers-assignment')
+@Controller('report-researchers-assignment')
 export class ReportResearchersAssignmentController {
   constructor(private readonly researchersService: ResearchersService) {}
 
   @Get('filterResearchers')
   filterResearchers(
-    @Query('empImmediateBoss') empImmediateBoss?: string,
-    @Query('empPosition') empPosition?: string,
+    @Query() query: QueryReportResearchersAssignmentDto,
   ): Promise<FilterReportResearcherAssignmentDto[]> {
     const filter = new FilterReportResearcherAssignmentDto();
-    filter.empImmediateBoss = empImmediateBoss;
-    filter.empPosition = empPosition;
+    filter.empImmediateBoss = query.empImmediateBoss;
+    filter.empPosition = query.empPosition;
 
     return this.researchersService.filterResearchers(filter);
   }
@@ -43,35 +43,27 @@ export class ReportResearchersAssignmentController {
 
   @Get('/summaryReportsMyAssignedCases')
   async summaryReportsMyAssignedCases(
-    @Query('filingNumber') filingNumber?: string,
-    @Query('patientDoc') patientDoc?: string,
-    @Query('caseTypeId') caseTypeId?: number,
-    @Query('eventId') eventId?: number,
-    @Query('priorityId') priorityId?: number,
+    @Query() query: QueryReportResearchersAssignmentDto,
   ) {
     return await this.researchersService.summaryReportsMyAssignedCases(
-      filingNumber,
-      patientDoc,
-      caseTypeId,
-      eventId,
-      priorityId,
+      query.filingNumber,
+      query.patientDoc,
+      query.caseTypeId,
+      query.eventId,
+      query.priorityId,
     );
   }
 
   @Get('/summaryReportsMyCasesByCharacterization')
   async summaryReportsMyCasesByCharacterization(
-    @Query('filingNumber') filingNumber?: string,
-    @Query('statusMovementId') statusMovementId?: number,
-    @Query('caseTypeId') caseTypeId?: number,
-    @Query('eventId') eventId?: number,
-    @Query('priorityId') priorityId?: number,
+    @Query() query: QueryReportResearchersAssignmentDto,
   ) {
     return await this.researchersService.summaryReportsMyCasesByCharacterization(
-      filingNumber,
-      statusMovementId,
-      caseTypeId,
-      eventId,
-      priorityId,
+      query.filingNumber,
+      query.statusMovementId,
+      query.caseTypeId,
+      query.eventId,
+      query.priorityId,
     );
   }
 

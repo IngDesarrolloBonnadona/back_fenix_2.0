@@ -52,6 +52,7 @@ import { UnitService } from 'src/modules/unit/services/unit.service';
 import { Priority as PriorityEntity } from 'src/modules/priority/entities/priority.entity';
 import { ObservationReturnCase as ObservationReturnCaseEntity } from 'src/modules/observation-return-case/entities/observation-return-case.entity';
 import { ObservationReturnCaseService } from 'src/modules/observation-return-case/services/observation-return-case.service';
+import { MovementReportService } from 'src/modules/movement-report/services/movement-report.service';
 
 @Injectable()
 export class CaseReportValidateService {
@@ -88,6 +89,7 @@ export class CaseReportValidateService {
     private readonly subOriginService: SubOriginService,
     private readonly riskLevelService: RiskLevelService,
     private readonly unitService: UnitService,
+    private readonly movementReportService: MovementReportService,
     @Inject(forwardRef(() => ObservationReturnCaseService))
     private readonly observationReturnCaseService: ObservationReturnCaseService,
     @Inject(forwardRef(() => ResearchersService))
@@ -111,8 +113,8 @@ export class CaseReportValidateService {
         val_cr_validated: false,
       },
       order: {
-        createdAt: 'DESC'
-      }
+        createdAt: 'DESC',
+      },
     });
 
     if (similarReport.length > 0) {
@@ -129,6 +131,7 @@ export class CaseReportValidateService {
     createReportValDto: any,
     clientIp: string,
     reportId: string,
+    idValidator: number,
   ): Promise<any> {
     await ValDtoValidator(createReportValDto, this.caseTypeRepository);
 
@@ -245,19 +248,10 @@ export class CaseReportValidateService {
       const consecutiveId = previousReport.val_cr_consecutive_id + 1;
       const previousId = previousReport.val_cr_previous_id + 1;
 
-      const movementReportFound = await this.movementReportRepository.findOne({
-        where: {
-          mov_r_name: movementReport.VALIDATION,
-          mov_r_status: true,
-        },
-      });
-
-      if (!movementReportFound) {
-        throw new HttpException(
-          `El movimiento ${movementReport.VALIDATION} no existe.`,
-          HttpStatus.NO_CONTENT,
+      const movementReportFound =
+        await this.movementReportService.findOneMovementReportByName(
+          movementReport.VALIDATION,
         );
-      }
 
       if (
         createReportValDto.val_cr_severityclasif_id_fk !== null &&
@@ -318,7 +312,7 @@ export class CaseReportValidateService {
       await this.logService.createLogTransaction(
         queryRunner,
         caseReportValidate.id,
-        caseReportValidate.val_cr_reporter_id,
+        idValidator,
         clientIp,
         logReports.LOG_VALIDATION,
       );
@@ -453,8 +447,8 @@ export class CaseReportValidateService {
       },
       withDeleted: true,
       order: {
-        createdAt: 'DESC'
-      }
+        createdAt: 'DESC',
+      },
     });
 
     if (caseReportsValidate.length === 0) {
@@ -532,8 +526,8 @@ export class CaseReportValidateService {
       },
       withDeleted: true,
       order: {
-        createdAt: 'DESC'
-      }
+        createdAt: 'DESC',
+      },
     });
 
     if (caseReportsValidate.length === 0) {
@@ -552,6 +546,7 @@ export class CaseReportValidateService {
       relations: {
         movementReport: true,
         reportAnalystAssignment: true,
+        reportResearcherAssignment: true,
         synergy: true,
         caseType: true,
         riskType: true,
@@ -566,8 +561,8 @@ export class CaseReportValidateService {
         priority: true,
       },
       order: {
-        createdAt: 'DESC'
-      }
+        createdAt: 'DESC',
+      },
     });
 
     if (caseReportValidates.length === 0) {
@@ -586,6 +581,7 @@ export class CaseReportValidateService {
       relations: {
         movementReport: true,
         reportAnalystAssignment: true,
+        reportResearcherAssignment: true,
         synergy: true,
         caseType: true,
         riskType: true,
@@ -636,8 +632,8 @@ export class CaseReportValidateService {
         priority: true,
       },
       order: {
-        createdAt: 'DESC'
-      }
+        createdAt: 'DESC',
+      },
     });
 
     if (caseReportValidate.length === 0) {
@@ -674,19 +670,10 @@ export class CaseReportValidateService {
   }
 
   async cancelReportValidate(id: string, clientIp: string) {
-    const movementReportFound = await this.movementReportRepository.findOne({
-      where: {
-        mov_r_name: movementReport.ANULATION,
-        mov_r_status: true,
-      },
-    });
-
-    if (!movementReportFound) {
-      throw new HttpException(
-        `El movimiento ${movementReport.ANULATION} no existe.`,
-        HttpStatus.NO_CONTENT,
+    const movementReportFound =
+      await this.movementReportService.findOneMovementReportByName(
+        movementReport.ANULATION,
       );
-    }
 
     const caseReportValidate = await this.findOneReportValidate(id);
 

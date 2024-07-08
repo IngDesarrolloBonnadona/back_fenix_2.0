@@ -14,12 +14,13 @@ import { SeverityClasification } from '../severity-clasification/entities/severi
 import { Role } from '../role/entities/role.entity';
 import { RoleResponseTime } from '../role-response-time/entities/role-response-time.entity';
 import { ReportAnalystAssignment } from '../report-analyst-assignment/entities/report-analyst-assignment.entity';
+import { MovementReportModule } from '../movement-report/movement-report.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       ReportResearcherAssignment,
-      MovementReport,
+      // MovementReport,
       CaseReportValidate,
       CaseType,
       SeverityClasification,
@@ -29,6 +30,7 @@ import { ReportAnalystAssignment } from '../report-analyst-assignment/entities/r
     ]),
     HttpModule,
     LogModule,
+    MovementReportModule,
     forwardRef(() => CaseReportValidateModule),
   ],
   controllers: [ReportResearchersAssignmentController],

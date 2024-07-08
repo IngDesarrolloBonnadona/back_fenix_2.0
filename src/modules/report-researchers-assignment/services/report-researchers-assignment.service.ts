@@ -27,14 +27,13 @@ import { RoleResponseTime as RoleResponseTimeEntity } from 'src/modules/role-res
 import { sentinelTime } from 'src/enums/sentinel-time.enum';
 import { UpdateReportResearcherAssignmentDto } from '../dto/update-report-researcher-assignment.dto';
 import { ReportAnalystAssignment as ReportAnalystAssignmentEntity } from 'src/modules/report-analyst-assignment/entities/report-analyst-assignment.entity';
+import { MovementReportService } from 'src/modules/movement-report/services/movement-report.service';
 
 @Injectable()
 export class ResearchersService {
   constructor(
     @InjectRepository(ResearcherEntity)
     private readonly researcherRepository: Repository<ResearcherEntity>,
-    @InjectRepository(MovementReportEntity)
-    private readonly movementReportRepository: Repository<MovementReportEntity>,
     @InjectRepository(CaseReportValidateEntity)
     private readonly caseReportValidateRepository: Repository<CaseReportValidateEntity>,
     @InjectRepository(CaseTypeEntity)
@@ -50,6 +49,7 @@ export class ResearchersService {
 
     private readonly httpResearchersService: HttpResearchersService,
     private readonly logService: LogService,
+    private readonly movementReportService: MovementReportService,
     @Inject(forwardRef(() => CaseReportValidateService))
     private readonly caseReportValidateService: CaseReportValidateService,
   ) {}
@@ -162,19 +162,10 @@ export class ResearchersService {
       );
     }
 
-    const movementReportFound = await this.movementReportRepository.findOne({
-      where: {
-        mov_r_name: movementReport.ASSIGNMENT_RESEARCHER,
-        mov_r_status: true,
-      },
-    });
-
-    if (!movementReportFound) {
-      throw new HttpException(
-        `El movimiento ${movementReport.ASSIGNMENT_RESEARCHER} no existe.`,
-        HttpStatus.NO_CONTENT,
+    const movementReportFound =
+      await this.movementReportService.findOneMovementReportByName(
+        movementReport.ASSIGNMENT_RESEARCHER,
       );
-    }
 
     const updateStatusMovement = await this.caseReportValidateRepository.update(
       createResearcherDto.res_validatedcase_id_fk,
@@ -230,7 +221,7 @@ export class ResearchersService {
   ) {
     const query = this.caseReportValidateRepository
       .createQueryBuilder('crv')
-      .innerJoinAndSelect('crv.researcher', 'res')
+      .innerJoinAndSelect('crv.reportResearcherAssignment', 'res')
       .leftJoinAndSelect('crv.caseType', 'caseType')
       .leftJoinAndSelect('crv.event', 'event')
       .leftJoinAndSelect('crv.priority', 'priority')
@@ -295,7 +286,7 @@ export class ResearchersService {
   ) {
     const query = this.caseReportValidateRepository
       .createQueryBuilder('crv')
-      .innerJoinAndSelect('crv.researcher', 'res')
+      .innerJoinAndSelect('crv.reportResearcherAssignment', 'res')
       .leftJoinAndSelect('crv.caseType', 'caseType')
       .leftJoinAndSelect('crv.event', 'event')
       .leftJoinAndSelect('crv.priority', 'priority')
@@ -328,6 +319,8 @@ export class ResearchersService {
     if (priorityId) {
       query.andWhere('crv.val_cr_priority_id_fk = :priorityId', { priorityId });
     }
+
+    query.andWhere('crv.val_cr_characterization_id_fk IS NOT NULL');
 
     query.andWhere('res.res_status = :statusBool', {
       statusBool: true,
@@ -390,24 +383,15 @@ export class ResearchersService {
       idCaseReportValidate,
     );
 
-    const findMovementReport = await this.movementReportRepository.findOne({
-      where: {
-        mov_r_name: movementReport.REASSIGNMENT_RESEARCHER,
-        mov_r_status: true,
-      },
-    });
-
-    if (!findMovementReport) {
-      throw new HttpException(
-        `El movimiento ${movementReport.REASSIGNMENT_RESEARCHER} no existe.`,
-        HttpStatus.NO_CONTENT,
+    const movementReportFound =
+      await this.movementReportService.findOneMovementReportByName(
+        movementReport.REASSIGNMENT_RESEARCHER,
       );
-    }
 
     const updateStatusMovement = await this.caseReportValidateRepository.update(
       idCaseReportValidate,
       {
-        val_cr_statusmovement_id_fk: findMovementReport.id,
+        val_cr_statusmovement_id_fk: movementReportFound.id,
       },
     );
 
@@ -503,24 +487,15 @@ export class ResearchersService {
       );
     }
 
-    const findMovementReport = await this.movementReportRepository.findOne({
-      where: {
-        mov_r_name: movementReport.RETURN_CASE_ANALYST,
-        mov_r_status: true,
-      },
-    });
-
-    if (!findMovementReport) {
-      throw new HttpException(
-        `El movimiento ${movementReport.REASSIGNMENT_ANALYST} no existe.`,
-        HttpStatus.NO_CONTENT,
+    const movementReportFound =
+      await this.movementReportService.findOneMovementReportByName(
+        movementReport.RETURN_CASE_ANALYST,
       );
-    }
 
     const updateStatusMovement = await this.caseReportValidateRepository.update(
       idCaseReportValidate,
       {
-        val_cr_statusmovement_id_fk: findMovementReport.id,
+        val_cr_statusmovement_id_fk: movementReportFound.id,
       },
     );
 

@@ -79,6 +79,24 @@ export class MovementReportService {
     return movementReport;
   }
 
+  async findOneMovementReportByName(movementName : string) {
+    const movementReportName = await this.movementReportRepository.findOne({
+      where: {
+        mov_r_name: movementName,
+        mov_r_status: true,
+      },
+    });
+
+    if (!movementReportName) {
+      throw new HttpException(
+        `El movimiento ${movementName} no existe.`,
+        HttpStatus.NO_CONTENT,
+      );
+    }
+
+    return movementReportName
+  }
+
   async updateMovementReport(
     id: number,
     updateMovementReportDto: UpdateMovementReportDto,
