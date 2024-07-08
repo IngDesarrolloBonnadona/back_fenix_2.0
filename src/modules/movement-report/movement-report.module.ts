@@ -10,5 +10,6 @@ import { MovementReport } from './entities/movement-report.entity';
   ],
   controllers: [MovementReportController],
   providers: [MovementReportService],
+  exports: [MovementReportService],
 })
 export class MovementReportModule {}

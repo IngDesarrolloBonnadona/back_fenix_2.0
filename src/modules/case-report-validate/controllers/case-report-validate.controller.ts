@@ -36,16 +36,18 @@ export class CaseReportValidateController {
     );
   }
 
-  @Post('/createReportValidate/:reportId')
+  @Post('/createReportValidate/:idValidator/:reportId')
   async createReportValidate(
     @Body() createReportValDto: CreateReportValDto,
     @Ip() clientIp: string,
     @Param('reportId') reportId: string,
+    @Param('idValidator') idValidator: number
   ): Promise<any> {
     return await this.caseReportValidateService.createReportValidate(
       createReportValDto,
       clientIp,
       reportId,
+      idValidator
     );
   }
 

@@ -27,6 +27,7 @@ import { UnitModule } from '../unit/unit.module';
 import { Priority } from '../priority/entities/priority.entity';
 import { ObservationReturnCase } from '../observation-return-case/entities/observation-return-case.entity';
 import { ObservationReturnCaseModule } from '../observation-return-case/observation-return-case.module';
+import { MovementReportModule } from '../movement-report/movement-report.module';
 
 @Module({
   imports: [
@@ -54,6 +55,7 @@ import { ObservationReturnCaseModule } from '../observation-return-case/observat
     SubOriginModule,
     RiskLevelModule,
     UnitModule,
+    MovementReportModule,
     forwardRef(() => ResearchersModule),
     forwardRef(() => ReportAnalystAssignmentModule),
     forwardRef(() => ObservationReturnCaseModule),
