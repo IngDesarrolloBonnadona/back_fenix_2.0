@@ -28,6 +28,7 @@ import { RoleResponseTimeModule } from './modules/role-response-time/role-respon
 import { ReasonReturnCaseModule } from './modules/reason-return-case/reason-return-case.module';
 import { RoleModule } from './modules/role/role.module';
 import { ObservationReturnCaseModule } from './modules/observation-return-case/observation-return-case.module';
+import { UserPermissionsModule } from './modules/user-permissions/user-permissions.module';
 
 require('dotenv').config();
 
@@ -43,6 +44,15 @@ require('dotenv').config();
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
       autoLoadEntities: true,
+    }),
+    TypeOrmModule.forRoot({
+      name: 'bonnadonaHub',
+      type: 'postgres',
+      host: process.env.BONNADONA_HOST,
+      port: +process.env.BONNADONA_PORT,
+      username: process.env.BONNADONA_USER,
+      password: process.env.BONNADONA_PASSWORD,
+      database: process.env.BONNADONA_DATABASE
     }),
     CaseReportOriginalModule,
     CaseTypeModule,
@@ -71,6 +81,7 @@ require('dotenv').config();
     ReasonReturnCaseModule,
     RoleModule,
     ObservationReturnCaseModule,
+    UserPermissionsModule,
   ],
   controllers: [],
   providers: [],
