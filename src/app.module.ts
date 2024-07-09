@@ -45,6 +45,15 @@ require('dotenv').config();
       synchronize: true,
       autoLoadEntities: true,
     }),
+    TypeOrmModule.forRoot({
+      name: 'bonnadonaHub',
+      type: 'postgres',
+      host: process.env.BONNADONA_HOST,
+      port: +process.env.BONNADONA_PORT,
+      username: process.env.BONNADONA_USER,
+      password: process.env.BONNADONA_PASSWORD,
+      database: process.env.BONNADONA_DATABASE
+    }),
     CaseReportOriginalModule,
     CaseTypeModule,
     RiskTypeModule,
