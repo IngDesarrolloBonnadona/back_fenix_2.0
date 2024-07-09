@@ -28,6 +28,7 @@ import { RoleResponseTimeModule } from './modules/role-response-time/role-respon
 import { ReasonReturnCaseModule } from './modules/reason-return-case/reason-return-case.module';
 import { RoleModule } from './modules/role/role.module';
 import { ObservationReturnCaseModule } from './modules/observation-return-case/observation-return-case.module';
+import { UserPermissionsModule } from './modules/user-permissions/user-permissions.module';
 
 require('dotenv').config();
 
@@ -71,6 +72,7 @@ require('dotenv').config();
     ReasonReturnCaseModule,
     RoleModule,
     ObservationReturnCaseModule,
+    UserPermissionsModule,
   ],
   controllers: [],
   providers: [],
