@@ -1,6 +1,15 @@
-import { Column, CreateDateColumn, DeleteDateColumn, UpdateDateColumn } from "typeorm";
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
+@Entity()
 export class Users {
+  @PrimaryGeneratedColumn('uuid')
   id!: string;
 
   @Column({ length: 32 })
