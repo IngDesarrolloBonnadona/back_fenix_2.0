@@ -1,5 +1,16 @@
-import { Column, CreateDateColumn, DeleteDateColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { Users } from './bonnadonaUsers.entity';
 
+@Entity()
 export class UserDetails {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
@@ -27,4 +38,8 @@ export class UserDetails {
 
   @DeleteDateColumn({ type: 'timestamp', select: false })
   deletedAt?: Date;
+
+  @JoinColumn()
+  @OneToOne((_type) => Users, (user) => user.details)
+  user!: Users;
 }

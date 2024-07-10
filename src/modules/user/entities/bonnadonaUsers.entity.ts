@@ -3,9 +3,13 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { UserDetails } from './bonnadonaDetails.entity';
+import { OportunitySource } from './bonnadonaOportunitySource.entity';
 
 @Entity()
 export class Users {
@@ -38,4 +42,10 @@ export class Users {
 
   @DeleteDateColumn({ type: 'timestamp', select: false })
   deletedAt?: Date;
+
+  @OneToOne((_type) => UserDetails, (details) => details.user)
+  details!: UserDetails;
+
+  // @OneToMany((_type) => OportunitySource, (source) => source.attendant)
+  // oportunitySources?: OportunitySource[];
 }
