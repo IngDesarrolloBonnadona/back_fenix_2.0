@@ -9,7 +9,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity({ name: 'fenix-characterization-case' })
+@Entity({ name: 'fenix_characterization_case' })
 export class CharacterizationCase {
   @PrimaryGeneratedColumn()
   id: number;

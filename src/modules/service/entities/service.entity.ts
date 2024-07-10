@@ -11,7 +11,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity({ name: 'fenix-service' })
+@Entity({ name: 'fenix_service' })
 export class Service {
   @PrimaryGeneratedColumn()
   id: number;

@@ -13,7 +13,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity({ name: 'fenix-unit' })
+@Entity({ name: 'fenix_unit' })
 export class Unit {
   @PrimaryGeneratedColumn()
   id: number;

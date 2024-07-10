@@ -11,7 +11,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity({ name: 'fenix-report-researcher-assignment' })
+@Entity({ name: 'fenix_report_researcher_assignment' })
 export class ReportResearcherAssignment {
   @PrimaryGeneratedColumn()
   id: number;

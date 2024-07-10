@@ -2,7 +2,7 @@ import { CaseReportOriginal } from "src/modules/case-report-original/entities/ca
 import { CaseReportValidate } from "src/modules/case-report-validate/entities/case-report-validate.entity";
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
-@Entity({ name: 'fenix-risk-type' })
+@Entity({ name: 'fenix_risk_type' })
 export class RiskType {
     @PrimaryGeneratedColumn()
     id: number;

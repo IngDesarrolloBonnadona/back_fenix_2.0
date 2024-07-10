@@ -11,7 +11,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity({ name: 'fenix-observation-return-case' })
+@Entity({ name: 'fenix_observation_return_case' })
 export class ObservationReturnCase {
   @PrimaryGeneratedColumn()
   id: number;

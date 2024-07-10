@@ -10,7 +10,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity({ name: 'fenix-movement-report' })
+@Entity({ name: 'fenix_movement_report' })
 export class MovementReport {
   @PrimaryGeneratedColumn()
   id: number;

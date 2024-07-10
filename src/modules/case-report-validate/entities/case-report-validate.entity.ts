@@ -29,7 +29,7 @@ import { MovementReport } from 'src/modules/movement-report/entities/movement-re
 import { CharacterizationCase } from 'src/modules/characterization-cases/entities/characterization-case.entity';
 import { ObservationReturnCase } from 'src/modules/observation-return-case/entities/observation-return-case.entity';
 
-@Entity({ name: 'fenix-case-report-validate' })
+@Entity({ name: 'fenix_case_report_validate' })
 export class CaseReportValidate {
   @PrimaryGeneratedColumn('uuid')
   id: string;

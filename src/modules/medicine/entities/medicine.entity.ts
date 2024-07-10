@@ -10,7 +10,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity({ name: 'fenix-medicine' })
+@Entity({ name: 'fenix_medicine' })
 export class Medicine {
   @PrimaryGeneratedColumn()
   id: number;

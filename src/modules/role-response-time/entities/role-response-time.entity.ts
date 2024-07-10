@@ -11,7 +11,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity({ name: 'fenix-role-response-time' })
+@Entity({ name: 'fenix_role_response_time' })
 export class RoleResponseTime {
   @PrimaryGeneratedColumn()
   id: number;

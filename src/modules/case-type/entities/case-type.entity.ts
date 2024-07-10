@@ -11,7 +11,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity({ name: 'fenix-case-type' })
+@Entity({ name: 'fenix_case_type' })
 export class CaseType {
   @PrimaryGeneratedColumn()
   id: number;

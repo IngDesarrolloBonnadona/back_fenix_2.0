@@ -10,7 +10,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity({ name: 'fenix-risk-level' })
+@Entity({ name: 'fenix_risk_level' })
 export class RiskLevel {
   @PrimaryGeneratedColumn()
   id: number;

@@ -13,7 +13,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity({ name: 'fenix-severity-clasification' })
+@Entity({ name: 'fenix_severity_clasification' })
 export class SeverityClasification {
   @PrimaryGeneratedColumn()
   id: number;
