@@ -52,7 +52,9 @@ require('dotenv').config();
       port: +process.env.BONNADONA_PORT,
       username: process.env.BONNADONA_USER,
       password: process.env.BONNADONA_PASSWORD,
-      database: process.env.BONNADONA_DATABASE
+      database: process.env.BONNADONA_DATABASE,
+      entities: [__dirname + '/modules/user/entities/*.entity{.ts,.js}'],
+      synchronize: false,
     }),
     CaseReportOriginalModule,
     CaseTypeModule,
