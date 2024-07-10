@@ -1,36 +1,48 @@
-import { CaseReportOriginal } from "src/modules/case-report-original/entities/case-report-original.entity";
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { CaseReportOriginal } from 'src/modules/case-report-original/entities/case-report-original.entity';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
-@Entity()
+@Entity({ name: 'fenix-device' })
 export class Device {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column({ type: 'uuid' })
-    dev_case_id_fk: string
+  @Column({ type: 'uuid' })
+  dev_case_id_fk: string;
 
-    @Column()
-    dev_code: string
+  @Column()
+  dev_code: string;
 
-    @Column({ type: 'varchar' })
-    dev_name: string;
+  @Column({ type: 'varchar' })
+  dev_name: string;
 
-    @Column({ type: 'varchar', nullable: true })
-    dev_description: string;
+  @Column({ type: 'varchar', nullable: true })
+  dev_description: string;
 
-    @Column({ default: true })
-    dev_status: boolean;
+  @Column({ default: true })
+  dev_status: boolean;
 
-    @CreateDateColumn()
-    createdAt: Date;
+  @CreateDateColumn()
+  createdAt: Date;
 
-    @UpdateDateColumn()
-    updateAt: Date;
+  @UpdateDateColumn()
+  updateAt: Date;
 
-    @DeleteDateColumn({ nullable: true })
-    deletedAt: Date
+  @DeleteDateColumn({ nullable: true })
+  deletedAt: Date;
 
-    @ManyToOne(() => CaseReportOriginal, (caseReportOriginal) => caseReportOriginal.device)
-    @JoinColumn({ name: 'dev_case_id_fk'})
-    caseReportOriginal: CaseReportOriginal
+  @ManyToOne(
+    () => CaseReportOriginal,
+    (caseReportOriginal) => caseReportOriginal.device,
+  )
+  @JoinColumn({ name: 'dev_case_id_fk' })
+  caseReportOriginal: CaseReportOriginal;
 }

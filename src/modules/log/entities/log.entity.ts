@@ -10,7 +10,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity()
+@Entity({ name: 'fenix-log' })
 export class Log {
   @PrimaryGeneratedColumn()
   id: number;

@@ -12,7 +12,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity()
+@Entity({ name: 'fenix-reason-return-case' })
 export class ReasonReturnCase {
   @PrimaryGeneratedColumn()
   id: number;

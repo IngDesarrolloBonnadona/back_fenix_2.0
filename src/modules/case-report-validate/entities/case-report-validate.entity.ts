@@ -29,7 +29,7 @@ import { MovementReport } from 'src/modules/movement-report/entities/movement-re
 import { CharacterizationCase } from 'src/modules/characterization-cases/entities/characterization-case.entity';
 import { ObservationReturnCase } from 'src/modules/observation-return-case/entities/observation-return-case.entity';
 
-@Entity()
+@Entity({ name: 'fenix-case-report-validate' })
 export class CaseReportValidate {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -236,7 +236,8 @@ export class CaseReportValidate {
 
   @OneToMany(
     () => ReportResearcherAssignment,
-    (reportResearcherAssignment) => reportResearcherAssignment.caseReportValidate,
+    (reportResearcherAssignment) =>
+      reportResearcherAssignment.caseReportValidate,
   )
   reportResearcherAssignment: ReportResearcherAssignment[];
 

@@ -14,7 +14,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity()
+@Entity({ name: 'fenix-event-type' })
 export class EventType {
   @PrimaryGeneratedColumn()
   id: number;

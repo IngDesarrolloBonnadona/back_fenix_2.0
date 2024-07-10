@@ -11,7 +11,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity()
+@Entity({ name: 'fenix-role-response-time' })
 export class RoleResponseTime {
   @PrimaryGeneratedColumn()
   id: number;
@@ -49,5 +49,5 @@ export class RoleResponseTime {
 
   @ManyToOne(() => Role, (role) => role.roleResponseTime)
   @JoinColumn({ name: 'rest_r_role_id_fk' })
-  role: Role
+  role: Role;
 }

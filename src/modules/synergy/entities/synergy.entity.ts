@@ -10,7 +10,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity()
+@Entity({ name: 'fenix-synergy' })
 export class Synergy {
   @PrimaryGeneratedColumn()
   id: number;
@@ -19,7 +19,7 @@ export class Synergy {
   syn_validatedcase_id_fk: string;
 
   @Column()
-  syn_programmingcounter: number
+  syn_programmingcounter: number;
 
   @Column()
   syn_evaluationdate: Date;

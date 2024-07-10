@@ -9,7 +9,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity()
+@Entity({ name: 'fenix-position' })
 export class Position {
   @PrimaryGeneratedColumn()
   id: number;

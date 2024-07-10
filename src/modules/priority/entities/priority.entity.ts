@@ -13,7 +13,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity()
+@Entity({ name: 'fenix-priority' })
 export class Priority {
   @PrimaryGeneratedColumn()
   id: number;

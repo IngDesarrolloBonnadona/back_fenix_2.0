@@ -11,7 +11,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity()
+@Entity({ name: 'fenix-observation-return-case' })
 export class ObservationReturnCase {
   @PrimaryGeneratedColumn()
   id: number;
@@ -29,7 +29,7 @@ export class ObservationReturnCase {
   rec_o_observation: string;
 
   @Column({ type: 'boolean', default: true })
-  rec_o_status: boolean
+  rec_o_status: boolean;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -40,11 +40,17 @@ export class ObservationReturnCase {
   @DeleteDateColumn()
   deletedAt: Date;
 
-  @ManyToOne(() => ReasonReturnCase, (reasonReturnCase) => reasonReturnCase.observationReturnCase)
+  @ManyToOne(
+    () => ReasonReturnCase,
+    (reasonReturnCase) => reasonReturnCase.observationReturnCase,
+  )
   @JoinColumn({ name: 'rec_o_reasonreturn_id_fk' })
   reasonReturnCase: ReasonReturnCase;
 
-  @ManyToOne(() => CaseReportValidate, (caseReportValidate) => caseReportValidate.observationReturnCase)
+  @ManyToOne(
+    () => CaseReportValidate,
+    (caseReportValidate) => caseReportValidate.observationReturnCase,
+  )
   @JoinColumn({ name: 'rec_o_validatedcase_id_fk' })
   caseReportValidate: CaseReportValidate;
 }
