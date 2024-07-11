@@ -3,15 +3,12 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
-  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { UserDetails } from './bonnadonaDetails.entity';
-import { OportunitySource } from './bonnadonaOportunitySource.entity';
 
-@Entity()
 export class Users {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
@@ -46,6 +43,4 @@ export class Users {
   @OneToOne((_type) => UserDetails, (details) => details.user)
   details!: UserDetails;
 
-  // @OneToMany((_type) => OportunitySource, (source) => source.attendant)
-  // oportunitySources?: OportunitySource[];
 }

@@ -9,7 +9,9 @@ import { IUserPermission } from '../interfaces/IUserPermissions.interface';
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(Users, 'bonnadonaHub')
+    @InjectRepository(Users, 
+      // 'bonnadonaHub'
+    )
     private readonly userRepository: Repository<Users>,
   ) {}
 

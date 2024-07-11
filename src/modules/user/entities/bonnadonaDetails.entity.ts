@@ -4,13 +4,14 @@ import {
   DeleteDateColumn,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Users } from './bonnadonaUsers.entity';
+import { Position } from './bonnadonaPosition.entity';
 
-@Entity()
 export class UserDetails {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
@@ -42,4 +43,7 @@ export class UserDetails {
   @JoinColumn()
   @OneToOne((_type) => Users, (user) => user.details)
   user!: Users;
+
+  @ManyToOne((_type) => Position, (position) => position.details)
+  position!: Position;
 }

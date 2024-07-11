@@ -1,4 +1,6 @@
-import { Column, CreateDateColumn, DeleteDateColumn, PrimaryGeneratedColumn, UpdateDateColumn,  } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn,  } from "typeorm";
+import { UserDetails } from "./bonnadonaDetails.entity";
+import { Roles } from "./bonnadonaRoles.entity";
 
 export class Position {
   @PrimaryGeneratedColumn()
@@ -15,4 +17,17 @@ export class Position {
 
   @DeleteDateColumn({ type: 'timestamp', select: false })
   deletedAt?: Date;
+
+  @OneToMany(
+    _type => UserDetails,
+    details => details.position,
+  )
+  details?: UserDetails[];
+
+  @ManyToOne(
+    _type => Roles,
+    role => role.positions,
+    { nullable: true },
+  )
+  role?: Roles;
 }

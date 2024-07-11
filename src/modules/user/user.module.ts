@@ -18,7 +18,9 @@ import { RolesPermissions } from './entities/bonnadonaRolesPermissions.entity';
       // Position,
       // Roles,
       // RolesPermissions,
-    ], 'bonnadonaHub'),
+    ], 
+    // 'bonnadonaHub'
+  ),
   ],
   controllers: [UserController],
   providers: [UserService],
