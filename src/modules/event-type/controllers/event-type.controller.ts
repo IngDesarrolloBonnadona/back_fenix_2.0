@@ -15,6 +15,11 @@ export class EventTypeController {
     return this.eventTypeService.createEventType(createEventTypeDto);
   }
 
+  @Post('/createEventTypeArray')
+  createEventTypeArray(@Body() createEventTypeDto: CreateEventTypeDto[]): Promise<HttpException> {
+    return this.eventTypeService.createEventTypesArray(createEventTypeDto);
+  }
+
   @Get('/listEventTypes')
   listEventTypes(): Promise<EventType[]> {
     return this.eventTypeService.findAllEventTypes();
