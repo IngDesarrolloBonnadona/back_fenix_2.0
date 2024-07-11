@@ -22,8 +22,8 @@ export class UserController {
     return this.userPermissionsService.getUserPermissions(userId);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userPermissionsService.findOne(+id);
-  }
+  // @Get('/listPermissions')
+  // listPermissionsUser(@Query('userId') userId: string) {
+  //   return this.userPermissionsService.getUserPermissions(userId);
+  // }
 }

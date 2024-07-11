@@ -1,7 +1,8 @@
-import { Column, CreateDateColumn, DeleteDateColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn,  } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn,  } from "typeorm";
 import { UserDetails } from "./bonnadonaDetails.entity";
 import { Roles } from "./bonnadonaRoles.entity";
 
+@Entity()
 export class Position {
   @PrimaryGeneratedColumn()
   id!: number;

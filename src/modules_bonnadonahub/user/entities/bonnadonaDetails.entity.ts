@@ -12,6 +12,7 @@ import {
 import { Users } from './bonnadonaUsers.entity';
 import { Position } from './bonnadonaPosition.entity';
 
+@Entity()
 export class UserDetails {
   @PrimaryGeneratedColumn('uuid')
   id!: string;

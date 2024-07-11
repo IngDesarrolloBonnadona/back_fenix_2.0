@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { UserDetails } from './bonnadonaDetails.entity';
 
+@Entity()
 export class Users {
   @PrimaryGeneratedColumn('uuid')
   id!: string;

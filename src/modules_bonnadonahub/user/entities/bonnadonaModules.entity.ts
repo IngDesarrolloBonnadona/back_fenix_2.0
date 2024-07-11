@@ -1,6 +1,7 @@
-import { Column, CreateDateColumn, DeleteDateColumn, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Permissions } from './bonnadonaPermissions.entity';
 
+@Entity()
 export class Modules {
   @PrimaryGeneratedColumn('uuid')
   id!: string;

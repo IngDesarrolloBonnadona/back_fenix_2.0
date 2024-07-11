@@ -41,7 +41,21 @@ export class UserService {
     }));
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} userPermission`;
-  }
+  // async getUserPermissions(userId: string) {
+  //   const permissions: IUserPermission[] = await this.userRepository
+  //     .createQueryBuilder('u')
+  //     .where('u.id = :userId', { userId })
+  //     .andWhere('u.active = true')
+  //     .andWhere('u.deletedAt IS NULL')
+  //     .getRawMany();
+
+  //   if (permissions.length === 0) {
+  //     throw new HttpException(
+  //       'No se encontró la lista de permisos del usuario.',
+  //       HttpStatus.NO_CONTENT,
+  //     );
+  //   }
+
+  //   return permissions
+  // }
 }

@@ -1,7 +1,8 @@
-import { Column, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { RolesPermissions } from "./bonnadonaRolesPermissions.entity";
 import { Modules } from "./bonnadonaModules.entity";
 
+@Entity()
 export class Permissions {
     @PrimaryGeneratedColumn()
     id!: number;
