@@ -15,6 +15,11 @@ export class EventController {
     return this.eventService.createEvent(createEventDto);
   }
 
+  @Post('/createEventsArray')
+  createEventsArray(@Body() createEventDto: CreateEventDto[]){
+    return this.eventService.createEventsArray(createEventDto);
+  }
+
   @Get('/listEvents')
   listEvents(): Promise<Event[]> {
     return this.eventService.findAllEvents();
