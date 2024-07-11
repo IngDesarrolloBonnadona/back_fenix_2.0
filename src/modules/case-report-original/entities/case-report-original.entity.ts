@@ -25,7 +25,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity()
+@Entity({ name: 'fenix_case_report_original' })
 export class CaseReportOriginal {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -98,18 +98,18 @@ export class CaseReportOriginal {
 
   @Column({ nullable: true })
   ori_cr_priority_id_fk: number;
-  
+
   @Column({ nullable: true })
   ori_cr_statusmovement_id_fk: number;
-  
-  @Column({ nullable: true })
-  ori_cr_characterization_id_fk: number
 
   @Column({ nullable: true })
-  ori_cr_infoprovidedfamily: boolean
+  ori_cr_characterization_id_fk: number;
 
   @Column({ nullable: true })
-  ori_cr_clinicalfollowrequired: boolean
+  ori_cr_infoprovidedfamily: boolean;
+
+  @Column({ nullable: true })
+  ori_cr_clinicalfollowrequired: boolean;
 
   @Column({ type: 'varchar', nullable: true })
   ori_cr_observationscharacterization: string;
@@ -150,9 +150,12 @@ export class CaseReportOriginal {
   @OneToMany(() => Device, (device) => device.caseReportOriginal)
   device: Device[];
 
-  @ManyToOne(() => MovementReport, (movementReport) => movementReport.caseReportOriginal)
+  @ManyToOne(
+    () => MovementReport,
+    (movementReport) => movementReport.caseReportOriginal,
+  )
   @JoinColumn({ name: 'ori_cr_statusmovement_id_fk' })
-  movementReport: MovementReport
+  movementReport: MovementReport;
 
   @ManyToOne(() => CaseType, (caseType) => caseType.caseReportOriginal)
   @JoinColumn({ name: 'ori_cr_casetype_id_fk' })

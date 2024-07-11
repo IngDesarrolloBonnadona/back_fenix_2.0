@@ -13,7 +13,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity()
+@Entity({ name: 'fenix_sub_origin' })
 export class SubOrigin {
   @PrimaryGeneratedColumn()
   id: number;

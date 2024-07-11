@@ -1,7 +1,15 @@
 import { CaseReportValidate } from 'src/modules/case-report-validate/entities/case-report-validate.entity';
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
-@Entity()
+@Entity({ name: 'fenix_characterization_case' })
 export class CharacterizationCase {
   @PrimaryGeneratedColumn()
   id: number;
@@ -24,6 +32,9 @@ export class CharacterizationCase {
   @DeleteDateColumn()
   deletedAt: Date;
 
-  @OneToMany(() => CaseReportValidate, (caseReportValidate) => caseReportValidate.characterizationCase)
-    caseReportValidate: CaseReportValidate[];
+  @OneToMany(
+    () => CaseReportValidate,
+    (caseReportValidate) => caseReportValidate.characterizationCase,
+  )
+  caseReportValidate: CaseReportValidate[];
 }

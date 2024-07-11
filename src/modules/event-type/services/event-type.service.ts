@@ -48,6 +48,38 @@ export class EventTypeService {
     );
   }
 
+  async createEventTypesArray(createEventTypeDto: CreateEventTypeDto[]) {
+    const eventTypesToCreate = [];
+  
+    for (const eventType of createEventTypeDto) {
+      const findEventType = await this.eventTypeRepository.findOne({
+        where: {
+          eve_t_name: eventType.eve_t_name,
+          eve_t_casetype_id_fk: eventType.eve_t_casetype_id_fk,
+        },
+      });
+  
+      if (findEventType) {
+        throw new HttpException(
+          `El tipo de suceso ${eventType.eve_t_name} ya existe en el tipo de caso seleccionado.`,
+          HttpStatus.NO_CONTENT,
+        );
+      }
+  
+      await this.caseTypeService.findOneCaseType(eventType.eve_t_casetype_id_fk);
+  
+      const newEventType = this.eventTypeRepository.create(eventType);
+      eventTypesToCreate.push(newEventType);
+    }
+  
+    await this.eventTypeRepository.save(eventTypesToCreate);
+  
+    return new HttpException(
+      `¡Los tipos de suceso se crearon correctamente!`,
+      HttpStatus.CREATED,
+    );
+  }
+
   async findAllEventTypes() {
     const eventTypes = await this.eventTypeRepository.find({
       where: {

@@ -31,7 +31,7 @@ export class EventService {
 
     if (events) {
       throw new HttpException(
-        'El suceso ya existe en el tipo de suceso seleccionado.',
+        `El suceso ${events.eve_name} ya existe en el tipo de suceso seleccionado.`,
         HttpStatus.CONFLICT,
       );
     }
@@ -45,6 +45,37 @@ export class EventService {
 
     return new HttpException(
       `¡El suceso ${event.eve_name} se creó correctamente!`,
+      HttpStatus.CREATED,
+    );
+  }
+
+  async createEventsArray(createEventDto: CreateEventDto[]) {
+    const eventToCreate = [];
+
+    for (const event of createEventDto) {
+      const findEvent = await this.eventRepository.findOne({
+        where: {
+          eve_name: event.eve_name,
+          eve_eventtype_id_fk: event.eve_eventtype_id_fk,
+          eve_status: true,
+        },
+      });
+
+      if (findEvent) {
+        throw new HttpException(
+          `El suceso ${event.eve_name} ya existe en el tipo de suceso seleccionado.`,
+          HttpStatus.NO_CONTENT,
+        );
+      }
+
+      const newEvent = this.eventRepository.create(event);
+      eventToCreate.push(newEvent);
+    }
+
+    await this.eventRepository.save(eventToCreate);
+
+    return new HttpException(
+      `¡Los sucesos se crearon correctamente ${eventToCreate.length}!`,
       HttpStatus.CREATED,
     );
   }
