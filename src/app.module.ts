@@ -28,7 +28,7 @@ import { RoleResponseTimeModule } from './modules/role-response-time/role-respon
 import { ReasonReturnCaseModule } from './modules/reason-return-case/reason-return-case.module';
 import { RoleModule } from './modules/role/role.module';
 import { ObservationReturnCaseModule } from './modules/observation-return-case/observation-return-case.module';
-import { UserModule } from './modules/user/user.module';
+import { UserModule } from './modules_bonnadonahub/user/user.module';
 
 require('dotenv').config();
 
@@ -41,21 +41,21 @@ require('dotenv').config();
       username: process.env.BONNADONA_USER,
       password: process.env.BONNADONA_PASSWORD,
       database: process.env.BONNADONA_DATABASE,
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: false,
+      entities: [__dirname + '/modules/**/entities/*.entity{.ts,.js}'],
+      synchronize: true,
       autoLoadEntities: true,
     }),
-    // TypeOrmModule.forRoot({
-    //   name: 'bonnadonaHub',
-    //   type: 'postgres',
-    //   host: process.env.BONNADONA_HOST,
-    //   port: +process.env.BONNADONA_PORT,
-    //   username: process.env.BONNADONA_USER,
-    //   password: process.env.BONNADONA_PASSWORD,
-    //   database: process.env.BONNADONA_DATABASE,
-    //   entities: [__dirname + '/modules/user/entities/*.entity{.ts,.js}'],
-    //   synchronize: false,
-    // }),
+    TypeOrmModule.forRoot({
+      name: 'bonnadonaHub',
+      type: 'postgres',
+      host: process.env.BONNADONA_HOST,
+      port: +process.env.BONNADONA_PORT,
+      username: process.env.BONNADONA_USER,
+      password: process.env.BONNADONA_PASSWORD,
+      database: process.env.BONNADONA_DATABASE,
+      entities: [__dirname + '/modules_bonnadonahub/user/entities/*.entity{.ts,.js}'],
+      synchronize: false,
+    }),
     CaseReportOriginalModule,
     CaseTypeModule,
     RiskTypeModule,

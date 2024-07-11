@@ -9,9 +9,7 @@ import { IUserPermission } from '../interfaces/IUserPermissions.interface';
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(Users, 
-      // 'bonnadonaHub'
-    )
+    @InjectRepository(Users, 'bonnadonaHub')
     private readonly userRepository: Repository<Users>,
   ) {}
 
@@ -36,7 +34,7 @@ export class UserService {
         HttpStatus.NO_CONTENT,
       );
     }
-    
+
     return permissions.map((permission) => ({
       nombre: `${permission.name}-${permission.module}`,
       authorized: true,

@@ -11,16 +11,17 @@ import { RolesPermissions } from './entities/bonnadonaRolesPermissions.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([
-      Users,
-      // UserDetails,
-      // Modules,
-      // Position,
-      // Roles,
-      // RolesPermissions,
-    ], 
-    // 'bonnadonaHub'
-  ),
+    TypeOrmModule.forFeature(
+      [
+        Users,
+        // UserDetails,
+        // Modules,
+        // Position,
+        // Roles,
+        // RolesPermissions,
+      ],
+      'bonnadonaHub',
+    ),
   ],
   controllers: [UserController],
   providers: [UserService],
