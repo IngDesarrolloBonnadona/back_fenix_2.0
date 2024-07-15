@@ -18,7 +18,7 @@ import { HttpPositionService } from 'src/modules/position/http/http-position.ser
 import { movementReport } from 'src/enums/movement-report.enum';
 import { CaseReportValidate as CaseReportValidateEntity } from 'src/modules/case-report-validate/entities/case-report-validate.entity';
 import { RoleResponseTime as RoleResponseTimeEntity } from 'src/modules/role-response-time/entities/role-response-time.entity';
-import { Role as RoleEntity } from 'src/modules/role/entities/role.entity';
+import { RolePermission as RoleEntity } from 'src/modules/role-permission/entities/role-permission.entity';
 import { userRoles } from 'src/enums/user-roles.enum';
 import { CaseType as CaseTypeEntity } from 'src/modules/case-type/entities/case-type.entity';
 import { caseTypeReport } from 'src/enums/caseType-report.enum';

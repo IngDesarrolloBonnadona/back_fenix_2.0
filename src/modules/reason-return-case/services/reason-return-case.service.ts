@@ -4,7 +4,7 @@ import { UpdateReasonReturnCaseDto } from '../dto/update-reason-return-case.dto'
 import { InjectRepository } from '@nestjs/typeorm';
 import { ReasonReturnCase as ReasonReturnCaseEntity } from '../entities/reason-return-case.entity';
 import { Repository } from 'typeorm';
-import { RoleService } from 'src/modules/role/services/role.service';
+import { RolePermissionService } from 'src/modules/role-permission/services/role-permission.service';
 
 @Injectable()
 export class ReasonReturnCaseService {
@@ -12,7 +12,7 @@ export class ReasonReturnCaseService {
     @InjectRepository(ReasonReturnCaseEntity)
     private readonly reasonReturnCaseRepository: Repository<ReasonReturnCaseEntity>,
 
-    private readonly roleService: RoleService,
+    private readonly roleService: RolePermissionService,
   ) {}
 
   async createReasonReturnCase(

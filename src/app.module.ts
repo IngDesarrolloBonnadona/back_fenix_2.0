@@ -25,7 +25,7 @@ import { PriorityModule } from './modules/priority/priority.module';
 import { CharacterizationCasesModule } from './modules/characterization-cases/characterization-cases.module';
 import { RoleResponseTimeModule } from './modules/role-response-time/role-response-time.module';
 import { ReasonReturnCaseModule } from './modules/reason-return-case/reason-return-case.module';
-import { RoleModule } from './modules/role/role.module';
+import { RolePermissionModule } from './modules/role-permission/role-permission.module';
 import { ObservationReturnCaseModule } from './modules/observation-return-case/observation-return-case.module';
 import { UserModule } from './modules_bonnadonahub/user/user.module';
 
@@ -52,7 +52,9 @@ require('dotenv').config();
       username: process.env.BONNADONA_USER,
       password: process.env.BONNADONA_PASSWORD,
       database: process.env.BONNADONA_DATABASE,
-      entities: [__dirname + '/modules_bonnadonahub/user/entities/*.entity{.ts,.js}'],
+      entities: [
+        __dirname + '/modules_bonnadonahub/user/entities/*.entity{.ts,.js}',
+      ],
       synchronize: false,
     }),
     CaseReportOriginalModule,
@@ -80,7 +82,7 @@ require('dotenv').config();
     CharacterizationCasesModule,
     RoleResponseTimeModule,
     ReasonReturnCaseModule,
-    RoleModule,
+    RolePermissionModule,
     ObservationReturnCaseModule,
     UserModule,
   ],

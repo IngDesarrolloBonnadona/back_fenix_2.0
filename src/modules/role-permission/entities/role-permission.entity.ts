@@ -10,8 +10,8 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity({ name: 'fenix_role' })
-export class Role {
+@Entity({ name: 'fenix_role_permission' })
+export class RolePermission {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -33,9 +33,15 @@ export class Role {
   @DeleteDateColumn()
   deletedAt: Date;
 
-  @OneToMany(() => ReasonReturnCase, (reasonReturnCase) => reasonReturnCase.role)
+  @OneToMany(
+    () => ReasonReturnCase,
+    (reasonReturnCase) => reasonReturnCase.role,
+  )
   reasonReturnCase: ReasonReturnCase[];
 
-  @OneToMany(() => RoleResponseTime, (roleResponseTime) => roleResponseTime.role)
+  @OneToMany(
+    () => RoleResponseTime,
+    (roleResponseTime) => roleResponseTime.role,
+  )
   roleResponseTime: RoleResponseTime[];
 }

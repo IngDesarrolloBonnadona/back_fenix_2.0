@@ -1,4 +1,4 @@
-import { Role } from 'src/modules/role/entities/role.entity';
+import { RolePermission } from 'src/modules/role-permission/entities/role-permission.entity';
 import { SeverityClasification } from 'src/modules/severity-clasification/entities/severity-clasification.entity';
 import {
   Column,
@@ -47,7 +47,7 @@ export class RoleResponseTime {
   @JoinColumn({ name: 'rest_r_severityclasif_id_fk' })
   severityClasification: SeverityClasification;
 
-  @ManyToOne(() => Role, (role) => role.roleResponseTime)
+  @ManyToOne(() => RolePermission, (role) => role.roleResponseTime)
   @JoinColumn({ name: 'rest_r_role_id_fk' })
-  role: Role;
+  role: RolePermission;
 }
