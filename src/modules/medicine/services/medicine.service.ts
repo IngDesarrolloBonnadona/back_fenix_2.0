@@ -50,8 +50,8 @@ export class MedicineService {
         // caseReportOriginal: true,
       },
       order: {
-        createdAt: 'DESC'
-      }
+        createdAt: 'DESC',
+      },
     });
 
     if (medicines.length === 0) {

@@ -1,6 +1,4 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { CreateUserDto } from '../dto/create-user.dto';
-import { UpdateUserDto } from '../dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from '../entities/bonnadonaUsers.entity';
 import { Repository } from 'typeorm';
@@ -18,6 +16,7 @@ export class UserService {
       .createQueryBuilder('u')
       .select(['p.name AS name', 'm.name as module'])
       .where('u.id = :userId', { userId })
+      .andWhere('m.name = :module', { module: 'Fenix' })
       .andWhere('u.active = true')
       .andWhere('u.deletedAt IS NULL')
       .leftJoin('u.details', 'd')
@@ -36,26 +35,8 @@ export class UserService {
     }
 
     return permissions.map((permission) => ({
-      nombre: `${permission.name}-${permission.module}`,
+      nombre: `${permission.module}-${permission.name}`,
       authorized: true,
     }));
   }
-
-  // async getUserPermissions(userId: string) {
-  //   const permissions: IUserPermission[] = await this.userRepository
-  //     .createQueryBuilder('u')
-  //     .where('u.id = :userId', { userId })
-  //     .andWhere('u.active = true')
-  //     .andWhere('u.deletedAt IS NULL')
-  //     .getRawMany();
-
-  //   if (permissions.length === 0) {
-  //     throw new HttpException(
-  //       'No se encontró la lista de permisos del usuario.',
-  //       HttpStatus.NO_CONTENT,
-  //     );
-  //   }
-
-  //   return permissions
-  // }
 }

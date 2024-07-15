@@ -1,18 +1,18 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { CreateRoleDto } from '../dto/create-role.dto';
-import { UpdateRoleDto } from '../dto/update-role.dto';
+import { CreateRolePermissionDto } from '../dto/create-role-permission.dto';
+import { UpdateRolePermissionDto } from '../dto/update-role-permission.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Role as RoleEntity } from '../entities/role.entity';
+import { RolePermission as RolePermissionEntity } from '../entities/role-permission.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
-export class RoleService {
+export class RolePermissionService {
   constructor(
-    @InjectRepository(RoleEntity)
-    private readonly roleRepository: Repository<RoleEntity>,
+    @InjectRepository(RolePermissionEntity)
+    private readonly roleRepository: Repository<RolePermissionEntity>,
   ) {}
 
-  async createRole(createRoleDto: CreateRoleDto) {
+  async createRole(createRoleDto: CreateRolePermissionDto) {
     const findRole = await this.roleRepository.findOne({
       where: {
         role_name: createRoleDto.role_name,
@@ -63,7 +63,7 @@ export class RoleService {
     return role;
   }
 
-  async findRoleByName(createRoleDto: CreateRoleDto) {
+  async findRoleByName(createRoleDto: CreateRolePermissionDto) {
     const roleName = await this.roleRepository.findOne({
       where: { role_name: createRoleDto.role_name, role_status: true },
     });
@@ -78,7 +78,7 @@ export class RoleService {
     return roleName;
   }
 
-  async updateRole(id: number, updateRoleDto: UpdateRoleDto) {
+  async updateRole(id: number, updateRoleDto: UpdateRolePermissionDto) {
     const role = await this.findOneRole(id);
     const result = await this.roleRepository.update(role.id, updateRoleDto);
 

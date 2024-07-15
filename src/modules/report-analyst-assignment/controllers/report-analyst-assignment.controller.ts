@@ -10,6 +10,7 @@ import {
   Query,
   HttpException,
   Patch,
+  UseGuards,
 } from '@nestjs/common';
 import { ReportAnalystAssignmentService } from '../services/report-analyst-assignment.service';
 import { CreateReportAnalystAssignmentDto } from '../dto/create-report-analyst-assignment.dto';
@@ -17,19 +18,25 @@ import { UpdateReportAnalystAssignmentDto } from '../dto/update-report-analyst-a
 import { ApiTags } from '@nestjs/swagger';
 import { ReportAnalystAssignment } from '../entities/report-analyst-assignment.entity';
 import { QueryReportAnalystAssignmentDto } from '../dto/query-report-analyst-assignment.dto';
+import { PermissionGuard } from 'src/guards/permission.guard';
+import { Permission } from 'src/decorators/permission.decorator';
+import { permissions } from 'src/enums/permissions.enum';
 
 @ApiTags('report-analyst-assignment')
 @Controller('report-analyst-assignment')
+@UseGuards(PermissionGuard) // Usa el guard de permisos
 export class ReportAnalystAssignmentController {
   constructor(
     private readonly reportAnalisysAssignmentService: ReportAnalystAssignmentService,
   ) {}
 
-  @Post('assingAnalyst/:idValidator')
+  @Post('assingAnalyst/:idValidator/:userIdPermission')
+  @Permission(permissions.VALIDATOR) // Decorador para definir los permisos requeridos
   createAssingAnalystReporter(
     @Body() createAnalystReporterDto: CreateReportAnalystAssignmentDto,
     @Ip() clientIp: string,
     @Param('idValidator') idValidator: number,
+    @Param('userIdPermission') userIdPermission: string,
   ): Promise<HttpException> {
     return this.reportAnalisysAssignmentService.assingAnalyst(
       createAnalystReporterDto,
@@ -56,13 +63,15 @@ export class ReportAnalystAssignmentController {
     @Query() query: QueryReportAnalystAssignmentDto,
   ): Promise<ReportAnalystAssignment[]> {
     return await this.reportAnalisysAssignmentService.findAssignedAnalystsByPosition(
-      query
+      query,
     );
   }
 
-  @Get('findAssignedAnalyst/:id')
+  @Get('findAssignedAnalyst/:id/:userIdPermission')
+  @Permission(permissions.VALIDATOR) // Decorador para definir los permisos requeridos
   findAssignedAnalyst(
     @Param('id') id: number,
+    @Param('userIdPermission') userIdPermission: string,
   ): Promise<ReportAnalystAssignment> {
     return this.reportAnalisysAssignmentService.findOneAssignedAnalyst(id);
   }
@@ -74,7 +83,7 @@ export class ReportAnalystAssignmentController {
 
   @Get('/summaryReportsForAssignCases')
   async summaryReportsForAssignCases(
-  @Query() query: QueryReportAnalystAssignmentDto,
+    @Query() query: QueryReportAnalystAssignmentDto,
   ) {
     return await this.reportAnalisysAssignmentService.summaryReportsForAssignCases(
       query.filingNumber,

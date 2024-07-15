@@ -1,5 +1,5 @@
 import { ObservationReturnCase } from 'src/modules/observation-return-case/entities/observation-return-case.entity';
-import { Role } from 'src/modules/role/entities/role.entity';
+import { RolePermission } from 'src/modules/role-permission/entities/role-permission.entity';
 import {
   Column,
   CreateDateColumn,
@@ -38,9 +38,9 @@ export class ReasonReturnCase {
   @DeleteDateColumn()
   deletedAt: Date;
 
-  @ManyToOne(() => Role, (role) => role.reasonReturnCase)
+  @ManyToOne(() => RolePermission, (role) => role.reasonReturnCase)
   @JoinColumn({ name: 'rec_r_role_id_fk' })
-  role: Role;
+  role: RolePermission;
 
   @OneToMany(
     () => ObservationReturnCase,

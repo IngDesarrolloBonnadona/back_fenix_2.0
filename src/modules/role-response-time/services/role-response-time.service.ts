@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { RoleResponseTime as RoleResponseTimeResponseTimeEntity } from '../entities/role-response-time.entity';
 import { Repository } from 'typeorm';
 import { SeverityClasificationService } from 'src/modules/severity-clasification/services/severity-clasification.service';
-import { RoleService } from 'src/modules/role/services/role.service';
+import { RolePermissionService } from 'src/modules/role-permission/services/role-permission.service';
 
 @Injectable()
 export class RoleResponseTimeService {
@@ -14,7 +14,7 @@ export class RoleResponseTimeService {
     private readonly roleResponseTimeRepository: Repository<RoleResponseTimeResponseTimeEntity>,
 
     private readonly severityClasificationService: SeverityClasificationService,
-    private readonly roleService: RoleService,
+    private readonly roleService: RolePermissionService,
   ) {}
   async createRoleResponseTime(
     createRoleResponseTimeDto: CreateRoleResponseTimeDto,

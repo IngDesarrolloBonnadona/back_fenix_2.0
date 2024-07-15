@@ -21,9 +21,4 @@ export class UserController {
   > {
     return this.userPermissionsService.getUserPermissions(userId);
   }
-
-  // @Get('/listPermissions')
-  // listPermissionsUser(@Query('userId') userId: string) {
-  //   return this.userPermissionsService.getUserPermissions(userId);
-  // }
 }

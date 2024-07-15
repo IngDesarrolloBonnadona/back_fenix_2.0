@@ -3,12 +3,12 @@ import { ReasonReturnCaseService } from './services/reason-return-case.service';
 import { ReasonReturnCaseController } from './controllers/reason-return-case.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ReasonReturnCase } from './entities/reason-return-case.entity';
-import { RoleModule } from '../role/role.module';
+import { RolePermissionModule } from '../role-permission/role-permission.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ReasonReturnCase]), RoleModule],
+  imports: [TypeOrmModule.forFeature([ReasonReturnCase]), RolePermissionModule],
   controllers: [ReasonReturnCaseController],
   providers: [ReasonReturnCaseService],
-  exports: [ReasonReturnCaseService]
+  exports: [ReasonReturnCaseService],
 })
 export class ReasonReturnCaseModule {}

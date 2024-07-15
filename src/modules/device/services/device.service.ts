@@ -45,7 +45,7 @@ export class DeviceService {
   async findAllDevices(): Promise<DeviceEntity[]> {
     const devices = await this.deviceRepository.find({
       order: {
-        createdAt: 'DESC'
+        createdAt: 'DESC',
       },
       // relations: {
       //   caseReportOriginal: true,

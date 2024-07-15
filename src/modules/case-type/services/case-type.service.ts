@@ -39,8 +39,8 @@ export class CaseTypeService {
     const caseTypes = await this.caseTypeRepository.find({
       where: { cas_t_status: true },
       order: {
-        cas_t_name: 'ASC'
-      }
+        cas_t_name: 'ASC',
+      },
       // relations: {
       //   eventType: true,
       //   caseReportValidate: true,

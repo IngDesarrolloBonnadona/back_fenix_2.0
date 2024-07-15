@@ -9,7 +9,7 @@ import { CreateReportAnalystAssignmentDto } from '../dto/create-report-analyst-a
 import { UpdateReportAnalystAssignmentDto } from '../dto/update-report-analyst-assignment.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ReportAnalystAssignment as ReportAnalystAssignmentEntity } from '../entities/report-analyst-assignment.entity';
-import { FindOptionsWhere, Like, Repository } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 import { LogService } from 'src/modules/log/services/log.service';
 import { logReports } from 'src/enums/logs.enum';
 import { CaseReportValidateService } from 'src/modules/case-report-validate/services/case-report-validate.service';
@@ -18,7 +18,7 @@ import { HttpPositionService } from 'src/modules/position/http/http-position.ser
 import { movementReport } from 'src/enums/movement-report.enum';
 import { CaseReportValidate as CaseReportValidateEntity } from 'src/modules/case-report-validate/entities/case-report-validate.entity';
 import { RoleResponseTime as RoleResponseTimeEntity } from 'src/modules/role-response-time/entities/role-response-time.entity';
-import { Role as RoleEntity } from 'src/modules/role/entities/role.entity';
+import { RolePermission as RoleEntity } from 'src/modules/role-permission/entities/role-permission.entity';
 import { userRoles } from 'src/enums/user-roles.enum';
 import { CaseType as CaseTypeEntity } from 'src/modules/case-type/entities/case-type.entity';
 import { caseTypeReport } from 'src/enums/caseType-report.enum';
@@ -105,9 +105,9 @@ export class ReportAnalystAssignmentService {
     );
 
     const movementReportFound =
-    await this.movementReportService.findOneMovementReportByName(
-      movementReport.ASSIGNMENT_ANALYST,
-    );
+      await this.movementReportService.findOneMovementReportByName(
+        movementReport.ASSIGNMENT_ANALYST,
+      );
 
     const findIdRole = await this.roleRepository.findOne({
       where: {
@@ -261,9 +261,9 @@ export class ReportAnalystAssignmentService {
     }
 
     const movementReportFound =
-    await this.movementReportService.findOneMovementReportByName(
-      movementReport.REASSIGNMENT_ANALYST,
-    );
+      await this.movementReportService.findOneMovementReportByName(
+        movementReport.REASSIGNMENT_ANALYST,
+      );
 
     const updateStatusMovement = await this.caseReportValidateRepository.update(
       idCaseReportValidate,
@@ -354,9 +354,9 @@ export class ReportAnalystAssignmentService {
     await this.reportAnalystAssignmentRepository.save(reportAssignmentFind);
 
     const movementReportFound =
-    await this.movementReportService.findOneMovementReportByName(
-      movementReport.RETURN_CASE_ANALYST,
-    );
+      await this.movementReportService.findOneMovementReportByName(
+        movementReport.RETURN_CASE_ANALYST,
+      );
 
     const analyst = this.reportAnalystAssignmentRepository.create({
       ...createReportAnalystAssignmentDto,
@@ -408,7 +408,10 @@ export class ReportAnalystAssignmentService {
       .leftJoinAndSelect('crv.caseType', 'caseType')
       .leftJoinAndSelect('crv.event', 'event')
       .leftJoinAndSelect('crv.priority', 'priority')
-      .leftJoinAndSelect('crv.reportResearcherAssignment', 'reportResearcherAssignment')
+      .leftJoinAndSelect(
+        'crv.reportResearcherAssignment',
+        'reportResearcherAssignment',
+      )
       .where('crv.val_cr_validated = :validated', { validated: false });
 
     if (filingNumber) {
@@ -553,9 +556,9 @@ export class ReportAnalystAssignmentService {
     }
 
     const movementReportFound =
-    await this.movementReportService.findOneMovementReportByName(
-      movementReport.RETURN_CASE_VALIDATOR,
-    );
+      await this.movementReportService.findOneMovementReportByName(
+        movementReport.RETURN_CASE_VALIDATOR,
+      );
 
     const updateStatusMovement = await this.caseReportValidateRepository.update(
       idCaseReportValidate,

@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CaseReportOriginalModule } from './modules/case-report-original/case-report-original.module';
 import { CaseTypeModule } from './modules/case-type/case-type.module';
@@ -15,7 +15,6 @@ import { ServiceModule } from './modules/service/service.module';
 import { UnitModule } from './modules/unit/unit.module';
 import { CaseReportValidateModule } from './modules/case-report-validate/case-report-validate.module';
 import { MovementReportModule } from './modules/movement-report/movement-report.module';
-// import { IpClientMiddleware } from './middlewares/ip-client.middleware';
 import { LogModule } from './modules/log/log.module';
 import { PositionModule } from './modules/position/position.module';
 import { ReportAnalystAssignmentModule } from './modules/report-analyst-assignment/report-analyst-assignment.module';
@@ -26,7 +25,7 @@ import { PriorityModule } from './modules/priority/priority.module';
 import { CharacterizationCasesModule } from './modules/characterization-cases/characterization-cases.module';
 import { RoleResponseTimeModule } from './modules/role-response-time/role-response-time.module';
 import { ReasonReturnCaseModule } from './modules/reason-return-case/reason-return-case.module';
-import { RoleModule } from './modules/role/role.module';
+import { RolePermissionModule } from './modules/role-permission/role-permission.module';
 import { ObservationReturnCaseModule } from './modules/observation-return-case/observation-return-case.module';
 import { UserModule } from './modules_bonnadonahub/user/user.module';
 
@@ -53,7 +52,9 @@ require('dotenv').config();
       username: process.env.BONNADONA_USER,
       password: process.env.BONNADONA_PASSWORD,
       database: process.env.BONNADONA_DATABASE,
-      entities: [__dirname + '/modules_bonnadonahub/user/entities/*.entity{.ts,.js}'],
+      entities: [
+        __dirname + '/modules_bonnadonahub/user/entities/*.entity{.ts,.js}',
+      ],
       synchronize: false,
     }),
     CaseReportOriginalModule,
@@ -81,7 +82,7 @@ require('dotenv').config();
     CharacterizationCasesModule,
     RoleResponseTimeModule,
     ReasonReturnCaseModule,
-    RoleModule,
+    RolePermissionModule,
     ObservationReturnCaseModule,
     UserModule,
   ],

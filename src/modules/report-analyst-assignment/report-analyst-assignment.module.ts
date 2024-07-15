@@ -10,17 +10,19 @@ import { HttpPositionService } from '../position/http/http-position.service';
 import { HttpModule } from '@nestjs/axios';
 import { CaseReportValidate } from '../case-report-validate/entities/case-report-validate.entity';
 import { RoleResponseTime } from '../role-response-time/entities/role-response-time.entity';
-import { Role } from '../role/entities/role.entity';
+import { RolePermission } from '../role-permission/entities/role-permission.entity';
 import { CaseType } from '../case-type/entities/case-type.entity';
 import { SeverityClasification } from '../severity-clasification/entities/severity-clasification.entity';
 import { MovementReportModule } from '../movement-report/movement-report.module';
+import { PermissionGuard } from 'src/guards/permission.guard';
+import { UserModule } from 'src/modules_bonnadonahub/user/user.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       ReportAnalystAssignment,
       CaseReportValidate,
-      Role,
+      RolePermission,
       RoleResponseTime,
       CaseType,
       SeverityClasification,
@@ -29,10 +31,15 @@ import { MovementReportModule } from '../movement-report/movement-report.module'
     PositionModule,
     HttpModule,
     MovementReportModule,
+    UserModule,
     forwardRef(() => CaseReportValidateModule),
   ],
   controllers: [ReportAnalystAssignmentController],
-  providers: [ReportAnalystAssignmentService, HttpPositionService],
+  providers: [
+    ReportAnalystAssignmentService,
+    HttpPositionService,
+    PermissionGuard,
+  ],
   exports: [ReportAnalystAssignmentService],
 })
 export class ReportAnalystAssignmentModule {}

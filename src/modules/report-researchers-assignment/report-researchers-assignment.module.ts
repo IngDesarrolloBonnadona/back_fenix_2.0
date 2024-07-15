@@ -11,7 +11,7 @@ import { MovementReport } from '../movement-report/entities/movement-report.enti
 import { CaseReportValidate } from '../case-report-validate/entities/case-report-validate.entity';
 import { CaseType } from '../case-type/entities/case-type.entity';
 import { SeverityClasification } from '../severity-clasification/entities/severity-clasification.entity';
-import { Role } from '../role/entities/role.entity';
+import { RolePermission } from '../role-permission/entities/role-permission.entity';
 import { RoleResponseTime } from '../role-response-time/entities/role-response-time.entity';
 import { ReportAnalystAssignment } from '../report-analyst-assignment/entities/report-analyst-assignment.entity';
 import { MovementReportModule } from '../movement-report/movement-report.module';
@@ -24,7 +24,7 @@ import { MovementReportModule } from '../movement-report/movement-report.module'
       CaseReportValidate,
       CaseType,
       SeverityClasification,
-      Role,
+      RolePermission,
       RoleResponseTime,
       ReportAnalystAssignment,
     ]),

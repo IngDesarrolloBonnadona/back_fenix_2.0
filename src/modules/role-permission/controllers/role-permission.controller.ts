@@ -8,41 +8,45 @@ import {
   Delete,
   HttpException,
 } from '@nestjs/common';
-import { RoleService } from '../services/role.service';
-import { CreateRoleDto } from '../dto/create-role.dto';
-import { UpdateRoleDto } from '../dto/update-role.dto';
+import { RolePermissionService } from '../services/role-permission.service';
+import { CreateRolePermissionDto } from '../dto/create-role-permission.dto';
+import { UpdateRolePermissionDto } from '../dto/update-role-permission.dto';
 import { ApiTags } from '@nestjs/swagger';
-import { Role } from '../entities/role.entity';
+import { RolePermission } from '../entities/role-permission.entity';
 
 @ApiTags('role')
 @Controller('role')
-export class RoleController {
-  constructor(private readonly roleService: RoleService) {}
+export class RolePermissionController {
+  constructor(private readonly roleService: RolePermissionService) {}
 
   @Post('/createRole')
-  createRole(@Body() createRoleDto: CreateRoleDto): Promise<HttpException> {
+  createRole(
+    @Body() createRoleDto: CreateRolePermissionDto,
+  ): Promise<HttpException> {
     return this.roleService.createRole(createRoleDto);
   }
 
   @Get('/listRoles')
-  listRoles(): Promise<Role[]> {
+  listRoles(): Promise<RolePermission[]> {
     return this.roleService.findAllRoles();
   }
 
   @Get('/findRole/:id')
-  findRole(@Param('id') id: number): Promise<Role> {
+  findRole(@Param('id') id: number): Promise<RolePermission> {
     return this.roleService.findOneRole(id);
   }
 
   @Get('/findRoleByName')
-  findRoleByName(@Body() createRoleDto: CreateRoleDto): Promise<Role> {
+  findRoleByName(
+    @Body() createRoleDto: CreateRolePermissionDto,
+  ): Promise<RolePermission> {
     return this.roleService.findRoleByName(createRoleDto);
   }
 
   @Patch('/updateRole/:id')
   updateRole(
     @Param('id') id: number,
-    @Body() updateRoleDto: UpdateRoleDto,
+    @Body() updateRoleDto: UpdateRolePermissionDto,
   ): Promise<HttpException> {
     return this.roleService.updateRole(id, updateRoleDto);
   }
