@@ -18,7 +18,7 @@ import { UpdateReportAnalystAssignmentDto } from '../dto/update-report-analyst-a
 import { ApiTags } from '@nestjs/swagger';
 import { ReportAnalystAssignment } from '../entities/report-analyst-assignment.entity';
 import { QueryReportAnalystAssignmentDto } from '../dto/query-report-analyst-assignment.dto';
-import { PermissionGuard } from 'src/guards/permission/permission.guard';
+import { PermissionGuard } from 'src/guards/permission.guard';
 import { Permission } from 'src/decorators/permission.decorator';
 import { permissions } from 'src/enums/permissions.enum';
 
