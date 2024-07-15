@@ -44,8 +44,8 @@ export class MovementReportService {
         mov_r_status: true,
       },
       order: {
-        mov_r_name: 'ASC'
-      }
+        mov_r_name: 'ASC',
+      },
       // relations: {
       //   caseReportValidate: true,
       // },
@@ -79,7 +79,7 @@ export class MovementReportService {
     return movementReport;
   }
 
-  async findOneMovementReportByName(movementName : string) {
+  async findOneMovementReportByName(movementName: string) {
     const movementReportName = await this.movementReportRepository.findOne({
       where: {
         mov_r_name: movementName,
@@ -94,7 +94,7 @@ export class MovementReportService {
       );
     }
 
-    return movementReportName
+    return movementReportName;
   }
 
   async updateMovementReport(

@@ -18,7 +18,7 @@ export class UserService {
       .createQueryBuilder('u')
       .select(['p.name AS name', 'm.name as module'])
       .where('u.id = :userId', { userId })
-      .andWhere('m.name = :module', {module: 'Fenix'})
+      .andWhere('m.name = :module', { module: 'Fenix' })
       .andWhere('u.active = true')
       .andWhere('u.deletedAt IS NULL')
       .leftJoin('u.details', 'd')

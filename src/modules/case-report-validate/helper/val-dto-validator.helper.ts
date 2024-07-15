@@ -19,7 +19,7 @@ export type CreateReportValDto =
 
 export async function ValDtoValidator(
   createReportValDto: any,
-  caseTypeRepository: Repository<CaseType>
+  caseTypeRepository: Repository<CaseType>,
 ): Promise<CreateReportValDto> {
   let dtoInstance: CreateReportValDto;
 
@@ -30,7 +30,10 @@ export async function ValDtoValidator(
   });
 
   if (!caseTypeFound) {
-    throw new HttpException(`El tipo de caso no existe.`, HttpStatus.NO_CONTENT);
+    throw new HttpException(
+      `El tipo de caso no existe.`,
+      HttpStatus.NO_CONTENT,
+    );
   }
 
   switch (caseTypeFound.cas_t_name) {

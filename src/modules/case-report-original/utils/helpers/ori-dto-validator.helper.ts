@@ -20,7 +20,7 @@ export type CreateReportOriDto = //Discriminador que define los Dto
 
 export async function OriDtoValidator(
   createReportDto: any,
-  caseTypeRepository: Repository<CaseType>
+  caseTypeRepository: Repository<CaseType>,
 ): Promise<CreateReportOriDto> {
   let dtoInstance: CreateReportOriDto;
 
@@ -31,7 +31,10 @@ export async function OriDtoValidator(
   });
 
   if (!caseTypeFound) {
-    throw new HttpException(`El tipo de caso no existe.`, HttpStatus.NO_CONTENT);
+    throw new HttpException(
+      `El tipo de caso no existe.`,
+      HttpStatus.NO_CONTENT,
+    );
   }
 
   switch (caseTypeFound.cas_t_name) {

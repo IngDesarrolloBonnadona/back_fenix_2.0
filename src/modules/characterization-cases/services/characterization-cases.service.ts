@@ -47,8 +47,8 @@ export class CharacterizationCasesService {
         cha_c_status: true,
       },
       order: {
-        cha_c_name: 'ASC'
-      }
+        cha_c_name: 'ASC',
+      },
     });
 
     if (characterization.length === 0) {
@@ -68,7 +68,7 @@ export class CharacterizationCasesService {
     if (!characterization) {
       throw new HttpException(
         'No se encontró la caracterización de los casos',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
 
