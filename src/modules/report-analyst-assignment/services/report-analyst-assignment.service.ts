@@ -9,7 +9,7 @@ import { CreateReportAnalystAssignmentDto } from '../dto/create-report-analyst-a
 import { UpdateReportAnalystAssignmentDto } from '../dto/update-report-analyst-assignment.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ReportAnalystAssignment as ReportAnalystAssignmentEntity } from '../entities/report-analyst-assignment.entity';
-import { FindOptionsWhere, Like, Repository } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 import { LogService } from 'src/modules/log/services/log.service';
 import { logReports } from 'src/enums/logs.enum';
 import { CaseReportValidateService } from 'src/modules/case-report-validate/services/case-report-validate.service';

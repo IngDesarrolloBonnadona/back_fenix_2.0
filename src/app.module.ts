@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CaseReportOriginalModule } from './modules/case-report-original/case-report-original.module';
 import { CaseTypeModule } from './modules/case-type/case-type.module';
@@ -15,7 +15,6 @@ import { ServiceModule } from './modules/service/service.module';
 import { UnitModule } from './modules/unit/unit.module';
 import { CaseReportValidateModule } from './modules/case-report-validate/case-report-validate.module';
 import { MovementReportModule } from './modules/movement-report/movement-report.module';
-// import { IpClientMiddleware } from './middlewares/ip-client.middleware';
 import { LogModule } from './modules/log/log.module';
 import { PositionModule } from './modules/position/position.module';
 import { ReportAnalystAssignmentModule } from './modules/report-analyst-assignment/report-analyst-assignment.module';
