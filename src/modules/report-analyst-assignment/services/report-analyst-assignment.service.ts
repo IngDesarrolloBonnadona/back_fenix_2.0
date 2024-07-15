@@ -105,9 +105,9 @@ export class ReportAnalystAssignmentService {
     );
 
     const movementReportFound =
-    await this.movementReportService.findOneMovementReportByName(
-      movementReport.ASSIGNMENT_ANALYST,
-    );
+      await this.movementReportService.findOneMovementReportByName(
+        movementReport.ASSIGNMENT_ANALYST,
+      );
 
     const findIdRole = await this.roleRepository.findOne({
       where: {
@@ -261,9 +261,9 @@ export class ReportAnalystAssignmentService {
     }
 
     const movementReportFound =
-    await this.movementReportService.findOneMovementReportByName(
-      movementReport.REASSIGNMENT_ANALYST,
-    );
+      await this.movementReportService.findOneMovementReportByName(
+        movementReport.REASSIGNMENT_ANALYST,
+      );
 
     const updateStatusMovement = await this.caseReportValidateRepository.update(
       idCaseReportValidate,
@@ -354,9 +354,9 @@ export class ReportAnalystAssignmentService {
     await this.reportAnalystAssignmentRepository.save(reportAssignmentFind);
 
     const movementReportFound =
-    await this.movementReportService.findOneMovementReportByName(
-      movementReport.RETURN_CASE_ANALYST,
-    );
+      await this.movementReportService.findOneMovementReportByName(
+        movementReport.RETURN_CASE_ANALYST,
+      );
 
     const analyst = this.reportAnalystAssignmentRepository.create({
       ...createReportAnalystAssignmentDto,
@@ -408,7 +408,10 @@ export class ReportAnalystAssignmentService {
       .leftJoinAndSelect('crv.caseType', 'caseType')
       .leftJoinAndSelect('crv.event', 'event')
       .leftJoinAndSelect('crv.priority', 'priority')
-      .leftJoinAndSelect('crv.reportResearcherAssignment', 'reportResearcherAssignment')
+      .leftJoinAndSelect(
+        'crv.reportResearcherAssignment',
+        'reportResearcherAssignment',
+      )
       .where('crv.val_cr_validated = :validated', { validated: false });
 
     if (filingNumber) {
@@ -553,9 +556,9 @@ export class ReportAnalystAssignmentService {
     }
 
     const movementReportFound =
-    await this.movementReportService.findOneMovementReportByName(
-      movementReport.RETURN_CASE_VALIDATOR,
-    );
+      await this.movementReportService.findOneMovementReportByName(
+        movementReport.RETURN_CASE_VALIDATOR,
+      );
 
     const updateStatusMovement = await this.caseReportValidateRepository.update(
       idCaseReportValidate,
