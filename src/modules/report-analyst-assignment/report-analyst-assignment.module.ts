@@ -14,6 +14,8 @@ import { Role } from '../role/entities/role.entity';
 import { CaseType } from '../case-type/entities/case-type.entity';
 import { SeverityClasification } from '../severity-clasification/entities/severity-clasification.entity';
 import { MovementReportModule } from '../movement-report/movement-report.module';
+import { PermissionGuard } from 'src/guards/permission/permission.guard';
+import { UserModule } from 'src/modules_bonnadonahub/user/user.module';
 
 @Module({
   imports: [
@@ -29,10 +31,11 @@ import { MovementReportModule } from '../movement-report/movement-report.module'
     PositionModule,
     HttpModule,
     MovementReportModule,
+    UserModule,
     forwardRef(() => CaseReportValidateModule),
   ],
   controllers: [ReportAnalystAssignmentController],
-  providers: [ReportAnalystAssignmentService, HttpPositionService],
+  providers: [ReportAnalystAssignmentService, HttpPositionService, PermissionGuard],
   exports: [ReportAnalystAssignmentService],
 })
 export class ReportAnalystAssignmentModule {}

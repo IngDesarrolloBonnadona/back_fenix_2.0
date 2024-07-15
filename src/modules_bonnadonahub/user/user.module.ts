@@ -25,5 +25,6 @@ import { RolesPermissions } from './entities/bonnadonaRolesPermissions.entity';
   ],
   controllers: [UserController],
   providers: [UserService],
+  exports: [UserService],
 })
 export class UserModule {}
