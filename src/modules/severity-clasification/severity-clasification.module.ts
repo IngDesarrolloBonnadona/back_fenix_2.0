@@ -3,13 +3,13 @@ import { SeverityClasificationService } from './services/severity-clasification.
 import { SeverityClasificationController } from './controllers/severity-clasification.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SeverityClasification } from './entities/severity-clasification.entity';
+import { PermissionGuard } from 'src/guards/permission.guard';
+import { UserModule } from 'src/modules_bonnadonahub/user/user.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([SeverityClasification])
-  ],
+  imports: [TypeOrmModule.forFeature([SeverityClasification]), UserModule],
   controllers: [SeverityClasificationController],
-  providers: [SeverityClasificationService],
+  providers: [SeverityClasificationService, PermissionGuard],
   exports: [SeverityClasificationService],
 })
 export class SeverityClasificationModule {}
