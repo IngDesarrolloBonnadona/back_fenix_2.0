@@ -15,7 +15,7 @@ export class HttpResearchersService {
       const response = firstValueFrom(
         this.httpResearchersService.get(url, {
           headers: {
-            'X-Authorization': process.env.X_AUTH_VALUE_RESEARCHER,
+            'X-Authorization': process.env.X_TOKEN_VALUE_RESEARCHER,
           },
         }),
       );
@@ -36,7 +36,7 @@ export class HttpResearchersService {
   //         const response = await axios.get(URL,
   //             {
   //                 headers: {
-  //                     'X-Authorization': process.env.X_AUTH_VALUE_RESEARCHER
+  //                     'X-Authorization': process.env.X_TOKEN_VALUE_RESEARCHER
   //                 }
   //             }
   //         );

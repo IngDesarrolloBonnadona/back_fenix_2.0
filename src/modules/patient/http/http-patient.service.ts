@@ -19,7 +19,7 @@ export class HttpPatientService {
       const response = firstValueFrom(
         this.httpPatientService.get(url, {
           headers: {
-            'X-Authorization': process.env.X_AUTH_VALUE_PATIENT,
+            'X-Authorization': process.env.X_TOKEN_VALUE_PATIENT,
           },
         }),
       );

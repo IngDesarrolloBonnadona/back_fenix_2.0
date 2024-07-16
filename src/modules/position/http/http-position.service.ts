@@ -19,7 +19,7 @@ export class HttpPositionService {
       const response = firstValueFrom(
         this.httpPositionService.get(url, {
           headers: {
-            'X-Authorization': process.env.X_AUTH_VALUE_POSITION,
+            'X-Authorization': process.env.X_TOKEN_VALUE_POSITION,
           },
         }),
       );
