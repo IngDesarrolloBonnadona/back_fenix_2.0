@@ -381,7 +381,7 @@ export class CaseReportValidateService {
     return await queryRunner.manager.save(caseReportValidate);
   }
 
-  async summaryReportsValidate(
+  async summaryReports(
     creationDate?: Date,
     filingNumber?: string,
     statusMovementId?: number,
@@ -442,6 +442,69 @@ export class CaseReportValidateService {
         severityClasification: true,
         event: true,
         unit: true,
+        priority: true,
+        movementReport: true,
+      },
+      withDeleted: true,
+      order: {
+        createdAt: 'DESC',
+      },
+    });
+
+    if (caseReportsValidate.length === 0) {
+      throw new HttpException(
+        'No hay reportes para mostrar.',
+        HttpStatus.NO_CONTENT,
+      );
+    }
+
+    return caseReportsValidate;
+  }
+
+  async summaryReportsForValidator(
+    filingNumber?: string,
+    statusMovementId?: number,
+    caseTypeId?: number,
+    patientDoc?: string,
+    priorityId?: number,
+    creationDate?: Date,
+  ): Promise<CaseReportValidateEntity[]> {
+    const where: FindOptionsWhere<CaseReportValidateEntity> = {};
+
+    if (creationDate) {
+      const nextDay = new Date(creationDate);
+      nextDay.setDate(creationDate.getDate() + 1);
+
+      where.createdAt = Between(creationDate, nextDay);
+    }
+
+    if (filingNumber) {
+      where.val_cr_filingnumber = Like(`%${filingNumber}%`);
+    }
+
+    if (statusMovementId) {
+      where.val_cr_statusmovement_id_fk = statusMovementId;
+    }
+
+    if (patientDoc) {
+      where.val_cr_documentpatient = patientDoc;
+    }
+
+    if (caseTypeId) {
+      where.val_cr_casetype_id_fk = caseTypeId;
+    }
+
+    if (priorityId) {
+      where.val_cr_priority_id_fk = priorityId;
+    }
+
+    where.val_cr_validated = false;
+
+    const caseReportsValidate = await this.caseReportValidateRepository.find({
+      where,
+      relations: {
+        caseType: true,
+        event: true,
         priority: true,
         movementReport: true,
       },
@@ -559,6 +622,7 @@ export class CaseReportValidateService {
         service: true,
         unit: true,
         priority: true,
+        characterizationCase: true,
       },
       order: {
         createdAt: 'DESC',
@@ -594,6 +658,7 @@ export class CaseReportValidateService {
         service: true,
         unit: true,
         priority: true,
+        characterizationCase: true,
       },
     });
 
@@ -630,6 +695,7 @@ export class CaseReportValidateService {
         service: true,
         unit: true,
         priority: true,
+        characterizationCase: true,
       },
       order: {
         createdAt: 'DESC',

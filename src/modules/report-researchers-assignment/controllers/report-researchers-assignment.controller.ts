@@ -9,6 +9,7 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { ResearchersService } from '../services/report-researchers-assignment.service';
 import { FilterReportResearcherAssignmentDto } from '../dto/filter-researcher-.dto';
@@ -17,13 +18,18 @@ import { CreateReportResearcherAssignmentDto } from '../dto/create-report-resear
 import { ReportResearcherAssignment } from '../entities/report-researchers-assignment.entity';
 import { UpdateReportResearcherAssignmentDto } from '../dto/update-report-researcher-assignment.dto';
 import { QueryReportResearchersAssignmentDto } from '../dto/query-report-researcher-assignment.dto';
+import { PermissionGuard } from 'src/guards/permission.guard';
+import { Permission } from 'src/decorators/permission.decorator';
+import { permissions } from 'src/enums/permissions.enum';
 
 @ApiTags('report-researchers-assignment')
 @Controller('report-researchers-assignment')
+@UseGuards(PermissionGuard)
 export class ReportResearchersAssignmentController {
   constructor(private readonly researchersService: ResearchersService) {}
 
-  @Get('filterResearchers')
+  @Get('filterResearchers/:userIdPermission')
+  @Permission(permissions.SUPER_ADMIN, permissions.ANALYST)
   filterResearchers(
     @Query() query: QueryReportResearchersAssignmentDto,
   ): Promise<FilterReportResearcherAssignmentDto[]> {
@@ -41,7 +47,8 @@ export class ReportResearchersAssignmentController {
     return this.researchersService.findOneAssignedResearch(id);
   }
 
-  @Get('/summaryReportsMyAssignedCases')
+  @Get('/summaryReportsMyAssignedCases/:userIdPermission')
+  @Permission(permissions.SUPER_ADMIN, permissions.INVESTIGATOR)
   async summaryReportsMyAssignedCases(
     @Query() query: QueryReportResearchersAssignmentDto,
   ) {
@@ -54,7 +61,8 @@ export class ReportResearchersAssignmentController {
     );
   }
 
-  @Get('/summaryReportsMyCasesByCharacterization')
+  @Get('/summaryReportsMyCasesByCharacterization/:userIdPermission')
+  @Permission(permissions.SUPER_ADMIN, permissions.INVESTIGATOR)
   async summaryReportsMyCasesByCharacterization(
     @Query() query: QueryReportResearchersAssignmentDto,
   ) {
@@ -67,7 +75,8 @@ export class ReportResearchersAssignmentController {
     );
   }
 
-  @Post('createAssingResearcher/:idAnalyst')
+  @Post('assingResearcher/:idAnalyst/:userIdPermission')
+  @Permission(permissions.SUPER_ADMIN, permissions.ANALYST)
   createAssingResearcher(
     @Body() createResearcherDto: CreateReportResearcherAssignmentDto,
     @Ip() clientIp: string,
@@ -80,7 +89,8 @@ export class ReportResearchersAssignmentController {
     );
   }
 
-  @Patch('updateReAssignedResearch/:idAnalyst/:idCaseReportValidate')
+  @Patch('reAssignResearch/:idAnalyst/:idCaseReportValidate/:userIdPermission')
+  @Permission(permissions.SUPER_ADMIN, permissions.ANALYST)
   updateReAssignedResearch(
     @Body() updateResearcherDto: UpdateReportResearcherAssignmentDto,
     @Ip() clientIp: string,
@@ -95,7 +105,8 @@ export class ReportResearchersAssignmentController {
     );
   }
 
-  @Patch('updateReturnCaseToAnalyst/:idResearcher/:idCaseReportValidate')
+  @Patch('ReturnCaseToAnalyst/:idResearcher/:idCaseReportValidate/:userIdPermission')
+  @Permission(permissions.SUPER_ADMIN, permissions.INVESTIGATOR)
   updateReturnCaseToAnalyst(
     @Param('idResearcher') idResearcher: number,
     @Param('idCaseReportValidate') idCaseReportValidate: string,
@@ -108,7 +119,8 @@ export class ReportResearchersAssignmentController {
     );
   }
 
-  @Delete('deleteAssignedResearch/:id')
+  @Delete('deleteAssignedResearch/:id/:userIdPermission')
+  @Permission(permissions.SUPER_ADMIN, permissions.ANALYST)
   deleteAssignedResearch(@Param('id') id: number): Promise<HttpException> {
     return this.researchersService.deleteAssignedResearcher(id);
   }

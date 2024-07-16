@@ -1,9 +1,4 @@
-import {
-  Controller,
-  Get,
-  Param,
-  Query,
-} from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { UserService } from '../services/user.service';
 import { ApiTags } from '@nestjs/swagger';
 
@@ -12,8 +7,8 @@ import { ApiTags } from '@nestjs/swagger';
 export class UserController {
   constructor(private readonly userPermissionsService: UserService) {}
 
-  @Get('/listPermissions')
-  listPermissionsUser(@Query('userId') userId: string): Promise<
+  @Get('/listPermissions/:userId')
+  listPermissionsUser(@Param('userId') userId: string): Promise<
     {
       nombre: string;
       authorized: boolean;

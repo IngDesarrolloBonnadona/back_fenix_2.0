@@ -7,10 +7,10 @@ import {
   Param,
   Delete,
   HttpException,
-  HttpStatus,
   Put,
   Query,
   Ip,
+  UseGuards,
 } from '@nestjs/common';
 import { CaseReportValidateService } from '../services/case-report-validate.service';
 import { UpdateCaseReportValidateDto } from '../dto/update-case-report-validate.dto';
@@ -19,9 +19,13 @@ import { ApiTags } from '@nestjs/swagger';
 import { FindSimilarCaseReportValidateDto } from '../dto/find-similar-case-report-validate';
 import { CreateReportValDto } from '../helper/val-dto-validator.helper';
 import { QueryCaseReportValidateDto } from '../dto/query-case-report-validate.dto';
+import { PermissionGuard } from 'src/guards/permission.guard';
+import { Permission } from 'src/decorators/permission.decorator';
+import { permissions } from 'src/enums/permissions.enum';
 
 @ApiTags('case-report-validate')
 @Controller('case-report-validate')
+@UseGuards(PermissionGuard)
 export class CaseReportValidateController {
   constructor(
     private readonly caseReportValidateService: CaseReportValidateService,
@@ -36,30 +40,31 @@ export class CaseReportValidateController {
     );
   }
 
-  @Post('/createReportValidate/:idValidator/:reportId')
+  @Post('/createReportValidate/:idValidator/:reportId/:userIdPermission')
+  @Permission(permissions.SUPER_ADMIN, permissions.VALIDATOR)
   async createReportValidate(
     @Body() createReportValDto: CreateReportValDto,
     @Ip() clientIp: string,
     @Param('reportId') reportId: string,
-    @Param('idValidator') idValidator: number
+    @Param('idValidator') idValidator: number,
   ): Promise<any> {
     return await this.caseReportValidateService.createReportValidate(
       createReportValDto,
       clientIp,
       reportId,
-      idValidator
+      idValidator,
     );
   }
 
-  @Get('/summaryReportsValidate')
-  async SummaryReportsValidate(
+  @Get('/summaryReports')
+  async SummaryReports(
     @Query() query: QueryCaseReportValidateDto,
   ): Promise<CaseReportValidate[]> {
     const creationDateObj = query.creationDate
       ? new Date(query.creationDate)
       : undefined;
 
-    return await this.caseReportValidateService.summaryReportsValidate(
+    return await this.caseReportValidateService.summaryReports(
       creationDateObj,
       query.filingNumber,
       query.statusMovementId,
@@ -72,28 +77,30 @@ export class CaseReportValidateController {
     );
   }
 
-  // @Get('/summaryReportsForValidator')
-  // async SummaryReportsForValidator(
-  //   @Query('filingNumber') filingNumber?: string,
-  //   @Query('statusMovementId') statusMovementId?: number,
-  //   @Query('caseTypeId') caseTypeId?: number,
-  //   @Query('patientDoc') patientDoc?: string,
-  //   @Query('priorityId') priorityId?: number,
-  //   @Query('creationDate') creationDate?: string,
-  // ): Promise<CaseReportValidate[]> {
-  //   const creationDateObj = creationDate ? new Date(creationDate) : undefined;
+  @Get('/summaryReportsForValidator/:userIdPermission')
+  @Permission(permissions.SUPER_ADMIN, permissions.VALIDATOR)
+  async SummaryReportsForValidator(
+    @Query('filingNumber') filingNumber?: string,
+    @Query('statusMovementId') statusMovementId?: number,
+    @Query('caseTypeId') caseTypeId?: number,
+    @Query('patientDoc') patientDoc?: string,
+    @Query('priorityId') priorityId?: number,
+    @Query('creationDate') creationDate?: string,
+  ): Promise<CaseReportValidate[]> {
+    const creationDateObj = creationDate ? new Date(creationDate) : undefined;
 
-  //   return await this.caseReportValidateService.summaryReportsForValidator(
-  //     filingNumber,
-  //     statusMovementId,
-  //     caseTypeId,
-  //     patientDoc,
-  //     priorityId,
-  //     creationDateObj,
-  //   );
-  // }
+    return await this.caseReportValidateService.summaryReportsForValidator(
+      filingNumber,
+      statusMovementId,
+      caseTypeId,
+      patientDoc,
+      priorityId,
+      creationDateObj,
+    );
+  }
 
-  @Get('/summaryReportsForReview')
+  @Get('/summaryReportsForReview/:userIdPermission')
+  @Permission(permissions.SUPER_ADMIN, permissions.VALIDATOR)
   async summaryReportsForReview(
     @Query() query: QueryCaseReportValidateDto,
   ): Promise<CaseReportValidate[]> {
@@ -141,7 +148,13 @@ export class CaseReportValidateController {
     );
   }
 
-  @Delete('/cancelReportValidate/:id')
+  @Delete('/cancelReportValidate/:id/:userIdPermission')
+  @Permission(
+    permissions.SUPER_ADMIN,
+    permissions.VALIDATOR,
+    permissions.ANALYST,
+    permissions.INVESTIGATOR,
+  )
   async cancelReportValidate(
     @Param('id') id: string,
     @Ip() clientIp: string,

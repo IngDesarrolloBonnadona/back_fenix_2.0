@@ -15,6 +15,8 @@ import { RolePermission } from '../role-permission/entities/role-permission.enti
 import { RoleResponseTime } from '../role-response-time/entities/role-response-time.entity';
 import { ReportAnalystAssignment } from '../report-analyst-assignment/entities/report-analyst-assignment.entity';
 import { MovementReportModule } from '../movement-report/movement-report.module';
+import { UserModule } from 'src/modules_bonnadonahub/user/user.module';
+import { PermissionGuard } from 'src/guards/permission.guard';
 
 @Module({
   imports: [
@@ -31,10 +33,11 @@ import { MovementReportModule } from '../movement-report/movement-report.module'
     HttpModule,
     LogModule,
     MovementReportModule,
+    UserModule,
     forwardRef(() => CaseReportValidateModule),
   ],
   controllers: [ReportResearchersAssignmentController],
-  providers: [ResearchersService, HttpResearchersService],
+  providers: [ResearchersService, HttpResearchersService, PermissionGuard],
   exports: [ResearchersService],
 })
 export class ResearchersModule {}

@@ -31,7 +31,7 @@ export class ReportAnalystAssignmentController {
   ) {}
 
   @Post('assingAnalyst/:idValidator/:userIdPermission')
-  @Permission(permissions.VALIDATOR) // Decorador para definir los permisos requeridos
+  @Permission(permissions.SUPER_ADMIN, permissions.VALIDATOR)
   createAssingAnalystReporter(
     @Body() createAnalystReporterDto: CreateReportAnalystAssignmentDto,
     @Ip() clientIp: string,
@@ -45,7 +45,8 @@ export class ReportAnalystAssignmentController {
     );
   }
 
-  @Post('returnCaseBetweenAnalyst/:idAnalystCurrent')
+  @Post('returnCaseBetweenAnalyst/:idAnalystCurrent/:userIdPermission')
+  @Permission(permissions.SUPER_ADMIN, permissions.ANALYST)
   createReturnCaseBetweenAnalyst(
     @Body() createAnalystReporterDto: CreateReportAnalystAssignmentDto,
     @Ip() clientIp: string,
@@ -58,7 +59,8 @@ export class ReportAnalystAssignmentController {
     );
   }
 
-  @Get('listAssignedAnalystsByPosition')
+  @Get('listAssignedAnalystsByPosition/:userIdPermission')
+  @Permission(permissions.SUPER_ADMIN, permissions.VALIDATOR)
   async listAssignedAnalystsByPosition(
     @Query() query: QueryReportAnalystAssignmentDto,
   ): Promise<ReportAnalystAssignment[]> {
@@ -68,20 +70,21 @@ export class ReportAnalystAssignmentController {
   }
 
   @Get('findAssignedAnalyst/:id/:userIdPermission')
-  @Permission(permissions.VALIDATOR) // Decorador para definir los permisos requeridos
+  @Permission(permissions.SUPER_ADMIN, permissions.VALIDATOR)
   findAssignedAnalyst(
     @Param('id') id: number,
-    @Param('userIdPermission') userIdPermission: string,
   ): Promise<ReportAnalystAssignment> {
     return this.reportAnalisysAssignmentService.findOneAssignedAnalyst(id);
   }
 
-  @Get('findInfoAnalystByCode/:code')
+  @Get('findInfoAnalystByCode/:code/:userIdPermission')
+  @Permission(permissions.SUPER_ADMIN, permissions.VALIDATOR)
   findInfoAnalystByCode(@Param('code') code?: number) {
     return this.reportAnalisysAssignmentService.findInfoAnalystByCode(code);
   }
 
-  @Get('/summaryReportsForAssignCases')
+  @Get('/summaryReportsForAssignCases/:userIdPermission')
+  @Permission(permissions.SUPER_ADMIN, permissions.ANALYST)
   async summaryReportsForAssignCases(
     @Query() query: QueryReportAnalystAssignmentDto,
   ) {
@@ -94,7 +97,8 @@ export class ReportAnalystAssignmentController {
     );
   }
 
-  @Patch('updateReAssignedAnalyst/:idValidator/:idCaseReportValidate')
+  @Patch('reAssignedAnalyst/:idValidator/:idCaseReportValidate/:userIdPermission')
+  @Permission(permissions.SUPER_ADMIN, permissions.VALIDATOR)
   updateReAssignedAnalyst(
     @Body() updateReportAnalystAssignmentDto: UpdateReportAnalystAssignmentDto,
     @Ip() clientIp: string,
@@ -109,7 +113,8 @@ export class ReportAnalystAssignmentController {
     );
   }
 
-  @Patch('updateReturnCaseToValidator/:idAnalyst/:idCaseReportValidate')
+  @Patch('returnCaseToValidator/:idAnalyst/:idCaseReportValidate/:userIdPermission')
+  @Permission(permissions.SUPER_ADMIN, permissions.ANALYST)
   updateReturnCaseToValidator(
     @Param('idCaseReportValidate') idCaseReportValidate: string,
     @Ip() clientIp: string,
@@ -122,7 +127,8 @@ export class ReportAnalystAssignmentController {
     );
   }
 
-  @Delete('deleteAssignedAnalyst/:id')
+  @Delete('deleteAssignedAnalyst/:id/:userIdPermission')
+  @Permission(permissions.SUPER_ADMIN, permissions.VALIDATOR)
   deleteAssignedAnalyst(@Param('id') id: number): Promise<HttpException> {
     return this.reportAnalisysAssignmentService.deleteAssignedAnalyst(id);
   }

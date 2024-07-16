@@ -7,38 +7,47 @@ import {
   Param,
   Delete,
   HttpException,
+  UseGuards,
 } from '@nestjs/common';
 import { ReasonReturnCaseService } from '../services/reason-return-case.service';
 import { CreateReasonReturnCaseDto } from '../dto/create-reason-return-case.dto';
 import { UpdateReasonReturnCaseDto } from '../dto/update-reason-return-case.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { ReasonReturnCase } from '../entities/reason-return-case.entity';
+import { PermissionGuard } from 'src/guards/permission.guard';
+import { Permission } from 'src/decorators/permission.decorator';
+import { permissions } from 'src/enums/permissions.enum';
 
 @ApiTags('reason-return-case')
 @Controller('reason-return-case')
+@UseGuards(PermissionGuard)
 export class ReasonReturnCaseController {
   constructor(
     private readonly reasonReturnCaseService: ReasonReturnCaseService,
   ) {}
 
-  @Post('/createReasonReturnCase')
+  @Post('/createReasonReturnCase/:userIdPermission')
+  @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
   create(@Body() createReasonReturnCaseDto: CreateReasonReturnCaseDto): Promise<HttpException> {
     return this.reasonReturnCaseService.createReasonReturnCase(
       createReasonReturnCaseDto,
     );
   }
 
-  @Get('/listReasonReturnCases')
+  @Get('/listReasonReturnCases/:userIdPermission')
+  @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
   listReasonReturnCases(): Promise<ReasonReturnCase[]> {
     return this.reasonReturnCaseService.findAllReasonReturnCases();
   }
 
-  @Get('/findReasonReturnCase/:id')
+  @Get('/findReasonReturnCase/:id/:userIdPermission')
+  @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
   findReasonReturnCase(@Param('id') id: number): Promise<ReasonReturnCase> {
     return this.reasonReturnCaseService.findOneReasonReturnCase(id);
   }
 
-  @Patch('/updateReasonReturnCase/:id')
+  @Patch('/updateReasonReturnCase/:id/:userIdPermission')
+  @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
   updateReasonReturnCase(
     @Param('id') id: number,
     @Body() updateReasonReturnCaseDto: UpdateReasonReturnCaseDto,
@@ -49,7 +58,8 @@ export class ReasonReturnCaseController {
     );
   }
 
-  @Delete('/deleteReasonReturnCase/:id')
+  @Delete('/deleteReasonReturnCase/:id/:userIdPermission')
+  @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
   deleteReasonReturnCase(@Param('id') id: number): Promise<HttpException> {
     return this.reasonReturnCaseService.deleteReasonReturnCase(id);
   }

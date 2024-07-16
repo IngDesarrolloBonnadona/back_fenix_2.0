@@ -8,36 +8,45 @@ import {
   Delete,
   Put,
   HttpException,
+  UseGuards,
 } from '@nestjs/common';
 import { PriorityService } from '../services/priority.service';
 import { CreatePriorityDto } from '../dto/create-priority.dto';
 import { UpdatePriorityDto } from '../dto/update-priority.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { Priority } from '../entities/priority.entity';
+import { PermissionGuard } from 'src/guards/permission.guard';
+import { Permission } from 'src/decorators/permission.decorator';
+import { permissions } from 'src/enums/permissions.enum';
 
 @ApiTags('priority')
 @Controller('priority')
+@UseGuards(PermissionGuard)
 export class PriorityController {
   constructor(private readonly priorityService: PriorityService) {}
 
-  @Post('/createPriority')
+  @Post('/createPriority/:userIdPermission')
+  @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
   createPriority(
     @Body() createPriorityDto: CreatePriorityDto,
   ): Promise<HttpException> {
     return this.priorityService.createPriority(createPriorityDto);
   }
 
-  @Get('/listPriorities')
+  @Get('/listPriorities/:userIdPermission')
+  @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
   listPriorities(): Promise<Priority[]> {
     return this.priorityService.findAllPriorities();
   }
 
-  @Get('/findPriority/:id')
+  @Get('/findPriority/:id/:userIdPermission')
+  @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
   findPriority(@Param('id') id: number): Promise<Priority> {
     return this.priorityService.findOnePriority(id);
   }
 
-  @Patch('/updatePriority/:id')
+  @Patch('/updatePriority/:id/:userIdPermission')
+  @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
   updateStatusPriority(
     @Param('id') id: number,
     @Body() updateStatusPriority: UpdatePriorityDto,
@@ -48,7 +57,8 @@ export class PriorityController {
     );
   }
 
-  @Delete('/deletePriority/:id')
+  @Delete('/deletePriority/:id/:userIdPermission')
+  @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
   deletePriority(@Param('id') id: number): Promise<HttpException> {
     return this.priorityService.deletePriority(id);
   }

@@ -1,38 +1,62 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, Put } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  HttpException,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import { CaseTypeService } from '../services/case-type.service';
 import { CreateCaseTypeDto } from '../dto/create-case-type.dto';
 import { UpdateCaseTypeDto } from '../dto/update-case-type.dto';
 import { CaseType } from '../entities/case-type.entity';
 import { ApiTags } from '@nestjs/swagger';
+import { PermissionGuard } from 'src/guards/permission.guard';
+import { Permission } from 'src/decorators/permission.decorator';
+import { permissions } from 'src/enums/permissions.enum';
 
 @ApiTags('case-type')
 @Controller('case-type')
+@UseGuards(PermissionGuard)
 export class CaseTypeController {
   constructor(private readonly caseTypeService: CaseTypeService) {}
 
-  @Post('/createCaseType')
-  createCaseType(@Body() createCaseTypeDto: CreateCaseTypeDto): Promise<HttpException> {
+  @Post('/createCaseType/:userIdPermission')
+  @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
+  createCaseType(
+    @Body() createCaseTypeDto: CreateCaseTypeDto,
+  ): Promise<HttpException> {
     return this.caseTypeService.createCaseType(createCaseTypeDto);
   }
 
-  @Get('/listCaseTypes')
+  @Get('/listCaseTypes/:userIdPermission')
+  @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
   listCaseTypes(): Promise<CaseType[]> {
     return this.caseTypeService.findAllCaseTypes();
   }
 
-  @Get('/findCaseType/:id')
+  @Get('/findCaseType/:id/:userIdPermission')
+  @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
   findCaseType(@Param('id') id: number): Promise<CaseType> {
     return this.caseTypeService.findOneCaseType(id);
   }
 
-  @Patch('/updateCaseType/:id')
-  updateCaseType(@Param('id') id: number, @Body() updateCaseTypeDto: UpdateCaseTypeDto): Promise<HttpException> {
+  @Patch('/updateCaseType/:id/:userIdPermission')
+  @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
+  updateCaseType(
+    @Param('id') id: number,
+    @Body() updateCaseTypeDto: UpdateCaseTypeDto,
+  ): Promise<HttpException> {
     return this.caseTypeService.updateCaseType(id, updateCaseTypeDto);
   }
 
-  @Delete('/deleteCaseType/:id')
+  @Delete('/deleteCaseType/:id/:userIdPermission')
+  @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
   deleteCaseType(@Param('id') id: number): Promise<HttpException> {
     return this.caseTypeService.deleteCaseType(id);
-
   }
 }

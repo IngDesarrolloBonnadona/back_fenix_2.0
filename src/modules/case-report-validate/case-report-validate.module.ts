@@ -28,6 +28,8 @@ import { Priority } from '../priority/entities/priority.entity';
 import { ObservationReturnCase } from '../observation-return-case/entities/observation-return-case.entity';
 import { ObservationReturnCaseModule } from '../observation-return-case/observation-return-case.module';
 import { MovementReportModule } from '../movement-report/movement-report.module';
+import { PermissionGuard } from 'src/guards/permission.guard';
+import { UserModule } from 'src/modules_bonnadonahub/user/user.module';
 
 @Module({
   imports: [
@@ -56,12 +58,13 @@ import { MovementReportModule } from '../movement-report/movement-report.module'
     RiskLevelModule,
     UnitModule,
     MovementReportModule,
+    UserModule,
     forwardRef(() => ResearchersModule),
     forwardRef(() => ReportAnalystAssignmentModule),
     forwardRef(() => ObservationReturnCaseModule),
   ],
   controllers: [CaseReportValidateController],
-  providers: [CaseReportValidateService],
+  providers: [CaseReportValidateService, PermissionGuard],
   exports: [CaseReportValidateService],
 })
 export class CaseReportValidateModule {}
