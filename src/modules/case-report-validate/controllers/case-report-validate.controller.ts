@@ -148,7 +148,7 @@ export class CaseReportValidateController {
     );
   }
 
-  @Delete('/cancelReportValidate/:id')
+  @Delete('/cancelReportValidate/:id/:userIdPermission')
   @Permission(
     permissions.SUPER_ADMIN,
     permissions.VALIDATOR,
