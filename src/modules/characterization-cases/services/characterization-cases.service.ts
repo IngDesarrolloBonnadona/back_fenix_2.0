@@ -25,7 +25,7 @@ export class CharacterizationCasesService {
 
     if (findCharacterization) {
       throw new HttpException(
-        'La caracterización de los casos no existe.',
+        'La caracterización de los casos ya existe.',
         HttpStatus.CONFLICT,
       );
     }
