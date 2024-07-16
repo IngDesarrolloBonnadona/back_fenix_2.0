@@ -20,6 +20,8 @@ import { FindSimilarCaseReportValidateDto } from '../dto/find-similar-case-repor
 import { CreateReportValDto } from '../helper/val-dto-validator.helper';
 import { QueryCaseReportValidateDto } from '../dto/query-case-report-validate.dto';
 import { PermissionGuard } from 'src/guards/permission.guard';
+import { Permission } from 'src/decorators/permission.decorator';
+import { permissions } from 'src/enums/permissions.enum';
 
 @ApiTags('case-report-validate')
 @Controller('case-report-validate')
@@ -38,7 +40,8 @@ export class CaseReportValidateController {
     );
   }
 
-  @Post('/createReportValidate/:idValidator/:reportId')
+  @Post('/createReportValidate/:idValidator/:reportId/:userIdPermission')
+  @Permission(permissions.SUPER_ADMIN, permissions.VALIDATOR)
   async createReportValidate(
     @Body() createReportValDto: CreateReportValDto,
     @Ip() clientIp: string,
@@ -74,7 +77,8 @@ export class CaseReportValidateController {
     );
   }
 
-  @Get('/summaryReportsForValidator')
+  @Get('/summaryReportsForValidator/:userIdPermission')
+  @Permission(permissions.SUPER_ADMIN, permissions.VALIDATOR)
   async SummaryReportsForValidator(
     @Query('filingNumber') filingNumber?: string,
     @Query('statusMovementId') statusMovementId?: number,
@@ -95,7 +99,8 @@ export class CaseReportValidateController {
     );
   }
 
-  @Get('/summaryReportsForReview')
+  @Get('/summaryReportsForReview/:userIdPermission')
+  @Permission(permissions.SUPER_ADMIN, permissions.VALIDATOR)
   async summaryReportsForReview(
     @Query() query: QueryCaseReportValidateDto,
   ): Promise<CaseReportValidate[]> {
@@ -144,6 +149,12 @@ export class CaseReportValidateController {
   }
 
   @Delete('/cancelReportValidate/:id')
+  @Permission(
+    permissions.SUPER_ADMIN,
+    permissions.VALIDATOR,
+    permissions.ANALYST,
+    permissions.INVESTIGATOR,
+  )
   async cancelReportValidate(
     @Param('id') id: string,
     @Ip() clientIp: string,

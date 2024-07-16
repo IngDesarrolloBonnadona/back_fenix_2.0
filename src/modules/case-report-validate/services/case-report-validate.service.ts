@@ -622,6 +622,7 @@ export class CaseReportValidateService {
         service: true,
         unit: true,
         priority: true,
+        characterizationCase: true,
       },
       order: {
         createdAt: 'DESC',
@@ -657,6 +658,7 @@ export class CaseReportValidateService {
         service: true,
         unit: true,
         priority: true,
+        characterizationCase: true,
       },
     });
 
@@ -693,6 +695,7 @@ export class CaseReportValidateService {
         service: true,
         unit: true,
         priority: true,
+        characterizationCase: true,
       },
       order: {
         createdAt: 'DESC',

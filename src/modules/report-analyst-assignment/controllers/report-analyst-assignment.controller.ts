@@ -71,7 +71,6 @@ export class ReportAnalystAssignmentController {
   @Permission(permissions.VALIDATOR) // Decorador para definir los permisos requeridos
   findAssignedAnalyst(
     @Param('id') id: number,
-    @Param('userIdPermission') userIdPermission: string,
   ): Promise<ReportAnalystAssignment> {
     return this.reportAnalisysAssignmentService.findOneAssignedAnalyst(id);
   }
