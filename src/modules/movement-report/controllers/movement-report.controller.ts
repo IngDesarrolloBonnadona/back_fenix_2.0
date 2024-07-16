@@ -15,31 +15,31 @@ export class MovementReportController {
   constructor(private readonly movementReportService: MovementReportService) {}
 
   @Post('/createMovementReport/:userIdPermission')
-  @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
+  @Permission(permissions.SUPER_ADMIN)
   createMovementReport(@Body() createMovementReportDto: CreateMovementReportDto): Promise<HttpException> {
     return this.movementReportService.createMovementReport(createMovementReportDto);
   }
 
   @Get('/listMovementReports/:userIdPermission')
-  @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
+  @Permission(permissions.SUPER_ADMIN)
   listMovementReport(): Promise<MovementReport[]> {
     return this.movementReportService.findAllMovementReports();
   }
 
   @Get('/findMovementReport/:id/:userIdPermission')
-  @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
+  @Permission(permissions.SUPER_ADMIN)
   findMovementReport(@Param('id') id: number): Promise<MovementReport> {
     return this.movementReportService.findOneMovementReport(id);
   }
 
   @Patch('/updateMovementReport/:id/:userIdPermission')
-  @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
+  @Permission(permissions.SUPER_ADMIN)
   updateMovementReport(@Param('id') id: number, @Body() updateMovementReportDto: UpdateMovementReportDto): Promise<HttpException> {
     return this.movementReportService.updateMovementReport(id, updateMovementReportDto);
   }
 
   @Delete('/deleteMovementReport/:id/:userIdPermission')
-  @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
+  @Permission(permissions.SUPER_ADMIN)
   deleteMovementReport(@Param('id') id: number): Promise<HttpException> {
     return this.movementReportService.deleteMovementReport(id);
   }
