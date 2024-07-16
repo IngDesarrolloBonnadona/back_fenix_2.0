@@ -37,8 +37,7 @@ export class EventTypeController {
     return this.eventTypeService.findOneEventType(id);
   }
 
-  @Get('/findEvenTypeByCaseType/:caseTypeId/:userIdPermission')
-  @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
+  @Get('/findEvenTypeByCaseType/:caseTypeId')
   findEvenTypeByCaseType(@Param('caseTypeId') caseTypeId: number): Promise<EventType[]> {
     return this.eventTypeService.findEvenTypeByCaseType(caseTypeId);
   }
