@@ -33,14 +33,12 @@ export class PriorityController {
     return this.priorityService.createPriority(createPriorityDto);
   }
 
-  @Get('/listPriorities/:userIdPermission')
-  @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
+  @Get('/listPriorities/')
   listPriorities(): Promise<Priority[]> {
     return this.priorityService.findAllPriorities();
   }
 
-  @Get('/findPriority/:id/:userIdPermission')
-  @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
+  @Get('/findPriority/:id/')
   findPriority(@Param('id') id: number): Promise<Priority> {
     return this.priorityService.findOnePriority(id);
   }

@@ -20,14 +20,12 @@ export class ServiceController {
     return this.serviceService.createService(createServiceDto);
   }
 
-  @Get('/listServices/:userIdPermission')
-  @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
+  @Get('/listServices/')
   listServices(): Promise<Service[]> {
     return this.serviceService.findAllServices();
   }
 
-  @Get('/findService/:id/:userIdPermission')
-  @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
+  @Get('/findService/:id/')
   findService(@Param('id') id: number): Promise<Service> {
     return this.serviceService.findOneService(id);
   }

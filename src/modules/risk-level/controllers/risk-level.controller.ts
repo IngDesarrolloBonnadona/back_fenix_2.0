@@ -20,14 +20,12 @@ export class RiskLevelController {
     return this.riskLevelService.createRiskLevel(createRiskLevelDto);
   }
 
-  @Get('/listRisksLevel/:userIdPermission')
-  @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
+  @Get('/listRisksLevel/')
   listRiskLevel(): Promise<RiskLevel[]> {
     return this.riskLevelService.findAllRiskLevel();
   }
 
-  @Get('/findRiskLevel/:id/:userIdPermission')
-  @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
+  @Get('/findRiskLevel/:id/')
   findRiskLevel(@Param('id') id: number): Promise<RiskLevel> {
     return this.riskLevelService.findOneRiskLevel(id);
   }

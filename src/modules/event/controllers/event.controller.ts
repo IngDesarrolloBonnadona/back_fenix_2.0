@@ -25,20 +25,17 @@ export class EventController {
     return this.eventService.createEventsArray(createEventDto);
   }
 
-  @Get('/listEvents/:userIdPermission')
-  @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
+  @Get('/listEvents/')
   listEvents(): Promise<Event[]> {
     return this.eventService.findAllEvents();
   }
 
-  @Get('/findEvent/:id/:userIdPermission')
-  @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
+  @Get('/findEvent/:id/')
   findEvent(@Param('id') id: number): Promise<Event> {
     return this.eventService.findOneEvent(id);
   }
 
-  @Get('/findEventsByEventTypeId/:eventTypeId/:userIdPermission')
-  @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
+  @Get('/findEventsByEventTypeId/:eventTypeId/')
   findEventsByEventTypeId(@Param('eventTypeId') eventTypeId: number): Promise<Event[]> {
     return this.eventService.findEventByEventTypeId(eventTypeId );
   }

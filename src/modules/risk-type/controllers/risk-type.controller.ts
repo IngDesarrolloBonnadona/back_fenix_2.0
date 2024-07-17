@@ -34,14 +34,12 @@ export class RiskTypeController {
     return this.riskTypeService.createRiskType(createRiskTypeDto);
   }
 
-  @Get('/listRisktypes/:userIdPermission')
-  @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
+  @Get('/listRisktypes/')
   listRisktypes(): Promise<RiskType[]> {
     return this.riskTypeService.findAllRiskTypes();
   }
 
-  @Get('/findRisktype/:id/:userIdPermission')
-  @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
+  @Get('/findRisktype/:id/')
   findRisktype(@Param('id') id: number): Promise<RiskType> {
     return this.riskTypeService.findOneRiskType(id);
   }

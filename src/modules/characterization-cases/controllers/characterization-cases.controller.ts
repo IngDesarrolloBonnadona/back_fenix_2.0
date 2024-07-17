@@ -37,14 +37,12 @@ export class CharacterizationCasesController {
     );
   }
 
-  @Get('/listCharacterizations/:userIdPermission')
-  @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
+  @Get('/listCharacterizations/')
   listCharacterizations(): Promise<CharacterizationCase[]> {
     return this.characterizationCasesService.findAllCharacterizations();
   }
 
-  @Get('/findCharacterization/:id/:userIdPermission')
-  @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
+  @Get('/findCharacterization/:id/')
   findCharacterization(@Param('id') id: number): Promise<CharacterizationCase> {
     return this.characterizationCasesService.findOneCharacterization(id);
   }

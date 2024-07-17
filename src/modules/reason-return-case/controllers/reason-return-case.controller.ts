@@ -34,14 +34,12 @@ export class ReasonReturnCaseController {
     );
   }
 
-  @Get('/listReasonReturnCases/:userIdPermission')
-  @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
+  @Get('/listReasonReturnCases/')
   listReasonReturnCases(): Promise<ReasonReturnCase[]> {
     return this.reasonReturnCaseService.findAllReasonReturnCases();
   }
 
-  @Get('/findReasonReturnCase/:id/:userIdPermission')
-  @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
+  @Get('/findReasonReturnCase/:id/')
   findReasonReturnCase(@Param('id') id: number): Promise<ReasonReturnCase> {
     return this.reasonReturnCaseService.findOneReasonReturnCase(id);
   }

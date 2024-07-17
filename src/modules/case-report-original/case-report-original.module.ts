@@ -21,6 +21,8 @@ import { UnitModule } from '../unit/unit.module';
 import { Priority } from '../priority/entities/priority.entity';
 import { SeverityClasification } from '../severity-clasification/entities/severity-clasification.entity';
 import { MovementReportModule } from '../movement-report/movement-report.module';
+import { PermissionGuard } from 'src/guards/permission.guard';
+import { UserModule } from 'src/modules_bonnadonahub/user/user.module';
 
 @Module({
   imports: [
@@ -28,7 +30,7 @@ import { MovementReportModule } from '../movement-report/movement-report.module'
       CaseReportOriginal,
       CaseType,
       Priority,
-      SeverityClasification
+      SeverityClasification,
     ]),
     CaseReportValidateModule,
     LogModule,
@@ -44,9 +46,10 @@ import { MovementReportModule } from '../movement-report/movement-report.module'
     SubOriginModule,
     RiskLevelModule,
     UnitModule,
-    MovementReportModule
+    MovementReportModule,
+    UserModule,
   ],
   controllers: [CaseReportOriginalController],
-  providers: [CaseReportOriginalService],
+  providers: [CaseReportOriginalService, PermissionGuard],
 })
 export class CaseReportOriginalModule {}
