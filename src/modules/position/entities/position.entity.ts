@@ -26,9 +26,6 @@ export class Position {
   @Column({ type: 'boolean', default: true })
   pos_enabled: boolean;
 
-  @Column({ type: 'boolean', default: true })
-  pos_status: boolean;
-
   @CreateDateColumn()
   createdAt: Date;
 
