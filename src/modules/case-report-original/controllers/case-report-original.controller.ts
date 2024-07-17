@@ -27,19 +27,19 @@ export class CaseReportOriginalController {
     );
   }
 
-  @Get('/listReportsOriginal')
+  @Get('/listReportsOriginal/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN)
   async listReportsOriginal(): Promise<CaseReportOriginal[]> {
     return await this.CaseReportOriginalService.findAllReportsOriginal();
   }
 
-  @Get('/findReportOriginal/:id')
+  @Get('/findReportOriginal/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN)
   async findReportOriginal(@Param('id') id: string): Promise<CaseReportOriginal> {
     return await this.CaseReportOriginalService.findOneReportOriginal(id);
   }
 
-  @Put('/updateReportOriginal/:id')
+  @Put('/updateReportOriginal/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN)
   async updateReportOriginal(
     @Param('id') id: string,
@@ -51,7 +51,7 @@ export class CaseReportOriginalController {
     );
   }
 
-  @Delete('/deleteReportOriginal/:id')
+  @Delete('/deleteReportOriginal/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN)
   async deleteReportOriginal(@Param('id') id: string): Promise<HttpException> {
     return await this.CaseReportOriginalService.deleteReportOriginal(id);
