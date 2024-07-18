@@ -229,7 +229,7 @@ export class ReportAnalystAssignmentService {
     if (!reportAssignmentFind) {
       throw new HttpException(
         'No se encontró el reporte asignado a analista',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
 
@@ -237,6 +237,7 @@ export class ReportAnalystAssignmentService {
       where: {
         id: idCaseReportValidate,
         val_cr_validated: false,
+        val_cr_status: true,
       },
       withDeleted: true,
     });
@@ -244,7 +245,7 @@ export class ReportAnalystAssignmentService {
     if (!caseReportValidate) {
       throw new HttpException(
         'No se encontró el reporte.',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
 
@@ -543,7 +544,7 @@ export class ReportAnalystAssignmentService {
     if (!findReportAnalystAssigned) {
       throw new HttpException(
         'El caso asignado ya fue devuelto al validador.',
-        HttpStatus.NOT_FOUND,
+        HttpStatus.NO_CONTENT,
       );
     }
 
