@@ -222,42 +222,52 @@ export class ReportAnalystAssignmentService {
       await this.reportAnalystAssignmentRepository.findOne({
         where: {
           ana_validatedcase_id_fk: idCaseReportValidate,
-          ana_status: true,
-          ana_isreturned: false,
         },
+        withDeleted: true,
       });
 
     if (!reportAssignmentFind) {
       throw new HttpException(
         'No se encontró el reporte asignado a analista',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
-    await this.caseReportValidateService.findOneReportValidate(
-      idCaseReportValidate,
-    );
+    const caseReportValidate = await this.caseReportValidateRepository.findOne({
+      where: {
+        id: idCaseReportValidate,
+        val_cr_validated: false,
+      },
+      withDeleted: true,
+    });
+
+    if (!caseReportValidate) {
+      throw new HttpException(
+        'No se encontró el reporte.',
+        HttpStatus.NOT_FOUND,
+      );
+    }
 
     await this.positionService.findOnePosition(
       updateReportAnalystAssignmentDto.ana_position_id_fk,
     );
 
-    if (reportAssignmentFind) {
-      const result = await this.reportAnalystAssignmentRepository.update(
-        reportAssignmentFind.id,
-        {
-          ...updateReportAnalystAssignmentDto,
-          ana_uservalidator_id: idValidator,
-          ana_amountreturns: 0,
-        },
-      );
+    const result = await this.reportAnalystAssignmentRepository.update(
+      reportAssignmentFind.id,
+      {
+        ...updateReportAnalystAssignmentDto,
+        ana_uservalidator_id: idValidator,
+        ana_amountreturns: 0,
+        deletedAt: null,
+        ana_isreturned: false,
+      },
+    );
 
-      if (result.affected === 0) {
-        return new HttpException(
-          `No se pudo reasignar el analista`,
-          HttpStatus.INTERNAL_SERVER_ERROR,
-        );
-      }
+    if (result.affected === 0) {
+      return new HttpException(
+        `No se pudo reasignar el analista`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
 
     const movementReportFound =
@@ -266,9 +276,11 @@ export class ReportAnalystAssignmentService {
       );
 
     const updateStatusMovement = await this.caseReportValidateRepository.update(
-      idCaseReportValidate,
+      caseReportValidate.id,
       {
         val_cr_statusmovement_id_fk: movementReportFound.id,
+        val_cr_status: true,
+        deletedAt: null,
       },
     );
 
@@ -530,8 +542,8 @@ export class ReportAnalystAssignmentService {
 
     if (!findReportAnalystAssigned) {
       throw new HttpException(
-        'No se encontró el reporte asignado a analista.',
-        HttpStatus.NO_CONTENT,
+        'El caso asignado ya fue devuelto al validador.',
+        HttpStatus.NOT_FOUND,
       );
     }
 
