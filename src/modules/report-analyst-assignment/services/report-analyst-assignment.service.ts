@@ -425,8 +425,9 @@ export class ReportAnalystAssignmentService {
         'crv.reportResearcherAssignment',
         'reportResearcherAssignment',
       )
-      .where('crv.val_cr_validated = :validated', { validated: false });
-
+      .where('crv.val_cr_validated = :validated', { validated: false })
+      .andWhere('crv.val_cr_status = :status', { status: true });
+      
     if (filingNumber) {
       query.andWhere('crv.val_cr_filingnumber LIKE :filingNumber', {
         filingNumber: `%${filingNumber}%`,
