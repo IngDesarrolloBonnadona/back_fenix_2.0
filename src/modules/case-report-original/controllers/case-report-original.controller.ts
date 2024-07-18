@@ -1,12 +1,16 @@
-import { Controller, Get, Post, Body, Param, Delete, HttpException, Put, Ip, } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, HttpException, Put, Ip, UseGuards, } from '@nestjs/common';
 import { CaseReportOriginalService } from '../services/case-report-original.service';
 import { CreateReportOriDto } from '../utils/helpers/ori-dto-validator.helper';
 import { UpdateCaseReportOriginalDto } from '../dto/update-case-report-original.dto';
 import { CaseReportOriginal } from '../entities/case-report-original.entity';
 import { ApiTags } from '@nestjs/swagger';
+import { PermissionGuard } from 'src/guards/permission.guard';
+import { Permission } from 'src/decorators/permission.decorator';
+import { permissions } from 'src/enums/permissions.enum';
 
 @ApiTags('case-report-original')
 @Controller('case-report-original')
+@UseGuards(PermissionGuard)
 export class CaseReportOriginalController {
   constructor(
     private readonly CaseReportOriginalService: CaseReportOriginalService,
@@ -23,17 +27,20 @@ export class CaseReportOriginalController {
     );
   }
 
-  @Get('/listReportsOriginal')
+  @Get('/listReportsOriginal/:userIdPermission')
+  @Permission(permissions.SUPER_ADMIN)
   async listReportsOriginal(): Promise<CaseReportOriginal[]> {
     return await this.CaseReportOriginalService.findAllReportsOriginal();
   }
 
-  @Get('/findReportOriginal/:id')
+  @Get('/findReportOriginal/:id/:userIdPermission')
+  @Permission(permissions.SUPER_ADMIN)
   async findReportOriginal(@Param('id') id: string): Promise<CaseReportOriginal> {
     return await this.CaseReportOriginalService.findOneReportOriginal(id);
   }
 
-  @Put('/updateReportOriginal/:id')
+  @Put('/updateReportOriginal/:id/:userIdPermission')
+  @Permission(permissions.SUPER_ADMIN)
   async updateReportOriginal(
     @Param('id') id: string,
     @Body() UpdateCaseReportOriginalDto: UpdateCaseReportOriginalDto,
@@ -44,7 +51,8 @@ export class CaseReportOriginalController {
     );
   }
 
-  @Delete('/deleteReportOriginal/:id')
+  @Delete('/deleteReportOriginal/:id/:userIdPermission')
+  @Permission(permissions.SUPER_ADMIN)
   async deleteReportOriginal(@Param('id') id: string): Promise<HttpException> {
     return await this.CaseReportOriginalService.deleteReportOriginal(id);
   }

@@ -20,14 +20,12 @@ export class SubOriginController {
     return this.subOriginService.createSubOrigin(createSubOriginDto);
   }
 
-  @Get('/listSubOrigins/:userIdPermission')
-  @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
+  @Get('/listSubOrigins/')
   listSubOrigins(): Promise<SubOrigin[]> {
     return this.subOriginService.findAllSubOrigins();
   }
 
-  @Get('/findSubOrigin/:id/:userIdPermission')
-  @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
+  @Get('/findSubOrigin/:id/')
   findSubOrigin(@Param('id') id: number): Promise<SubOrigin> {
     return this.subOriginService.findOneSubOrigin(id);
   }

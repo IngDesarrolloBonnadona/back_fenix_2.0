@@ -36,14 +36,12 @@ export class SeverityClasificationController {
     );
   }
 
-  @Get('/listSeverityClasifications/:userIdPermission')
-  @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
+  @Get('/listSeverityClasifications/')
   listSeverityClasifications(): Promise<SeverityClasification[]> {
     return this.severityClasificationService.findAllSeverityClasifications();
   }
 
-  @Get('findSeverityClasification/:id/:userIdPermission')
-  @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
+  @Get('findSeverityClasification/:id/')
   findSeverityClasification(@Param('id') id: number): Promise<SeverityClasification> {
     return this.severityClasificationService.findOneSeverityClasification(id);
   }

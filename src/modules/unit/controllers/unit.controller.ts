@@ -20,14 +20,12 @@ export class UnitController {
     return this.unitService.createUnit(createUnitDto);
   }
 
-  @Get('/listUnits/:userIdPermission')
-  @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
+  @Get('/listUnits/')
   listUnits(): Promise<Unit[]> {
     return this.unitService.findAllUnits();
   }
 
-  @Get('/findUnit/:id/:userIdPermission')
-  @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
+  @Get('/findUnit/:id/')
   findUnit(@Param('id') id: number): Promise<Unit> {
     return this.unitService.findOneUnit(id);
   }

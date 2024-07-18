@@ -137,7 +137,8 @@ export class CaseReportValidateController {
     );
   }
 
-  @Patch('/updateReportValidate/:id')
+  @Patch('/updateReportValidate/:id/:userIdPermission')
+  @Permission(permissions.SUPER_ADMIN, permissions.VALIDATOR)
   updateReportValidate(
     @Param('id') id: string,
     @Body() updateCaseReportValidateDto: UpdateCaseReportValidateDto,

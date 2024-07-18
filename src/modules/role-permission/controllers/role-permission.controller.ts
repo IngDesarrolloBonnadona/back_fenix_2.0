@@ -32,20 +32,17 @@ export class RolePermissionController {
     return this.roleService.createRole(createRoleDto);
   }
 
-  @Get('/listRoles/:userIdPermission')
-  @Permission(permissions.SUPER_ADMIN)
+  @Get('/listRoles/')
   listRoles(): Promise<RolePermission[]> {
     return this.roleService.findAllRoles();
   }
 
-  @Get('/findRole/:id/:userIdPermission')
-  @Permission(permissions.SUPER_ADMIN)
+  @Get('/findRole/:id/')
   findRole(@Param('id') id: number): Promise<RolePermission> {
     return this.roleService.findOneRole(id);
   }
 
-  @Get('/findRoleByName/:userIdPermission')
-  @Permission(permissions.SUPER_ADMIN)
+  @Get('/findRoleByName/')
   findRoleByName(
     @Body() createRoleDto: CreateRolePermissionDto,
   ): Promise<RolePermission> {

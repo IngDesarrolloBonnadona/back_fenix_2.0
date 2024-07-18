@@ -20,19 +20,17 @@ export class EventTypeController {
     return this.eventTypeService.createEventType(createEventTypeDto);
   }
 
-  @Post('/createEventTypeArray')
+  @Post('/createEventTypeArray') //es para cargar datos masivos 
   createEventTypeArray(@Body() createEventTypeDto: CreateEventTypeDto[]): Promise<HttpException> {
     return this.eventTypeService.createEventTypesArray(createEventTypeDto);
   }
 
-  @Get('/listEventTypes/:userIdPermission')
-  @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
+  @Get('/listEventTypes/')
   listEventTypes(): Promise<EventType[]> {
     return this.eventTypeService.findAllEventTypes();
   }
 
-  @Get('/findEventType/:id/:userIdPermission')
-  @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
+  @Get('/findEventType/:id/')
   findEventType(@Param('id') id: number): Promise<EventType> {
     return this.eventTypeService.findOneEventType(id);
   }

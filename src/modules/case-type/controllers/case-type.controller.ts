@@ -33,14 +33,12 @@ export class CaseTypeController {
     return this.caseTypeService.createCaseType(createCaseTypeDto);
   }
 
-  @Get('/listCaseTypes/:userIdPermission')
-  @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
+  @Get('/listCaseTypes/')
   listCaseTypes(): Promise<CaseType[]> {
     return this.caseTypeService.findAllCaseTypes();
   }
 
-  @Get('/findCaseType/:id/:userIdPermission')
-  @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
+  @Get('/findCaseType/:id/')
   findCaseType(@Param('id') id: number): Promise<CaseType> {
     return this.caseTypeService.findOneCaseType(id);
   }

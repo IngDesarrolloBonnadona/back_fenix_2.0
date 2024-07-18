@@ -20,14 +20,12 @@ export class OriginController {
     return this.originService.createOrigin(createOriginDto);
   }
 
-  @Get('/listOrigins/:userIdPermission')
-  @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
+  @Get('/listOrigins/')
   listOrigins(): Promise<Origin[]> {
     return this.originService.findAllOrigins();
   }
 
-  @Get('/findOrigin/:id/:userIdPermission')
-  @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
+  @Get('/findOrigin/:id/')
   findOrigin(@Param('id') id: number): Promise<Origin> {
     return this.originService.findOneOrigin(id);
   }
