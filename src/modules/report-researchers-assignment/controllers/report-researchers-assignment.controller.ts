@@ -105,7 +105,7 @@ export class ReportResearchersAssignmentController {
     );
   }
 
-  @Patch('ReturnCaseToAnalyst/:idResearcher/:idCaseReportValidate/:userIdPermission')
+  @Patch('returnCaseToAnalyst/:idResearcher/:idCaseReportValidate/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.INVESTIGATOR)
   updateReturnCaseToAnalyst(
     @Param('idResearcher') idResearcher: number,
