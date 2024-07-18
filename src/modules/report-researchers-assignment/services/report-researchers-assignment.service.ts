@@ -369,9 +369,8 @@ export class ResearchersService {
     const findResearcherAssined = await this.researcherRepository.findOne({
       where: {
         res_validatedcase_id_fk: idCaseReportValidate,
-        res_status: true,
-        res_isreturned: false,
       },
+      withDeleted: true,
     });
 
     if (!findResearcherAssined) {
@@ -381,9 +380,21 @@ export class ResearchersService {
       );
     }
 
-    await this.caseReportValidateService.findOneReportValidate(
-      idCaseReportValidate,
-    );
+    const caseReportValidate = await this.caseReportValidateRepository.findOne({
+      where: {
+        id: idCaseReportValidate,
+        val_cr_validated: false,
+        val_cr_status: true,
+      },
+      withDeleted: true,
+    });
+
+    if (!caseReportValidate) {
+      throw new HttpException(
+        'No se encontró el reporte.',
+        HttpStatus.NO_CONTENT,
+      );
+    }
 
     const movementReportFound =
       await this.movementReportService.findOneMovementReportByName(
@@ -391,9 +402,11 @@ export class ResearchersService {
       );
 
     const updateStatusMovement = await this.caseReportValidateRepository.update(
-      idCaseReportValidate,
+      caseReportValidate.id,
       {
         val_cr_statusmovement_id_fk: movementReportFound.id,
+        val_cr_status: true,
+        deletedAt: null,
       },
     );
 
@@ -404,21 +417,21 @@ export class ResearchersService {
       );
     }
 
-    if (findResearcherAssined) {
-      const result = await this.researcherRepository.update(
-        findResearcherAssined.id,
-        {
-          ...updateResearcherDto,
-          res_useranalyst_id: idAnalyst,
-        },
-      );
+    const result = await this.researcherRepository.update(
+      findResearcherAssined.id,
+      {
+        ...updateResearcherDto,
+        res_useranalyst_id: idAnalyst,
+        deletedAt: null,
+        res_status: true,
+      },
+    );
 
-      if (result.affected === 0) {
-        return new HttpException(
-          `No se pudo reasignar el analista`,
-          HttpStatus.INTERNAL_SERVER_ERROR,
-        );
-      }
+    if (result.affected === 0) {
+      return new HttpException(
+        `No se pudo reasignar el analista`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
 
     await this.logService.createLog(
