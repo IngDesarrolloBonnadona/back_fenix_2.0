@@ -366,14 +366,14 @@ export class ResearchersService {
     idAnalyst: number,
     idCaseReportValidate: string,
   ) {
-    const findResearcherAssined = await this.researcherRepository.findOne({
+    const findResearcherAssigned = await this.researcherRepository.findOne({
       where: {
         res_validatedcase_id_fk: idCaseReportValidate,
       },
-      withDeleted: true,
+      // withDeleted: true,
     });
 
-    if (!findResearcherAssined) {
+    if (!findResearcherAssigned) {
       throw new HttpException(
         'No se encontró el reporte asignado a investigador.',
         HttpStatus.NO_CONTENT,
@@ -383,10 +383,10 @@ export class ResearchersService {
     const caseReportValidate = await this.caseReportValidateRepository.findOne({
       where: {
         id: idCaseReportValidate,
-        val_cr_validated: false,
-        val_cr_status: true,
+        // val_cr_validated: false,
+        // val_cr_status: true,
       },
-      withDeleted: true,
+      // withDeleted: true,
     });
 
     if (!caseReportValidate) {
@@ -405,8 +405,8 @@ export class ResearchersService {
       caseReportValidate.id,
       {
         val_cr_statusmovement_id_fk: movementReportFound.id,
-        val_cr_status: true,
-        deletedAt: null,
+        // val_cr_status: true,
+        // deletedAt: null,
       },
     );
 
@@ -418,12 +418,11 @@ export class ResearchersService {
     }
 
     const result = await this.researcherRepository.update(
-      findResearcherAssined.id,
+      findResearcherAssigned.id,
       {
         ...updateResearcherDto,
-        res_useranalyst_id: idAnalyst,
-        deletedAt: null,
-        res_status: true,
+        // res_useranalyst_id: idAnalyst,
+        // res_status: true,
       },
     );
 
