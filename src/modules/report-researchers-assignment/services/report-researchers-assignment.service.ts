@@ -369,6 +369,8 @@ export class ResearchersService {
     const findResearcherAssigned = await this.researcherRepository.findOne({
       where: {
         res_validatedcase_id_fk: idCaseReportValidate,
+        res_status: true,
+        res_isreturned: false,
       },
       // withDeleted: true,
     });
@@ -383,10 +385,10 @@ export class ResearchersService {
     const caseReportValidate = await this.caseReportValidateRepository.findOne({
       where: {
         id: idCaseReportValidate,
-        // val_cr_validated: false,
-        // val_cr_status: true,
+        val_cr_validated: false,
+        val_cr_status: true,
       },
-      // withDeleted: true,
+      withDeleted: true,
     });
 
     if (!caseReportValidate) {
@@ -421,7 +423,7 @@ export class ResearchersService {
       findResearcherAssigned.id,
       {
         ...updateResearcherDto,
-        // res_useranalyst_id: idAnalyst,
+        res_useranalyst_id: idAnalyst,
         // res_status: true,
       },
     );
