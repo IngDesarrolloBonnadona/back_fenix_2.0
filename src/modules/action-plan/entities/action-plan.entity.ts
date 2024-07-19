@@ -1,4 +1,5 @@
 import { ActionPlanActivity } from 'src/modules/action-plan-activities/entities/action-plan-activity.entity';
+import { ActionPlanCaseReportValidate } from 'src/modules/action-plan-case-report-validate/entities/action-plan-case-report-validate.entity';
 import { CaseReportValidate } from 'src/modules/case-report-validate/entities/case-report-validate.entity';
 import { CaseType } from 'src/modules/case-type/entities/case-type.entity';
 import { EventType } from 'src/modules/event-type/entities/event-type.entity';
@@ -12,8 +13,6 @@ import {
   DeleteDateColumn,
   Entity,
   JoinColumn,
-  JoinTable,
-  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -82,6 +81,12 @@ export class ActionPlan {
   )
   actionPlanActivity: ActionPlanActivity[];
 
+  @OneToMany(
+    () => ActionPlanCaseReportValidate,
+    (actionPlanCaseReportValidate) => actionPlanCaseReportValidate.actionPlan,
+  )
+  actionPlanCaseReportValidate: ActionPlanCaseReportValidate[];
+
   @ManyToOne(() => CaseType, (caseType) => caseType.actionPlan)
   @JoinColumn({ name: 'plan_a_casetype_id_fk' })
   caseType: CaseType;
@@ -106,9 +111,5 @@ export class ActionPlan {
   @JoinColumn({ name: 'plan_a_priority_id_fk' })
   priority: Priority;
 
-  @ManyToMany(() => CaseReportValidate, {
-    eager: true,
-  })
-  @JoinTable({ name: 'fenix_action_plan_report_validate' })
-  actionPlanReportValidated: CaseReportValidate[];
+
 }
