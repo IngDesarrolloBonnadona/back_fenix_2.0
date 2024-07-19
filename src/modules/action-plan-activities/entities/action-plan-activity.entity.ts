@@ -3,12 +3,14 @@ import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
+  Entity,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
+@Entity({ name: 'fenix_action_plan_activities'})
 export class ActionPlanActivity {
   @PrimaryGeneratedColumn()
   id: number;

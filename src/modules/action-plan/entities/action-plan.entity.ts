@@ -1,13 +1,23 @@
 import { ActionPlanActivity } from 'src/modules/action-plan-activities/entities/action-plan-activity.entity';
+import { CaseType } from 'src/modules/case-type/entities/case-type.entity';
+import { EventType } from 'src/modules/event-type/entities/event-type.entity';
+import { Event } from 'src/modules/event/entities/event.entity';
+import { Priority } from 'src/modules/priority/entities/priority.entity';
+import { Service } from 'src/modules/service/entities/service.entity';
+import { Unit } from 'src/modules/unit/entities/unit.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
+@Entity({ name: 'fenix_action_plan' })
 export class ActionPlan {
   @PrimaryGeneratedColumn()
   id: number;
@@ -37,7 +47,7 @@ export class ActionPlan {
   plan_a_service_id_fk: number;
 
   @Column()
-  plan_a_unit: number;
+  plan_a_unit_id_fk: number;
 
   @Column()
   plan_a_priority_id_fk: number;
@@ -63,11 +73,33 @@ export class ActionPlan {
   @DeleteDateColumn()
   deletedAt: Date;
 
-  @OneToMany(() => ActionPlanActivity, (actionPlanActivity) => actionPlanActivity.actionPlan)
+  @OneToMany(
+    () => ActionPlanActivity,
+    (actionPlanActivity) => actionPlanActivity.actionPlan,
+  )
   actionPlanActivity: ActionPlanActivity[];
 
+  @ManyToOne(() => CaseType, (caseType) => caseType.actionPlan)
+  @JoinColumn({ name: 'plan_a_casetype_id_fk' })
+  caseType: CaseType;
 
+  @ManyToOne(() => EventType, (eventType) => eventType.actionPlan)
+  @JoinColumn({ name: 'plan_a_eventtype_id_fk' })
+  eventType: EventType;
 
+  @ManyToOne(() => Event, (event) => event.actionPlan)
+  @JoinColumn({ name: 'plan_a_event_id_fk' })
+  event: Event;
 
+  @ManyToOne(() => Service, (service) => service.actionPlan)
+  @JoinColumn({ name: 'plan_a_service_id_fk' })
+  service: Service;
 
+  @ManyToOne(() => Unit, (unit) => unit.actionPlan)
+  @JoinColumn({ name: 'plan_a_unit_id_fk' })
+  unit: Unit;
+
+  @ManyToOne(() => Priority, (priority) => priority.actionPlan)
+  @JoinColumn({ name: 'plan_a_priority_id_fk' })
+  priority: Priority;
 }

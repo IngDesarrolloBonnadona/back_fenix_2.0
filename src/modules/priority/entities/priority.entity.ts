@@ -1,3 +1,4 @@
+import { ActionPlan } from 'src/modules/action-plan/entities/action-plan.entity';
 import { CaseReportOriginal } from 'src/modules/case-report-original/entities/case-report-original.entity';
 import { CaseReportValidate } from 'src/modules/case-report-validate/entities/case-report-validate.entity';
 import { SeverityClasification } from 'src/modules/severity-clasification/entities/severity-clasification.entity';
@@ -60,4 +61,7 @@ export class Priority {
   )
   @JoinColumn({ name: 'prior_severityclasif_id_fk' })
   severityClasification: SeverityClasification;
+
+  @OneToMany(() => ActionPlan, (actionPlan) => actionPlan.priority)
+  actionPlan: ActionPlan[];
 }
