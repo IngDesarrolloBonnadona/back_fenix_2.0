@@ -25,6 +25,10 @@ export class CreateActionPlanDto {
 
   @IsNumber()
   @IsNotEmpty()
+  plan_a_position_id_fk: number;
+
+  @IsNumber()
+  @IsNotEmpty()
   plan_a_casetype_id_fk: number;
 
   @IsNumber()
