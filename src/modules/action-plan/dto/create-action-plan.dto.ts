@@ -1,4 +1,14 @@
-import { IsDateString, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  IsArray,
+  IsDateString,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
+import { ActionPlanActivity } from 'src/modules/action-plan-activities/entities/action-plan-activity.entity';
 
 export class CreateActionPlanDto {
   @IsNotEmpty()
@@ -48,4 +58,10 @@ export class CreateActionPlanDto {
   @IsNotEmpty()
   @IsDateString()
   plan_a_closingdate: Date;
+
+  @IsNotEmpty()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ActionPlanActivity)
+  actionPlanActivity: ActionPlanActivity[];
 }
