@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { ActionPlanService } from './action-plan.service';
-import { CreateActionPlanDto } from './dto/create-action-plan.dto';
-import { UpdateActionPlanDto } from './dto/update-action-plan.dto';
+import { ActionPlanService } from '../services/action-plan.service';
+import { CreateActionPlanDto } from '../dto/create-action-plan.dto';
+import { UpdateActionPlanDto } from '../dto/update-action-plan.dto';
 
 @Controller('action-plan')
 export class ActionPlanController {

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CreateActionPlanActivityDto } from './dto/create-action-plan-activity.dto';
-import { UpdateActionPlanActivityDto } from './dto/update-action-plan-activity.dto';
+import { CreateActionPlanActivityDto } from '../dto/create-action-plan-activity.dto';
+import { UpdateActionPlanActivityDto } from '../dto/update-action-plan-activity.dto';
 
 @Injectable()
 export class ActionPlanActivitiesService {

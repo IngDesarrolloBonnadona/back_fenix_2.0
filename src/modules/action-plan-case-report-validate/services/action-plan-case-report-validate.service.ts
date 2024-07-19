@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CreateActionPlanCaseReportValidateDto } from './dto/create-action-plan-case-report-validate.dto';
-import { UpdateActionPlanCaseReportValidateDto } from './dto/update-action-plan-case-report-validate.dto';
+import { CreateActionPlanCaseReportValidateDto } from '../dto/create-action-plan-case-report-validate.dto';
+import { UpdateActionPlanCaseReportValidateDto } from '../dto/update-action-plan-case-report-validate.dto';
 
 @Injectable()
 export class ActionPlanCaseReportValidateService {

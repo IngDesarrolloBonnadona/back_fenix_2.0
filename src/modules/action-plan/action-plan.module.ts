@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ActionPlanService } from './services/action-plan.service';
-import { ActionPlanController } from './action-plan.controller';
+import { ActionPlanController } from './controllers/action-plan.controller';
 
 @Module({
   controllers: [ActionPlanController],

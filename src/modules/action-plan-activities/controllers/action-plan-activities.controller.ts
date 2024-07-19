@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { ActionPlanActivitiesService } from './action-plan-activities.service';
-import { CreateActionPlanActivityDto } from './dto/create-action-plan-activity.dto';
-import { UpdateActionPlanActivityDto } from './dto/update-action-plan-activity.dto';
+import { ActionPlanActivitiesService } from '../services/action-plan-activities.service';
+import { CreateActionPlanActivityDto } from '../dto/create-action-plan-activity.dto';
+import { UpdateActionPlanActivityDto } from '../dto/update-action-plan-activity.dto';
 
 @Controller('action-plan-activities')
 export class ActionPlanActivitiesController {
