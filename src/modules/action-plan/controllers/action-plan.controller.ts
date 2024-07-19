@@ -1,34 +1,47 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { ActionPlanService } from '../services/action-plan.service';
 import { CreateActionPlanDto } from '../dto/create-action-plan.dto';
 import { UpdateActionPlanDto } from '../dto/update-action-plan.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('action-plan')
 @Controller('action-plan')
 export class ActionPlanController {
   constructor(private readonly actionPlanService: ActionPlanService) {}
 
-  @Post()
-  create(@Body() createActionPlanDto: CreateActionPlanDto) {
-    return this.actionPlanService.create(createActionPlanDto);
+  @Post('/createActionPlan/')
+  createActionPlan(@Body() createActionPlanDto: CreateActionPlanDto) {
+    return this.actionPlanService.createActionPlan(createActionPlanDto);
   }
 
-  @Get()
-  findAll() {
-    return this.actionPlanService.findAll();
+  @Get('/listActionPlan/')
+  listActionPlan() {
+    return this.actionPlanService.findAllActionPlans();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.actionPlanService.findOne(+id);
+  @Get('/findActionPlan/:id')
+  findActionPlan(@Param('id') id: number) {
+    return this.actionPlanService.findOneActionPlan(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateActionPlanDto: UpdateActionPlanDto) {
-    return this.actionPlanService.update(+id, updateActionPlanDto);
+  @Patch('updateActionPlan/:id/')
+  updateActionPlan(
+    @Param('id') id: number,
+    @Body() updateActionPlanDto: UpdateActionPlanDto,
+  ) {
+    return this.actionPlanService.updateActionPlan(id, updateActionPlanDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.actionPlanService.remove(+id);
+  @Delete('/deleteActionPlan/:id')
+  deleteActionPlan(@Param('id') id: number) {
+    return this.actionPlanService.deleteActionPlan(id);
   }
 }
