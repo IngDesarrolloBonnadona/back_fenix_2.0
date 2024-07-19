@@ -28,6 +28,7 @@ import { ReasonReturnCaseModule } from './modules/reason-return-case/reason-retu
 import { RolePermissionModule } from './modules/role-permission/role-permission.module';
 import { ObservationReturnCaseModule } from './modules/observation-return-case/observation-return-case.module';
 import { UserModule } from './modules_bonnadonahub/user/user.module';
+import { ActionPlanModule } from './modules/action-plan/action-plan.module';
 
 require('dotenv').config();
 
@@ -85,6 +86,7 @@ require('dotenv').config();
     RolePermissionModule,
     ObservationReturnCaseModule,
     UserModule,
+    ActionPlanModule,
   ],
   controllers: [],
   providers: [],
