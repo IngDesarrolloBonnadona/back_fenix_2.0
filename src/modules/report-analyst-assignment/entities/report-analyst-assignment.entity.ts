@@ -16,7 +16,7 @@ export class ReportAnalystAssignment {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ type: 'uuid' })
   ana_validatedcase_id_fk: string;
 
   @Column()

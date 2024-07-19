@@ -16,7 +16,7 @@ export class ActionPlanCaseReportValidate {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ type: 'uuid' })
   plan_av_validatedcase_id_fk: string;
 
   @Column()

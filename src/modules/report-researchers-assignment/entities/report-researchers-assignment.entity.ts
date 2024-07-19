@@ -16,7 +16,7 @@ export class ReportResearcherAssignment {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ type: 'uuid' })
   res_validatedcase_id_fk: string;
 
   @Column()
