@@ -42,9 +42,6 @@ export class ActionPlan {
   @Column()
   plan_a_event_id_fk: number;
 
-  @Column({ type: 'uuid' })
-  plan_a_validatedcase_id_fk: string;
-
   @Column()
   plan_a_service_id_fk: number;
 
