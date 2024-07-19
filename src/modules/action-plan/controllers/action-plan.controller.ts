@@ -17,9 +17,15 @@ import { ApiTags } from '@nestjs/swagger';
 export class ActionPlanController {
   constructor(private readonly actionPlanService: ActionPlanService) {}
 
-  @Post('/createActionPlan/')
-  createActionPlan(@Body() createActionPlanDto: CreateActionPlanDto) {
-    return this.actionPlanService.createActionPlan(createActionPlanDto);
+  @Post('/createActionPlan/:idCaseValidate')
+  createActionPlan(
+    @Body() createActionPlanDto: CreateActionPlanDto,
+    @Param('idCaseValidate') idCaseValidate: string,
+  ) {
+    return this.actionPlanService.createActionPlan(
+      createActionPlanDto,
+      idCaseValidate,
+    );
   }
 
   @Get('/listActionPlan/')
