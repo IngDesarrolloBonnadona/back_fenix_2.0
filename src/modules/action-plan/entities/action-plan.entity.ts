@@ -1,7 +1,9 @@
+import { ActionPlanActivity } from 'src/modules/action-plan-activities/entities/action-plan-activity.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -17,7 +19,7 @@ export class ActionPlan {
   plan_a_description: string;
 
   @Column({ type: 'varchar' })
-  plan_a_userresponsible_id_fk: string;
+  plan_a_userresponsible_id: string;
 
   @Column()
   plan_a_casetype_id_fk: number;
@@ -46,6 +48,9 @@ export class ActionPlan {
   @Column({ type: 'varchar' })
   plan_a_whydescription: string;
 
+  @Column({ type: 'date' })
+  plan_a_closingdate: Date;
+
   @Column({ default: true })
   plan_a_status: boolean;
 
@@ -57,4 +62,12 @@ export class ActionPlan {
 
   @DeleteDateColumn()
   deletedAt: Date;
+
+  @OneToMany(() => ActionPlanActivity, (actionPlanActivity) => actionPlanActivity.actionPlan)
+  actionPlanActivity: ActionPlanActivity[];
+
+
+
+
+
 }
