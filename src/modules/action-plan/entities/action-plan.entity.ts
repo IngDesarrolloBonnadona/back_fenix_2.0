@@ -4,6 +4,7 @@ import { CaseReportValidate } from 'src/modules/case-report-validate/entities/ca
 import { CaseType } from 'src/modules/case-type/entities/case-type.entity';
 import { EventType } from 'src/modules/event-type/entities/event-type.entity';
 import { Event } from 'src/modules/event/entities/event.entity';
+import { Position } from 'src/modules/position/entities/position.entity';
 import { Priority } from 'src/modules/priority/entities/priority.entity';
 import { Service } from 'src/modules/service/entities/service.entity';
 import { Unit } from 'src/modules/unit/entities/unit.entity';
@@ -32,6 +33,9 @@ export class ActionPlan {
 
   @Column({ type: 'varchar' })
   plan_a_userresponsible_id: string;
+
+  @Column()
+  plan_a_position_id_fk: number;
 
   @Column()
   plan_a_casetype_id_fk: number;
@@ -84,6 +88,10 @@ export class ActionPlan {
   )
   actionPlanCaseReportValidate: ActionPlanCaseReportValidate[];
 
+  @ManyToOne(() => Position, (position) => position.actionPlan)
+  @JoinColumn({ name: 'plan_a_position_id_fk' })
+  position: Position;
+
   @ManyToOne(() => CaseType, (caseType) => caseType.actionPlan)
   @JoinColumn({ name: 'plan_a_casetype_id_fk' })
   caseType: CaseType;
@@ -107,6 +115,4 @@ export class ActionPlan {
   @ManyToOne(() => Priority, (priority) => priority.actionPlan)
   @JoinColumn({ name: 'plan_a_priority_id_fk' })
   priority: Priority;
-
-
 }

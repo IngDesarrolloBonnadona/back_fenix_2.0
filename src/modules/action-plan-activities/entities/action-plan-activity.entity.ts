@@ -1,4 +1,5 @@
 import { ActionPlan } from 'src/modules/action-plan/entities/action-plan.entity';
+import { Position } from 'src/modules/position/entities/position.entity';
 import {
   Column,
   CreateDateColumn,
@@ -19,7 +20,10 @@ export class ActionPlanActivity {
   plan_aa_actionplan_id_fk: number;
 
   @Column()
-  plan_aa_userincharge_id_: number;
+  plan_aa_userincharge_id: number;
+
+  @Column()
+  plan_aa_position_id_fk: number;
 
   @Column({ type: 'date' })
   plan_aa_executiondate: Date;
@@ -48,4 +52,8 @@ export class ActionPlanActivity {
   )
   @JoinColumn({ name: 'plan_aa_actionplan_id_fk' })
   actionPlan: ActionPlan;
+
+  @ManyToOne(() => Position, (position) => position.actionPlanActivity)
+  @JoinColumn({ name: 'plan_aa_position_id_fk' })
+  position: Position;
 }
