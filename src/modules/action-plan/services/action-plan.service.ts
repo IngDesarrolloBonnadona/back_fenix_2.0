@@ -38,32 +38,35 @@ export class ActionPlanService {
     await queryRunner.startTransaction();
 
     try {
-      await this.caseTypeService.findOneCaseType(
-        createActionPlanDto.plan_a_casetype_id_fk,
-      );
+      await Promise.all([
+        this.caseTypeService.findOneCaseType(
+          createActionPlanDto.plan_a_casetype_id_fk,
+        ),
+        this.eventTypeService.findOneEventType(
+          createActionPlanDto.plan_a_eventtype_id_fk,
+        ),
+        this.eventService.findOneEvent(createActionPlanDto.plan_a_event_id_fk),
+        this.serviceService.findOneService(
+          createActionPlanDto.plan_a_service_id_fk,
+        ),
+        this.unitService.findOneUnit(createActionPlanDto.plan_a_unit_id_fk),
+        this.priorityService.findOnePriority(
+          createActionPlanDto.plan_a_priority_id_fk,
+        ),
+      ]);
 
-      await this.eventTypeService.findOneEventType(
-        createActionPlanDto.plan_a_eventtype_id_fk,
-      );
+      const actionPlan = this.actionPlanRepository.create(createActionPlanDto);
 
-      await this.eventService.findOneEvent(
-        createActionPlanDto.plan_a_event_id_fk,
-      );
-
-      await this.serviceService.findOneService(
-        createActionPlanDto.plan_a_service_id_fk,
-      );
-
-      await this.unitService.findOneUnit(createActionPlanDto.plan_a_unit_id_fk);
-
-      await this.priorityService.findOnePriority(
-        createActionPlanDto.plan_a_priority_id_fk,
-      );
+      await queryRunner.manager.save(actionPlan)
 
       
 
       await queryRunner.commitTransaction();
-      return;
+
+      return new HttpException(
+        `¡Has creado el plan de acción exitosamente.!`,
+        HttpStatus.CREATED,
+      );
     } catch (error) {
       await queryRunner.rollbackTransaction();
 
