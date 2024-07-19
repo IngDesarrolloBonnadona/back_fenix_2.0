@@ -20,7 +20,7 @@ export class ActionPlanActivity {
   plan_aa_actionplan_id_fk: number;
 
   @Column()
-  plan_aa_userincharge_id: number;
+  plan_aa_userincharge_id: string;
 
   @Column()
   plan_aa_position_id_fk: number;
