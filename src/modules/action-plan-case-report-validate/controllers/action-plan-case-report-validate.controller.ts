@@ -7,10 +7,10 @@ import { UpdateActionPlanCaseReportValidateDto } from '../dto/update-action-plan
 export class ActionPlanCaseReportValidateController {
   constructor(private readonly actionPlanCaseReportValidateService: ActionPlanCaseReportValidateService) {}
 
-  @Post()
-  create(@Body() createActionPlanCaseReportValidateDto: CreateActionPlanCaseReportValidateDto) {
-    return this.actionPlanCaseReportValidateService.create(createActionPlanCaseReportValidateDto);
-  }
+  // @Post()
+  // create(@Body() createActionPlanCaseReportValidateDto: CreateActionPlanCaseReportValidateDto) {
+  //   return this.actionPlanCaseReportValidateService.create(createActionPlanCaseReportValidateDto);
+  // }
 
   @Get()
   findAll() {

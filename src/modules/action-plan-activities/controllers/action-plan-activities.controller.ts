@@ -7,10 +7,10 @@ import { UpdateActionPlanActivityDto } from '../dto/update-action-plan-activity.
 export class ActionPlanActivitiesController {
   constructor(private readonly actionPlanActivitiesService: ActionPlanActivitiesService) {}
 
-  @Post()
-  create(@Body() createActionPlanActivityDto: CreateActionPlanActivityDto) {
-    return this.actionPlanActivitiesService.create(createActionPlanActivityDto);
-  }
+  // @Post()
+  // create(@Body() createActionPlanActivityDto: CreateActionPlanActivityDto) {
+  //   return this.actionPlanActivitiesService.create(createActionPlanActivityDto);
+  // }
 
   @Get()
   findAll() {

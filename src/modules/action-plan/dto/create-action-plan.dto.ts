@@ -8,7 +8,7 @@ import {
   IsString,
   ValidateNested,
 } from 'class-validator';
-import { ActionPlanActivity } from 'src/modules/action-plan-activities/entities/action-plan-activity.entity';
+import { CreateActionPlanActivityDto } from 'src/modules/action-plan-activities/dto/create-action-plan-activity.dto';
 
 export class CreateActionPlanDto {
   @IsNotEmpty()
@@ -22,6 +22,10 @@ export class CreateActionPlanDto {
   @IsNotEmpty()
   @IsString()
   plan_a_userresponsible_id: string;
+
+  @IsNotEmpty()
+  @IsString()
+  plan_a_nameresponsible: string;
 
   @IsNumber()
   @IsNotEmpty()
@@ -66,6 +70,6 @@ export class CreateActionPlanDto {
   @IsNotEmpty()
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => ActionPlanActivity)
-  actionPlanActivity: ActionPlanActivity[];
+  @Type(() => CreateActionPlanActivityDto)
+  actionPlanActivity: CreateActionPlanActivityDto[];
 }

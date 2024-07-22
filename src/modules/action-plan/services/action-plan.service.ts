@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateActionPlanDto } from '../dto/create-action-plan.dto';
 import { UpdateActionPlanDto } from '../dto/update-action-plan.dto';
 import { ActionPlan as ActionPlanEntity } from '../entities/action-plan.entity';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, FindOptionsWhere, Like, Repository } from 'typeorm';
 import { CaseReportValidateService } from 'src/modules/case-report-validate/services/case-report-validate.service';
 import { CaseTypeService } from 'src/modules/case-type/services/case-type.service';
 import { EventTypeService } from 'src/modules/event-type/services/event-type.service';
@@ -12,6 +12,9 @@ import { ServiceService } from 'src/modules/service/services/service.service';
 import { UnitService } from 'src/modules/unit/services/unit.service';
 import { PriorityService } from 'src/modules/priority/services/priority.service';
 import { PositionService } from 'src/modules/position/services/position.service';
+import { ActionPlanCaseReportValidateService } from 'src/modules/action-plan-case-report-validate/services/action-plan-case-report-validate.service';
+import { CreateActionPlanCaseReportValidateDto } from 'src/modules/action-plan-case-report-validate/dto/create-action-plan-case-report-validate.dto';
+import { ActionPlanActivitiesService } from 'src/modules/action-plan-activities/services/action-plan-activities.service';
 
 @Injectable()
 export class ActionPlanService {
@@ -28,6 +31,8 @@ export class ActionPlanService {
     private readonly unitService: UnitService,
     private readonly priorityService: PriorityService,
     private readonly prositionService: PositionService,
+    private readonly actionPlanCaseReportValidateService: ActionPlanCaseReportValidateService,
+    private readonly actionPlanActivityService: ActionPlanActivitiesService,
   ) {}
   async createActionPlan(
     createActionPlanDto: CreateActionPlanDto,
@@ -53,13 +58,43 @@ export class ActionPlanService {
         this.priorityService.findOnePriority(
           createActionPlanDto.plan_a_priority_id_fk,
         ),
+        this.caseReportValidateService.findOneReportValidate(idCaseValidate),
+        this.prositionService.findOnePosition(
+          createActionPlanDto.plan_a_position_id_fk,
+        ),
       ]);
 
+      const actionPlanExist = await this.actionPlanRepository.findOne({
+        where: {
+          plan_a_name: createActionPlanDto.plan_a_name,
+        },
+      });
+
+      if (actionPlanExist) {
+        throw new HttpException(
+          `El plan de acción ya existe.`,
+          HttpStatus.NO_CONTENT,
+        );
+      }
+
       const actionPlan = this.actionPlanRepository.create(createActionPlanDto);
+      await queryRunner.manager.save(actionPlan);
 
-      await queryRunner.manager.save(actionPlan)
+      const actionPlanRCV: CreateActionPlanCaseReportValidateDto = {
+        plan_av_actionplan_id_fk: actionPlan.id,
+        plan_av_validatedcase_id_fk: idCaseValidate,
+      };
 
-      
+      await this.actionPlanCaseReportValidateService.createActionPlanCaseReportValidateTransaction(
+        queryRunner,
+        actionPlanRCV,
+      );
+
+      await this.actionPlanActivityService.createActionPlanActivityTransaction(
+        createActionPlanDto.actionPlanActivity,
+        actionPlan.id,
+        queryRunner,
+      );
 
       await queryRunner.commitTransaction();
 
@@ -71,7 +106,7 @@ export class ActionPlanService {
       await queryRunner.rollbackTransaction();
 
       throw new HttpException(
-        `Un error a ocurrido: ${error.message}`,
+        `${error.message}`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     } finally {
@@ -79,8 +114,41 @@ export class ActionPlanService {
     }
   }
 
-  findAllActionPlans() {
-    return `This action returns all actionPlan`;
+  async summaryActionPlan(
+    actionPlanName?: string,
+    eventTypeId?: number,
+    eventId?: number,
+  ) {
+    const where: FindOptionsWhere<ActionPlanEntity> = {};
+    console.log(actionPlanName)
+    if (actionPlanName) {
+      where.plan_a_name = Like(`%${actionPlanName}%`);
+    }
+
+    if (eventTypeId) {
+      where.plan_a_eventtype_id_fk = eventTypeId;
+    }
+
+    if (eventId) {
+      where.plan_a_event_id_fk = eventId;
+    }
+
+    where.plan_a_status = true;
+
+    const actionPlan = await this.actionPlanRepository.find({
+      where,
+      order: {
+        createdAt: 'DESC',
+      },
+    })
+
+    if (actionPlan.length === 0) {
+      throw new HttpException(
+        'No hay planes de acción para mostrar.',
+        HttpStatus.NO_CONTENT,
+      );
+    }
+    return actionPlan;
   }
 
   findOneActionPlan(id: number) {

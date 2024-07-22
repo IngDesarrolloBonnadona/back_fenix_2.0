@@ -160,6 +160,7 @@ export class ReportAnalystAssignmentService {
       await this.severityClasificationRepository.findOne({
         where: {
           sev_c_name: severityClasification.SERIOUS_SEVERITY,
+          sev_c_status: true,
         },
       });
 
@@ -226,9 +227,9 @@ export class ReportAnalystAssignmentService {
         where: {
           ana_validatedcase_id_fk: idCaseReportValidate,
           ana_status: true,
-          ana_isreturned: false,
+          // ana_isreturned: false,
         },
-        // withDeleted: true,
+        withDeleted: true,
       });
 
     if (!reportAssignmentFind) {
@@ -264,8 +265,8 @@ export class ReportAnalystAssignmentService {
         ...updateReportAnalystAssignmentDto,
         ana_uservalidator_id: idValidator,
         ana_amountreturns: 0,
-        // deletedAt: null,
-        // ana_isreturned: false,
+        deletedAt: null,
+        ana_isreturned: false,
       },
     );
 
@@ -285,8 +286,8 @@ export class ReportAnalystAssignmentService {
       caseReportValidate.id,
       {
         val_cr_statusmovement_id_fk: movementReportFound.id,
-        // val_cr_status: true,
-        // deletedAt: null,
+        val_cr_status: true,
+        deletedAt: null,
       },
     );
 
@@ -370,6 +371,9 @@ export class ReportAnalystAssignmentService {
 
     reportAssignmentFind.ana_status = false;
     await this.reportAnalystAssignmentRepository.save(reportAssignmentFind);
+    await this.reportAnalystAssignmentRepository.softDelete(
+      reportAssignmentFind.id,
+    );
 
     const movementReportFound =
       await this.movementReportService.findOneMovementReportByName(
@@ -549,7 +553,7 @@ export class ReportAnalystAssignmentService {
 
     if (!findReportAnalystAssigned) {
       throw new HttpException(
-        'El caso asignado ya fue devuelto al validador.',
+        'No se encontró el reporte asignado a analista.',
         HttpStatus.NO_CONTENT,
       );
     }
@@ -568,7 +572,7 @@ export class ReportAnalystAssignmentService {
 
     if (updateStatusReturn.affected === 0) {
       throw new HttpException(
-        `No se pudo actualizar el estado.`,
+        `No se pudo actualizar el estado de retorno.`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
@@ -579,7 +583,7 @@ export class ReportAnalystAssignmentService {
 
     if (result.affected === 0) {
       return new HttpException(
-        `No se pudo eliminar el analista asignado.`,
+        `No se pudo anular el registro.`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }

@@ -700,6 +700,7 @@ export class CaseReportValidateService {
         unit: true,
         priority: true,
         characterizationCase: true,
+        actionPlanCaseReportValidate: true,
       },
       order: {
         createdAt: 'DESC',

@@ -122,6 +122,7 @@ export class ResearchersService {
       await this.severityClasificationRepository.findOne({
         where: {
           sev_c_name: severityClasification.SERIOUS_SEVERITY,
+          sev_c_status: true,
         },
       });
 
@@ -228,6 +229,10 @@ export class ResearchersService {
       .leftJoinAndSelect(
         'crv.reportAnalystAssignment',
         'reportAnalystAssignment',
+      )
+      .leftJoinAndSelect(
+        'crv.actionPlanCaseReportValidate',
+        'actionPlanCaseReportValidate',
       )
       .where('crv.val_cr_validated = :validated', { validated: false })
       .andWhere('crv.val_cr_status = :status', { status: true });
@@ -370,9 +375,9 @@ export class ResearchersService {
       where: {
         res_validatedcase_id_fk: idCaseReportValidate,
         res_status: true,
-        res_isreturned: false,
+        // res_isreturned: false,
       },
-      // withDeleted: true,
+      withDeleted: true,
     });
 
     if (!findResearcherAssigned) {
@@ -407,8 +412,8 @@ export class ResearchersService {
       caseReportValidate.id,
       {
         val_cr_statusmovement_id_fk: movementReportFound.id,
-        // val_cr_status: true,
-        // deletedAt: null,
+        val_cr_status: true,
+        deletedAt: null,
       },
     );
 
@@ -424,7 +429,8 @@ export class ResearchersService {
       {
         ...updateResearcherDto,
         res_useranalyst_id: idAnalyst,
-        // res_status: true,
+        deletedAt: null,
+        res_isreturned: false,
       },
     );
 
@@ -474,6 +480,7 @@ export class ResearchersService {
         where: {
           ana_validatedcase_id_fk: idCaseReportValidate,
           ana_status: true,
+          ana_isreturned: false,
         },
       });
 
@@ -491,14 +498,24 @@ export class ResearchersService {
     const updateStatusReturn = await this.researcherRepository.update(
       findReportResearcherAssigned.id,
       {
-        res_status: false,
         res_isreturned: true,
       },
     );
 
     if (updateStatusReturn.affected === 0) {
       throw new HttpException(
-        `No se pudo actualizar el estado.`,
+        `No se pudo actualizar el estado de retorno.`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    const result = await this.researcherRepository.softDelete(
+      findReportResearcherAssigned.id,
+    );
+
+    if (result.affected === 0) {
+      return new HttpException(
+        `No se pudo anular el registro.`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
