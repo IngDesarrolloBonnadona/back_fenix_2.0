@@ -73,7 +73,7 @@ export class ActionPlanService {
       if (actionPlanExist) {
         throw new HttpException(
           `El plan de acción ya existe.`,
-          HttpStatus.NOT_FOUND,
+          HttpStatus.NO_CONTENT,
         );
       }
 
@@ -106,7 +106,7 @@ export class ActionPlanService {
       await queryRunner.rollbackTransaction();
 
       throw new HttpException(
-        `Un error a ocurrido: ${error.message}`,
+        `${error.message}`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     } finally {
