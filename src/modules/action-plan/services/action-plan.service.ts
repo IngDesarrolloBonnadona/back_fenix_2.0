@@ -64,6 +64,19 @@ export class ActionPlanService {
         ),
       ]);
 
+      const actionPlanExist = await this.actionPlanRepository.findOne({
+        where: {
+          plan_a_name: createActionPlanDto.plan_a_name
+        },
+      });
+
+      if (actionPlanExist) {
+        throw new HttpException(
+          `El plan de acción ya existe.`,
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
       const actionPlan = this.actionPlanRepository.create(createActionPlanDto);
       await queryRunner.manager.save(actionPlan);
 
