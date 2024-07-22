@@ -89,7 +89,7 @@ export class EventTypeService {
       },
       relations: {
         event: true,
-        // caseType: true,
+        caseType: true,
         // caseReportValidate: true,
       },
       order: {
@@ -111,7 +111,7 @@ export class EventTypeService {
       where: { id, eve_t_status: true },
       relations: {
         event: true,
-        // caseType: true,
+        caseType: true,
         // caseReportValidate: true,
       },
     });
