@@ -60,12 +60,10 @@ export class CaseTypeService {
   async findOneCaseType(id: number) {
     const caseType = await this.caseTypeRepository.findOne({
       where: { id, cas_t_status: true },
-      // relations: {
-      //   eventType: {
-      //     event: true
-      //   },
+      relations: {
+        eventType: true
       //   caseReportValidate: true,
-      // },
+      },
     });
 
     if (!caseType) {
