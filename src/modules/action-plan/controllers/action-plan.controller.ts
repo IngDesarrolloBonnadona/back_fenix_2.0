@@ -6,11 +6,14 @@ import {
   Patch,
   Param,
   Delete,
+  HttpException,
+  Query,
 } from '@nestjs/common';
 import { ActionPlanService } from '../services/action-plan.service';
 import { CreateActionPlanDto } from '../dto/create-action-plan.dto';
 import { UpdateActionPlanDto } from '../dto/update-action-plan.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { ActionPlan } from '../entities/action-plan.entity';
 
 @ApiTags('action-plan')
 @Controller('action-plan')
@@ -21,16 +24,24 @@ export class ActionPlanController {
   createActionPlan(
     @Body() createActionPlanDto: CreateActionPlanDto,
     @Param('idCaseValidate') idCaseValidate: string,
-  ) {
+  ): Promise<HttpException> {
     return this.actionPlanService.createActionPlan(
       createActionPlanDto,
       idCaseValidate,
     );
   }
 
-  @Get('/listActionPlan/')
-  listActionPlan() {
-    return this.actionPlanService.findAllActionPlans();
+  @Get('/summaryActionPlan/')
+  summaryActionPlan(
+    @Query('actionPlanName') actionPlanName?: string,
+    @Query('eventTypeId') eventTypeId?: number,
+    @Query('eventId') eventId?: number,
+  ): Promise<ActionPlan[]> {
+    return this.actionPlanService.summaryActionPlan(
+      actionPlanName,
+      eventTypeId,
+      eventId
+    );
   }
 
   @Get('/findActionPlan/:id')

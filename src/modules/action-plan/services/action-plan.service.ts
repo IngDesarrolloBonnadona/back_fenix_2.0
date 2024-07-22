@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateActionPlanDto } from '../dto/create-action-plan.dto';
 import { UpdateActionPlanDto } from '../dto/update-action-plan.dto';
 import { ActionPlan as ActionPlanEntity } from '../entities/action-plan.entity';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, FindOptionsWhere, Like, Repository } from 'typeorm';
 import { CaseReportValidateService } from 'src/modules/case-report-validate/services/case-report-validate.service';
 import { CaseTypeService } from 'src/modules/case-type/services/case-type.service';
 import { EventTypeService } from 'src/modules/event-type/services/event-type.service';
@@ -66,7 +66,7 @@ export class ActionPlanService {
 
       const actionPlanExist = await this.actionPlanRepository.findOne({
         where: {
-          plan_a_name: createActionPlanDto.plan_a_name
+          plan_a_name: createActionPlanDto.plan_a_name,
         },
       });
 
@@ -114,8 +114,41 @@ export class ActionPlanService {
     }
   }
 
-  findAllActionPlans() {
-    return `This action returns all actionPlan`;
+  async summaryActionPlan(
+    actionPlanName?: string,
+    eventTypeId?: number,
+    eventId?: number,
+  ) {
+    const where: FindOptionsWhere<ActionPlanEntity> = {};
+    console.log(actionPlanName)
+    if (actionPlanName) {
+      where.plan_a_name = Like(`%${actionPlanName}%`);
+    }
+
+    if (eventTypeId) {
+      where.plan_a_eventtype_id_fk = eventTypeId;
+    }
+
+    if (eventId) {
+      where.plan_a_event_id_fk = eventId;
+    }
+
+    where.plan_a_status = true;
+
+    const actionPlan = await this.actionPlanRepository.find({
+      where,
+      order: {
+        createdAt: 'DESC',
+      },
+    })
+
+    if (actionPlan.length === 0) {
+      throw new HttpException(
+        'No hay planes de acción para mostrar.',
+        HttpStatus.NO_CONTENT,
+      );
+    }
+    return actionPlan;
   }
 
   findOneActionPlan(id: number) {
