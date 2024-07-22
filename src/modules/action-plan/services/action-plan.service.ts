@@ -12,6 +12,9 @@ import { ServiceService } from 'src/modules/service/services/service.service';
 import { UnitService } from 'src/modules/unit/services/unit.service';
 import { PriorityService } from 'src/modules/priority/services/priority.service';
 import { PositionService } from 'src/modules/position/services/position.service';
+import { ActionPlanCaseReportValidateService } from 'src/modules/action-plan-case-report-validate/services/action-plan-case-report-validate.service';
+import { CreateActionPlanCaseReportValidateDto } from 'src/modules/action-plan-case-report-validate/dto/create-action-plan-case-report-validate.dto';
+import { ActionPlanActivitiesService } from 'src/modules/action-plan-activities/services/action-plan-activities.service';
 
 @Injectable()
 export class ActionPlanService {
@@ -28,6 +31,8 @@ export class ActionPlanService {
     private readonly unitService: UnitService,
     private readonly priorityService: PriorityService,
     private readonly prositionService: PositionService,
+    private readonly actionPlanCaseReportValidateService: ActionPlanCaseReportValidateService,
+    private readonly actionPlanActivityService: ActionPlanActivitiesService,
   ) {}
   async createActionPlan(
     createActionPlanDto: CreateActionPlanDto,
@@ -53,13 +58,30 @@ export class ActionPlanService {
         this.priorityService.findOnePriority(
           createActionPlanDto.plan_a_priority_id_fk,
         ),
+        this.caseReportValidateService.findOneReportValidate(idCaseValidate),
+        this.prositionService.findOnePosition(
+          createActionPlanDto.plan_a_position_id_fk,
+        ),
       ]);
 
       const actionPlan = this.actionPlanRepository.create(createActionPlanDto);
+      await queryRunner.manager.save(actionPlan);
 
-      await queryRunner.manager.save(actionPlan)
+      const actionPlanRCV: CreateActionPlanCaseReportValidateDto = {
+        plan_av_actionplan_id_fk: actionPlan.id,
+        plan_av_validatedcase_id_fk: idCaseValidate,
+      };
 
-      
+      await this.actionPlanCaseReportValidateService.createActionPlanCaseReportValidateTransaction(
+        queryRunner,
+        actionPlanRCV,
+      );
+
+      await this.actionPlanActivityService.createActionPlanActivityTransaction(
+        createActionPlanDto.actionPlanActivity,
+        actionPlan.id,
+        queryRunner,
+      );
 
       await queryRunner.commitTransaction();
 
