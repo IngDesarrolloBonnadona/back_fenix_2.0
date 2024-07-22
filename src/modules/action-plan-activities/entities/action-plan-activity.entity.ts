@@ -19,7 +19,10 @@ export class ActionPlanActivity {
   @Column()
   plan_aa_actionplan_id_fk: number;
 
-  @Column()
+  @Column({ type: 'varchar' })
+  plan_aa_nameincharge: string;
+
+  @Column({ type: 'varchar' })
   plan_aa_userincharge_id: string;
 
   @Column()
