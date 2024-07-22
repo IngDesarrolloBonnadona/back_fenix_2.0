@@ -34,6 +34,9 @@ export class ActionPlan {
   @Column({ type: 'varchar' })
   plan_a_userresponsible_id: string;
 
+  @Column({ type: 'varchar' })
+  plan_a_nameresponsible: string;
+
   @Column()
   plan_a_position_id_fk: number;
 
