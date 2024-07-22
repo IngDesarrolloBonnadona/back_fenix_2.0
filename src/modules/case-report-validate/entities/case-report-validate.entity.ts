@@ -28,6 +28,7 @@ import { Priority } from 'src/modules/priority/entities/priority.entity';
 import { MovementReport } from 'src/modules/movement-report/entities/movement-report.entity';
 import { CharacterizationCase } from 'src/modules/characterization-cases/entities/characterization-case.entity';
 import { ObservationReturnCase } from 'src/modules/observation-return-case/entities/observation-return-case.entity';
+import { ActionPlanCaseReportValidate } from 'src/modules/action-plan-case-report-validate/entities/action-plan-case-report-validate.entity';
 
 @Entity({ name: 'fenix_case_report_validate' })
 export class CaseReportValidate {
@@ -246,4 +247,11 @@ export class CaseReportValidate {
     (observationReturnCase) => observationReturnCase.caseReportValidate,
   )
   observationReturnCase: ObservationReturnCase[];
+
+  @OneToMany(
+    () => ActionPlanCaseReportValidate,
+    (actionPlanCaseReportValidate) =>
+      actionPlanCaseReportValidate.caseReportValidate,
+  )
+  actionPlanCaseReportValidate: ActionPlanCaseReportValidate[];
 }

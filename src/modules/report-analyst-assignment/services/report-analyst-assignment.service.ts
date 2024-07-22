@@ -27,6 +27,7 @@ import { severityClasification } from 'src/enums/severity-clasif.enum';
 import { sentinelTime } from '../../../enums/sentinel-time.enum';
 import { QueryReportAnalystAssignmentDto } from '../dto/query-report-analyst-assignment.dto';
 import { MovementReportService } from 'src/modules/movement-report/services/movement-report.service';
+import { ReportResearcherAssignment as ReportResearcherAssignmentEntity } from 'src/modules/report-researchers-assignment/entities/report-researchers-assignment.entity';
 
 @Injectable()
 export class ReportAnalystAssignmentService {
@@ -43,6 +44,8 @@ export class ReportAnalystAssignmentService {
     private readonly caseTypeRepository: Repository<CaseTypeEntity>,
     @InjectRepository(SeverityClasificationEntity)
     private readonly severityClasificationRepository: Repository<SeverityClasificationEntity>,
+    @InjectRepository(ReportResearcherAssignmentEntity)
+    private readonly reportResearcherAssignmentRepository: Repository<ReportResearcherAssignmentEntity>,
 
     private readonly logService: LogService,
     private readonly positionService: PositionService,
@@ -225,6 +228,7 @@ export class ReportAnalystAssignmentService {
           ana_status: true,
           ana_isreturned: false,
         },
+        // withDeleted: true,
       });
 
     if (!reportAssignmentFind) {
@@ -234,30 +238,42 @@ export class ReportAnalystAssignmentService {
       );
     }
 
-    await this.caseReportValidateService.findOneReportValidate(
-      idCaseReportValidate,
-    );
+    const caseReportValidate = await this.caseReportValidateRepository.findOne({
+      where: {
+        id: idCaseReportValidate,
+        val_cr_validated: false,
+        val_cr_status: true,
+      },
+      withDeleted: true,
+    });
+
+    if (!caseReportValidate) {
+      throw new HttpException(
+        'No se encontró el reporte.',
+        HttpStatus.NO_CONTENT,
+      );
+    }
 
     await this.positionService.findOnePosition(
       updateReportAnalystAssignmentDto.ana_position_id_fk,
     );
 
-    if (reportAssignmentFind) {
-      const result = await this.reportAnalystAssignmentRepository.update(
-        reportAssignmentFind.id,
-        {
-          ...updateReportAnalystAssignmentDto,
-          ana_uservalidator_id: idValidator,
-          ana_amountreturns: 0,
-        },
-      );
+    const result = await this.reportAnalystAssignmentRepository.update(
+      reportAssignmentFind.id,
+      {
+        ...updateReportAnalystAssignmentDto,
+        ana_uservalidator_id: idValidator,
+        ana_amountreturns: 0,
+        // deletedAt: null,
+        // ana_isreturned: false,
+      },
+    );
 
-      if (result.affected === 0) {
-        return new HttpException(
-          `No se pudo reasignar el analista`,
-          HttpStatus.INTERNAL_SERVER_ERROR,
-        );
-      }
+    if (result.affected === 0) {
+      return new HttpException(
+        `No se pudo reasignar el analista`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
 
     const movementReportFound =
@@ -266,9 +282,11 @@ export class ReportAnalystAssignmentService {
       );
 
     const updateStatusMovement = await this.caseReportValidateRepository.update(
-      idCaseReportValidate,
+      caseReportValidate.id,
       {
         val_cr_statusmovement_id_fk: movementReportFound.id,
+        // val_cr_status: true,
+        // deletedAt: null,
       },
     );
 
@@ -412,7 +430,8 @@ export class ReportAnalystAssignmentService {
         'crv.reportResearcherAssignment',
         'reportResearcherAssignment',
       )
-      .where('crv.val_cr_validated = :validated', { validated: false });
+      .where('crv.val_cr_validated = :validated', { validated: false })
+      .andWhere('crv.val_cr_status = :status', { status: true });
 
     if (filingNumber) {
       query.andWhere('crv.val_cr_filingnumber LIKE :filingNumber', {
@@ -530,7 +549,7 @@ export class ReportAnalystAssignmentService {
 
     if (!findReportAnalystAssigned) {
       throw new HttpException(
-        'No se encontró el reporte asignado a analista.',
+        'El caso asignado ya fue devuelto al validador.',
         HttpStatus.NO_CONTENT,
       );
     }
@@ -543,7 +562,6 @@ export class ReportAnalystAssignmentService {
       await this.reportAnalystAssignmentRepository.update(
         findReportAnalystAssigned.id,
         {
-          ana_status: false,
           ana_isreturned: true,
         },
       );
@@ -553,6 +571,39 @@ export class ReportAnalystAssignmentService {
         `No se pudo actualizar el estado.`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
+    }
+
+    const result = await this.reportAnalystAssignmentRepository.softDelete(
+      findReportAnalystAssigned.id,
+    );
+
+    if (result.affected === 0) {
+      return new HttpException(
+        `No se pudo eliminar el analista asignado.`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    const findResearcherAssigned =
+      await this.reportResearcherAssignmentRepository.findOne({
+        where: {
+          res_validatedcase_id_fk: idCaseReportValidate,
+          res_status: true,
+          res_isreturned: false,
+        },
+      });
+
+    if (findResearcherAssigned) {
+      const result = await this.reportResearcherAssignmentRepository.softDelete(
+        findResearcherAssigned.id,
+      );
+
+      if (result.affected === 0) {
+        return new HttpException(
+          `No se pudo eliminar el investigador`,
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
     }
 
     const movementReportFound =
@@ -595,7 +646,7 @@ export class ReportAnalystAssignmentService {
 
     if (result.affected === 0) {
       return new HttpException(
-        `No se pudo eliminar el analista`,
+        `No se pudo eliminar el analista asignado.`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }

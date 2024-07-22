@@ -1,8 +1,8 @@
-import { IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { IsNotEmpty, IsNumber, IsString, IsUUID } from "class-validator";
 
 export class CreateSynergyDto {
     @IsNotEmpty()
-    @IsString()
+    @IsUUID()
     syn_validatedcase_id_fk: string;
 
     // @IsNotEmpty()

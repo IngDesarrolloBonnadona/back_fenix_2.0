@@ -1,3 +1,4 @@
+import { ActionPlan } from 'src/modules/action-plan/entities/action-plan.entity';
 import { CaseReportOriginal } from 'src/modules/case-report-original/entities/case-report-original.entity';
 import { CaseReportValidate } from 'src/modules/case-report-validate/entities/case-report-validate.entity';
 import { Unit } from 'src/modules/unit/entities/unit.entity';
@@ -48,4 +49,7 @@ export class Service {
     (caseReportValidate) => caseReportValidate.service,
   )
   caseReportValidate: CaseReportValidate[];
+
+  @OneToMany(() => ActionPlan, (actionPlan) => actionPlan.service)
+  actionPlan: ActionPlan[];
 }

@@ -1,8 +1,8 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString, IsUUID } from 'class-validator';
 
 export class CreateReportResearcherAssignmentDto {
   @IsNotEmpty()
-  @IsString()
+  @IsUUID()
   res_validatedcase_id_fk: string;
 
   @IsNotEmpty()

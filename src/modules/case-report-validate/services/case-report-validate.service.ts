@@ -110,6 +110,7 @@ export class CaseReportValidateService {
         val_cr_event_id_fk: similarCaseReportValidate.val_cr_event_id_fk,
         val_cr_eventtype_id_fk:
           similarCaseReportValidate.val_cr_eventtype_id_fk,
+        val_cr_status: true,
         val_cr_validated: false,
       },
       order: {
@@ -434,6 +435,7 @@ export class CaseReportValidateService {
     }
 
     where.val_cr_validated = false;
+    where.val_cr_status = true;
 
     const caseReportsValidate = await this.caseReportValidateRepository.find({
       where,
@@ -445,7 +447,7 @@ export class CaseReportValidateService {
         priority: true,
         movementReport: true,
       },
-      withDeleted: true,
+      // withDeleted: true,
       order: {
         createdAt: 'DESC',
       },
@@ -499,6 +501,7 @@ export class CaseReportValidateService {
     }
 
     where.val_cr_validated = false;
+    where.val_cr_status = true;
 
     const caseReportsValidate = await this.caseReportValidateRepository.find({
       where,
@@ -508,7 +511,7 @@ export class CaseReportValidateService {
         priority: true,
         movementReport: true,
       },
-      withDeleted: true,
+      // withDeleted: true,
       order: {
         createdAt: 'DESC',
       },
@@ -605,7 +608,7 @@ export class CaseReportValidateService {
 
   async findAllReportsValidate(): Promise<CaseReportValidateEntity[]> {
     const caseReportValidates = await this.caseReportValidateRepository.find({
-      where: { val_cr_validated: false },
+      where: { val_cr_validated: false, val_cr_status: true },
       relations: {
         movementReport: true,
         reportAnalystAssignment: true,
@@ -641,7 +644,7 @@ export class CaseReportValidateService {
 
   async findOneReportValidate(id: string): Promise<CaseReportValidateEntity> {
     const caseReportValidate = await this.caseReportValidateRepository.findOne({
-      where: { id, val_cr_validated: false },
+      where: { id, val_cr_validated: false, val_cr_status: true },
       relations: {
         movementReport: true,
         reportAnalystAssignment: true,
@@ -679,6 +682,7 @@ export class CaseReportValidateService {
       where: {
         val_cr_filingnumber: Like(`%${consecutive}%`),
         val_cr_validated: false,
+        val_cr_status: true,
       },
       relations: {
         movementReport: true,
@@ -747,7 +751,6 @@ export class CaseReportValidateService {
       caseReportValidate.id,
       {
         val_cr_statusmovement_id_fk: movementReportFound.id,
-        val_cr_status: false,
       },
     );
 

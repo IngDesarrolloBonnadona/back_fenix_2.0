@@ -16,6 +16,7 @@ import { SeverityClasification } from '../severity-clasification/entities/severi
 import { MovementReportModule } from '../movement-report/movement-report.module';
 import { PermissionGuard } from 'src/guards/permission.guard';
 import { UserModule } from 'src/modules_bonnadonahub/user/user.module';
+import { ReportResearcherAssignment } from '../report-researchers-assignment/entities/report-researchers-assignment.entity';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { UserModule } from 'src/modules_bonnadonahub/user/user.module';
       RoleResponseTime,
       CaseType,
       SeverityClasification,
+      ReportResearcherAssignment,
     ]),
     LogModule,
     PositionModule,

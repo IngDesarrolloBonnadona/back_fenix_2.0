@@ -1,3 +1,5 @@
+import { ActionPlanActivity } from 'src/modules/action-plan-activities/entities/action-plan-activity.entity';
+import { ActionPlan } from 'src/modules/action-plan/entities/action-plan.entity';
 import { ReportAnalystAssignment } from 'src/modules/report-analyst-assignment/entities/report-analyst-assignment.entity';
 import {
   Column,
@@ -40,4 +42,10 @@ export class Position {
     (reportAnalystAssignment) => reportAnalystAssignment.position,
   )
   reportAnalystAssignment: ReportAnalystAssignment[];
+
+  @OneToMany(() => ActionPlan, (actionPlan) => actionPlan.position)
+  actionPlan: ActionPlan[];
+
+  @OneToMany(() => ActionPlanActivity, (actionPlanActivity) => actionPlanActivity.position)
+  actionPlanActivity: ActionPlanActivity[];
 }

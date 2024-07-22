@@ -1,8 +1,8 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID } from 'class-validator';
 
 export class CreateReportAnalystAssignmentDto {
   @IsNotEmpty()
-  @IsString()
+  @IsUUID()
   ana_validatedcase_id_fk: string;
 
   @IsNotEmpty()

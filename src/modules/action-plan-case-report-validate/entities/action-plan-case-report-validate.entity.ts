@@ -1,5 +1,5 @@
+import { ActionPlan } from 'src/modules/action-plan/entities/action-plan.entity';
 import { CaseReportValidate } from 'src/modules/case-report-validate/entities/case-report-validate.entity';
-import { ReportAnalystAssignment } from 'src/modules/report-analyst-assignment/entities/report-analyst-assignment.entity';
 import {
   Column,
   CreateDateColumn,
@@ -11,28 +11,19 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity({ name: 'fenix_report_researcher_assignment' })
-export class ReportResearcherAssignment {
+@Entity({ name: 'fenix_action_plan_case_report_validate'})
+export class ActionPlanCaseReportValidate {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ type: 'uuid' })
-  res_validatedcase_id_fk: string;
+  plan_av_validatedcase_id_fk: string;
 
   @Column()
-  res_useranalyst_id: number;
-
-  @Column()
-  res_userresearch_id: number;
-
-  @Column()
-  res_days: number;
-
-  @Column({ default: false })
-  res_isreturned: boolean;
+  plan_av_actionplan_id_fk: number;
 
   @Column({ default: true })
-  res_status: boolean;
+  plan_av_status: boolean;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -44,9 +35,16 @@ export class ReportResearcherAssignment {
   deletedAt: Date;
 
   @ManyToOne(
-    () => CaseReportValidate,
-    (caseReportValidate) => caseReportValidate.reportResearcherAssignment,
+    () => ActionPlan,
+    (actionPlan) => actionPlan.actionPlanCaseReportValidate,
   )
-  @JoinColumn({ name: 'res_validatedcase_id_fk' })
+  @JoinColumn({ name: 'plan_av_actionplan_id_fk' })
+  actionPlan: ActionPlan;
+
+  @ManyToOne(
+    () => CaseReportValidate,
+    (caseReportValidate) => caseReportValidate.actionPlanCaseReportValidate,
+  )
+  @JoinColumn({ name: 'plan_av_validatedcase_id_fk' })
   caseReportValidate: CaseReportValidate;
 }
