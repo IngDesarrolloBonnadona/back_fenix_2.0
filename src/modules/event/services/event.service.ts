@@ -25,6 +25,7 @@ export class EventService {
       where: {
         eve_name: createEventDto.eve_name,
         eve_eventtype_id_fk: createEventDto.eve_eventtype_id_fk,
+        eve_unit_id_fk: createEventDto.eve_unit_id_fk,
         eve_status: true,
       },
     });
@@ -57,6 +58,7 @@ export class EventService {
         where: {
           eve_name: event.eve_name,
           eve_eventtype_id_fk: event.eve_eventtype_id_fk,
+          eve_unit_id_fk: event.eve_unit_id_fk,
           eve_status: true,
         },
       });
@@ -64,7 +66,7 @@ export class EventService {
       if (findEvent) {
         throw new HttpException(
           `El suceso ${event.eve_name} ya existe en el tipo de suceso seleccionado.`,
-          HttpStatus.NO_CONTENT,
+          HttpStatus.NOT_FOUND,
         );
       }
 
@@ -123,9 +125,15 @@ export class EventService {
     return event;
   }
 
-  async findEventByEventTypeId(eventTypeId: number) {
+  async findEventByEventTypeAndIdUnitId(eventTypeId: number, unitId?: number) {
+    const where: any = { eve_eventtype_id_fk: eventTypeId };
+
+    if (unitId !== undefined) {
+      where.eve_unit_id_fk = unitId;
+    }
+
     const events = await this.eventRepository.find({
-      where: { eve_eventtype_id_fk: eventTypeId },
+      where,
       order: {
         eve_name: 'ASC',
       },

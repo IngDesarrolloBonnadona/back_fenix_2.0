@@ -1,4 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus, Put, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  HttpException,
+  HttpStatus,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import { EventService } from '../services/event.service';
 import { CreateEventDto } from '../dto/create-event.dto';
 import { UpdateEventDto } from '../dto/update-event.dto';
@@ -20,8 +32,8 @@ export class EventController {
     return this.eventService.createEvent(createEventDto);
   }
 
-  @Post('/createEventsArray') //es para cargar datos masivos 
-  createEventsArray(@Body() createEventDto: CreateEventDto[]){
+  @Post('/createEventsArray') //es para cargar datos masivos
+  createEventsArray(@Body() createEventDto: CreateEventDto[]) {
     return this.eventService.createEventsArray(createEventDto);
   }
 
@@ -35,14 +47,24 @@ export class EventController {
     return this.eventService.findOneEvent(id);
   }
 
-  @Get('/findEventsByEventTypeId/:eventTypeId/')
-  findEventsByEventTypeId(@Param('eventTypeId') eventTypeId: number): Promise<Event[]> {
-    return this.eventService.findEventByEventTypeId(eventTypeId );
+  @Get('/findEventsByEventTypeIdAndUnitId/:eventTypeId/:unitId?/')
+  findEventsByEventTypeIdAndUnitId(
+    @Param('eventTypeId') eventTypeId: number,
+    @Param('unitId') unitId?: string,
+  ): Promise<Event[]> {
+    const unitIdNumber = unitId ? parseInt(unitId, 10) : undefined;
+    return this.eventService.findEventByEventTypeAndIdUnitId(
+      eventTypeId,
+      unitIdNumber,
+    );
   }
 
   @Patch('/updateEvent/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  updateEvent(@Param('id') id: number, @Body() updateEventDto: UpdateEventDto): Promise<HttpException> {
+  updateEvent(
+    @Param('id') id: number,
+    @Body() updateEventDto: UpdateEventDto,
+  ): Promise<HttpException> {
     return this.eventService.updateEvent(id, updateEventDto);
   }
 
