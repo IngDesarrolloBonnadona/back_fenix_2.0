@@ -47,10 +47,11 @@ export class UnitService {
       where: {
         unit_status: true,
       },
-      // relations: {
-      //   service: true,
-      //   caseReportValidate: true,
-      // },
+      relations: {
+        event: true
+        // service: true,
+        // caseReportValidate: true,
+      },
       order: {
         unit_name: 'ASC',
       },
@@ -69,10 +70,11 @@ export class UnitService {
   async findOneUnit(id: number) {
     const unit = await this.unitRepository.findOne({
       where: { id, unit_status: true },
-      // relations: {
+      relations: {
+        event: true
         // service: true,
         //   caseReportValidate: true,
-      // },
+      },
     });
 
     if (!unit) {

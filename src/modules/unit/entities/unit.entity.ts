@@ -1,6 +1,7 @@
 import { ActionPlan } from 'src/modules/action-plan/entities/action-plan.entity';
 import { CaseReportOriginal } from 'src/modules/case-report-original/entities/case-report-original.entity';
 import { CaseReportValidate } from 'src/modules/case-report-validate/entities/case-report-validate.entity';
+import { Event } from 'src/modules/event/entities/event.entity';
 import { Service } from 'src/modules/service/entities/service.entity';
 import {
   Column,
@@ -61,4 +62,7 @@ export class Unit {
 
   @OneToMany(() => ActionPlan, (actionPlan) => actionPlan.unit)
   actionPlan: ActionPlan[];
+
+  @OneToMany(() => Event, (event) => event.unit)
+  event: Event[];
 }

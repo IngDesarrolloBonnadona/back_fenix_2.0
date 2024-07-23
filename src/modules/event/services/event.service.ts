@@ -85,10 +85,10 @@ export class EventService {
       where: {
         eve_status: true,
       },
-      relations: {
-        eventType: true,
-        // caseReportValidate: true,
-      },
+      // relations: {
+      //   eventType: true,
+      //   caseReportValidate: true,
+      // },
       order: {
         eve_name: 'ASC',
       },
@@ -107,10 +107,10 @@ export class EventService {
   async findOneEvent(id: number) {
     const event = await this.eventRepository.findOne({
       where: { id, eve_status: true },
-      relations: {
-        eventType: true,
-        // caseReportValidate: true,
-      },
+      // relations: {
+      //   eventType: true,
+      //   caseReportValidate: true,
+      // },
     });
 
     if (!event) {
