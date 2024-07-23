@@ -77,6 +77,10 @@ export class ActionPlanService {
         );
       }
 
+      await this.actionPlanCaseReportValidateService.findOneActionPlanCaseReportValidateByIdCase(
+        idCaseValidate,
+      );
+
       const actionPlan = this.actionPlanRepository.create(createActionPlanDto);
       await queryRunner.manager.save(actionPlan);
 
@@ -140,7 +144,7 @@ export class ActionPlanService {
       order: {
         createdAt: 'DESC',
       },
-    })
+    });
 
     if (actionPlan.length === 0) {
       throw new HttpException(

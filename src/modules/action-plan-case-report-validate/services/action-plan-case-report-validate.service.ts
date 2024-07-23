@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateActionPlanCaseReportValidateDto } from '../dto/create-action-plan-case-report-validate.dto';
 import { UpdateActionPlanCaseReportValidateDto } from '../dto/update-action-plan-case-report-validate.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { QueryRunner, Repository } from 'typeorm';
-import { ActionPlanCaseReportValidate as ActionPlanCaseReportValidateEntity} from '../entities/action-plan-case-report-validate.entity';
+import { ActionPlanCaseReportValidate as ActionPlanCaseReportValidateEntity } from '../entities/action-plan-case-report-validate.entity';
 
 @Injectable()
 export class ActionPlanCaseReportValidateService {
@@ -16,18 +16,32 @@ export class ActionPlanCaseReportValidateService {
     actionPlanCaseReportValidate: CreateActionPlanCaseReportValidateDto,
   ) {
     const actionPlanCRV = this.actionPlanCaseReportValidateRepository.create(
-      actionPlanCaseReportValidate
-    )
+      actionPlanCaseReportValidate,
+    );
 
     return await queryRunner.manager.save(actionPlanCRV);
   }
 
-  findAll() {
-    return `This action returns all actionPlanCaseReportValidate`;
+  async findOneActionPlanCaseReportValidateByIdCase(idCase: string) {
+    const actionPlanCRV =
+      await this.actionPlanCaseReportValidateRepository.findOne({
+        where: {
+          plan_av_validatedcase_id_fk: idCase,
+        },
+      });
+
+    if (actionPlanCRV) {
+      throw new HttpException(
+        'El caso ya se encuentra en investigación.',
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    return actionPlanCRV;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} actionPlanCaseReportValidate`;
+  findAll() {
+    return `This action returns all actionPlanCaseReportValidate`;
   }
 
   update(
