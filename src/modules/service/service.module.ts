@@ -5,9 +5,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Service } from './entities/service.entity';
 import { PermissionGuard } from 'src/guards/permission.guard';
 import { UserModule } from 'src/modules_bonnadonahub/user/user.module';
+import { UnitModule } from '../unit/unit.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Service]), UserModule],
+  imports: [TypeOrmModule.forFeature([Service]), UnitModule, UserModule],
   controllers: [ServiceController],
   providers: [ServiceService, PermissionGuard],
   exports: [ServiceService],

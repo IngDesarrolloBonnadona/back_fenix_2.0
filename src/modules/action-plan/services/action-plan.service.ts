@@ -77,6 +77,10 @@ export class ActionPlanService {
         );
       }
 
+      await this.actionPlanCaseReportValidateService.findOneActionPlanCaseReportValidateByIdCase(
+        idCaseValidate,
+      );
+
       const actionPlan = this.actionPlanRepository.create(createActionPlanDto);
       await queryRunner.manager.save(actionPlan);
 
@@ -120,7 +124,7 @@ export class ActionPlanService {
     eventId?: number,
   ) {
     const where: FindOptionsWhere<ActionPlanEntity> = {};
-    console.log(actionPlanName)
+
     if (actionPlanName) {
       where.plan_a_name = Like(`%${actionPlanName}%`);
     }
@@ -140,7 +144,7 @@ export class ActionPlanService {
       order: {
         createdAt: 'DESC',
       },
-    })
+    });
 
     if (actionPlan.length === 0) {
       throw new HttpException(

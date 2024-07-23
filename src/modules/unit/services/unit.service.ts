@@ -9,34 +9,29 @@ import { UpdateUnitDto } from '../dto/update-unit.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Unit as UnitEntity } from '../entities/unit.entity';
 import { Repository } from 'typeorm';
-import { ServiceService } from 'src/modules/service/services/service.service';
+// import { ServiceService } from 'src/modules/service/services/service.service';
 
 @Injectable()
 export class UnitService {
   constructor(
     @InjectRepository(UnitEntity)
     private readonly unitRepository: Repository<UnitEntity>,
-
-    private readonly serviceService: ServiceService,
   ) {}
 
   async createUnit(createUnitDto: CreateUnitDto) {
     const FindUnit = await this.unitRepository.findOne({
       where: {
         unit_name: createUnitDto.unit_name,
-        unit_service_id_fk: createUnitDto.unit_service_id_fk,
+        // unit_service_id_fk: createUnitDto.unit_service_id_fk,
         unit_status: true,
       },
     });
 
-    await this.serviceService.findOneService(createUnitDto.unit_service_id_fk);
-
     if (FindUnit) {
-      throw new HttpException(
-        'La unidad ya existe con el servicio seleccionado.',
-        HttpStatus.CONFLICT,
-      );
+      throw new HttpException('La unidad ya existe.', HttpStatus.CONFLICT);
     }
+
+    // await this.serviceService.findOneService(createUnitDto.unit_service_id_fk);
 
     const unit = this.unitRepository.create(createUnitDto);
     await this.unitRepository.save(unit);
@@ -52,10 +47,11 @@ export class UnitService {
       where: {
         unit_status: true,
       },
-      // relations: {
-      //   service: true,
-      //   caseReportValidate: true,
-      // },
+      relations: {
+        event: true
+        // service: true,
+        // caseReportValidate: true,
+      },
       order: {
         unit_name: 'ASC',
       },
@@ -74,10 +70,11 @@ export class UnitService {
   async findOneUnit(id: number) {
     const unit = await this.unitRepository.findOne({
       where: { id, unit_status: true },
-      // relations: {
-      //   service: true,
-      //   caseReportValidate: true,
-      // },
+      relations: {
+        event: true
+        // service: true,
+        //   caseReportValidate: true,
+      },
     });
 
     if (!unit) {
@@ -90,31 +87,31 @@ export class UnitService {
     return unit;
   }
 
-  async findUnitByService(serviceId: number) {
-    const unitByService = await this.unitRepository.find({
-      where: {
-        unit_service_id_fk: serviceId,
-        unit_status: true,
-      },
-      order: {
-        unit_name: 'ASC',
-      },
-    });
+  // async findUnitByService(serviceId: number) {
+  //   const unitByService = await this.unitRepository.find({
+  //     where: {
+  //       unit_service_id_fk: serviceId,
+  //       unit_status: true,
+  //     },
+  //     order: {
+  //       unit_name: 'ASC',
+  //     },
+  //   });
 
-    if (!unitByService) {
-      throw new HttpException(
-        'No se encontró la unidad relacionado al servicio.',
-        HttpStatus.CONFLICT,
-      );
-    }
+  //   if (!unitByService) {
+  //     throw new HttpException(
+  //       'No se encontró la unidad relacionado al servicio.',
+  //       HttpStatus.CONFLICT,
+  //     );
+  //   }
 
-    return unitByService;
-  }
+  //   return unitByService;
+  // }
 
   async updateUnit(id: number, updateUnitDto: UpdateUnitDto) {
     const unit = await this.findOneUnit(id);
 
-    await this.serviceService.findOneService(updateUnitDto.unit_service_id_fk);
+    // await this.serviceService.findOneService(updateUnitDto.unit_service_id_fk);
 
     const result = await this.unitRepository.update(unit.id, updateUnitDto);
 

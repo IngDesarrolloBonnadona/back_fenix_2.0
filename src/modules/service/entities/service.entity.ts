@@ -7,6 +7,8 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -16,6 +18,9 @@ import {
 export class Service {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column()
+  serv_unit_id_fk: number;
 
   @Column({ type: 'varchar' })
   serv_name: string;
@@ -35,8 +40,12 @@ export class Service {
   @DeleteDateColumn()
   deletedAt: Date;
 
-  @OneToMany(() => Unit, (unit) => unit.service)
-  unit: Unit[];
+  @ManyToOne(() => Unit, (unit) => unit.service)
+  @JoinColumn({ name: 'serv_unit_id_fk' })
+  unit: Unit;
+
+  // @OneToMany(() => Unit, (unit) => unit.service)
+  // unit: Unit[];
 
   @OneToMany(
     () => CaseReportOriginal,

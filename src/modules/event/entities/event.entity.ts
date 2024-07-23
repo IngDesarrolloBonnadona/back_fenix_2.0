@@ -2,6 +2,7 @@ import { ActionPlan } from 'src/modules/action-plan/entities/action-plan.entity'
 import { CaseReportOriginal } from 'src/modules/case-report-original/entities/case-report-original.entity';
 import { CaseReportValidate } from 'src/modules/case-report-validate/entities/case-report-validate.entity';
 import { EventType } from 'src/modules/event-type/entities/event-type.entity';
+import { Unit } from 'src/modules/unit/entities/unit.entity';
 import {
   Column,
   CreateDateColumn,
@@ -21,6 +22,9 @@ export class Event {
 
   @Column()
   eve_eventtype_id_fk: number;
+
+  @Column({ nullable: true })
+  eve_unit_id_fk: number;
 
   @Column({ type: 'varchar' })
   eve_name: string;
@@ -58,4 +62,8 @@ export class Event {
 
   @OneToMany(() => ActionPlan, (actionPlan) => actionPlan.event)
   actionPlan: ActionPlan[];
+
+  @ManyToOne(() => Unit, (unit) => unit.event)
+  @JoinColumn({ name: 'eve_unit_id_fk' })
+  unit: Unit;
 }
