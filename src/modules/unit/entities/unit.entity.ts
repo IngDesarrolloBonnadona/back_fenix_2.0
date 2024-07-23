@@ -19,8 +19,8 @@ export class Unit {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  unit_service_id_fk: number;
+  // @Column()
+  // unit_service_id_fk: number;
 
   @Column({ type: 'varchar' })
   unit_name: string;
@@ -40,9 +40,12 @@ export class Unit {
   @DeleteDateColumn()
   deletedAt: Date;
 
-  @ManyToOne(() => Service, (service) => service.unit)
-  @JoinColumn({ name: 'unit_service_id_fk' })
-  service: Service;
+  // @ManyToOne(() => Service, (service) => service.unit)
+  // @JoinColumn({ name: 'unit_service_id_fk' })
+  // service: Service;
+
+  @OneToMany(() => Service, (service) => service.unit)
+  service: Service[];
 
   @OneToMany(
     () => CaseReportOriginal,

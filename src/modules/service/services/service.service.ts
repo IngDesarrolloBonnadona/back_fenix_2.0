@@ -9,25 +9,31 @@ import { UpdateServiceDto } from '../dto/update-service.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Service, Service as ServiceEntity } from '../entities/service.entity';
 import { Repository } from 'typeorm';
+import { UnitService } from 'src/modules/unit/services/unit.service';
 
 @Injectable()
 export class ServiceService {
   constructor(
     @InjectRepository(ServiceEntity)
     private readonly serviceRepository: Repository<ServiceEntity>,
+
+    private readonly unitService: UnitService,
   ) {}
 
   async createService(createServiceDto: CreateServiceDto) {
     const FindService = await this.serviceRepository.findOne({
       where: {
         serv_name: createServiceDto.serv_name,
+        serv_unit_id_fk: createServiceDto.serv_unit_id_fk,
         serv_status: true,
       },
     });
 
     if (FindService) {
-      throw new HttpException('El  servicio ya existe.', HttpStatus.CONFLICT);
+      throw new HttpException('El  servicio ya existe con la unidad seleccionada.', HttpStatus.CONFLICT);
     }
+
+    await this.unitService.findOneUnit(createServiceDto.serv_unit_id_fk)
 
     const service = this.serviceRepository.create(createServiceDto);
     await this.serviceRepository.save(service);
@@ -43,10 +49,10 @@ export class ServiceService {
       where: {
         serv_status: true,
       },
-      relations: {
-        unit: true,
-        // caseReportValidate: true,
-      },
+      // relations: {
+      // unit: true,
+      // caseReportValidate: true,
+      // },
       order: {
         serv_name: 'ASC',
       },
@@ -64,10 +70,10 @@ export class ServiceService {
   async findOneService(id: number) {
     const service = await this.serviceRepository.findOne({
       where: { id, serv_status: true },
-      relations: {
-        unit: true,
-        // caseReportValidate: true,
-      },
+      // relations: {
+      // unit: true,
+      // caseReportValidate: true,
+      // },
     });
 
     if (!service) {
@@ -81,6 +87,9 @@ export class ServiceService {
 
   async updateService(id: number, updateServiceDto: UpdateServiceDto) {
     const service = await this.findOneService(id);
+
+    await this.unitService.findOneUnit(updateServiceDto.serv_unit_id_fk);
+
     const result = await this.serviceRepository.update(
       service.id,
       updateServiceDto,

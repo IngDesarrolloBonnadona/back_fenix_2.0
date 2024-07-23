@@ -30,10 +30,10 @@ export class UnitController {
     return this.unitService.findOneUnit(id);
   }
 
-  @Get('/findUnitByService/:serviceId')
-  findUnitByService(@Param('serviceId') serviceId: number): Promise<Unit[]> {
-    return this.unitService.findUnitByService(serviceId);
-  }
+  // @Get('/findUnitByService/:serviceId')
+  // findUnitByService(@Param('serviceId') serviceId: number): Promise<Unit[]> {
+  //   return this.unitService.findUnitByService(serviceId);
+  // }
 
   @Patch('/updateUnit/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
