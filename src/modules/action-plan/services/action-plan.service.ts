@@ -120,7 +120,7 @@ export class ActionPlanService {
     eventId?: number,
   ) {
     const where: FindOptionsWhere<ActionPlanEntity> = {};
-    console.log(actionPlanName)
+
     if (actionPlanName) {
       where.plan_a_name = Like(`%${actionPlanName}%`);
     }
