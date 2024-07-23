@@ -49,10 +49,10 @@ export class ServiceService {
       where: {
         serv_status: true,
       },
-      // relations: {
-      // unit: true,
+      relations: {
+      unit: true,
       // caseReportValidate: true,
-      // },
+      },
       order: {
         serv_name: 'ASC',
       },
@@ -70,10 +70,10 @@ export class ServiceService {
   async findOneService(id: number) {
     const service = await this.serviceRepository.findOne({
       where: { id, serv_status: true },
-      // relations: {
-      // unit: true,
+      relations: {
+      unit: true,
       // caseReportValidate: true,
-      // },
+      },
     });
 
     if (!service) {
