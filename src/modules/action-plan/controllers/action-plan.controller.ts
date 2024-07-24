@@ -20,14 +20,12 @@ import { ActionPlan } from '../entities/action-plan.entity';
 export class ActionPlanController {
   constructor(private readonly actionPlanService: ActionPlanService) {}
 
-  @Post('/createActionPlan/:idCaseValidate')
+  @Post('/createActionPlan/')
   createActionPlan(
     @Body() createActionPlanDto: CreateActionPlanDto,
-    @Param('idCaseValidate') idCaseValidate: string,
   ): Promise<HttpException> {
     return this.actionPlanService.createActionPlan(
       createActionPlanDto,
-      idCaseValidate,
     );
   }
 
@@ -44,21 +42,13 @@ export class ActionPlanController {
     );
   }
 
-  @Get('/findActionPlan/:id')
-  findActionPlan(@Param('id') id: number) {
+  @Get('/listActionPlans/')
+  listActionPlans(): Promise<ActionPlan[]> {
+    return this.actionPlanService.findAllActionPlan();
+  }
+
+  @Get('/findOneActionPlan/:id')
+  findOneActionPlan(@Param('id') id: number) {
     return this.actionPlanService.findOneActionPlan(id);
-  }
-
-  @Patch('updateActionPlan/:id/')
-  updateActionPlan(
-    @Param('id') id: number,
-    @Body() updateActionPlanDto: UpdateActionPlanDto,
-  ) {
-    return this.actionPlanService.updateActionPlan(id, updateActionPlanDto);
-  }
-
-  @Delete('/deleteActionPlan/:id')
-  deleteActionPlan(@Param('id') id: number) {
-    return this.actionPlanService.deleteActionPlan(id);
   }
 }

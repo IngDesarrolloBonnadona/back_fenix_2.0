@@ -53,6 +53,8 @@ import { Priority as PriorityEntity } from 'src/modules/priority/entities/priori
 import { ObservationReturnCase as ObservationReturnCaseEntity } from 'src/modules/observation-return-case/entities/observation-return-case.entity';
 import { ObservationReturnCaseService } from 'src/modules/observation-return-case/services/observation-return-case.service';
 import { MovementReportService } from 'src/modules/movement-report/services/movement-report.service';
+import { ActionPlanCaseReportValidate as ActionPlanCaseReportValidateEntity } from 'src/modules/action-plan-case-report-validate/entities/action-plan-case-report-validate.entity';
+import { ActionPlanCaseReportValidateService } from 'src/modules/action-plan-case-report-validate/services/action-plan-case-report-validate.service';
 
 @Injectable()
 export class CaseReportValidateService {
@@ -73,6 +75,8 @@ export class CaseReportValidateService {
     private readonly priorityRepository: Repository<PriorityEntity>,
     @InjectRepository(ObservationReturnCaseEntity)
     private readonly observationReturnCaseRepository: Repository<ObservationReturnCaseEntity>,
+    @InjectRepository(ActionPlanCaseReportValidateEntity)
+    private readonly actionPlanCaseReportValidateRepository: Repository<ActionPlanCaseReportValidateEntity>,
 
     private dataSource: DataSource,
     private readonly medicineService: MedicineService,
@@ -95,7 +99,8 @@ export class CaseReportValidateService {
     @Inject(forwardRef(() => ResearchersService))
     private readonly researchService: ResearchersService,
     @Inject(forwardRef(() => ReportAnalystAssignmentService))
-    private readonly reportAnalystAssygnmentService: ReportAnalystAssignmentService,
+    private readonly reportAnalystAssignmentService: ReportAnalystAssignmentService,
+    private readonly actionPlanCaseReportValidateService: ActionPlanCaseReportValidateService,
   ) {}
 
   async findSimilarCaseReportsValidate(
@@ -791,11 +796,12 @@ export class CaseReportValidateService {
       await this.reportAnalystAssignmentRepository.findOne({
         where: {
           ana_validatedcase_id_fk: caseReportValidate.id,
+          ana_status: true,
         },
       });
 
     if (findReportAnalystAssygnment) {
-      await this.reportAnalystAssygnmentService.deleteAssignedAnalyst(
+      await this.reportAnalystAssignmentService.deleteAssignedAnalyst(
         findReportAnalystAssygnment.id,
       );
     }
@@ -803,6 +809,7 @@ export class CaseReportValidateService {
     const findSynergy = await this.synergyRepository.findOne({
       where: {
         syn_validatedcase_id_fk: caseReportValidate.id,
+        syn_status: true,
       },
     });
 
@@ -813,6 +820,7 @@ export class CaseReportValidateService {
     const findResearchAssignment = await this.researchRepository.findOne({
       where: {
         res_validatedcase_id_fk: caseReportValidate.id,
+        res_status: true,
       },
     });
 
@@ -826,12 +834,27 @@ export class CaseReportValidateService {
       await this.observationReturnCaseRepository.findOne({
         where: {
           rec_o_validatedcase_id_fk: caseReportValidate.id,
+          rec_o_status: true,
         },
       });
 
     if (findObservationReturnCase) {
       await this.observationReturnCaseService.deleteObservationReturnCase(
         findObservationReturnCase.id,
+      );
+    }
+
+    const actionPlanCRV =
+      await this.actionPlanCaseReportValidateRepository.findOne({
+        where: {
+          plan_av_validatedcase_id_fk: caseReportValidate.id,
+          plan_av_status: true,
+        },
+      });
+
+    if (actionPlanCRV) {
+      await this.actionPlanCaseReportValidateService.deleteActionPlanCaseReportValidate(
+        actionPlanCRV.id,
       );
     }
 

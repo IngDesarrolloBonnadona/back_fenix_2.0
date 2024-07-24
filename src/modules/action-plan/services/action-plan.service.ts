@@ -1,7 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateActionPlanDto } from '../dto/create-action-plan.dto';
-import { UpdateActionPlanDto } from '../dto/update-action-plan.dto';
 import { ActionPlan as ActionPlanEntity } from '../entities/action-plan.entity';
 import { DataSource, FindOptionsWhere, Like, Repository } from 'typeorm';
 import { CaseReportValidateService } from 'src/modules/case-report-validate/services/case-report-validate.service';
@@ -34,10 +33,7 @@ export class ActionPlanService {
     private readonly actionPlanCaseReportValidateService: ActionPlanCaseReportValidateService,
     private readonly actionPlanActivityService: ActionPlanActivitiesService,
   ) {}
-  async createActionPlan(
-    createActionPlanDto: CreateActionPlanDto,
-    idCaseValidate: string,
-  ) {
+  async createActionPlan(createActionPlanDto: CreateActionPlanDto) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -58,7 +54,6 @@ export class ActionPlanService {
         this.priorityService.findOnePriority(
           createActionPlanDto.plan_a_priority_id_fk,
         ),
-        this.caseReportValidateService.findOneReportValidate(idCaseValidate),
         this.prositionService.findOnePosition(
           createActionPlanDto.plan_a_position_id_fk,
         ),
@@ -67,6 +62,7 @@ export class ActionPlanService {
       const actionPlanExist = await this.actionPlanRepository.findOne({
         where: {
           plan_a_name: createActionPlanDto.plan_a_name,
+          plan_a_status: true,
         },
       });
 
@@ -77,22 +73,18 @@ export class ActionPlanService {
         );
       }
 
-      await this.actionPlanCaseReportValidateService.findOneActionPlanCaseReportValidateByIdCase(
-        idCaseValidate,
-      );
-
       const actionPlan = this.actionPlanRepository.create(createActionPlanDto);
       await queryRunner.manager.save(actionPlan);
 
-      const actionPlanRCV: CreateActionPlanCaseReportValidateDto = {
-        plan_av_actionplan_id_fk: actionPlan.id,
-        plan_av_validatedcase_id_fk: idCaseValidate,
-      };
+      // const actionPlanRCV: CreateActionPlanCaseReportValidateDto = {
+      //   plan_av_actionplan_id_fk: actionPlan.id,
+      //   plan_av_validatedcase_id_fk: idCaseValidate,
+      // };
 
-      await this.actionPlanCaseReportValidateService.createActionPlanCaseReportValidateTransaction(
-        queryRunner,
-        actionPlanRCV,
-      );
+      // await this.actionPlanCaseReportValidateService.createActionPlanCaseReportValidateTransaction(
+      //   queryRunner,
+      //   actionPlanRCV,
+      // );
 
       await this.actionPlanActivityService.createActionPlanActivityTransaction(
         createActionPlanDto.actionPlanActivity,
@@ -155,15 +147,34 @@ export class ActionPlanService {
     return actionPlan;
   }
 
-  findOneActionPlan(id: number) {
-    return `This action returns a #${id} actionPlan`;
+  async findAllActionPlan() {
+    const actionPlans = await this.actionPlanRepository.find({
+      where: { plan_a_status: true },
+      order: { plan_a_name: 'ASC' },
+    });
+
+    if (actionPlans.length === 0) {
+      throw new HttpException(
+        'No se encontró la lista de planes de acción.',
+        HttpStatus.NO_CONTENT,
+      );
+    }
+
+    return actionPlans;
   }
 
-  updateActionPlan(id: number, updateActionPlanDto: UpdateActionPlanDto) {
-    return `This action updates a #${id} actionPlan`;
-  }
+  async findOneActionPlan(id: number) {
+    const actionPlan = await this.actionPlanRepository.findOne({
+      where: { id, plan_a_status: true },
+      relations: { actionPlanActivity: true },
+    });
 
-  deleteActionPlan(id: number) {
-    return `This action removes a #${id} actionPlan`;
+    if (!actionPlan) {
+      throw new HttpException(
+        'No se encontró el plan de acción.',
+        HttpStatus.NO_CONTENT,
+      );
+    }
+    return actionPlan;
   }
 }

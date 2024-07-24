@@ -24,7 +24,7 @@ export class DeviceService {
     });
 
     if (existingDevice.length > 0) {
-      await queryRunner.manager.remove(existingDevice);
+      await queryRunner.manager.softRemove(existingDevice);
     }
 
     for (const device of devices) {

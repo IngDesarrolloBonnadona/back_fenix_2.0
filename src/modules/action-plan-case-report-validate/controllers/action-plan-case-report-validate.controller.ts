@@ -12,18 +12,8 @@ export class ActionPlanCaseReportValidateController {
     return this.actionPlanCaseReportValidateService.findOneActionPlanCaseReportValidateByIdCase(idCase);
   }
 
-  @Get()
-  findAll() {
-    return this.actionPlanCaseReportValidateService.findAll();
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateActionPlanCaseReportValidateDto: UpdateActionPlanCaseReportValidateDto) {
-    return this.actionPlanCaseReportValidateService.update(+id, updateActionPlanCaseReportValidateDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: number) {
-    return this.actionPlanCaseReportValidateService.remove(id);
+  @Delete('/deleteActionPlanCaseReportValidate/:id')
+  deleteActionPlanCaseReportValidate(@Param('id') id: number) {
+    return this.actionPlanCaseReportValidateService.deleteActionPlanCaseReportValidate(id);
   }
 }

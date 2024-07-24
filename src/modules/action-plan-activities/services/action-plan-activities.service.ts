@@ -16,15 +16,23 @@ export class ActionPlanActivitiesService {
     actionPlanId: number,
     queryRunner: QueryRunner,
   ) {
+    const existingActionPlanActivity =
+      await this.actionPlanActivityRepository.find({
+        where: { plan_aa_actionplan_id_fk: actionPlanId, plan_aa_status: true },
+      });
+
+    if (existingActionPlanActivity.length > 0) {
+      await queryRunner.manager.softRemove(existingActionPlanActivity)
+    }
+
     for (const actionPlanActivity of actionPlanActivities) {
       const actionPA = this.actionPlanActivityRepository.create({
         ...actionPlanActivity,
         plan_aa_actionplan_id_fk: actionPlanId,
       });
-      
+
       await queryRunner.manager.save(actionPA);
     }
-
   }
 
   findAll() {

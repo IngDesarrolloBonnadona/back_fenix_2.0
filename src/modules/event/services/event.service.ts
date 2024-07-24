@@ -66,7 +66,7 @@ export class EventService {
       if (findEvent) {
         throw new HttpException(
           `El suceso ${event.eve_name} ya existe en el tipo de suceso seleccionado.`,
-          HttpStatus.NOT_FOUND,
+          HttpStatus.CONFLICT,
         );
       }
 
@@ -131,6 +131,8 @@ export class EventService {
     if (unitId !== undefined) {
       where.eve_unit_id_fk = unitId;
     }
+
+    where.eve_status = true;
 
     const events = await this.eventRepository.find({
       where,
