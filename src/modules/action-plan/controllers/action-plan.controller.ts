@@ -42,6 +42,11 @@ export class ActionPlanController {
     );
   }
 
+  @Get('/listActionPlans/')
+  listActionPlans(): Promise<ActionPlan[]> {
+    return this.actionPlanService.findAllActionPlan();
+  }
+
   @Get('/findOneActionPlan/:id')
   findOneActionPlan(@Param('id') id: number) {
     return this.actionPlanService.findOneActionPlan(id);

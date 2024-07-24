@@ -33,9 +33,7 @@ export class ActionPlanService {
     private readonly actionPlanCaseReportValidateService: ActionPlanCaseReportValidateService,
     private readonly actionPlanActivityService: ActionPlanActivitiesService,
   ) {}
-  async createActionPlan(
-    createActionPlanDto: CreateActionPlanDto,
-  ) {
+  async createActionPlan(createActionPlanDto: CreateActionPlanDto) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -149,9 +147,26 @@ export class ActionPlanService {
     return actionPlan;
   }
 
+  async findAllActionPlan() {
+    const actionPlans = await this.actionPlanRepository.find({
+      where: { plan_a_status: true },
+      order: { plan_a_name: 'ASC' },
+    });
+
+    if (actionPlans.length === 0) {
+      throw new HttpException(
+        'No se encontró la lista de planes de acción.',
+        HttpStatus.NO_CONTENT,
+      );
+    }
+
+    return actionPlans;
+  }
+
   async findOneActionPlan(id: number) {
     const actionPlan = await this.actionPlanRepository.findOne({
       where: { id, plan_a_status: true },
+      relations: { actionPlanActivity: true },
     });
 
     if (!actionPlan) {
@@ -162,6 +177,4 @@ export class ActionPlanService {
     }
     return actionPlan;
   }
-
-
 }
