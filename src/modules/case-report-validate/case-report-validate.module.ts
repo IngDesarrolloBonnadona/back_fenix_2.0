@@ -30,6 +30,9 @@ import { ObservationReturnCaseModule } from '../observation-return-case/observat
 import { MovementReportModule } from '../movement-report/movement-report.module';
 import { PermissionGuard } from 'src/guards/permission.guard';
 import { UserModule } from 'src/modules_bonnadonahub/user/user.module';
+import { ActionPlanCaseReportValidate } from '../action-plan-case-report-validate/entities/action-plan-case-report-validate.entity';
+import { ActionPlanCaseReportValidateModule } from '../action-plan-case-report-validate/action-plan-case-report-validate.module';
+import { ActionPlanModule } from '../action-plan/action-plan.module';
 
 @Module({
   imports: [
@@ -42,6 +45,7 @@ import { UserModule } from 'src/modules_bonnadonahub/user/user.module';
       ReportResearcherAssignment,
       Priority,
       ObservationReturnCase,
+      ActionPlanCaseReportValidate,
     ]),
     MedicineModule,
     DeviceModule,
@@ -59,6 +63,7 @@ import { UserModule } from 'src/modules_bonnadonahub/user/user.module';
     UnitModule,
     MovementReportModule,
     UserModule,
+    ActionPlanCaseReportValidateModule,
     forwardRef(() => ResearchersModule),
     forwardRef(() => ReportAnalystAssignmentModule),
     forwardRef(() => ObservationReturnCaseModule),

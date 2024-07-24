@@ -1,7 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateActionPlanDto } from '../dto/create-action-plan.dto';
-import { UpdateActionPlanDto } from '../dto/update-action-plan.dto';
 import { ActionPlan as ActionPlanEntity } from '../entities/action-plan.entity';
 import { DataSource, FindOptionsWhere, Like, Repository } from 'typeorm';
 import { CaseReportValidateService } from 'src/modules/case-report-validate/services/case-report-validate.service';
@@ -156,15 +155,17 @@ export class ActionPlanService {
     return actionPlan;
   }
 
-  findOneActionPlan(id: number) {
-    return `This action returns a #${id} actionPlan`;
-  }
+  async findOneActionPlan(id: number) {
+    const actionPlan = await this.actionPlanRepository.findOne({
+      where: { id, plan_a_status: true },
+    });
 
-  updateActionPlan(id: number, updateActionPlanDto: UpdateActionPlanDto) {
-    return `This action updates a #${id} actionPlan`;
-  }
-
-  deleteActionPlan(id: number) {
-    return `This action removes a #${id} actionPlan`;
+    if (!actionPlan) {
+      throw new HttpException(
+        'No se encontró el plan de acción.',
+        HttpStatus.NO_CONTENT,
+      );
+    }
+    return actionPlan;
   }
 }

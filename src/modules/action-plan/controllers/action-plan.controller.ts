@@ -43,22 +43,4 @@ export class ActionPlanController {
       eventId
     );
   }
-
-  @Get('/findActionPlan/:id')
-  findActionPlan(@Param('id') id: number) {
-    return this.actionPlanService.findOneActionPlan(id);
-  }
-
-  @Patch('updateActionPlan/:id/')
-  updateActionPlan(
-    @Param('id') id: number,
-    @Body() updateActionPlanDto: UpdateActionPlanDto,
-  ) {
-    return this.actionPlanService.updateActionPlan(id, updateActionPlanDto);
-  }
-
-  @Delete('/deleteActionPlan/:id')
-  deleteActionPlan(@Param('id') id: number) {
-    return this.actionPlanService.deleteActionPlan(id);
-  }
 }
