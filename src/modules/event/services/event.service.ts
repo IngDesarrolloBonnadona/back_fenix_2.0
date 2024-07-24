@@ -132,6 +132,8 @@ export class EventService {
       where.eve_unit_id_fk = unitId;
     }
 
+    where.eve_status = true;
+
     const events = await this.eventRepository.find({
       where,
       order: {

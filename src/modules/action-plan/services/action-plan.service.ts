@@ -67,6 +67,7 @@ export class ActionPlanService {
       const actionPlanExist = await this.actionPlanRepository.findOne({
         where: {
           plan_a_name: createActionPlanDto.plan_a_name,
+          plan_a_status: true,
         },
       });
 

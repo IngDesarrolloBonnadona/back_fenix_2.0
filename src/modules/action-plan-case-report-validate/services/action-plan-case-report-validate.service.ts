@@ -27,6 +27,7 @@ export class ActionPlanCaseReportValidateService {
       await this.actionPlanCaseReportValidateRepository.findOne({
         where: {
           plan_av_validatedcase_id_fk: idCase,
+          plan_av_status: true,
         },
       });
 
