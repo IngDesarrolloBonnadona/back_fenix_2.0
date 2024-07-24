@@ -43,4 +43,9 @@ export class ActionPlanController {
       eventId
     );
   }
+
+  @Get('/findOneActionPlan/:id')
+  findOneActionPlan(@Param('id') id: number) {
+    return this.actionPlanService.findOneActionPlan(id);
+  }
 }
