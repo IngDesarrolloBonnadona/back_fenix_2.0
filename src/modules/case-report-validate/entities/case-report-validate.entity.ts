@@ -9,7 +9,6 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -249,7 +248,7 @@ export class CaseReportValidate {
   )
   observationReturnCase: ObservationReturnCase[];
 
-  @OneToOne(
+  @OneToMany(
     () => ActionPlanCaseReportValidate,
     (actionPlanCaseReportValidate) =>
       actionPlanCaseReportValidate.caseReportValidate,

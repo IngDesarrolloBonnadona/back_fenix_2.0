@@ -7,7 +7,6 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -35,14 +34,14 @@ export class ActionPlanCaseReportValidate {
   @DeleteDateColumn()
   deletedAt: Date;
 
-  @OneToOne(
+  @ManyToOne(
     () => ActionPlan,
     (actionPlan) => actionPlan.actionPlanCaseReportValidate,
   )
   @JoinColumn({ name: 'plan_av_actionplan_id_fk' })
   actionPlan: ActionPlan;
 
-  @OneToOne(
+  @ManyToOne(
     () => CaseReportValidate,
     (caseReportValidate) => caseReportValidate.actionPlanCaseReportValidate,
   )

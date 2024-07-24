@@ -16,7 +16,6 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -86,7 +85,7 @@ export class ActionPlan {
   )
   actionPlanActivity: ActionPlanActivity[];
 
-  @OneToOne(
+  @OneToMany(
     () => ActionPlanCaseReportValidate,
     (actionPlanCaseReportValidate) => actionPlanCaseReportValidate.actionPlan,
   )
