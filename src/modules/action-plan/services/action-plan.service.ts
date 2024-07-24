@@ -35,7 +35,6 @@ export class ActionPlanService {
   ) {}
   async createActionPlan(
     createActionPlanDto: CreateActionPlanDto,
-    idCaseValidate: string,
   ) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -57,7 +56,6 @@ export class ActionPlanService {
         this.priorityService.findOnePriority(
           createActionPlanDto.plan_a_priority_id_fk,
         ),
-        this.caseReportValidateService.findOneReportValidate(idCaseValidate),
         this.prositionService.findOnePosition(
           createActionPlanDto.plan_a_position_id_fk,
         ),
@@ -77,22 +75,18 @@ export class ActionPlanService {
         );
       }
 
-      await this.actionPlanCaseReportValidateService.findOneActionPlanCaseReportValidateByIdCase(
-        idCaseValidate,
-      );
-
       const actionPlan = this.actionPlanRepository.create(createActionPlanDto);
       await queryRunner.manager.save(actionPlan);
 
-      const actionPlanRCV: CreateActionPlanCaseReportValidateDto = {
-        plan_av_actionplan_id_fk: actionPlan.id,
-        plan_av_validatedcase_id_fk: idCaseValidate,
-      };
+      // const actionPlanRCV: CreateActionPlanCaseReportValidateDto = {
+      //   plan_av_actionplan_id_fk: actionPlan.id,
+      //   plan_av_validatedcase_id_fk: idCaseValidate,
+      // };
 
-      await this.actionPlanCaseReportValidateService.createActionPlanCaseReportValidateTransaction(
-        queryRunner,
-        actionPlanRCV,
-      );
+      // await this.actionPlanCaseReportValidateService.createActionPlanCaseReportValidateTransaction(
+      //   queryRunner,
+      //   actionPlanRCV,
+      // );
 
       await this.actionPlanActivityService.createActionPlanActivityTransaction(
         createActionPlanDto.actionPlanActivity,
@@ -168,4 +162,6 @@ export class ActionPlanService {
     }
     return actionPlan;
   }
+
+
 }

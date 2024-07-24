@@ -20,14 +20,12 @@ import { ActionPlan } from '../entities/action-plan.entity';
 export class ActionPlanController {
   constructor(private readonly actionPlanService: ActionPlanService) {}
 
-  @Post('/createActionPlan/:idCaseValidate')
+  @Post('/createActionPlan/')
   createActionPlan(
     @Body() createActionPlanDto: CreateActionPlanDto,
-    @Param('idCaseValidate') idCaseValidate: string,
   ): Promise<HttpException> {
     return this.actionPlanService.createActionPlan(
       createActionPlanDto,
-      idCaseValidate,
     );
   }
 
