@@ -24,7 +24,7 @@ export class MedicineService {
     });
 
     if (existingMedicines.length > 0) {
-      await queryRunner.manager.remove(existingMedicines);
+      await queryRunner.manager.softRemove(existingMedicines);
     }
 
     for (const medicine of medicines) {
@@ -46,11 +46,11 @@ export class MedicineService {
 
   async findAllMedicines(): Promise<MedicineEntity[]> {
     const medicines = await this.medicineRepository.find({
-      relations: {
-        // caseReportOriginal: true,
-      },
       order: {
         createdAt: 'DESC',
+        // relations: {
+        //   // caseReportOriginal: true,
+        // },
       },
     });
 
@@ -67,9 +67,9 @@ export class MedicineService {
   async findOneMedicine(id: number): Promise<MedicineEntity> {
     const medicine = await this.medicineRepository.findOne({
       where: { id },
-      relations: {
-        // caseReportOriginal: true,
-      },
+      // relations: {
+      //   // caseReportOriginal: true,
+      // },
     });
 
     if (!medicine) {
