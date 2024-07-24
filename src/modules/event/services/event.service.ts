@@ -66,7 +66,7 @@ export class EventService {
       if (findEvent) {
         throw new HttpException(
           `El suceso ${event.eve_name} ya existe en el tipo de suceso seleccionado.`,
-          HttpStatus.NOT_FOUND,
+          HttpStatus.CONFLICT,
         );
       }
 
