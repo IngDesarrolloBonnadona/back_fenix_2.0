@@ -22,7 +22,7 @@ import { FindSimilarCaseReportValidateDto } from '../dto/find-similar-case-repor
 import { ValDtoValidator } from '../helper/val-dto-validator.helper';
 import { CaseType as CaseTypeEntity } from 'src/modules/case-type/entities/case-type.entity';
 import { MedicineService } from 'src/modules/medicine/services/medicine.service';
-import { DeviceService } from 'src/modules/device/services/device.service';
+import { DeviceService } from 'src/modules/device-case-report/services/device.service';
 import { MovementReport as MovementReportEntity } from 'src/modules/movement-report/entities/movement-report.entity';
 import { movementReport } from 'src/enums/movement-report.enum';
 import { LogService } from 'src/modules/log/services/log.service';

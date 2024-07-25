@@ -10,7 +10,7 @@ import { RiskLevelModule } from './modules/risk-level/risk-level.module';
 import { EventTypeModule } from './modules/event-type/event-type.module';
 import { EventModule } from './modules/event/event.module';
 import { MedicineModule } from './modules/medicine/medicine.module';
-import { DeviceModule } from './modules/device/device.module';
+import { DeviceModule } from './modules/device-case-report/device.module';
 import { ServiceModule } from './modules/service/service.module';
 import { UnitModule } from './modules/unit/unit.module';
 import { CaseReportValidateModule } from './modules/case-report-validate/case-report-validate.module';

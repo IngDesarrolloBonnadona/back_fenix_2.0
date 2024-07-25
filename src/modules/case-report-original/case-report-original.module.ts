@@ -7,7 +7,7 @@ import { CaseReportValidateModule } from '../case-report-validate/case-report-va
 import { CaseType } from '../case-type/entities/case-type.entity';
 import { LogModule } from '../log/log.module';
 import { MedicineModule } from '../medicine/medicine.module';
-import { DeviceModule } from '../device/device.module';
+import { DeviceModule } from '../device-case-report/device.module';
 import { CaseTypeModule } from '../case-type/case-type.module';
 import { RiskTypeModule } from '../risk-type/risk-type.module';
 import { EventTypeModule } from '../event-type/event-type.module';

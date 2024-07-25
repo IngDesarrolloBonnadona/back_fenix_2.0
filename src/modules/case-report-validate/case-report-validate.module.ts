@@ -5,7 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CaseReportValidate } from './entities/case-report-validate.entity';
 import { CaseType } from '../case-type/entities/case-type.entity';
 import { MedicineModule } from '../medicine/medicine.module';
-import { DeviceModule } from '../device/device.module';
+import { DeviceModule } from '../device-case-report/device.module';
 import { MovementReport } from '../movement-report/entities/movement-report.entity';
 import { LogModule } from '../log/log.module';
 import { ReportAnalystAssignment } from '../report-analyst-assignment/entities/report-analyst-assignment.entity';

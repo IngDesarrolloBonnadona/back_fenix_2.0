@@ -1,6 +1,6 @@
 import { CaseReportValidate } from 'src/modules/case-report-validate/entities/case-report-validate.entity';
 import { CaseType } from 'src/modules/case-type/entities/case-type.entity';
-import { Device } from 'src/modules/device/entities/device.entity';
+import { Device } from 'src/modules/device-case-report/entities/device.entity';
 import { EventType } from 'src/modules/event-type/entities/event-type.entity';
 import { Event } from 'src/modules/event/entities/event.entity';
 import { Medicine } from 'src/modules/medicine/entities/medicine.entity';
