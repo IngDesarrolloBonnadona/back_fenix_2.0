@@ -7,7 +7,7 @@ import { CaseReportValidateService } from 'src/modules/case-report-validate/serv
 import { OriDtoValidator } from '../utils/helpers/ori-dto-validator.helper';
 import { CaseType as CaseTypeEntity } from 'src/modules/case-type/entities/case-type.entity';
 import { LogService } from 'src/modules/log/services/log.service';
-import { MedicineService } from 'src/modules/medicine/services/medicine.service';
+import { MedicineService } from 'src/modules/medicine-case-report/services/medicine.service';
 import { DeviceService } from 'src/modules/device-case-report/services/device.service';
 import { logReports } from 'src/enums/logs.enum';
 import { generateFilingNumber } from '../utils/helpers/generate_filing_number.helper';

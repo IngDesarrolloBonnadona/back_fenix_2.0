@@ -9,7 +9,7 @@ import { SubOriginModule } from './modules/sub-origin/sub-origin.module';
 import { RiskLevelModule } from './modules/risk-level/risk-level.module';
 import { EventTypeModule } from './modules/event-type/event-type.module';
 import { EventModule } from './modules/event/event.module';
-import { MedicineModule } from './modules/medicine/medicine.module';
+import { MedicineModule } from './modules/medicine-case-report/medicine.module';
 import { DeviceModule } from './modules/device-case-report/device.module';
 import { ServiceModule } from './modules/service/service.module';
 import { UnitModule } from './modules/unit/unit.module';
