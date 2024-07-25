@@ -36,6 +36,7 @@ import { DeviceTypeModule } from './modules/device-type/device-type.module';
 import { DamageTypeModule } from './modules/damage-type/damage-type.module';
 import { FluidTypeModule } from './modules/fluid-type/fluid-type.module';
 import { InfluencingFactorModule } from './modules/influencing-factor/influencing-factor.module';
+import { FailedMeasuresModule } from './modules/failed-measures/failed-measures.module';
 
 require('dotenv').config();
 
@@ -101,6 +102,7 @@ require('dotenv').config();
     DamageTypeModule,
     FluidTypeModule,
     InfluencingFactorModule,
+    FailedMeasuresModule,
   ],
   controllers: [],
   providers: [],
