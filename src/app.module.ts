@@ -37,6 +37,7 @@ import { DamageTypeModule } from './modules/damage-type/damage-type.module';
 import { FluidTypeModule } from './modules/fluid-type/fluid-type.module';
 import { InfluencingFactorModule } from './modules/influencing-factor/influencing-factor.module';
 import { FailedMeasuresModule } from './modules/failed-measures/failed-measures.module';
+import { RiskFactorModule } from './modules/risk-factor/risk-factor.module';
 
 require('dotenv').config();
 
@@ -103,6 +104,7 @@ require('dotenv').config();
     FluidTypeModule,
     InfluencingFactorModule,
     FailedMeasuresModule,
+    RiskFactorModule,
   ],
   controllers: [],
   providers: [],
