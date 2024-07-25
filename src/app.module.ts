@@ -32,6 +32,7 @@ import { ActionPlanModule } from './modules/action-plan/action-plan.module';
 import { ActionPlanActivitiesModule } from './modules/action-plan-activities/action-plan-activities.module';
 import { ActionPlanCaseReportValidateModule } from './modules/action-plan-case-report-validate/action-plan-case-report-validate.module';
 import { ResearchInstrumentModule } from './modules/research-instrument/research-instrument.module';
+import { DeviceTypeModule } from './modules/device-type/device-type.module';
 
 require('dotenv').config();
 
@@ -93,6 +94,7 @@ require('dotenv').config();
     ActionPlanActivitiesModule,
     ActionPlanCaseReportValidateModule,
     ResearchInstrumentModule,
+    DeviceTypeModule,
   ],
   controllers: [],
   providers: [],
