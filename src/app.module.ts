@@ -34,6 +34,7 @@ import { ActionPlanCaseReportValidateModule } from './modules/action-plan-case-r
 import { ResearchInstrumentModule } from './modules/research-instrument/research-instrument.module';
 import { DeviceTypeModule } from './modules/device-type/device-type.module';
 import { DamageTypeModule } from './modules/damage-type/damage-type.module';
+import { FluidTypeModule } from './modules/fluid-type/fluid-type.module';
 
 require('dotenv').config();
 
@@ -97,6 +98,7 @@ require('dotenv').config();
     ResearchInstrumentModule,
     DeviceTypeModule,
     DamageTypeModule,
+    FluidTypeModule,
   ],
   controllers: [],
   providers: [],
