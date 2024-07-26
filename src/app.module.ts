@@ -40,6 +40,7 @@ import { FailedMeasuresModule } from './modules/failed-measures/failed-measures.
 import { RiskFactorModule } from './modules/risk-factor/risk-factor.module';
 import { SafetyBarriersModule } from './modules/safety-barriers/safety-barriers.module';
 import { ClinicalResearchInfluencingFactorModule } from './modules/clinical-research-influencing-factor/clinical-research-influencing-factor.module';
+import { ClinicalResearchFailedMeasuresModule } from './modules/clinical-research-failed-measures/clinical-research-failed-measures.module';
 
 require('dotenv').config();
 
@@ -109,6 +110,7 @@ require('dotenv').config();
     RiskFactorModule,
     SafetyBarriersModule,
     ClinicalResearchInfluencingFactorModule,
+    ClinicalResearchFailedMeasuresModule,
   ],
   controllers: [],
   providers: [],
