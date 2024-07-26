@@ -5,8 +5,8 @@ export class ClinicalResearchFailedMeasure {
     @PrimaryGeneratedColumn()
     id: number;
   
-    @Column()
-    meas_fcr_clinicalresearch_id_fk: number;
+    @Column({ type: 'uuid' })
+    meas_fcr_clinicalresearch_id_fk: string;
   
     @Column()
     meas_fcr_failedmeasures_id_fk: number;
