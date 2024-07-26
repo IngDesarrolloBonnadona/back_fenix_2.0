@@ -18,7 +18,7 @@ export class Device {
   @Column({ type: 'uuid' })
   dev_case_id_fk: string;
 
-  @Column()
+  @Column({ type: 'varchar' })
   dev_code: string;
 
   @Column({ type: 'varchar' })
