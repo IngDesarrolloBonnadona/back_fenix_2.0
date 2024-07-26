@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  HttpException,
 } from '@nestjs/common';
 import { SafetyBarriersService } from '../services/safety-barriers.service';
 import { CreateSafetyBarrierDto } from '../dto/create-safety-barrier.dto';
@@ -15,6 +16,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { PermissionGuard } from 'src/guards/permission.guard';
 import { Permission } from 'src/decorators/permission.decorator';
 import { permissions } from 'src/enums/permissions.enum';
+import { SafetyBarrier } from '../entities/safety-barrier.entity';
 
 @ApiTags('safety-barriers')
 @Controller('safety-barriers')
@@ -24,19 +26,21 @@ export class SafetyBarriersController {
 
   @Post('/createSafetyBarrier/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  createSafetyBarrier(@Body() createSafetyBarrierDto: CreateSafetyBarrierDto) {
+  createSafetyBarrier(
+    @Body() createSafetyBarrierDto: CreateSafetyBarrierDto,
+  ): Promise<HttpException> {
     return this.safetyBarriersService.createSafetyBarrier(
       createSafetyBarrierDto,
     );
   }
 
   @Get('/listSafetyBarriers')
-  listSafetyBarriers() {
+  listSafetyBarriers(): Promise<SafetyBarrier[]> {
     return this.safetyBarriersService.findAllSafetyBarriers();
   }
 
   @Get('/findSafetyBarrier/:id')
-  findSafetyBarrier(@Param('id') id: number) {
+  findSafetyBarrier(@Param('id') id: number): Promise<SafetyBarrier> {
     return this.safetyBarriersService.findOneSafetyBarrier(id);
   }
 
@@ -45,7 +49,7 @@ export class SafetyBarriersController {
   updateSafetyBarrier(
     @Param('id') id: number,
     @Body() updateSafetyBarrierDto: UpdateSafetyBarrierDto,
-  ) {
+  ): Promise<HttpException> {
     return this.safetyBarriersService.updateSafetyBarrier(
       id,
       updateSafetyBarrierDto,
@@ -54,7 +58,7 @@ export class SafetyBarriersController {
 
   @Delete('/deleteSafetyBarrier/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  deleteSafetyBarrier(@Param('id') id: number) {
+  deleteSafetyBarrier(@Param('id') id: number): Promise<HttpException> {
     return this.safetyBarriersService.deleteSafetyBarrier(id);
   }
 }
