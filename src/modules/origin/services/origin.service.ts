@@ -53,7 +53,7 @@ export class OriginService {
 
     if (origins.length === 0) {
       throw new HttpException(
-        'No se encontró la lista de fuentes',
+        'No se encontró la lista de origenes',
         HttpStatus.NO_CONTENT,
       );
     }
@@ -72,7 +72,7 @@ export class OriginService {
 
     if (!origin) {
       throw new HttpException(
-        'No se encontró la fuente',
+        'No se encontró el origen',
         HttpStatus.NO_CONTENT,
       );
     }
@@ -89,7 +89,7 @@ export class OriginService {
 
     if (result.affected === 0) {
       return new HttpException(
-        `No se pudo actualizar la fuente`,
+        `No se pudo actualizar el origen`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
