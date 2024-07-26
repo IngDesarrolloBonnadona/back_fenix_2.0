@@ -61,7 +61,7 @@ export class SubOriginService {
 
     if (subOrigins.length === 0) {
       throw new HttpException(
-        'No se encontró la lista de subfuentes',
+        'No se encontró la lista de sub origenes',
         HttpStatus.NO_CONTENT,
       );
     }
@@ -80,7 +80,7 @@ export class SubOriginService {
 
     if (!subOrigin) {
       throw new HttpException(
-        'No se encontró el subfuente',
+        'No se encontró el sub origen',
         HttpStatus.NO_CONTENT,
       );
     }
@@ -122,7 +122,7 @@ export class SubOriginService {
 
     if (result.affected === 0) {
       return new HttpException(
-        `No se pudo actualizar el sub fuente`,
+        `No se pudo actualizar el sub origen`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
@@ -139,7 +139,7 @@ export class SubOriginService {
 
     if (result.affected === 0) {
       return new HttpException(
-        `No se pudo eliminar el suborigen.`,
+        `No se pudo eliminar el sub origen.`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
