@@ -124,12 +124,14 @@ export class CaseReportValidateService {
     });
 
     if (similarReport.length > 0) {
-      return {
+      throw new HttpException({
         message: `¡Extisten ${similarReport.length} casos similares!`,
         data: similarReport,
-      };
+      }, HttpStatus.FOUND)
     } else {
-      return { message: '¡No existen casos similares!' };
+      throw new HttpException({
+        message: '¡No existen casos similares!',
+      }, HttpStatus.NO_CONTENT)
     }
   }
 
