@@ -21,7 +21,7 @@ export class PermissionGuard implements CanActivate {
       'permissions',
       context.getHandler(),
     );
-    console.log('requiredPermissions: ', requiredPermissions);
+    console.log('Permisos requeridos: ', requiredPermissions);
     if (!requiredPermissions) {
       return true;
     }
@@ -29,7 +29,7 @@ export class PermissionGuard implements CanActivate {
     // Obtener userId desde los parámetros de la solicitud
     const userIdPermission = context.switchToHttp().getRequest()
       .params.userIdPermission;
-    console.log('userIdPermission', userIdPermission);
+    console.log('id del usuario: ', userIdPermission);
 
     // Obtener los permisos actuales del usuario
     const permissions =
