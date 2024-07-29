@@ -35,7 +35,7 @@ export class ReportAnalystAssignmentController {
   createAssingAnalystReporter(
     @Body() createAnalystReporterDto: CreateReportAnalystAssignmentDto,
     @Ip() clientIp: string,
-    @Param('idValidator') idValidator: number,
+    @Param('idValidator') idValidator: string,
     @Param('userIdPermission') userIdPermission: string,
   ): Promise<HttpException> {
     return this.reportAnalisysAssignmentService.assingAnalyst(
@@ -50,7 +50,7 @@ export class ReportAnalystAssignmentController {
   createReturnCaseBetweenAnalyst(
     @Body() createAnalystReporterDto: CreateReportAnalystAssignmentDto,
     @Ip() clientIp: string,
-    @Param('idAnalystCurrent') idAnalystCurrent: number,
+    @Param('idAnalystCurrent') idAnalystCurrent: string,
   ): Promise<HttpException> {
     return this.reportAnalisysAssignmentService.returnCaseBetweenAnalyst(
       createAnalystReporterDto,
@@ -102,7 +102,7 @@ export class ReportAnalystAssignmentController {
   updateReAssignedAnalyst(
     @Body() updateReportAnalystAssignmentDto: UpdateReportAnalystAssignmentDto,
     @Ip() clientIp: string,
-    @Param('idValidator') idValidator: number,
+    @Param('idValidator') idValidator: string,
     @Param('idCaseReportValidate') idCaseReportValidate: string,
   ): Promise<HttpException> {
     return this.reportAnalisysAssignmentService.reAssingAnalyst(
@@ -118,7 +118,7 @@ export class ReportAnalystAssignmentController {
   updateReturnCaseToValidator(
     @Param('idCaseReportValidate') idCaseReportValidate: string,
     @Ip() clientIp: string,
-    @Param('idAnalyst') idAnalyst: number,
+    @Param('idAnalyst') idAnalyst: string,
   ) {
     return this.reportAnalisysAssignmentService.returnCaseToValidator(
       idCaseReportValidate,

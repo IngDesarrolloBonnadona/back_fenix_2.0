@@ -82,7 +82,7 @@ export class ResearchersService {
   async assingResearcher(
     createResearcherDto: CreateReportResearcherAssignmentDto,
     clientIp: string,
-    idAnalyst: number,
+    idAnalyst: string,
   ) {
     const reportAssignmentFind = await this.researcherRepository.findOne({
       where: {
@@ -368,7 +368,7 @@ export class ResearchersService {
   async reAssingResearcher(
     updateResearcherDto: UpdateReportResearcherAssignmentDto,
     clientIp: string,
-    idAnalyst: number,
+    idAnalyst: string,
     idCaseReportValidate: string,
   ) {
     const findResearcherAssigned = await this.researcherRepository.findOne({
@@ -457,7 +457,7 @@ export class ResearchersService {
   async returnCaseToAnalyst(
     idCaseReportValidate: string,
     clientIp: string,
-    idResearcher: number,
+    idResearcher: string,
   ) {
     const findReportResearcherAssigned =
       await this.researcherRepository.findOne({

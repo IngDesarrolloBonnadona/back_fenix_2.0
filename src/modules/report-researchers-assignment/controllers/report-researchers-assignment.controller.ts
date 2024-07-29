@@ -80,7 +80,7 @@ export class ReportResearchersAssignmentController {
   createAssingResearcher(
     @Body() createResearcherDto: CreateReportResearcherAssignmentDto,
     @Ip() clientIp: string,
-    @Param('idAnalyst') idAnalyst: number,
+    @Param('idAnalyst') idAnalyst: string,
   ): Promise<HttpException> {
     return this.researchersService.assingResearcher(
       createResearcherDto,
@@ -94,7 +94,7 @@ export class ReportResearchersAssignmentController {
   updateReAssignedResearch(
     @Body() updateResearcherDto: UpdateReportResearcherAssignmentDto,
     @Ip() clientIp: string,
-    @Param('idAnalyst') idAnalyst: number,
+    @Param('idAnalyst') idAnalyst: string,
     @Param('idCaseReportValidate') idCaseReportValidate: string,
   ): Promise<HttpException> {
     return this.researchersService.reAssingResearcher(
@@ -108,7 +108,7 @@ export class ReportResearchersAssignmentController {
   @Patch('returnCaseToAnalyst/:idResearcher/:idCaseReportValidate/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.INVESTIGATOR)
   updateReturnCaseToAnalyst(
-    @Param('idResearcher') idResearcher: number,
+    @Param('idResearcher') idResearcher: string,
     @Param('idCaseReportValidate') idCaseReportValidate: string,
     @Ip() clientIp: string,
   ): Promise<HttpException> {

@@ -6,6 +6,6 @@ export class CreateReportResearcherAssignmentDto {
   res_validatedcase_id_fk: string;
 
   @IsNotEmpty()
-  @IsNumber()
-  res_userresearch_id: number;
+  @IsString()
+  res_userresearch_id: string;
 }

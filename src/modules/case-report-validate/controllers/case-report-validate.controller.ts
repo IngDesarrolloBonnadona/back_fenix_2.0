@@ -46,7 +46,7 @@ export class CaseReportValidateController {
     @Body() createReportValDto: CreateReportValDto,
     @Ip() clientIp: string,
     @Param('reportId') reportId: string,
-    @Param('idValidator') idValidator: number,
+    @Param('idValidator') idValidator: string,
   ): Promise<any> {
     return await this.caseReportValidateService.createReportValidate(
       createReportValDto,
@@ -149,7 +149,7 @@ export class CaseReportValidateController {
     );
   }
 
-  @Delete('/cancelReportValidate/:id/:userIdPermission')
+  @Delete('/cancelReportValidate/:id/:idUser/:userIdPermission')
   @Permission(
     permissions.SUPER_ADMIN,
     permissions.VALIDATOR,
@@ -159,10 +159,12 @@ export class CaseReportValidateController {
   async cancelReportValidate(
     @Param('id') id: string,
     @Ip() clientIp: string,
+    @Param('idUser') idUser: string,
   ): Promise<Promise<HttpException>> {
     return await this.caseReportValidateService.cancelReportValidate(
       id,
       clientIp,
+      idUser
     );
   }
 }

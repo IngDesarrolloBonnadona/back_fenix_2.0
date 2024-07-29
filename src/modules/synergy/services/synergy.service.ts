@@ -31,7 +31,7 @@ export class SynergyService {
   async createSynergy(
     createSynergy: CreateSynergyDto[],
     clientIp: string,
-    idAnalyst: number,
+    idValidator: string,
   ) {
     const adverseEventType = await this.caseTypeRepository.findOne({
       where: {
@@ -108,7 +108,7 @@ export class SynergyService {
     for (const synergy of savedSynergies) {
       await this.logService.createLog(
         synergy.syn_validatedcase_id_fk,
-        idAnalyst,
+        idValidator,
         clientIp,
         logReports.LOG_CASE_RAISED_SYNERGY_COMMITTEE,
       );
@@ -178,7 +178,7 @@ export class SynergyService {
     return synergy;
   }
 
-  async rescheduleSynergy(id: number, clientIp: string, idValidator: number) {
+  async rescheduleSynergy(id: number, clientIp: string, idValidator: string) {
     const synergy = await this.findOneSynergy(id);
 
     const movementReportFound =
@@ -225,7 +225,7 @@ export class SynergyService {
     );
   }
 
-  async resolutionSynergy(id: number, clientIp: string, idValidator: number) {
+  async resolutionSynergy(id: number, clientIp: string, idValidator: string) {
     const synergy = await this.findOneSynergy(id);
 
     const movementReportFound =

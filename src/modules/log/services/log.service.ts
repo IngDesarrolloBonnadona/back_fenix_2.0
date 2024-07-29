@@ -15,7 +15,7 @@ export class LogService {
   async createLogTransaction(
     queryRunner: QueryRunner,
     caseReportValidateId: string,
-    reporterId: number,
+    reporterId: string,
     clientIp: string,
     action: string,
   ) {
@@ -31,7 +31,7 @@ export class LogService {
 
   async createLog(
     caseReportValidateId: string,
-    userId: number,
+    userId: string,
     clientIp: string,
     action: string,
   ) {

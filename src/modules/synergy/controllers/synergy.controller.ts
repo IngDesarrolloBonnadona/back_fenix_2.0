@@ -30,7 +30,7 @@ export class SynergyController {
   createSynergy(
     @Body() createSynergyDto: CreateSynergyDto[],
     @Ip() clientIp: string,
-    @Param('idValidator') idValidator: number,
+    @Param('idValidator') idValidator: string,
   ): Promise<
     | HttpException
     | {
@@ -62,7 +62,7 @@ export class SynergyController {
   rescheduleSynergy(
     @Param('id') id: number,
     @Ip() clientIp: string,
-    @Param('idValidator') idValidator: number,
+    @Param('idValidator') idValidator: string,
   ): Promise<HttpException> {
     return this.synergyService.rescheduleSynergy(id, clientIp, idValidator);
   }
@@ -72,7 +72,7 @@ export class SynergyController {
   resolutionSynergy(
     @Param('id') id: number,
     @Ip() clientIp: string,
-    @Param('idValidator') idValidator: number,
+    @Param('idValidator') idValidator: string,
   ): Promise<HttpException> {
     return this.synergyService.resolutionSynergy(id, clientIp, idValidator);
   }

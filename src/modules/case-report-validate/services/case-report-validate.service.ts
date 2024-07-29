@@ -137,7 +137,7 @@ export class CaseReportValidateService {
     createReportValDto: any,
     clientIp: string,
     reportId: string,
-    idValidator: number,
+    idValidator: string,
   ): Promise<any> {
     await ValDtoValidator(createReportValDto, this.caseTypeRepository);
 
@@ -745,7 +745,7 @@ export class CaseReportValidateService {
     );
   }
 
-  async cancelReportValidate(id: string, clientIp: string) {
+  async cancelReportValidate(id: string, clientIp: string, idUser: string) {
     const movementReportFound =
       await this.movementReportService.findOneMovementReportByName(
         movementReport.ANULATION,
@@ -787,7 +787,7 @@ export class CaseReportValidateService {
 
     await this.logService.createLog(
       caseReportValidate.id,
-      caseReportValidate.val_cr_reporter_id,
+      idUser,
       clientIp,
       logReports.LOG_ANULATION,
     );

@@ -18,8 +18,8 @@ export class Log {
   @Column({ type: 'uuid' })
   log_validatedcase_id_fk: string;
 
-  @Column()
-  log_user_id: number;
+  @Column({ type: 'varchar' })
+  log_user_id: string;
 
   @Column({ type: 'varchar' })
   log_action: string;
