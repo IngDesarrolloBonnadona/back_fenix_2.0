@@ -43,6 +43,7 @@ import { ClinicalResearchInfluencingFactorModule } from './modules/clinical-rese
 import { ClinicalResearchFailedMeasuresModule } from './modules/clinical-research-failed-measures/clinical-research-failed-measures.module';
 import { ClinicalResearchModule } from './modules/clinical-research/clinical-research.module';
 import { ProtocolModule } from './modules/protocol/protocol.module';
+import { UnsafeActionModule } from './modules/unsafe-action/unsafe-action.module';
 
 require('dotenv').config();
 
@@ -115,6 +116,7 @@ require('dotenv').config();
     ClinicalResearchFailedMeasuresModule,
     ClinicalResearchModule,
     ProtocolModule,
+    UnsafeActionModule,
   ],
   controllers: [],
   providers: [],
