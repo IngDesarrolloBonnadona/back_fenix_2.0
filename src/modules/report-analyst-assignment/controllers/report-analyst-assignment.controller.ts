@@ -36,7 +36,6 @@ export class ReportAnalystAssignmentController {
     @Body() createAnalystReporterDto: CreateReportAnalystAssignmentDto,
     @Ip() clientIp: string,
     @Param('idValidator') idValidator: string,
-    @Param('userIdPermission') userIdPermission: string,
   ): Promise<HttpException> {
     return this.reportAnalisysAssignmentService.assingAnalyst(
       createAnalystReporterDto,
