@@ -17,9 +17,15 @@ export class ClinicalResearchController {
     private readonly clinicalResearchService: ClinicalResearchService,
   ) {}
 
-  @Post()
-  create(@Body() createClinicalResearchDto: CreateClinicalResearchDto) {
-    return this.clinicalResearchService.create(createClinicalResearchDto);
+  @Post('/saveProgressClinicalResearch/:id?')
+  saveProgressClinicalResearch(
+    @Body() createClinicalResearchDto: CreateClinicalResearchDto,
+    @Param('id') id?: string
+  ) {
+    return this.clinicalResearchService.saveProgressClinicalResearch(
+      createClinicalResearchDto,
+      id
+    );
   }
 
   @Get()
