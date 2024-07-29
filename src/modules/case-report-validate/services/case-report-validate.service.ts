@@ -136,7 +136,7 @@ export class CaseReportValidateService {
   async createReportValidate(
     createReportValDto: any,
     clientIp: string,
-    reportId: string,
+    caseReportId: string,
     idValidator: string,
   ): Promise<any> {
     await ValDtoValidator(createReportValDto, this.caseTypeRepository);
@@ -180,7 +180,7 @@ export class CaseReportValidateService {
 
       const previousReport = await this.caseReportValidateRepository.findOne({
         where: {
-          id: reportId,
+          id: caseReportId,
           val_cr_validated: false,
         },
       });
@@ -193,8 +193,10 @@ export class CaseReportValidateService {
       }
 
       if (previousReport) {
-        previousReport.val_cr_validated = true;
+        await this.cancelReportValidate(previousReport.id, clientIp, idValidator )
 
+        previousReport.val_cr_validated = true;
+        previousReport.deletedAt = new Date();
         await queryRunner.manager.save(previousReport);
       }
 
