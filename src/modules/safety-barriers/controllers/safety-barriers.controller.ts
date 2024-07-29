@@ -13,9 +13,9 @@ import { SafetyBarriersService } from '../services/safety-barriers.service';
 import { CreateSafetyBarrierDto } from '../dto/create-safety-barrier.dto';
 import { UpdateSafetyBarrierDto } from '../dto/update-safety-barrier.dto';
 import { ApiTags } from '@nestjs/swagger';
-import { PermissionGuard } from 'src/guards/permission.guard';
-import { Permission } from 'src/decorators/permission.decorator';
-import { permissions } from 'src/enums/permissions.enum';
+import { PermissionGuard } from 'src/utils/guards/permission.guard';
+import { Permission } from 'src/utils/decorators/permission.decorator';
+import { permissions } from 'src/utils/enums/permissions.enum';
 import { SafetyBarrier } from '../entities/safety-barrier.entity';
 
 @ApiTags('safety-barriers')

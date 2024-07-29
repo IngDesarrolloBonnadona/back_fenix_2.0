@@ -24,16 +24,16 @@ import { CaseType as CaseTypeEntity } from 'src/modules/case-type/entities/case-
 import { MedicineService } from 'src/modules/medicine-case-report/services/medicine.service';
 import { DeviceService } from 'src/modules/device-case-report/services/device.service';
 import { MovementReport as MovementReportEntity } from 'src/modules/movement-report/entities/movement-report.entity';
-import { movementReport } from 'src/enums/movement-report.enum';
+import { movementReport } from 'src/utils/enums/movement-report.enum';
 import { LogService } from 'src/modules/log/services/log.service';
-import { logReports } from 'src/enums/logs.enum';
+import { logReports } from 'src/utils/enums/logs.enum';
 import { ReportAnalystAssignment as ReportAnalystAssignmentEntity } from 'src/modules/report-analyst-assignment/entities/report-analyst-assignment.entity';
 import { ReportAnalystAssignmentService } from 'src/modules/report-analyst-assignment/services/report-analyst-assignment.service';
 import { Synergy as SynergyEntity } from 'src/modules/synergy/entities/synergy.entity';
 import { SynergyService } from 'src/modules/synergy/services/synergy.service';
 import { ReportResearcherAssignment as ReportResearcherAssignmentEntity } from 'src/modules/report-researchers-assignment/entities/report-researchers-assignment.entity';
 import { ResearchersService } from 'src/modules/report-researchers-assignment/services/report-researchers-assignment.service';
-import { caseTypeReport } from 'src/enums/caseType-report.enum';
+import { caseTypeReport } from 'src/utils/enums/caseType-report.enum';
 import { CreateValRiskReportDto } from '../dto/create-val-risk-report.dto';
 import { CreateValAdverseEventReportDto } from '../dto/create-val-adverse-event-report.dto';
 import { CreateValIncidentReportDto } from '../dto/create-val-incident-report.dto';
@@ -193,7 +193,11 @@ export class CaseReportValidateService {
       }
 
       if (previousReport) {
-        await this.cancelReportValidate(previousReport.id, clientIp, idValidator )
+        await this.cancelReportValidate(
+          previousReport.id,
+          clientIp,
+          idValidator,
+        );
 
         previousReport.val_cr_validated = true;
         previousReport.deletedAt = new Date();

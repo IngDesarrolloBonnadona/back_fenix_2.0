@@ -15,9 +15,9 @@ import { SynergyService } from '../services/synergy.service';
 import { CreateSynergyDto } from '../dto/create-synergy.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { Synergy } from '../entities/synergy.entity';
-import { PermissionGuard } from 'src/guards/permission.guard';
-import { Permission } from 'src/decorators/permission.decorator';
-import { permissions } from 'src/enums/permissions.enum';
+import { PermissionGuard } from 'src/utils/guards/permission.guard';
+import { Permission } from 'src/utils/decorators/permission.decorator';
+import { permissions } from 'src/utils/enums/permissions.enum';
 
 @ApiTags('synergy')
 @Controller('synergy')

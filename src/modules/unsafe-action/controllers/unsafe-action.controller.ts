@@ -12,9 +12,9 @@ import { UnsafeActionService } from '../services/unsafe-action.service';
 import { CreateUnsafeActionDto } from '../dto/create-unsafe-action.dto';
 import { UpdateUnsafeActionDto } from '../dto/update-unsafe-action.dto';
 import { ApiTags } from '@nestjs/swagger';
-import { PermissionGuard } from 'src/guards/permission.guard';
-import { Permission } from 'src/decorators/permission.decorator';
-import { permissions } from 'src/enums/permissions.enum';
+import { PermissionGuard } from 'src/utils/guards/permission.guard';
+import { Permission } from 'src/utils/decorators/permission.decorator';
+import { permissions } from 'src/utils/enums/permissions.enum';
 
 @ApiTags('unsafe-action')
 @Controller('unsafe-action')

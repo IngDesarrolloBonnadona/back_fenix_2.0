@@ -9,10 +9,10 @@ import { CaseType as CaseTypeEntity } from 'src/modules/case-type/entities/case-
 import { LogService } from 'src/modules/log/services/log.service';
 import { MedicineService } from 'src/modules/medicine-case-report/services/medicine.service';
 import { DeviceService } from 'src/modules/device-case-report/services/device.service';
-import { logReports } from 'src/enums/logs.enum';
+import { logReports } from 'src/utils/enums/logs.enum';
 import { generateFilingNumber } from '../utils/helpers/generate_filing_number.helper';
-import { movementReport } from 'src/enums/movement-report.enum';
-import { caseTypeReport } from 'src/enums/caseType-report.enum';
+import { movementReport } from 'src/utils/enums/movement-report.enum';
+import { caseTypeReport } from 'src/utils/enums/caseType-report.enum';
 import { CreateOriRiskReportDto } from '../dto/create-ori-risk-report.dto';
 import { CreateOriAdverseEventReportDto } from '../dto/create-ori-adverse-event-report.dto';
 import { CreateOriIncidentReportDto } from '../dto/create-ori-incident-report.dto';
@@ -30,7 +30,7 @@ import { RiskLevelService } from 'src/modules/risk-level/services/risk-level.ser
 import { UnitService } from 'src/modules/unit/services/unit.service';
 import { Priority as PriorityEntity } from 'src/modules/priority/entities/priority.entity';
 import { SeverityClasification as SeverityClasificationEntity } from 'src/modules/severity-clasification/entities/severity-clasification.entity';
-import { severityClasification } from 'src/enums/severity-clasif.enum';
+import { severityClasification } from 'src/utils/enums/severity-clasif.enum';
 import { MovementReportService } from 'src/modules/movement-report/services/movement-report.service';
 
 @Injectable()

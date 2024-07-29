@@ -15,9 +15,9 @@ import { CreatePositionDto } from '../dto/create-position.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { Position } from '../entities/position.entity';
 import { UpdatePositionDto } from '../dto/update-position.dto';
-import { PermissionGuard } from 'src/guards/permission.guard';
-import { Permission } from 'src/decorators/permission.decorator';
-import { permissions } from 'src/enums/permissions.enum';
+import { PermissionGuard } from 'src/utils/guards/permission.guard';
+import { Permission } from 'src/utils/decorators/permission.decorator';
+import { permissions } from 'src/utils/enums/permissions.enum';
 
 @ApiTags('position')
 @Controller('position')

@@ -1,12 +1,24 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus, Put, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  HttpException,
+  HttpStatus,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import { MovementReportService } from '../services/movement-report.service';
 import { CreateMovementReportDto } from '../dto/create-movement-report.dto';
 import { UpdateMovementReportDto } from '../dto/update-movement-report.dto';
 import { MovementReport } from '../entities/movement-report.entity';
 import { ApiTags } from '@nestjs/swagger';
-import { PermissionGuard } from 'src/guards/permission.guard';
-import { Permission } from 'src/decorators/permission.decorator';
-import { permissions } from 'src/enums/permissions.enum';
+import { PermissionGuard } from 'src/utils/guards/permission.guard';
+import { Permission } from 'src/utils/decorators/permission.decorator';
+import { permissions } from 'src/utils/enums/permissions.enum';
 
 @ApiTags('movement-report')
 @Controller('movement-report')
@@ -16,8 +28,12 @@ export class MovementReportController {
 
   @Post('/createMovementReport/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN)
-  createMovementReport(@Body() createMovementReportDto: CreateMovementReportDto): Promise<HttpException> {
-    return this.movementReportService.createMovementReport(createMovementReportDto);
+  createMovementReport(
+    @Body() createMovementReportDto: CreateMovementReportDto,
+  ): Promise<HttpException> {
+    return this.movementReportService.createMovementReport(
+      createMovementReportDto,
+    );
   }
 
   @Get('/listMovementReports/:userIdPermission')
@@ -34,8 +50,14 @@ export class MovementReportController {
 
   @Patch('/updateMovementReport/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN)
-  updateMovementReport(@Param('id') id: number, @Body() updateMovementReportDto: UpdateMovementReportDto): Promise<HttpException> {
-    return this.movementReportService.updateMovementReport(id, updateMovementReportDto);
+  updateMovementReport(
+    @Param('id') id: number,
+    @Body() updateMovementReportDto: UpdateMovementReportDto,
+  ): Promise<HttpException> {
+    return this.movementReportService.updateMovementReport(
+      id,
+      updateMovementReportDto,
+    );
   }
 
   @Delete('/deleteMovementReport/:id/:userIdPermission')

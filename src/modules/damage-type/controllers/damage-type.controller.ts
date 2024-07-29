@@ -13,9 +13,9 @@ import { DamageTypeService } from '../services/damage-type.service';
 import { CreateDamageTypeDto } from '../dto/create-damage-type.dto';
 import { UpdateDamageTypeDto } from '../dto/update-damage-type.dto';
 import { ApiTags } from '@nestjs/swagger';
-import { PermissionGuard } from 'src/guards/permission.guard';
-import { Permission } from 'src/decorators/permission.decorator';
-import { permissions } from 'src/enums/permissions.enum';
+import { PermissionGuard } from 'src/utils/guards/permission.guard';
+import { Permission } from 'src/utils/decorators/permission.decorator';
+import { permissions } from 'src/utils/enums/permissions.enum';
 import { DamageType } from '../entities/damage-type.entity';
 
 @ApiTags('damage-type')

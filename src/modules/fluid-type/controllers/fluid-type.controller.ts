@@ -13,9 +13,9 @@ import { FluidTypeService } from '../services/fluid-type.service';
 import { CreateFluidTypeDto } from '../dto/create-fluid-type.dto';
 import { UpdateFluidTypeDto } from '../dto/update-fluid-type.dto';
 import { ApiTags } from '@nestjs/swagger';
-import { PermissionGuard } from 'src/guards/permission.guard';
-import { Permission } from 'src/decorators/permission.decorator';
-import { permissions } from 'src/enums/permissions.enum';
+import { PermissionGuard } from 'src/utils/guards/permission.guard';
+import { Permission } from 'src/utils/decorators/permission.decorator';
+import { permissions } from 'src/utils/enums/permissions.enum';
 import { FluidType } from '../entities/fluid-type.entity';
 
 @ApiTags('fluid-type')
@@ -26,7 +26,9 @@ export class FluidTypeController {
 
   @Post('/createFluidType/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  createFluidType(@Body() createFluidTypeDto: CreateFluidTypeDto): Promise<HttpException> {
+  createFluidType(
+    @Body() createFluidTypeDto: CreateFluidTypeDto,
+  ): Promise<HttpException> {
     return this.fluidTypeService.createFluidType(createFluidTypeDto);
   }
 

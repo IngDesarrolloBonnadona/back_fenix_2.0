@@ -13,9 +13,9 @@ import { DeviceTypeService } from '../services/device-type.service';
 import { CreateDeviceTypeDto } from '../dto/create-device-type.dto';
 import { UpdateDeviceTypeDto } from '../dto/update-device-type.dto';
 import { ApiTags } from '@nestjs/swagger';
-import { PermissionGuard } from 'src/guards/permission.guard';
-import { Permission } from 'src/decorators/permission.decorator';
-import { permissions } from 'src/enums/permissions.enum';
+import { PermissionGuard } from 'src/utils/guards/permission.guard';
+import { Permission } from 'src/utils/decorators/permission.decorator';
+import { permissions } from 'src/utils/enums/permissions.enum';
 import { DeviceType } from '../entities/device-type.entity';
 
 @ApiTags('device-type')

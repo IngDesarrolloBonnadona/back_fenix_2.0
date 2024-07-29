@@ -13,9 +13,9 @@ import { ResearchInstrumentService } from '../services/research-instrument.servi
 import { CreateResearchInstrumentDto } from '../dto/create-research-instrument.dto';
 import { UpdateResearchInstrumentDto } from '../dto/update-research-instrument.dto';
 import { ApiTags } from '@nestjs/swagger';
-import { PermissionGuard } from 'src/guards/permission.guard';
-import { Permission } from 'src/decorators/permission.decorator';
-import { permissions } from 'src/enums/permissions.enum';
+import { PermissionGuard } from 'src/utils/guards/permission.guard';
+import { Permission } from 'src/utils/decorators/permission.decorator';
+import { permissions } from 'src/utils/enums/permissions.enum';
 import { ResearchInstrument } from '../entities/research-instrument.entity';
 
 @ApiTags('research-instrument')

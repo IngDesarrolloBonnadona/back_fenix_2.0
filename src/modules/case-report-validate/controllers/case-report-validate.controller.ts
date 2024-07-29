@@ -19,9 +19,9 @@ import { ApiTags } from '@nestjs/swagger';
 import { FindSimilarCaseReportValidateDto } from '../dto/find-similar-case-report-validate';
 import { CreateReportValDto } from '../helper/val-dto-validator.helper';
 import { QueryCaseReportValidateDto } from '../dto/query-case-report-validate.dto';
-import { PermissionGuard } from 'src/guards/permission.guard';
-import { Permission } from 'src/decorators/permission.decorator';
-import { permissions } from 'src/enums/permissions.enum';
+import { PermissionGuard } from 'src/utils/guards/permission.guard';
+import { Permission } from 'src/utils/decorators/permission.decorator';
+import { permissions } from 'src/utils/enums/permissions.enum';
 
 @ApiTags('case-report-validate')
 @Controller('case-report-validate')
@@ -164,7 +164,7 @@ export class CaseReportValidateController {
     return await this.caseReportValidateService.cancelReportValidate(
       id,
       clientIp,
-      idUser
+      idUser,
     );
   }
 }

@@ -9,18 +9,14 @@ import { CaseReportValidate } from '../case-report-validate/entities/case-report
 import { MovementReport } from '../movement-report/entities/movement-report.entity';
 import { MovementReportModule } from '../movement-report/movement-report.module';
 import { UserModule } from 'src/modules_bonnadonahub/user/user.module';
-import { PermissionGuard } from 'src/guards/permission.guard';
+import { PermissionGuard } from 'src/utils/guards/permission.guard';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([
-      Synergy,
-      CaseType,
-      CaseReportValidate,
-    ]),
+    TypeOrmModule.forFeature([Synergy, CaseType, CaseReportValidate]),
     LogModule,
     MovementReportModule,
-    UserModule
+    UserModule,
   ],
   controllers: [SynergyController],
   providers: [SynergyService, PermissionGuard],

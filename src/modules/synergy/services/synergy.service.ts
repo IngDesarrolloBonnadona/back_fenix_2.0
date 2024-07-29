@@ -6,11 +6,11 @@ import { Synergy as SynergyEntity } from '../entities/synergy.entity';
 import { In, Repository } from 'typeorm';
 import { CaseReportValidateService } from 'src/modules/case-report-validate/services/case-report-validate.service';
 import { CaseType as CaseTypeEntity } from 'src/modules/case-type/entities/case-type.entity';
-import { caseTypeReport } from 'src/enums/caseType-report.enum';
+import { caseTypeReport } from 'src/utils/enums/caseType-report.enum';
 import { LogService } from 'src/modules/log/services/log.service';
-import { logReports } from 'src/enums/logs.enum';
+import { logReports } from 'src/utils/enums/logs.enum';
 import { CaseReportValidate as CaseReportValidateEntity } from 'src/modules/case-report-validate/entities/case-report-validate.entity';
-import { movementReport } from 'src/enums/movement-report.enum';
+import { movementReport } from 'src/utils/enums/movement-report.enum';
 import { MovementReport as MovementReportEntity } from 'src/modules/movement-report/entities/movement-report.entity';
 import { MovementReportService } from 'src/modules/movement-report/services/movement-report.service';
 

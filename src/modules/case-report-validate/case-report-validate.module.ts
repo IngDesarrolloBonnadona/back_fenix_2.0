@@ -28,7 +28,7 @@ import { Priority } from '../priority/entities/priority.entity';
 import { ObservationReturnCase } from '../observation-return-case/entities/observation-return-case.entity';
 import { ObservationReturnCaseModule } from '../observation-return-case/observation-return-case.module';
 import { MovementReportModule } from '../movement-report/movement-report.module';
-import { PermissionGuard } from 'src/guards/permission.guard';
+import { PermissionGuard } from 'src/utils/guards/permission.guard';
 import { UserModule } from 'src/modules_bonnadonahub/user/user.module';
 import { ActionPlanCaseReportValidate } from '../action-plan-case-report-validate/entities/action-plan-case-report-validate.entity';
 import { ActionPlanCaseReportValidateModule } from '../action-plan-case-report-validate/action-plan-case-report-validate.module';

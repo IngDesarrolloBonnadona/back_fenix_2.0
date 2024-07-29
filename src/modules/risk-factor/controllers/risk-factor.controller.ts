@@ -13,9 +13,9 @@ import { RiskFactorService } from '../services/risk-factor.service';
 import { CreateRiskFactorDto } from '../dto/create-risk-factor.dto';
 import { UpdateRiskFactorDto } from '../dto/update-risk-factor.dto';
 import { ApiTags } from '@nestjs/swagger';
-import { PermissionGuard } from 'src/guards/permission.guard';
-import { Permission } from 'src/decorators/permission.decorator';
-import { permissions } from 'src/enums/permissions.enum';
+import { PermissionGuard } from 'src/utils/guards/permission.guard';
+import { Permission } from 'src/utils/decorators/permission.decorator';
+import { permissions } from 'src/utils/enums/permissions.enum';
 import { RiskFactor } from '../entities/risk-factor.entity';
 
 @ApiTags('risk-factor')

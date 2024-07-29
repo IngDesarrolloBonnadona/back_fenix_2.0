@@ -4,7 +4,7 @@ import { CreateValComplicationsReportDto } from '../dto/create-val-complications
 import { CreateValIncidentReportDto } from '../dto/create-val-incident-report.dto';
 import { CreateValIndicatingUnsafeCareReportDto } from '../dto/create-val-indicating-unsafe-care-report.dto';
 import { CreateValRiskReportDto } from '../dto/create-val-risk-report.dto';
-import { caseTypeReport } from 'src/enums/caseType-report.enum';
+import { caseTypeReport } from 'src/utils/enums/caseType-report.enum';
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
 import { Repository } from 'typeorm';

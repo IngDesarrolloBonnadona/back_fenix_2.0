@@ -14,9 +14,9 @@ import { CreateSeverityClasificationDto } from '../dto/create-severity-clasifica
 import { UpdateSeverityClasificationDto } from '../dto/update-severity-clasification.dto';
 import { SeverityClasification } from '../entities/severity-clasification.entity';
 import { ApiTags } from '@nestjs/swagger';
-import { PermissionGuard } from 'src/guards/permission.guard';
-import { Permission } from 'src/decorators/permission.decorator';
-import { permissions } from 'src/enums/permissions.enum';
+import { PermissionGuard } from 'src/utils/guards/permission.guard';
+import { Permission } from 'src/utils/decorators/permission.decorator';
+import { permissions } from 'src/utils/enums/permissions.enum';
 
 @ApiTags('severity-clasification')
 @Controller('severity-clasification')
@@ -42,7 +42,9 @@ export class SeverityClasificationController {
   }
 
   @Get('findSeverityClasification/:id/')
-  findSeverityClasification(@Param('id') id: number): Promise<SeverityClasification> {
+  findSeverityClasification(
+    @Param('id') id: number,
+  ): Promise<SeverityClasification> {
     return this.severityClasificationService.findOneSeverityClasification(id);
   }
 

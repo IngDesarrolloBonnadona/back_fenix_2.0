@@ -13,9 +13,9 @@ import { InfluencingFactorService } from '../services/influencing-factor.service
 import { CreateInfluencingFactorDto } from '../dto/create-influencing-factor.dto';
 import { UpdateInfluencingFactorDto } from '../dto/update-influencing-factor.dto';
 import { ApiTags } from '@nestjs/swagger';
-import { PermissionGuard } from 'src/guards/permission.guard';
-import { Permission } from 'src/decorators/permission.decorator';
-import { permissions } from 'src/enums/permissions.enum';
+import { PermissionGuard } from 'src/utils/guards/permission.guard';
+import { Permission } from 'src/utils/decorators/permission.decorator';
+import { permissions } from 'src/utils/enums/permissions.enum';
 import { InfluencingFactor } from '../entities/influencing-factor.entity';
 
 @ApiTags('influencing-factor')

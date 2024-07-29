@@ -18,9 +18,9 @@ import { UpdateReportAnalystAssignmentDto } from '../dto/update-report-analyst-a
 import { ApiTags } from '@nestjs/swagger';
 import { ReportAnalystAssignment } from '../entities/report-analyst-assignment.entity';
 import { QueryReportAnalystAssignmentDto } from '../dto/query-report-analyst-assignment.dto';
-import { PermissionGuard } from 'src/guards/permission.guard';
-import { Permission } from 'src/decorators/permission.decorator';
-import { permissions } from 'src/enums/permissions.enum';
+import { PermissionGuard } from 'src/utils/guards/permission.guard';
+import { Permission } from 'src/utils/decorators/permission.decorator';
+import { permissions } from 'src/utils/enums/permissions.enum';
 
 @ApiTags('report-analyst-assignment')
 @Controller('report-analyst-assignment')
@@ -96,7 +96,9 @@ export class ReportAnalystAssignmentController {
     );
   }
 
-  @Patch('reAssignedAnalyst/:idValidator/:idCaseReportValidate/:userIdPermission')
+  @Patch(
+    'reAssignedAnalyst/:idValidator/:idCaseReportValidate/:userIdPermission',
+  )
   @Permission(permissions.SUPER_ADMIN, permissions.VALIDATOR)
   updateReAssignedAnalyst(
     @Body() updateReportAnalystAssignmentDto: UpdateReportAnalystAssignmentDto,
@@ -112,7 +114,9 @@ export class ReportAnalystAssignmentController {
     );
   }
 
-  @Patch('returnCaseToValidator/:idAnalyst/:idCaseReportValidate/:userIdPermission')
+  @Patch(
+    'returnCaseToValidator/:idAnalyst/:idCaseReportValidate/:userIdPermission',
+  )
   @Permission(permissions.SUPER_ADMIN, permissions.ANALYST)
   updateReturnCaseToValidator(
     @Param('idCaseReportValidate') idCaseReportValidate: string,

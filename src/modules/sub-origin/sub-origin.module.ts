@@ -4,7 +4,7 @@ import { SubOriginController } from './controllers/sub-origin.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SubOrigin } from './entities/sub-origin.entity';
 import { OriginModule } from '../origin/origin.module';
-import { PermissionGuard } from 'src/guards/permission.guard';
+import { PermissionGuard } from 'src/utils/guards/permission.guard';
 import { UserModule } from 'src/modules_bonnadonahub/user/user.module';
 
 @Module({

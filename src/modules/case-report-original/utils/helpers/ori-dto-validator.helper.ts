@@ -8,7 +8,7 @@ import { HttpException, HttpStatus } from '@nestjs/common';
 import { validate } from 'class-validator';
 import { Repository } from 'typeorm';
 import { CaseType } from 'src/modules/case-type/entities/case-type.entity';
-import { caseTypeReport } from 'src/enums/caseType-report.enum';
+import { caseTypeReport } from 'src/utils/enums/caseType-report.enum';
 
 export type CreateReportOriDto = //Discriminador que define los Dto
 

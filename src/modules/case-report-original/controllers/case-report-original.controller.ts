@@ -1,12 +1,23 @@
-import { Controller, Get, Post, Body, Param, Delete, HttpException, Put, Ip, UseGuards, } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  HttpException,
+  Put,
+  Ip,
+  UseGuards,
+} from '@nestjs/common';
 import { CaseReportOriginalService } from '../services/case-report-original.service';
 import { CreateReportOriDto } from '../utils/helpers/ori-dto-validator.helper';
 import { UpdateCaseReportOriginalDto } from '../dto/update-case-report-original.dto';
 import { CaseReportOriginal } from '../entities/case-report-original.entity';
 import { ApiTags } from '@nestjs/swagger';
-import { PermissionGuard } from 'src/guards/permission.guard';
-import { Permission } from 'src/decorators/permission.decorator';
-import { permissions } from 'src/enums/permissions.enum';
+import { PermissionGuard } from 'src/utils/guards/permission.guard';
+import { Permission } from 'src/utils/decorators/permission.decorator';
+import { permissions } from 'src/utils/enums/permissions.enum';
 
 @ApiTags('case-report-original')
 @Controller('case-report-original')
@@ -15,12 +26,12 @@ export class CaseReportOriginalController {
   constructor(
     private readonly CaseReportOriginalService: CaseReportOriginalService,
   ) {}
-  
+
   @Post('/createReportOriginal')
   async createReportOriginal(
-    @Body() createReportOriDto: CreateReportOriDto, 
-    @Ip() clientIp: string
-  ) : Promise<any>{
+    @Body() createReportOriDto: CreateReportOriDto,
+    @Ip() clientIp: string,
+  ): Promise<any> {
     return await this.CaseReportOriginalService.createReportOriginal(
       createReportOriDto,
       clientIp,
@@ -35,7 +46,9 @@ export class CaseReportOriginalController {
 
   @Get('/findReportOriginal/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN)
-  async findReportOriginal(@Param('id') id: string): Promise<CaseReportOriginal> {
+  async findReportOriginal(
+    @Param('id') id: string,
+  ): Promise<CaseReportOriginal> {
     return await this.CaseReportOriginalService.findOneReportOriginal(id);
   }
 

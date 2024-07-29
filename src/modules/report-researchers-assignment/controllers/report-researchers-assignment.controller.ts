@@ -18,9 +18,9 @@ import { CreateReportResearcherAssignmentDto } from '../dto/create-report-resear
 import { ReportResearcherAssignment } from '../entities/report-researchers-assignment.entity';
 import { UpdateReportResearcherAssignmentDto } from '../dto/update-report-researcher-assignment.dto';
 import { QueryReportResearchersAssignmentDto } from '../dto/query-report-researcher-assignment.dto';
-import { PermissionGuard } from 'src/guards/permission.guard';
-import { Permission } from 'src/decorators/permission.decorator';
-import { permissions } from 'src/enums/permissions.enum';
+import { PermissionGuard } from 'src/utils/guards/permission.guard';
+import { Permission } from 'src/utils/decorators/permission.decorator';
+import { permissions } from 'src/utils/enums/permissions.enum';
 
 @ApiTags('report-researchers-assignment')
 @Controller('report-researchers-assignment')
@@ -105,7 +105,9 @@ export class ReportResearchersAssignmentController {
     );
   }
 
-  @Patch('returnCaseToAnalyst/:idResearcher/:idCaseReportValidate/:userIdPermission')
+  @Patch(
+    'returnCaseToAnalyst/:idResearcher/:idCaseReportValidate/:userIdPermission',
+  )
   @Permission(permissions.SUPER_ADMIN, permissions.INVESTIGATOR)
   updateReturnCaseToAnalyst(
     @Param('idResearcher') idResearcher: string,
