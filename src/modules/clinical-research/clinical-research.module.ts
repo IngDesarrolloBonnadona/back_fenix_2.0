@@ -12,6 +12,8 @@ import { RiskFactorModule } from '../risk-factor/risk-factor.module';
 import { SafetyBarriersModule } from '../safety-barriers/safety-barriers.module';
 import { ClinicalResearchInfluencingFactorModule } from '../clinical-research-influencing-factor/clinical-research-influencing-factor.module';
 import { InfluencingFactorModule } from '../influencing-factor/influencing-factor.module';
+import { FailedMeasuresModule } from '../failed-measures/failed-measures.module';
+import { ClinicalResearchFailedMeasuresModule } from '../clinical-research-failed-measures/clinical-research-failed-measures.module';
 
 @Module({
   imports: [
@@ -24,7 +26,9 @@ import { InfluencingFactorModule } from '../influencing-factor/influencing-facto
     RiskFactorModule,
     SafetyBarriersModule,
     ClinicalResearchInfluencingFactorModule,
+    ClinicalResearchFailedMeasuresModule,
     InfluencingFactorModule,
+    FailedMeasuresModule,
   ],
   controllers: [ClinicalResearchController],
   providers: [ClinicalResearchService],

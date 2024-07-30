@@ -17,15 +17,15 @@ export class ClinicalResearchFailedMeasuresController {
     private readonly clinicalResearchFailedMeasuresService: ClinicalResearchFailedMeasuresService,
   ) {}
 
-  @Post()
-  create(
-    @Body()
-    createClinicalResearchFailedMeasureDto: CreateClinicalResearchFailedMeasureDto,
-  ) {
-    return this.clinicalResearchFailedMeasuresService.create(
-      createClinicalResearchFailedMeasureDto,
-    );
-  }
+  // @Post()
+  // create(
+  //   @Body()
+  //   createClinicalResearchFailedMeasureDto: CreateClinicalResearchFailedMeasureDto,
+  // ) {
+  //   return this.clinicalResearchFailedMeasuresService.create(
+  //     createClinicalResearchFailedMeasureDto,
+  //   );
+  // }
 
   @Get()
   findAll() {

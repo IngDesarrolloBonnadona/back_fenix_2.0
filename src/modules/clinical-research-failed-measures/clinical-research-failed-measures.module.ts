@@ -8,5 +8,6 @@ import { ClinicalResearchFailedMeasure } from './entities/clinical-research-fail
   imports: [TypeOrmModule.forFeature([ClinicalResearchFailedMeasure])],
   controllers: [ClinicalResearchFailedMeasuresController],
   providers: [ClinicalResearchFailedMeasuresService],
+  exports: [ClinicalResearchFailedMeasuresService],
 })
 export class ClinicalResearchFailedMeasuresModule {}

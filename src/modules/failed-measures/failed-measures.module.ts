@@ -9,5 +9,6 @@ import { UserModule } from 'src/modules_bonnadonahub/user/user.module';
   imports: [TypeOrmModule.forFeature([FailedMeasure]), UserModule],
   controllers: [FailedMeasuresController],
   providers: [FailedMeasuresService],
+  exports: [FailedMeasuresService],
 })
 export class FailedMeasuresModule {}

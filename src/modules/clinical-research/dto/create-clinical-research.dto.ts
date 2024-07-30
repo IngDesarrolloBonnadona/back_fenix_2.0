@@ -7,6 +7,7 @@ import {
   IsString,
   ValidateNested,
 } from 'class-validator';
+import { CreateClinicalResearchFailedMeasureDto } from 'src/modules/clinical-research-failed-measures/dto/create-clinical-research-failed-measure.dto';
 import { CreateClinicalResearchInfluencingFactorDto } from 'src/modules/clinical-research-influencing-factor/dto/create-clinical-research-influencing-factor.dto';
 
 export class CreateClinicalResearchDto {
@@ -131,4 +132,10 @@ export class CreateClinicalResearchDto {
   @ValidateNested({ each: true })
   @Type(() => CreateClinicalResearchInfluencingFactorDto)
   influencingFactor: CreateClinicalResearchInfluencingFactorDto[];
+
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateClinicalResearchFailedMeasureDto)
+  failedMeasure: CreateClinicalResearchFailedMeasureDto[];
 }

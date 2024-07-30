@@ -12,6 +12,8 @@ import { RiskFactorService } from 'src/modules/risk-factor/services/risk-factor.
 import { SafetyBarriersService } from 'src/modules/safety-barriers/services/safety-barriers.service';
 import { ClinicalResearchInfluencingFactorService } from 'src/modules/clinical-research-influencing-factor/services/clinical-research-influencing-factor.service';
 import { InfluencingFactorService } from 'src/modules/influencing-factor/services/influencing-factor.service';
+import { FailedMeasuresService } from 'src/modules/failed-measures/services/failed-measures.service';
+import { ClinicalResearchFailedMeasuresService } from 'src/modules/clinical-research-failed-measures/services/clinical-research-failed-measures.service';
 
 @Injectable()
 export class ClinicalResearchService {
@@ -27,7 +29,9 @@ export class ClinicalResearchService {
     private readonly riskFactorService: RiskFactorService,
     private readonly safetyBarriersService: SafetyBarriersService,
     private readonly clinicalResearchInfluencingFactorService: ClinicalResearchInfluencingFactorService,
+    private readonly clinicalResearchFailedMeasureService: ClinicalResearchFailedMeasuresService,
     private readonly influencingFactorService: InfluencingFactorService,
+    private readonly failedMeasureService: FailedMeasuresService,
   ) {}
 
   async saveProgressClinicalResearch(
@@ -74,6 +78,14 @@ export class ClinicalResearchService {
         }
       }
 
+      if (createClinicalResearchDto.failedMeasure) {
+        for (const measure of createClinicalResearchDto.failedMeasure) {
+          await this.failedMeasureService.findOneFailedMeasure(
+            measure.meas_fcr_failedmeasures_id_fk,
+          );
+        }
+      }
+
       let progress: ClinicalResearchEntity;
 
       if (clinicalResearchId) {
@@ -87,7 +99,7 @@ export class ClinicalResearchService {
             HttpStatus.NO_CONTENT,
           );
         }
-        const { influencingFactor, ...updateFields } =
+        const { influencingFactor, failedMeasure, ...updateFields } =
           createClinicalResearchDto;
 
         queryRunner.manager.update(
@@ -111,6 +123,18 @@ export class ClinicalResearchService {
       if (hasClinicalResearchInfluencingFactor) {
         await this.clinicalResearchInfluencingFactorService.createClinicalResearchInfluencingFactorTransaction(
           createClinicalResearchDto.influencingFactor,
+          clinicalResearchId || progress.id,
+          queryRunner,
+        );
+      }
+
+      const hasClinicalResearchFailedMeasure =
+        createClinicalResearchDto.failedMeasure &&
+        createClinicalResearchDto.failedMeasure.length > 0;
+
+      if (hasClinicalResearchFailedMeasure) {
+        await this.clinicalResearchFailedMeasureService.createClinicalResearchFailedMeasureTransaction(
+          createClinicalResearchDto.failedMeasure,
           clinicalResearchId || progress.id,
           queryRunner,
         );
