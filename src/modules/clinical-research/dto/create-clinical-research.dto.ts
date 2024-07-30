@@ -66,8 +66,8 @@ export class CreateClinicalResearchDto {
   res_c_adequatedilution: boolean;
 
   @IsOptional()
-  @IsNumber()
-  res_c_fluiddilution: number;
+  @IsString()
+  res_c_fluiddilution: string;
 
   @IsOptional()
   @IsString()

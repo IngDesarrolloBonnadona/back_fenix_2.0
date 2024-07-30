@@ -6,18 +6,21 @@ import {
   Patch,
   Param,
   Delete,
+  Put,
 } from '@nestjs/common';
 import { ClinicalResearchService } from '../services/clinical-research.service';
 import { CreateClinicalResearchDto } from '../dto/create-clinical-research.dto';
 import { UpdateClinicalResearchDto } from '../dto/update-clinical-research.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('clinical-research')
 @Controller('clinical-research')
 export class ClinicalResearchController {
   constructor(
     private readonly clinicalResearchService: ClinicalResearchService,
   ) {}
 
-  @Post('/saveProgressClinicalResearch/:id?')
+  @Put('/saveProgressClinicalResearch/:id?')
   saveProgressClinicalResearch(
     @Body() createClinicalResearchDto: CreateClinicalResearchDto,
     @Param('id') id?: string
@@ -28,26 +31,26 @@ export class ClinicalResearchController {
     );
   }
 
-  @Get()
-  findAll() {
-    return this.clinicalResearchService.findAll();
+  @Get('/listClinicalResearchs/')
+  listClinicalResearchs() {
+    return this.clinicalResearchService.findAllClinicalResearchs();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.clinicalResearchService.findOne(+id);
+  @Get('/findClinicalResearch/:id')
+  findClinicalResearch(@Param('id') id: string) {
+    return this.clinicalResearchService.findOneClinicalResearch(id);
   }
 
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateClinicalResearchDto: UpdateClinicalResearchDto,
-  ) {
-    return this.clinicalResearchService.update(+id, updateClinicalResearchDto);
-  }
+  // @Patch(':id')
+  // update(
+  //   @Param('id') id: string,
+  //   @Body() updateClinicalResearchDto: UpdateClinicalResearchDto,
+  // ) {
+  //   return this.clinicalResearchService.update(id, updateClinicalResearchDto);
+  // }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.clinicalResearchService.remove(+id);
+  @Delete('/deleteClinicalResearch/:id')
+  deleteClinicalResearch(@Param('id') id: string) {
+    return this.clinicalResearchService.deleteClinicalResearch(id);
   }
 }

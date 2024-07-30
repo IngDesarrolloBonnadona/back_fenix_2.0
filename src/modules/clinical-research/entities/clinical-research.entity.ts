@@ -60,8 +60,8 @@ export class ClinicalResearch {
   @Column({ nullable: true })
   res_c_adequatedilution: boolean;
 
-  @Column({ type: 'float', nullable: true })
-  res_c_fluiddilution: number;
+  @Column({ type: 'varchar', nullable: true })
+  res_c_fluiddilution: string;
 
   @Column({ type: 'varchar', nullable: true })
   res_c_otherinfluencingfactors: string;

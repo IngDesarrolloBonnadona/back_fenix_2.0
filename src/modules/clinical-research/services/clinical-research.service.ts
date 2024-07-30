@@ -64,7 +64,7 @@ export class ClinicalResearchService {
 
       let progress: ClinicalResearchEntity;
       if (id) {
-        progress = await this.clinicalResearchRepository.findOne({
+        progress = await queryRunner.manager.findOne(ClinicalResearchEntity, {
           where: { id },
         });
 
@@ -74,41 +74,84 @@ export class ClinicalResearchService {
             HttpStatus.NO_CONTENT,
           );
         }
-        queryRunner.manager.merge(
+        queryRunner.manager.update(
           ClinicalResearchEntity,
-          progress,
+          progress.id,
           createClinicalResearchDto,
         );
       } else {
-        progress = this.clinicalResearchRepository.create(
+        progress = queryRunner.manager.create(
+          ClinicalResearchEntity,
           createClinicalResearchDto,
         );
+
+        await queryRunner.manager.save(progress);
       }
 
-      await queryRunner.manager.save(progress);
-
       await queryRunner.commitTransaction();
+
+      return new HttpException(`Progreso guardado.`, HttpStatus.CREATED);
     } catch (error) {
       await queryRunner.rollbackTransaction();
-      throw error;
+
+      throw new HttpException(
+        `Error: ${error.message}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     } finally {
       await queryRunner.release();
     }
   }
 
-  findAll() {
-    return `This action returns all clinicalResearch`;
+  async findAllClinicalResearchs() {
+    const clinicalResearchs = await this.clinicalResearchRepository.find({
+      where: { res_c_status: true },
+    });
+
+    if (clinicalResearchs.length === 0) {
+      throw new HttpException(
+        'No se encontró la lista de investigaciones clínicas.',
+        HttpStatus.NO_CONTENT,
+      );
+    }
+
+    return clinicalResearchs;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} clinicalResearch`;
+  async findOneClinicalResearch(id: string) {
+    const clinicalResearch = await this.clinicalResearchRepository.findOne({
+      where: { id, res_c_status: true },
+    });
+
+    if (!clinicalResearch) {
+      throw new HttpException(
+        'No se encontró la investigación clínica.',
+        HttpStatus.NO_CONTENT,
+      );
+    }
+
+    return clinicalResearch;
   }
 
-  update(id: number, updateClinicalResearchDto: UpdateClinicalResearchDto) {
-    return `This action updates a #${id} clinicalResearch`;
-  }
+  // update(id: string, updateClinicalResearchDto: UpdateClinicalResearchDto) {
+  //   return `This action updates a #${id} clinicalResearch`;
+  // }
 
-  remove(id: number) {
-    return `This action removes a #${id} clinicalResearch`;
+  async deleteClinicalResearch(id: string) {
+    const clinicalResearch = await this.clinicalResearchRepository.findOne({
+      where: { id, res_c_status: true },
+    });
+
+    const result = await this.clinicalResearchRepository.softDelete(
+      clinicalResearch.id,
+    );
+
+    if (result.affected === 0) {
+      return new HttpException(
+        `No se pudo eliminar la investigación clínica.`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+    return new HttpException(`¡Datos eliminados correctamente!`, HttpStatus.OK);
   }
 }
