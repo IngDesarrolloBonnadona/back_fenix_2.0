@@ -1,8 +1,10 @@
+import { ClinicalResearchInfluencingFactor } from 'src/modules/clinical-research-influencing-factor/entities/clinical-research-influencing-factor.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -29,4 +31,7 @@ export class InfluencingFactor {
 
   @DeleteDateColumn()
   deletedAt: Date;
+
+  @OneToMany(() => ClinicalResearchInfluencingFactor, (clinicalResearchInfluencingFactor) => clinicalResearchInfluencingFactor.influencingFactor)
+  clinicalResearchInfluencingFactor: ClinicalResearchInfluencingFactor[];
 }
