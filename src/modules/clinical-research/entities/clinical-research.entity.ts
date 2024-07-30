@@ -1,9 +1,19 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 // @Entity({ name: 'fenix_clinical_research' })
 export class ClinicalResearch {
   @PrimaryGeneratedColumn('uuid')
   id: string;
+
+  @Column({ nullable: true, default: false })
+  res_c_isComplete: boolean;
 
   @Column({ nullable: true })
   res_c_instrument_id_fk: number;
@@ -88,4 +98,16 @@ export class ClinicalResearch {
 
   @Column({ nullable: true })
   res_c_casepreventable: boolean;
+
+  @Column({ nullable: true, default: true })
+  res_c_status: boolean;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updateAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 }

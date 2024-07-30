@@ -9,5 +9,6 @@ import { UserModule } from 'src/modules_bonnadonahub/user/user.module';
   imports: [TypeOrmModule.forFeature([RiskFactor]), UserModule],
   controllers: [RiskFactorController],
   providers: [RiskFactorService],
+  exports: [RiskFactorService],
 })
 export class RiskFactorModule {}

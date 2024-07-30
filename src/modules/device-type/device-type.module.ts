@@ -9,5 +9,6 @@ import { UserModule } from 'src/modules_bonnadonahub/user/user.module';
   imports: [TypeOrmModule.forFeature([DeviceType]), UserModule],
   controllers: [DeviceTypeController],
   providers: [DeviceTypeService],
+  exports: [DeviceTypeService],
 })
 export class DeviceTypeModule {}

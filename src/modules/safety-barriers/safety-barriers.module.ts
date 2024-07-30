@@ -9,5 +9,6 @@ import { UserModule } from 'src/modules_bonnadonahub/user/user.module';
   imports: [TypeOrmModule.forFeature([SafetyBarrier]), UserModule],
   controllers: [SafetyBarriersController],
   providers: [SafetyBarriersService],
+  exports: [SafetyBarriersService],
 })
 export class SafetyBarriersModule {}

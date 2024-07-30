@@ -9,5 +9,6 @@ import { UserModule } from 'src/modules_bonnadonahub/user/user.module';
   imports: [TypeOrmModule.forFeature([DamageType]), UserModule],
   controllers: [DamageTypeController],
   providers: [DamageTypeService],
+  exports: [DamageTypeService],
 })
 export class DamageTypeModule {}

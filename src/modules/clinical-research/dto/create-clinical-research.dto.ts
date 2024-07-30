@@ -2,6 +2,10 @@ import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateClinicalResearchDto {
   @IsOptional()
+  @IsBoolean()
+  res_c_isComplete: boolean;
+
+  @IsOptional()
   @IsNumber()
   res_c_instrument_id_fk: number;
 

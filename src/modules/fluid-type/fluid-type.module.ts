@@ -9,5 +9,6 @@ import { UserModule } from 'src/modules_bonnadonahub/user/user.module';
   imports: [TypeOrmModule.forFeature([FluidType]), UserModule],
   controllers: [FluidTypeController],
   providers: [FluidTypeService],
+  exports: [FluidTypeService],
 })
 export class FluidTypeModule {}

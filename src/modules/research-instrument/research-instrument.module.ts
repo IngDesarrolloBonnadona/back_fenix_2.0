@@ -9,5 +9,6 @@ import { UserModule } from 'src/modules_bonnadonahub/user/user.module';
   imports: [TypeOrmModule.forFeature([ResearchInstrument]), UserModule],
   controllers: [ResearchInstrumentController],
   providers: [ResearchInstrumentService],
+  exports: [ResearchInstrumentService],
 })
 export class ResearchInstrumentModule {}
