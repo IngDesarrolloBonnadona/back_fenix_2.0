@@ -1,8 +1,10 @@
+import { ClinicalResearchFailedMeasure } from 'src/modules/clinical-research-failed-measures/entities/clinical-research-failed-measure.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -29,4 +31,11 @@ export class FailedMeasure {
 
   @DeleteDateColumn()
   deletedAt: Date;
+
+  @OneToMany(
+    () => ClinicalResearchFailedMeasure,
+    (clinicalResearchFailedMeasure) =>
+      clinicalResearchFailedMeasure.failedMeasure,
+  )
+  clinicalResearchFailedMeasure: ClinicalResearchFailedMeasure[];
 }

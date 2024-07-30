@@ -1,3 +1,4 @@
+import { ClinicalResearchFailedMeasure } from 'src/modules/clinical-research-failed-measures/entities/clinical-research-failed-measure.entity';
 import { ClinicalResearchInfluencingFactor } from 'src/modules/clinical-research-influencing-factor/entities/clinical-research-influencing-factor.entity';
 import {
   Column,
@@ -115,4 +116,7 @@ export class ClinicalResearch {
 
   @OneToMany(() => ClinicalResearchInfluencingFactor, (clinicalResearchInfluencingFactor) => clinicalResearchInfluencingFactor.clinicalResearch)
   clinicalResearchInfluencingFactor: ClinicalResearchInfluencingFactor[];
+
+  @OneToMany(() => ClinicalResearchFailedMeasure, (clinicalResearchFailedMeasure) => clinicalResearchFailedMeasure.clinicalResearch)
+  clinicalResearchFailedMeasure: ClinicalResearchFailedMeasure[];
 }
