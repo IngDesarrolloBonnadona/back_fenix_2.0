@@ -11,6 +11,7 @@ import { FluidTypeModule } from '../fluid-type/fluid-type.module';
 import { RiskFactorModule } from '../risk-factor/risk-factor.module';
 import { SafetyBarriersModule } from '../safety-barriers/safety-barriers.module';
 import { ClinicalResearchInfluencingFactorModule } from '../clinical-research-influencing-factor/clinical-research-influencing-factor.module';
+import { InfluencingFactorModule } from '../influencing-factor/influencing-factor.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { ClinicalResearchInfluencingFactorModule } from '../clinical-research-in
     RiskFactorModule,
     SafetyBarriersModule,
     ClinicalResearchInfluencingFactorModule,
+    InfluencingFactorModule,
   ],
   controllers: [ClinicalResearchController],
   providers: [ClinicalResearchService],

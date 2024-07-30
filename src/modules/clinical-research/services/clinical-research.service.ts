@@ -11,6 +11,7 @@ import { FluidTypeService } from 'src/modules/fluid-type/services/fluid-type.ser
 import { RiskFactorService } from 'src/modules/risk-factor/services/risk-factor.service';
 import { SafetyBarriersService } from 'src/modules/safety-barriers/services/safety-barriers.service';
 import { ClinicalResearchInfluencingFactorService } from 'src/modules/clinical-research-influencing-factor/services/clinical-research-influencing-factor.service';
+import { InfluencingFactorService } from 'src/modules/influencing-factor/services/influencing-factor.service';
 
 @Injectable()
 export class ClinicalResearchService {
@@ -26,6 +27,7 @@ export class ClinicalResearchService {
     private readonly riskFactorService: RiskFactorService,
     private readonly safetyBarriersService: SafetyBarriersService,
     private readonly clinicalResearchInfluencingFactorService: ClinicalResearchInfluencingFactorService,
+    private readonly influencingFactorService: InfluencingFactorService,
   ) {}
 
   async saveProgressClinicalResearch(
@@ -64,7 +66,16 @@ export class ClinicalResearchService {
           ),
       ]);
 
+      if (createClinicalResearchDto.influencingFactor) {
+        for (const factor of createClinicalResearchDto.influencingFactor) {
+          await this.influencingFactorService.findOneInfluencingFactor(
+            factor.inf_fcr_influencingfactor_id_fk,
+          );
+        }
+      }
+
       let progress: ClinicalResearchEntity;
+
       if (clinicalResearchId) {
         progress = await queryRunner.manager.findOne(ClinicalResearchEntity, {
           where: { id: clinicalResearchId },
@@ -76,10 +87,13 @@ export class ClinicalResearchService {
             HttpStatus.NO_CONTENT,
           );
         }
+        const { influencingFactor, ...updateFields } =
+          createClinicalResearchDto;
+
         queryRunner.manager.update(
           ClinicalResearchEntity,
           progress.id,
-          createClinicalResearchDto,
+          updateFields,
         );
       } else {
         progress = queryRunner.manager.create(
@@ -98,7 +112,7 @@ export class ClinicalResearchService {
         await this.clinicalResearchInfluencingFactorService.createClinicalResearchInfluencingFactorTransaction(
           createClinicalResearchDto.influencingFactor,
           clinicalResearchId || progress.id,
-          queryRunner
+          queryRunner,
         );
       }
 
@@ -135,6 +149,9 @@ export class ClinicalResearchService {
   async findOneClinicalResearch(id: string) {
     const clinicalResearch = await this.clinicalResearchRepository.findOne({
       where: { id, res_c_status: true },
+      relations: {
+        clinicalResearchInfluencingFactor: { influencingFactor: true },
+      },
     });
 
     if (!clinicalResearch) {

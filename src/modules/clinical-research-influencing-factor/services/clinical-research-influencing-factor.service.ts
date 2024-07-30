@@ -23,7 +23,7 @@ export class ClinicalResearchInfluencingFactorService {
       });
 
     if (existingClinicalResearchInfluencingFactor.length > 0) {
-      await queryRunner.manager.softRemove(
+      await queryRunner.manager.remove(
         existingClinicalResearchInfluencingFactor,
       );
     }

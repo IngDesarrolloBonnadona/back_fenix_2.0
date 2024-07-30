@@ -9,5 +9,6 @@ import { UserModule } from 'src/modules_bonnadonahub/user/user.module';
   imports: [TypeOrmModule.forFeature([InfluencingFactor]), UserModule],
   controllers: [InfluencingFactorController],
   providers: [InfluencingFactorService],
+  exports: [InfluencingFactorService],
 })
 export class InfluencingFactorModule {}
