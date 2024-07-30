@@ -1,4 +1,13 @@
-import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  IsArray,
+  IsBoolean,
+  IsNumber,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
+import { CreateClinicalResearchInfluencingFactorDto } from 'src/modules/clinical-research-influencing-factor/dto/create-clinical-research-influencing-factor.dto';
 
 export class CreateClinicalResearchDto {
   @IsOptional()
@@ -116,4 +125,10 @@ export class CreateClinicalResearchDto {
   @IsOptional()
   @IsBoolean()
   res_c_casepreventable: boolean;
+
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateClinicalResearchInfluencingFactorDto)
+  influencingFactor: CreateClinicalResearchInfluencingFactorDto[];
 }

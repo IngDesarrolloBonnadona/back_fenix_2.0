@@ -10,6 +10,7 @@ import { DamageTypeService } from 'src/modules/damage-type/services/damage-type.
 import { FluidTypeService } from 'src/modules/fluid-type/services/fluid-type.service';
 import { RiskFactorService } from 'src/modules/risk-factor/services/risk-factor.service';
 import { SafetyBarriersService } from 'src/modules/safety-barriers/services/safety-barriers.service';
+import { ClinicalResearchInfluencingFactorService } from 'src/modules/clinical-research-influencing-factor/services/clinical-research-influencing-factor.service';
 
 @Injectable()
 export class ClinicalResearchService {
@@ -24,11 +25,12 @@ export class ClinicalResearchService {
     private readonly fluidTypeService: FluidTypeService,
     private readonly riskFactorService: RiskFactorService,
     private readonly safetyBarriersService: SafetyBarriersService,
+    private readonly clinicalResearchInfluencingFactorService: ClinicalResearchInfluencingFactorService,
   ) {}
 
   async saveProgressClinicalResearch(
     createClinicalResearchDto: CreateClinicalResearchDto,
-    id: string,
+    clinicalResearchId: string,
   ) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -63,9 +65,9 @@ export class ClinicalResearchService {
       ]);
 
       let progress: ClinicalResearchEntity;
-      if (id) {
+      if (clinicalResearchId) {
         progress = await queryRunner.manager.findOne(ClinicalResearchEntity, {
-          where: { id },
+          where: { id: clinicalResearchId },
         });
 
         if (!progress) {
@@ -86,6 +88,18 @@ export class ClinicalResearchService {
         );
 
         await queryRunner.manager.save(progress);
+      }
+
+      const hasClinicalResearchInfluencingFactor =
+        createClinicalResearchDto.influencingFactor &&
+        createClinicalResearchDto.influencingFactor.length > 0;
+
+      if (hasClinicalResearchInfluencingFactor) {
+        await this.clinicalResearchInfluencingFactorService.createClinicalResearchInfluencingFactorTransaction(
+          createClinicalResearchDto.influencingFactor,
+          clinicalResearchId || progress.id,
+          queryRunner
+        );
       }
 
       await queryRunner.commitTransaction();

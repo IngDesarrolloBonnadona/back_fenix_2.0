@@ -12,5 +12,6 @@ import { UserModule } from 'src/modules_bonnadonahub/user/user.module';
   ],
   controllers: [ClinicalResearchInfluencingFactorController],
   providers: [ClinicalResearchInfluencingFactorService],
+  exports: [ClinicalResearchInfluencingFactorService],
 })
 export class ClinicalResearchInfluencingFactorModule {}

@@ -7,7 +7,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-// @Entity({ name: 'fenix_clinical_research' })
+@Entity({ name: 'fenix_clinical_research' })
 export class ClinicalResearch {
   @PrimaryGeneratedColumn('uuid')
   id: string;

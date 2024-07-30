@@ -15,15 +15,15 @@ export class ClinicalResearchInfluencingFactorController {
     private readonly clinicalResearchInfluencingFactorService: ClinicalResearchInfluencingFactorService,
   ) {}
 
-  @Post()
-  create(
-    @Body()
-    createClinicalResearchInfluencingFactorDto: CreateClinicalResearchInfluencingFactorDto,
-  ) {
-    return this.clinicalResearchInfluencingFactorService.create(
-      createClinicalResearchInfluencingFactorDto,
-    );
-  }
+  // @Post()
+  // create(
+  //   @Body()
+  //   createClinicalResearchInfluencingFactorDto: CreateClinicalResearchInfluencingFactorDto[],
+  // ) {
+  //   return this.clinicalResearchInfluencingFactorService.createClinicalResearchInfluencingFactorTransaction(
+  //     createClinicalResearchInfluencingFactorDto,
+  //   );
+  // }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
