@@ -99,7 +99,7 @@ export class ClinicalResearchService {
             HttpStatus.NO_CONTENT,
           );
         }
-        
+
         const { influencingFactor, failedMeasure, ...updateFields } =
           createClinicalResearchDto;
 
@@ -182,6 +182,7 @@ export class ClinicalResearchService {
       where: { id, res_c_status: true },
       relations: {
         clinicalResearchInfluencingFactor: { influencingFactor: true },
+        clinicalResearchFailedMeasure: { failedMeasure: true },
       },
     });
 
