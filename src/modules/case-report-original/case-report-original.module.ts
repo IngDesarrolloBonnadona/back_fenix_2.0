@@ -29,8 +29,8 @@ import { UserModule } from 'src/modules_bonnadonahub/user/user.module';
     TypeOrmModule.forFeature([
       CaseReportOriginal,
       CaseType,
-      Priority,
-      SeverityClasification,
+      // Priority,
+      // SeverityClasification,
     ]),
     CaseReportValidateModule,
     LogModule,

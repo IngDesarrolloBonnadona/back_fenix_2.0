@@ -43,7 +43,7 @@ import { ActionPlanModule } from '../action-plan/action-plan.module';
       ReportAnalystAssignment,
       Synergy,
       ReportResearcherAssignment,
-      Priority,
+      // Priority,
       ObservationReturnCase,
       ActionPlanCaseReportValidate,
     ]),

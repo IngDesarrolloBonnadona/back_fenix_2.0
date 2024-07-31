@@ -40,10 +40,10 @@ export class CaseReportOriginalService {
     private readonly caseReportOriginalRepository: Repository<CaseReportOriginalEntity>,
     @InjectRepository(CaseTypeEntity)
     private readonly caseTypeRepository: Repository<CaseTypeEntity>,
-    @InjectRepository(PriorityEntity)
-    private readonly priorityRepository: Repository<PriorityEntity>,
-    @InjectRepository(SeverityClasificationEntity)
-    private readonly severityClasificationRepository: Repository<SeverityClasificationEntity>,
+    // @InjectRepository(PriorityEntity)
+    // private readonly priorityRepository: Repository<PriorityEntity>,
+    // @InjectRepository(SeverityClasificationEntity)
+    // private readonly severityClasificationRepository: Repository<SeverityClasificationEntity>,
 
     private readonly caseReportValidateService: CaseReportValidateService,
     private readonly logService: LogService,
@@ -156,10 +156,12 @@ export class CaseReportOriginalService {
           movementReport.REPORT_CREATION,
         );
 
-      const severityClasificationFound =
-        await this.severityClasificationRepository.findOne({
+      const severityClasificationFound = await queryRunner.manager.findOne(
+        SeverityClasificationEntity,
+        {
           where: { sev_c_name: severityClasification.MODERATE_SEVERITY },
-        });
+        },
+      );
 
       if (!severityClasificationFound) {
         throw new HttpException(
@@ -176,7 +178,7 @@ export class CaseReportOriginalService {
           severityClasificationFound.id;
       }
 
-      const priorityFind = await this.priorityRepository.findOne({
+      const priorityFind = await queryRunner.manager.findOne(PriorityEntity, {
         where: {
           prior_severityclasif_id_fk:
             createReportOriDto.ori_cr_severityclasif_id_fk,

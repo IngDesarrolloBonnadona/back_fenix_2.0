@@ -71,8 +71,8 @@ export class CaseReportValidateService {
     private readonly synergyRepository: Repository<SynergyEntity>,
     @InjectRepository(ReportResearcherAssignmentEntity)
     private readonly researchRepository: Repository<ReportResearcherAssignmentEntity>,
-    @InjectRepository(PriorityEntity)
-    private readonly priorityRepository: Repository<PriorityEntity>,
+    // @InjectRepository(PriorityEntity)
+    // private readonly priorityRepository: Repository<PriorityEntity>,
     @InjectRepository(ObservationReturnCaseEntity)
     private readonly observationReturnCaseRepository: Repository<ObservationReturnCaseEntity>,
     @InjectRepository(ActionPlanCaseReportValidateEntity)
@@ -124,14 +124,20 @@ export class CaseReportValidateService {
     });
 
     if (similarReport.length > 0) {
-      throw new HttpException({
-        message: `¡Extisten ${similarReport.length} casos similares!`,
-        data: similarReport,
-      }, HttpStatus.FOUND)
+      throw new HttpException(
+        {
+          message: `¡Extisten ${similarReport.length} casos similares!`,
+          data: similarReport,
+        },
+        HttpStatus.FOUND,
+      );
     } else {
-      throw new HttpException({
-        message: '¡No existen casos similares!',
-      }, HttpStatus.NO_CONTENT)
+      throw new HttpException(
+        {
+          message: '¡No existen casos similares!',
+        },
+        HttpStatus.NO_CONTENT,
+      );
     }
   }
 
@@ -271,7 +277,7 @@ export class CaseReportValidateService {
         createReportValDto.val_cr_severityclasif_id_fk !== null &&
         createReportValDto.val_cr_severityclasif_id_fk !== undefined
       ) {
-        const priorityFind = await this.priorityRepository.findOne({
+        const priorityFind = await queryRunner.manager.findOne(PriorityEntity, {
           where: {
             prior_severityclasif_id_fk:
               createReportValDto.val_cr_severityclasif_id_fk,
