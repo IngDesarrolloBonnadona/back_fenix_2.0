@@ -99,6 +99,7 @@ export class ClinicalResearchService {
             HttpStatus.NO_CONTENT,
           );
         }
+        
         const { influencingFactor, failedMeasure, ...updateFields } =
           createClinicalResearchDto;
 
@@ -123,7 +124,7 @@ export class ClinicalResearchService {
       if (hasClinicalResearchInfluencingFactor) {
         await this.clinicalResearchInfluencingFactorService.createClinicalResearchInfluencingFactorTransaction(
           createClinicalResearchDto.influencingFactor,
-          clinicalResearchId || progress.id,
+          progress.id,
           queryRunner,
         );
       }
@@ -135,7 +136,7 @@ export class ClinicalResearchService {
       if (hasClinicalResearchFailedMeasure) {
         await this.clinicalResearchFailedMeasureService.createClinicalResearchFailedMeasureTransaction(
           createClinicalResearchDto.failedMeasure,
-          clinicalResearchId || progress.id,
+          progress.id,
           queryRunner,
         );
       }
@@ -145,7 +146,7 @@ export class ClinicalResearchService {
       return new HttpException(
         {
           message: `Progreso guardado.`,
-          data: clinicalResearchId || progress.id,
+          data: progress.id,
         },
         HttpStatus.CREATED,
       );

@@ -113,7 +113,7 @@ export class CreateClinicalResearchDto {
 
   @IsOptional()
   @IsBoolean()
-  res_c_incorrectupdates: boolean;
+  res_c_incorrectactions: boolean;
 
   @IsOptional()
   @IsBoolean()

@@ -91,7 +91,7 @@ export class ClinicalResearch {
   res_c_safetybarriers_id_fk: number;
 
   @Column({ nullable: true })
-  res_c_incorrectupdates: boolean;
+  res_c_incorrectactions: boolean;
 
   @Column({ nullable: true })
   res_c_unsafeactions: boolean;
