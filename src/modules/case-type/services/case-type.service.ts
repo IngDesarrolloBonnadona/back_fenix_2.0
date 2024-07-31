@@ -13,6 +13,12 @@ export class CaseTypeService {
   ) {}
 
   async createCaseType(createCaseTypeDto: CreateCaseTypeDto) {
+    if (!createCaseTypeDto || !createCaseTypeDto.cas_t_name) {
+      throw new HttpException(
+        'El nombre del tipo de caso es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
     const findCaseType = await this.caseTypeRepository.findOne({
       where: {
         cas_t_name: createCaseTypeDto.cas_t_name,
@@ -23,7 +29,7 @@ export class CaseTypeService {
     if (findCaseType) {
       throw new HttpException(
         'El tipo de caso ya existe.',
-        HttpStatus.CONFLICT,
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
     const caseType = this.caseTypeRepository.create(createCaseTypeDto);
@@ -50,7 +56,7 @@ export class CaseTypeService {
     if (caseTypes.length === 0) {
       throw new HttpException(
         'No se encontró la lista de tipos de caso',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -58,18 +64,25 @@ export class CaseTypeService {
   }
 
   async findOneCaseType(id: number) {
+    if (!id) {
+      throw new HttpException(
+        'El id del tipo de caso es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const caseType = await this.caseTypeRepository.findOne({
       where: { id, cas_t_status: true },
       relations: {
-        eventType: true
-      //   caseReportValidate: true,
+        eventType: true,
+        //   caseReportValidate: true,
       },
     });
 
     if (!caseType) {
       throw new HttpException(
         'No se encontró el tipo de caso',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 

@@ -2,7 +2,6 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
-  NotFoundException,
 } from '@nestjs/common';
 import { CreateEventTypeDto } from '../dto/create-event-type.dto';
 import { UpdateEventTypeDto } from '../dto/update-event-type.dto';
@@ -144,6 +143,13 @@ export class EventTypeService {
   }
 
   async findEvenTypeByCaseType(caseTypeId: number) {
+    if (!caseTypeId) {
+      throw new HttpException(
+        'El id del tipo de caso es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    
     const eventTypesByCaseType = await this.eventTypeRepository.find({
       where: {
         eve_t_casetype_id_fk: caseTypeId,
