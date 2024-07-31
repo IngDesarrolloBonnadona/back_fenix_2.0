@@ -81,7 +81,7 @@ export class ClinicalResearchService {
       if (createClinicalResearchDto.failedMeasure) {
         for (const measure of createClinicalResearchDto.failedMeasure) {
           await this.failedMeasureService.findOneFailedMeasure(
-            measure.meas_fcr_failedmeasures_id_fk,
+            measure.meas_fcr_failedmeasure_id_fk,
           );
         }
       }
@@ -142,7 +142,13 @@ export class ClinicalResearchService {
 
       await queryRunner.commitTransaction();
 
-      return new HttpException(`Progreso guardado.`, HttpStatus.CREATED);
+      return new HttpException(
+        {
+          message: `Progreso guardado.`,
+          data: clinicalResearchId || progress.id,
+        },
+        HttpStatus.CREATED,
+      );
     } catch (error) {
       await queryRunner.rollbackTransaction();
 
