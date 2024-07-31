@@ -21,6 +21,17 @@ export class EventTypeService {
   ) {}
 
   async createEventType(createEventTypeDto: CreateEventTypeDto) {
+    if (
+      !createEventTypeDto ||
+      !createEventTypeDto.eve_t_name ||
+      !createEventTypeDto.eve_t_casetype_id_fk
+    ) {
+      throw new HttpException(
+        'Los datos del tipo de suceso son requeridos.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const findEventType = await this.eventTypeRepository.findOne({
       where: {
         eve_t_name: createEventTypeDto.eve_t_name,
@@ -31,7 +42,7 @@ export class EventTypeService {
     if (findEventType) {
       throw new HttpException(
         'El tipo de suceso ya existe en el tipo de caso seleccionado.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
 
@@ -62,7 +73,7 @@ export class EventTypeService {
       if (findEventType) {
         throw new HttpException(
           `El tipo de suceso ${eventType.eve_t_name} ya existe en el tipo de caso seleccionado.`,
-          HttpStatus.NO_CONTENT,
+          HttpStatus.INTERNAL_SERVER_ERROR,
         );
       }
 
@@ -100,26 +111,32 @@ export class EventTypeService {
     if (eventTypes.length === 0) {
       throw new HttpException(
         'No se encontró la lista de tipo de sucesos.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
     return eventTypes;
   }
 
   async findOneEventType(id: number) {
+    if (!id) {
+      throw new HttpException(
+        'El id del tipo de suceso es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const eventType = await this.eventTypeRepository.findOne({
       where: { id, eve_t_status: true },
       relations: {
         event: true,
         caseType: true,
-        // caseReportValidate: true,
       },
     });
 
     if (!eventType) {
       throw new HttpException(
         'No se encontró el tipo de suceso.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -140,7 +157,7 @@ export class EventTypeService {
     if (!eventTypesByCaseType) {
       throw new HttpException(
         'No se encontró el tipo de suceso relacionado al tipo de caso.',
-        HttpStatus.CONFLICT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
