@@ -18,6 +18,17 @@ export class ReasonReturnCaseService {
   async createReasonReturnCase(
     createReasonReturnCaseDto: CreateReasonReturnCaseDto,
   ) {
+    if (
+      !createReasonReturnCaseDto ||
+      !createReasonReturnCaseDto.rec_r_cause ||
+      !createReasonReturnCaseDto.rec_r_role_id_fk
+    ) {
+      throw new HttpException(
+        'Algunos datos del motivo de devolución son requeridos.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const findReasonReturnCase = await this.reasonReturnCaseRepository.findOne({
       where: {
         rec_r_role_id_fk: createReasonReturnCaseDto.rec_r_role_id_fk,
@@ -29,7 +40,7 @@ export class ReasonReturnCaseService {
     if (findReasonReturnCase) {
       throw new HttpException(
         `El motivo de devolución para este rol ya existe.`,
-        HttpStatus.CONFLICT,
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
 
@@ -60,13 +71,20 @@ export class ReasonReturnCaseService {
     if (reasonReturnCases.length === 0) {
       throw new HttpException(
         'No se encontró la lista de motivos de devolución.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
     return reasonReturnCases;
   }
 
   async findOneReasonReturnCase(id: number) {
+    if (!id) {
+      throw new HttpException(
+        'El identificador del motivo de devolución es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const reasonReturnCase = await this.reasonReturnCaseRepository.findOne({
       where: { id, rec_r_status: true },
       relations: { role: true },
@@ -75,7 +93,7 @@ export class ReasonReturnCaseService {
     if (!reasonReturnCase) {
       throw new HttpException(
         'No se encontró el motivo de devolución.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
     return reasonReturnCase;
@@ -85,6 +103,13 @@ export class ReasonReturnCaseService {
     id: number,
     updateReasonReturnCaseDto: UpdateReasonReturnCaseDto,
   ) {
+    if (!updateReasonReturnCaseDto) {
+      throw new HttpException(
+        'Los datos para actualizar el motivo de devolución son requeridos.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const reasonReturnCase = await this.findOneReasonReturnCase(id);
     const result = await this.reasonReturnCaseRepository.update(
       reasonReturnCase.id,
