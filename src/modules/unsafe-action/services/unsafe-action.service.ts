@@ -13,6 +13,13 @@ export class UnsafeActionService {
   ) {}
 
   async createUnsafeAction(createUnsafeActionDto: CreateUnsafeActionDto) {
+    if (!createUnsafeActionDto || !createUnsafeActionDto.uns_a_name) {
+      throw new HttpException(
+        'El nombre de la acción insegura es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const findUnsafeAction = await this.unsafeActionRepository.findOne({
       where: {
         uns_a_name: createUnsafeActionDto.uns_a_name,
@@ -23,7 +30,7 @@ export class UnsafeActionService {
     if (findUnsafeAction) {
       throw new HttpException(
         'la acción insegura ya existe.',
-        HttpStatus.CONFLICT,
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
 
@@ -47,7 +54,7 @@ export class UnsafeActionService {
     if (unsafeAction.length === 0) {
       throw new HttpException(
         'No se encontró la lista de acciones inseguras.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -55,6 +62,13 @@ export class UnsafeActionService {
   }
 
   async findOneUnsafeActions(id: number) {
+    if (!id) {
+      throw new HttpException(
+        'El identificador de la acción insegura es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const unsafeAction = await this.unsafeActionRepository.findOne({
       where: { id, uns_a_status: true },
     });
@@ -62,7 +76,7 @@ export class UnsafeActionService {
     if (!unsafeAction) {
       throw new HttpException(
         'No se encontró la acción insegura.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -73,6 +87,13 @@ export class UnsafeActionService {
     id: number,
     updateUnsafeActionDto: UpdateUnsafeActionDto,
   ) {
+    if (!updateUnsafeActionDto) {
+      throw new HttpException(
+        'Los datos para actualizar la acción insegura son requeridos.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const unsafeAction = await this.findOneUnsafeActions(id);
     const result = await this.unsafeActionRepository.update(
       unsafeAction.id,
