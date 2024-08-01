@@ -46,7 +46,7 @@ export class DeviceService {
 
     if (devices.length === 0) {
       throw new HttpException(
-        'No se encontró la lista de dispositivos',
+        'No se encontró la lista de dispositivos.',
         HttpStatus.NOT_FOUND,
       );
     }
@@ -67,7 +67,7 @@ export class DeviceService {
 
     if (!device) {
       throw new HttpException(
-        'No se encontró el dispositivo',
+        'No se encontró el dispositivo.',
         HttpStatus.NOT_FOUND,
       );
     }
@@ -82,7 +82,7 @@ export class DeviceService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    
+
     const device = await this.findOneDevice(id);
     const result = await this.deviceRepository.update(
       device.id,
@@ -91,7 +91,7 @@ export class DeviceService {
 
     if (result.affected === 0) {
       return new HttpException(
-        `No se pudo actualizar el dispositivo`,
+        `No se pudo actualizar el dispositivo.`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
@@ -108,7 +108,7 @@ export class DeviceService {
 
     if (result.affected === 0) {
       return new HttpException(
-        `No se pudo eliminar el dispositivo`,
+        `No se pudo eliminar el dispositivo.`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }

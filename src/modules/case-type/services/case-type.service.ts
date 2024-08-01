@@ -76,7 +76,7 @@ export class CaseTypeService {
 
     if (!caseType) {
       throw new HttpException(
-        'No se encontró el tipo de caso',
+        'No se encontró el tipo de caso.',
         HttpStatus.NOT_FOUND,
       );
     }
@@ -100,7 +100,7 @@ export class CaseTypeService {
 
     if (result.affected === 0) {
       return new HttpException(
-        `No se pudo actualizar el tipo de caso`,
+        `No se pudo actualizar el tipo de caso.`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
@@ -117,7 +117,7 @@ export class CaseTypeService {
 
     if (result.affected === 0) {
       return new HttpException(
-        `No se pudo eliminar el tipo de caso`,
+        `No se pudo eliminar el tipo de caso.`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }

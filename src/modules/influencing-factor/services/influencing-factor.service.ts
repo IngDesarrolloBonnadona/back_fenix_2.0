@@ -15,6 +15,13 @@ export class InfluencingFactorService {
   async createInfluencingFactor(
     createInfluencingFactorDto: CreateInfluencingFactorDto,
   ) {
+    if (!createInfluencingFactorDto || !createInfluencingFactorDto.inf_f_name) {
+      throw new HttpException(
+        'El nombre del factor de influencia es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const findInfluencingFactor =
       await this.influencingFactoryRepository.findOne({
         where: {
@@ -26,7 +33,7 @@ export class InfluencingFactorService {
     if (findInfluencingFactor) {
       throw new HttpException(
         'El factor de influencia ya existe.',
-        HttpStatus.CONFLICT,
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
 
@@ -49,8 +56,8 @@ export class InfluencingFactorService {
 
     if (influencingFactor.length === 0) {
       throw new HttpException(
-        'No se encontró la lista de factores de influencia',
-        HttpStatus.NO_CONTENT,
+        'No se encontró la lista de factores de influencia.',
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -58,14 +65,21 @@ export class InfluencingFactorService {
   }
 
   async findOneInfluencingFactor(id: number) {
+    if (!id) {
+      throw new HttpException(
+        'El identificador del factor de influencia es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const influencingFactor = await this.influencingFactoryRepository.findOne({
       where: { id, inf_f_status: true },
     });
 
     if (!influencingFactor) {
       throw new HttpException(
-        'No se encontró el factor de influencia',
-        HttpStatus.NO_CONTENT,
+        'No se encontró el factor de influencia.',
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -76,6 +90,13 @@ export class InfluencingFactorService {
     id: number,
     updateInfluencingFactorDto: UpdateInfluencingFactorDto,
   ) {
+    if (!updateInfluencingFactorDto) {
+      throw new HttpException(
+        'Los datos para actualizar el factor de influencia son requeridos.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const influencingFactor = await this.findOneInfluencingFactor(id);
     const result = await this.influencingFactoryRepository.update(
       influencingFactor.id,
