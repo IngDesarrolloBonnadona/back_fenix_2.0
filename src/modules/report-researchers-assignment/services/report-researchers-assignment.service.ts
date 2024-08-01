@@ -72,7 +72,7 @@ export class ResearchersService {
     if (filteredResearchers.length === 0) {
       throw new HttpException(
         'No se encontraron investigadores que coincidan con los criterios de búsqueda.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -84,6 +84,31 @@ export class ResearchersService {
     clientIp: string,
     idAnalyst: string,
   ) {
+    if (
+      !createResearcherDto ||
+      !createResearcherDto.res_userresearch_id ||
+      !createResearcherDto.res_validatedcase_id_fk
+    ) {
+      throw new HttpException(
+        'Algunos datos para asignar investigador son requeridos.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    if (!clientIp) {
+      throw new HttpException(
+        'La dirección IP del usuario es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    if (!idAnalyst) {
+      throw new HttpException(
+        'El identificador del analista es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const reportAssignmentFind = await this.researcherRepository.findOne({
       where: {
         res_validatedcase_id_fk: createResearcherDto.res_validatedcase_id_fk,
@@ -95,7 +120,7 @@ export class ResearchersService {
     if (reportAssignmentFind) {
       throw new HttpException(
         'El reporte ya tiene un investigador asignado',
-        HttpStatus.CONFLICT,
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
 
@@ -114,7 +139,7 @@ export class ResearchersService {
     if (!findCaseType) {
       throw new HttpException(
         `El tipo de caso ${caseTypeReport.ADVERSE_EVENT} no existe.`,
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -129,7 +154,7 @@ export class ResearchersService {
     if (!findSeverityClasification) {
       throw new HttpException(
         `La clasificacion de severidad ${severityClasification.SERIOUS_SEVERITY} no existe.`,
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -143,7 +168,7 @@ export class ResearchersService {
     if (!findIdRole) {
       throw new HttpException(
         `El rol ${userRoles.INVESTIGATOR} no existe.`,
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -159,7 +184,7 @@ export class ResearchersService {
     if (!findRoleResponseTime) {
       throw new HttpException(
         `El tiempo de respuesta del rol ${userRoles.INVESTIGATOR} no existe.`,
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -276,7 +301,7 @@ export class ResearchersService {
     if (caseReportsValidate.length === 0) {
       throw new HttpException(
         'No hay reportes para mostrar.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -344,7 +369,7 @@ export class ResearchersService {
     if (caseReportsValidate.length === 0) {
       throw new HttpException(
         'No hay reportes para mostrar.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -352,6 +377,13 @@ export class ResearchersService {
   }
 
   async findOneAssignedResearch(id: number) {
+    if (!id) {
+      throw new HttpException(
+        'El identificador del investigador asignado es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const research = await this.researcherRepository.findOne({
       where: { id, res_status: true, res_isreturned: false },
     });
@@ -359,7 +391,7 @@ export class ResearchersService {
     if (!research) {
       throw new HttpException(
         'No se encontró el investigador',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
     return research;
@@ -371,6 +403,34 @@ export class ResearchersService {
     idAnalyst: string,
     idCaseReportValidate: string,
   ) {
+    if (!updateResearcherDto) {
+      throw new HttpException(
+        'Los datos para actualizar la asignación del investigador son requeridos.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    if (!clientIp) {
+      throw new HttpException(
+        'La dirección IP del usuario es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    if (!idAnalyst) {
+      throw new HttpException(
+        'El identificador del analista es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    if (!idCaseReportValidate) {
+      throw new HttpException(
+        'El identificador del caso es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const findResearcherAssigned = await this.researcherRepository.findOne({
       where: {
         res_validatedcase_id_fk: idCaseReportValidate,
@@ -383,7 +443,7 @@ export class ResearchersService {
     if (!findResearcherAssigned) {
       throw new HttpException(
         'No se encontró el reporte asignado a investigador.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -399,7 +459,7 @@ export class ResearchersService {
     if (!caseReportValidate) {
       throw new HttpException(
         'No se encontró el reporte.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -459,6 +519,27 @@ export class ResearchersService {
     clientIp: string,
     idResearcher: string,
   ) {
+    if (!idCaseReportValidate) {
+      throw new HttpException(
+        'El identificador del caso es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    if (!clientIp) {
+      throw new HttpException(
+        'La dirección IP del usuario es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    if (!idResearcher) {
+      throw new HttpException(
+        'El identificador del investigador es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const findReportResearcherAssigned =
       await this.researcherRepository.findOne({
         where: {
@@ -471,7 +552,7 @@ export class ResearchersService {
     if (!findReportResearcherAssigned) {
       throw new HttpException(
         'No se encontró el reporte asignado a investigador.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -487,7 +568,7 @@ export class ResearchersService {
     if (!reportAssignmentFind) {
       throw new HttpException(
         'No se encontró el reporte asignado a analista',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
