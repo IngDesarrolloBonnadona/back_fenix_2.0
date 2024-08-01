@@ -90,6 +90,13 @@ export class CaseTypeService {
   }
 
   async updateCaseType(id: number, updateCaseTypeDto: UpdateCaseTypeDto) {
+    if (!updateCaseTypeDto) {
+      throw new HttpException(
+        'Los datos para actualizar el tipo de caso son requeridos.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    
     const caseType = await this.findOneCaseType(id);
     const result = await this.caseTypeRepository.update(
       caseType.id,

@@ -13,6 +13,13 @@ export class DamageTypeService {
   ) {}
 
   async createDamageType(createDamageTypeDto: CreateDamageTypeDto) {
+    if (!createDamageTypeDto || !createDamageTypeDto.dam_t_description) {
+      throw new HttpException(
+        'El nombre del tipo de daño es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const findDamageType = await this.damageTypeRepository.findOne({
       where: { dam_t_name: createDamageTypeDto.dam_t_name, dam_t_status: true },
     });
@@ -20,7 +27,7 @@ export class DamageTypeService {
     if (findDamageType) {
       throw new HttpException(
         'El tipo de daño ya existe.',
-        HttpStatus.CONFLICT,
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
 
@@ -34,21 +41,28 @@ export class DamageTypeService {
   }
 
   async findAllDamageType() {
-    const damageType = await this.damageTypeRepository.find({
+    const damageTypes = await this.damageTypeRepository.find({
       where: { dam_t_status: true },
       order: { dam_t_name: 'ASC' },
     });
 
-    if (damageType.length === 0) {
+    if (damageTypes.length === 0) {
       throw new HttpException(
-        'No se encontró la lista de tipo de daños.',
-        HttpStatus.NO_CONTENT,
+        'No se encontró la lista de tipos de daño.',
+        HttpStatus.NOT_FOUND,
       );
     }
-    return damageType;
+    return damageTypes;
   }
 
   async findOneDamageType(id: number) {
+    if (!id) {
+      throw new HttpException(
+        'El identificador del tipo de daño es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const damageType = await this.damageTypeRepository.findOne({
       where: { id, dam_t_status: true },
     });
@@ -56,13 +70,20 @@ export class DamageTypeService {
     if (!damageType) {
       throw new HttpException(
         'No se encontró el tipo de daño.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
     return damageType;
   }
 
   async updateDamageType(id: number, updateDamageTypeDto: UpdateDamageTypeDto) {
+    if (!updateDamageTypeDto) {
+      throw new HttpException(
+        'Los datos para actualizar el tipo de daño son requeridos.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const damageType = await this.findOneDamageType(id);
     const result = await this.damageTypeRepository.update(
       damageType.id,

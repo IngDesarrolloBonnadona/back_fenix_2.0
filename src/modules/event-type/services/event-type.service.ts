@@ -1,8 +1,4 @@
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateEventTypeDto } from '../dto/create-event-type.dto';
 import { UpdateEventTypeDto } from '../dto/update-event-type.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -171,6 +167,13 @@ export class EventTypeService {
   }
 
   async updateEventType(id: number, updateEventTypeDto: UpdateEventTypeDto) {
+    if (!updateEventTypeDto) {
+      throw new HttpException(
+        'Los datos para actualizar el tipo de suceso son requeridos.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const eventType = await this.findOneEventType(id);
     await this.caseTypeService.findOneCaseType(
       updateEventTypeDto.eve_t_casetype_id_fk,

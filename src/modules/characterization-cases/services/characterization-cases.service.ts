@@ -96,6 +96,13 @@ export class CharacterizationCasesService {
     id: number,
     updateCharacterizationCaseDto: UpdateCharacterizationCaseDto,
   ) {
+    if (!updateCharacterizationCaseDto) {
+      throw new HttpException(
+        'Los datos para actualizar la caracterización de los casos son requeridos.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const characterization = await this.findOneCharacterization(id);
     const result = await this.characterizationCaseRepository.update(
       characterization.id,
