@@ -13,6 +13,13 @@ export class FailedMeasuresService {
   ) {}
 
   async createFailedMeasure(createFailedMeasureDto: CreateFailedMeasureDto) {
+    if (!createFailedMeasureDto || !createFailedMeasureDto.meas_f_name) {
+      throw new HttpException(
+        'El nombre de la medida fallida es requerida.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const findFailedMeasure = await this.failedMeasureRepository.findOne({
       where: {
         meas_f_name: createFailedMeasureDto.meas_f_name,
@@ -23,7 +30,7 @@ export class FailedMeasuresService {
     if (findFailedMeasure) {
       throw new HttpException(
         'La medida fallida ya existe.',
-        HttpStatus.CONFLICT,
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
     const failedMeasure = this.failedMeasureRepository.create(
@@ -46,13 +53,20 @@ export class FailedMeasuresService {
     if (failedMeasures.length === 0) {
       throw new HttpException(
         'No se encontró la lista de medidas fallida.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
     return failedMeasures;
   }
 
   async findOneFailedMeasure(id: number) {
+    if (!id) {
+      throw new HttpException(
+        'El identificador de la medida fallida es requerida.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const failedMeasures = await this.failedMeasureRepository.findOne({
       where: { id, meas_f_status: true },
     });
@@ -60,7 +74,7 @@ export class FailedMeasuresService {
     if (!failedMeasures) {
       throw new HttpException(
         'No se encontró la medida fallida.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -71,6 +85,13 @@ export class FailedMeasuresService {
     id: number,
     updateFailedMeasureDto: UpdateFailedMeasureDto,
   ) {
+    if (!updateFailedMeasureDto) {
+      throw new HttpException(
+        'Los datos para actualizar la medida fallida es requerida.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const failedMeasure = await this.findOneFailedMeasure(id);
     const result = await this.failedMeasureRepository.update(
       failedMeasure.id,
