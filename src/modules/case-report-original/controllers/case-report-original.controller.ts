@@ -52,17 +52,17 @@ export class CaseReportOriginalController {
     return await this.CaseReportOriginalService.findOneReportOriginal(id);
   }
 
-  @Put('/updateReportOriginal/:id/:userIdPermission')
-  @Permission(permissions.SUPER_ADMIN)
-  async updateReportOriginal(
-    @Param('id') id: string,
-    @Body() UpdateCaseReportOriginalDto: UpdateCaseReportOriginalDto,
-  ): Promise<HttpException> {
-    return await this.CaseReportOriginalService.updateReportOriginal(
-      id,
-      UpdateCaseReportOriginalDto,
-    );
-  }
+  // @Put('/updateReportOriginal/:id/:userIdPermission')
+  // @Permission(permissions.SUPER_ADMIN)
+  // async updateReportOriginal(
+  //   @Param('id') id: string,
+  //   @Body() UpdateCaseReportOriginalDto: UpdateCaseReportOriginalDto,
+  // ): Promise<HttpException> {
+  //   return await this.CaseReportOriginalService.updateReportOriginal(
+  //     id,
+  //     UpdateCaseReportOriginalDto,
+  //   );
+  // }
 
   @Delete('/deleteReportOriginal/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN)

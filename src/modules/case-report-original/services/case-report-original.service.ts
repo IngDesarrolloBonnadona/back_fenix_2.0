@@ -166,7 +166,7 @@ export class CaseReportOriginalService {
       if (!severityClasificationFound) {
         throw new HttpException(
           `La clasificación de severidad no existe`,
-          HttpStatus.NO_CONTENT,
+          HttpStatus.NOT_FOUND,
         );
       }
 
@@ -188,7 +188,7 @@ export class CaseReportOriginalService {
       if (!priorityFind) {
         throw new HttpException(
           `La prioridad no existe`,
-          HttpStatus.NO_CONTENT,
+          HttpStatus.NOT_FOUND,
         );
       }
 
@@ -279,10 +279,10 @@ export class CaseReportOriginalService {
       },
     });
 
-    if (!caseReportsOriginal || caseReportsOriginal.length === 0) {
+    if (caseReportsOriginal.length === 0) {
       throw new HttpException(
         'No hay reportes para mostrar.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -290,6 +290,12 @@ export class CaseReportOriginalService {
   }
 
   async findOneReportOriginal(id: string) {
+    if (!id) {
+      throw new HttpException(
+        'El identificador del caso es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
     const caseReportsOriginal = await this.caseReportOriginalRepository.findOne(
       {
         where: { id },
@@ -316,35 +322,35 @@ export class CaseReportOriginalService {
     if (!caseReportsOriginal) {
       throw new HttpException(
         `No se encontró el reporte.`,
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
     return caseReportsOriginal;
   }
 
-  async updateReportOriginal(
-    id: string,
-    UpdateCaseReportOriginalDto: UpdateCaseReportOriginalDto,
-  ) {
-    const caseReportsOriginal = await this.findOneReportOriginal(id);
-    const result = await this.caseReportOriginalRepository.update(
-      caseReportsOriginal.id,
-      UpdateCaseReportOriginalDto,
-    );
+  // async updateReportOriginal(
+  //   id: string,
+  //   UpdateCaseReportOriginalDto: UpdateCaseReportOriginalDto,
+  // ) {
+  //   const caseReportsOriginal = await this.findOneReportOriginal(id);
+  //   const result = await this.caseReportOriginalRepository.update(
+  //     caseReportsOriginal.id,
+  //     UpdateCaseReportOriginalDto,
+  //   );
 
-    if (result.affected === 0) {
-      return new HttpException(
-        `No se pudo actualizar el caso original #${caseReportsOriginal.id}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+  //   if (result.affected === 0) {
+  //     return new HttpException(
+  //       `No se pudo actualizar el caso original #${caseReportsOriginal.id}`,
+  //       HttpStatus.INTERNAL_SERVER_ERROR,
+  //     );
+  //   }
 
-    return new HttpException(
-      `¡Datos actualizados correctamente!`,
-      HttpStatus.OK,
-    );
-  }
+  //   return new HttpException(
+  //     `¡Datos actualizados correctamente!`,
+  //     HttpStatus.OK,
+  //   );
+  // }
 
   async deleteReportOriginal(id: string) {
     const caseReportsOriginal = await this.findOneReportOriginal(id);
