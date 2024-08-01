@@ -15,6 +15,16 @@ export class ResearchInstrumentService {
   async createResearchInstrument(
     createResearchInstrumentDto: CreateResearchInstrumentDto,
   ) {
+    if (
+      !createResearchInstrumentDto ||
+      !createResearchInstrumentDto.inst_r_name
+    ) {
+      throw new HttpException(
+        'El nombre del instrumento de investigación es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const findResearchInstrument =
       await this.researchInstrumentRepository.findOne({
         where: {
@@ -26,7 +36,7 @@ export class ResearchInstrumentService {
     if (findResearchInstrument) {
       throw new HttpException(
         'El instrumento de investigación ya existe.',
-        HttpStatus.CONFLICT,
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
 
@@ -50,7 +60,7 @@ export class ResearchInstrumentService {
     if (researchInstruments.length === 0) {
       throw new HttpException(
         'No se encontro la lista de instrumentos de investigación.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -58,6 +68,13 @@ export class ResearchInstrumentService {
   }
 
   async findOneResearchInstrument(id: number) {
+    if (!id) {
+      throw new HttpException(
+        'El identificador del instrumento de investigación es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const researchInstrument = await this.researchInstrumentRepository.findOne({
       where: { id, inst_r_status: true },
     });
@@ -65,7 +82,7 @@ export class ResearchInstrumentService {
     if (!researchInstrument) {
       throw new HttpException(
         'No se encontro el instrumento de investigación.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -76,6 +93,13 @@ export class ResearchInstrumentService {
     id: number,
     updateResearchInstrumentDto: UpdateResearchInstrumentDto,
   ) {
+    if (!updateResearchInstrumentDto) {
+      throw new HttpException(
+        'Los datos para actualizar el instrumento de investigación son requeridos.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const researchInstrument = await this.findOneResearchInstrument(id);
     const result = await this.researchInstrumentRepository.update(
       researchInstrument.id,
