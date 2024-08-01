@@ -117,6 +117,13 @@ export class DeviceService {
   }
 
   async deleteDevicesByCaseId(caseId: string) {
+    if (!caseId) {
+      throw new HttpException(
+        'El identificador del caso es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    
     const findListDevices = await this.deviceRepository.find({
       where: {
         dev_case_id_fk: caseId,

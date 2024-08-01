@@ -37,27 +37,17 @@ export class MedicineService {
     }
   }
 
-  // async createMedicine(
-  //   createMedicineDto: CreateMedicineDto,
-  // ): Promise<MedicineEntity> {
-  //   const medicine = this.medicineRepository.create(createMedicineDto);
-  //   return await this.medicineRepository.save(medicine);
-  // }
-
   async findAllMedicines(): Promise<MedicineEntity[]> {
     const medicines = await this.medicineRepository.find({
       order: {
         createdAt: 'DESC',
-        // relations: {
-        //   // caseReportOriginal: true,
-        // },
       },
     });
 
     if (medicines.length === 0) {
       throw new HttpException(
         'No se encontró la lista de medicamentos',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -65,17 +55,21 @@ export class MedicineService {
   }
 
   async findOneMedicine(id: number): Promise<MedicineEntity> {
+    if (!id) {
+      throw new HttpException(
+        'El identificador del medicamento es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const medicine = await this.medicineRepository.findOne({
       where: { id },
-      // relations: {
-      //   // caseReportOriginal: true,
-      // },
     });
 
     if (!medicine) {
       throw new HttpException(
         'No se encontró el medicamento',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -83,6 +77,13 @@ export class MedicineService {
   }
 
   async updateMedicine(id: number, updateMedicineDto: UpdateMedicineDto) {
+    if (!updateMedicineDto) {
+      throw new HttpException(
+        'Los datos para actualizar el medicamento son requeridos.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const medicine = await this.findOneMedicine(id);
     const result = await this.medicineRepository.update(
       medicine.id,
@@ -116,6 +117,12 @@ export class MedicineService {
   }
 
   async deleteMedicinesByCaseId(caseId: string) {
+    if (!caseId) {
+      throw new HttpException(
+        'El identificador del caso es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
     const findListMedicines = await this.medicineRepository.find({
       where: {
         med_case_id_fk: caseId,
