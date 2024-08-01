@@ -47,10 +47,6 @@ export class CaseTypeService {
       order: {
         cas_t_name: 'ASC',
       },
-      // relations: {
-      //   eventType: true,
-      //   caseReportValidate: true,
-      // },
     });
 
     if (caseTypes.length === 0) {
@@ -75,7 +71,6 @@ export class CaseTypeService {
       where: { id, cas_t_status: true },
       relations: {
         eventType: true,
-        //   caseReportValidate: true,
       },
     });
 
@@ -96,7 +91,7 @@ export class CaseTypeService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    
+
     const caseType = await this.findOneCaseType(id);
     const result = await this.caseTypeRepository.update(
       caseType.id,
