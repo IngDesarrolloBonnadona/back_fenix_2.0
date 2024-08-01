@@ -21,7 +21,18 @@ export class EventService {
   ) {}
 
   async createEvent(createEventDto: CreateEventDto) {
-    const events = await this.eventRepository.findOne({
+    if (
+      !createEventDto ||
+      !createEventDto.eve_name ||
+      !createEventDto.eve_eventtype_id_fk
+    ) {
+      throw new HttpException(
+        'Algunos datos del suceso son requeridos.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const findEvents = await this.eventRepository.findOne({
       where: {
         eve_name: createEventDto.eve_name,
         eve_eventtype_id_fk: createEventDto.eve_eventtype_id_fk,
@@ -30,10 +41,10 @@ export class EventService {
       },
     });
 
-    if (events) {
+    if (findEvents) {
       throw new HttpException(
-        `El suceso ${events.eve_name} ya existe en el tipo de suceso seleccionado.`,
-        HttpStatus.CONFLICT,
+        `El suceso ya existe en el tipo de suceso seleccionado.`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
 
@@ -50,6 +61,7 @@ export class EventService {
     );
   }
 
+  // Se usa para parametrizar datos masivos
   async createEventsArray(createEventDto: CreateEventDto[]) {
     const eventToCreate = [];
 
@@ -66,7 +78,7 @@ export class EventService {
       if (findEvent) {
         throw new HttpException(
           `El suceso ${event.eve_name} ya existe en el tipo de suceso seleccionado.`,
-          HttpStatus.CONFLICT,
+          HttpStatus.INTERNAL_SERVER_ERROR,
         );
       }
 
@@ -87,10 +99,6 @@ export class EventService {
       where: {
         eve_status: true,
       },
-      // relations: {
-      //   eventType: true,
-      //   caseReportValidate: true,
-      // },
       order: {
         eve_name: 'ASC',
       },
@@ -99,7 +107,7 @@ export class EventService {
     if (events.length === 0) {
       throw new HttpException(
         'No se encontró la lista de sucesos.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -107,18 +115,21 @@ export class EventService {
   }
 
   async findOneEvent(id: number) {
+    if (!id) {
+      throw new HttpException(
+        'El identificador del suceso es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const event = await this.eventRepository.findOne({
       where: { id, eve_status: true },
-      // relations: {
-      //   eventType: true,
-      //   caseReportValidate: true,
-      // },
     });
 
     if (!event) {
       throw new HttpException(
         'No se encontró el suceso.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -144,7 +155,7 @@ export class EventService {
     if (events.length === 0) {
       throw new HttpException(
         'No se encontró la lista de sucesos relacionados con el tipo de suceso.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -152,6 +163,13 @@ export class EventService {
   }
 
   async updateEvent(id: number, updateEventDto: UpdateEventDto) {
+    if (!updateEventDto) {
+      throw new HttpException(
+        'Los datos para actualizar el suceso son requeridos.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const event = await this.findOneEvent(id);
     const result = await this.eventRepository.update(event.id, updateEventDto);
 
