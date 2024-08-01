@@ -92,7 +92,7 @@ export class SynergyService {
       throw new HttpException(
         {
           message: `Algunos reportes no coinciden con el tipo de caso ${caseTypeReport.ADVERSE_EVENT}`,
-          invalidSynergyCodes,
+          data: invalidSynergyCodes,
         },
         HttpStatus.BAD_REQUEST,
       );

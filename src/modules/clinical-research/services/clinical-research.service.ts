@@ -70,6 +70,13 @@ export class ClinicalResearchService {
           ),
       ]);
 
+      if (!clinicalResearchId) {
+        throw new HttpException(
+          'El identificador de la investigación clínica es requerido.',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
       if (createClinicalResearchDto.influencingFactor) {
         for (const factor of createClinicalResearchDto.influencingFactor) {
           await this.influencingFactorService.findOneInfluencingFactor(
@@ -96,7 +103,7 @@ export class ClinicalResearchService {
         if (!progress) {
           throw new HttpException(
             `No se encontró el progreso guardado.`,
-            HttpStatus.NO_CONTENT,
+            HttpStatus.NOT_FOUND,
           );
         }
 
@@ -170,7 +177,7 @@ export class ClinicalResearchService {
     if (clinicalResearchs.length === 0) {
       throw new HttpException(
         'No se encontró la lista de investigaciones clínicas.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -178,6 +185,13 @@ export class ClinicalResearchService {
   }
 
   async findOneClinicalResearch(id: string) {
+    if (!id) {
+      throw new HttpException(
+        'El identificador de la investigación clínica es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const clinicalResearch = await this.clinicalResearchRepository.findOne({
       where: { id, res_c_status: true },
       relations: {
@@ -189,7 +203,7 @@ export class ClinicalResearchService {
     if (!clinicalResearch) {
       throw new HttpException(
         'No se encontró la investigación clínica.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -201,10 +215,7 @@ export class ClinicalResearchService {
   // }
 
   async deleteClinicalResearch(id: string) {
-    const clinicalResearch = await this.clinicalResearchRepository.findOne({
-      where: { id, res_c_status: true },
-    });
-
+    const clinicalResearch = await this.findOneClinicalResearch(id);
     const result = await this.clinicalResearchRepository.softDelete(
       clinicalResearch.id,
     );
