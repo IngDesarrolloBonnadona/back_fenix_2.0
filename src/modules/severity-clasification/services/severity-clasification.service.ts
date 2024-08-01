@@ -20,6 +20,16 @@ export class SeverityClasificationService {
   async createSeverityClasification(
     createSeverityClasificationDto: CreateSeverityClasificationDto,
   ) {
+    if (
+      !createSeverityClasificationDto ||
+      !createSeverityClasificationDto.sev_c_name
+    ) {
+      throw new HttpException(
+        'El nombre de clasificación de seguridad es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const FindSevClasification = await this.severityClasifRepository.findOne({
       where: {
         sev_c_name: createSeverityClasificationDto.sev_c_name,
@@ -30,7 +40,7 @@ export class SeverityClasificationService {
     if (FindSevClasification) {
       throw new HttpException(
         'La clasificación de severidad ya existe.',
-        HttpStatus.CONFLICT,
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
 
@@ -52,8 +62,6 @@ export class SeverityClasificationService {
       },
       relations: {
         priority: true,
-        // caseReportValidate: true,
-        // roleResponseTime: true,
       },
       order: {
         sev_c_name: 'ASC',
@@ -63,7 +71,7 @@ export class SeverityClasificationService {
     if (severityClasifs.length === 0) {
       throw new HttpException(
         'No se encontró la lista de clasificaciones de severidad',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -73,19 +81,24 @@ export class SeverityClasificationService {
   async findOneSeverityClasification(
     id: number,
   ): Promise<SeverityClasifEntity> {
+    if (!id) {
+      throw new HttpException(
+        'El identificador de clasificación de severidad es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const severityClasif = await this.severityClasifRepository.findOne({
       where: { id, sev_c_status: true },
       relations: {
         priority: true,
-        // caseReportValidate: true,
-        // roleResponseTime: true,
       },
     });
 
     if (!severityClasif) {
       throw new HttpException(
-        'No se encontró la clasificacion de severidad',
-        HttpStatus.NO_CONTENT,
+        'No se encontró la clasificación de severidad',
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -96,6 +109,13 @@ export class SeverityClasificationService {
     id: number,
     updateSeverityClasificationDto: UpdateSeverityClasificationDto,
   ) {
+    if (!updateSeverityClasificationDto) {
+      throw new HttpException(
+        'Los datos para actualizar la clasificación de severidad son requeridos.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const severityClasif = await this.findOneSeverityClasification(id);
     const result = await this.severityClasifRepository.update(
       severityClasif.id,
