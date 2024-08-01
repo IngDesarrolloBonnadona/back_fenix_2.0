@@ -1,12 +1,24 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus, Put, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  HttpException,
+  HttpStatus,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import { ServiceService } from '../services/service.service';
 import { CreateServiceDto } from '../dto/create-service.dto';
 import { UpdateServiceDto } from '../dto/update-service.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { Service } from '../entities/service.entity';
-import { PermissionGuard } from 'src/guards/permission.guard';
-import { Permission } from 'src/decorators/permission.decorator';
-import { permissions } from 'src/enums/permissions.enum';
+import { PermissionGuard } from 'src/utils/guards/permission.guard';
+import { Permission } from 'src/utils/decorators/permission.decorator';
+import { permissions } from 'src/utils/enums/permissions.enum';
 
 @ApiTags('service')
 @Controller('service')
@@ -16,7 +28,9 @@ export class ServiceController {
 
   @Post('/createService/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  createService(@Body() createServiceDto: CreateServiceDto): Promise<HttpException> {
+  createService(
+    @Body() createServiceDto: CreateServiceDto,
+  ): Promise<HttpException> {
     return this.serviceService.createService(createServiceDto);
   }
 
@@ -32,7 +46,10 @@ export class ServiceController {
 
   @Patch('/updateService/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  updateService(@Param('id') id: number, @Body() updateServiceDto: UpdateServiceDto): Promise<HttpException> {
+  updateService(
+    @Param('id') id: number,
+    @Body() updateServiceDto: UpdateServiceDto,
+  ): Promise<HttpException> {
     return this.serviceService.updateService(id, updateServiceDto);
   }
 

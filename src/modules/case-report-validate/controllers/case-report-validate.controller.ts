@@ -19,9 +19,9 @@ import { ApiTags } from '@nestjs/swagger';
 import { FindSimilarCaseReportValidateDto } from '../dto/find-similar-case-report-validate';
 import { CreateReportValDto } from '../helper/val-dto-validator.helper';
 import { QueryCaseReportValidateDto } from '../dto/query-case-report-validate.dto';
-import { PermissionGuard } from 'src/guards/permission.guard';
-import { Permission } from 'src/decorators/permission.decorator';
-import { permissions } from 'src/enums/permissions.enum';
+import { PermissionGuard } from 'src/utils/guards/permission.guard';
+import { Permission } from 'src/utils/decorators/permission.decorator';
+import { permissions } from 'src/utils/enums/permissions.enum';
 
 @ApiTags('case-report-validate')
 @Controller('case-report-validate')
@@ -46,7 +46,7 @@ export class CaseReportValidateController {
     @Body() createReportValDto: CreateReportValDto,
     @Ip() clientIp: string,
     @Param('reportId') reportId: string,
-    @Param('idValidator') idValidator: number,
+    @Param('idValidator') idValidator: string,
   ): Promise<any> {
     return await this.caseReportValidateService.createReportValidate(
       createReportValDto,
@@ -137,19 +137,19 @@ export class CaseReportValidateController {
     );
   }
 
-  @Patch('/updateReportValidate/:id/:userIdPermission')
-  @Permission(permissions.SUPER_ADMIN, permissions.VALIDATOR)
-  updateReportValidate(
-    @Param('id') id: string,
-    @Body() updateCaseReportValidateDto: UpdateCaseReportValidateDto,
-  ): Promise<HttpException> {
-    return this.caseReportValidateService.updateReportValidate(
-      id,
-      updateCaseReportValidateDto,
-    );
-  }
+  // @Patch('/updateReportValidate/:id/:userIdPermission')
+  // @Permission(permissions.SUPER_ADMIN, permissions.VALIDATOR)
+  // updateReportValidate(
+  //   @Param('id') id: string,
+  //   @Body() updateCaseReportValidateDto: UpdateCaseReportValidateDto,
+  // ): Promise<HttpException> {
+  //   return this.caseReportValidateService.updateReportValidate(
+  //     id,
+  //     updateCaseReportValidateDto,
+  //   );
+  // }
 
-  @Delete('/cancelReportValidate/:id/:userIdPermission')
+  @Delete('/cancelReportValidate/:id/:idUser/:userIdPermission')
   @Permission(
     permissions.SUPER_ADMIN,
     permissions.VALIDATOR,
@@ -159,10 +159,12 @@ export class CaseReportValidateController {
   async cancelReportValidate(
     @Param('id') id: string,
     @Ip() clientIp: string,
+    @Param('idUser') idUser: string,
   ): Promise<Promise<HttpException>> {
     return await this.caseReportValidateService.cancelReportValidate(
       id,
       clientIp,
+      idUser,
     );
   }
 }

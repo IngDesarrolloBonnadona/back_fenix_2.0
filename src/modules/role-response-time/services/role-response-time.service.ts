@@ -19,6 +19,18 @@ export class RoleResponseTimeService {
   async createRoleResponseTime(
     createRoleResponseTimeDto: CreateRoleResponseTimeDto,
   ) {
+    if (
+      !createRoleResponseTimeDto ||
+      !createRoleResponseTimeDto.rest_r_role_id_fk ||
+      !createRoleResponseTimeDto.rest_r_responsetime ||
+      !createRoleResponseTimeDto.rest_r_severityclasif_id_fk
+    ) {
+      throw new HttpException(
+        'Algunos datos del tiempo de respuesta de los roles son requeridos.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const findRoleResponseTime = await this.roleResponseTimeRepository.findOne({
       where: {
         rest_r_role_id_fk: createRoleResponseTimeDto.rest_r_role_id_fk,
@@ -29,8 +41,8 @@ export class RoleResponseTimeService {
 
     if (findRoleResponseTime) {
       throw new HttpException(
-        'Ya existe un tiempo de respuesta caso con el rol y la clasificación de severidad especificados.',
-        HttpStatus.CONFLICT,
+        'Ya existe un tiempo de respuesta del rol y la clasificación de severidad especificado.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
 
@@ -65,8 +77,8 @@ export class RoleResponseTimeService {
 
     if (roleResponseTimes.length === 0) {
       throw new HttpException(
-        'No se encontró la lista de tiempos de respuestas de cada rol',
-        HttpStatus.NO_CONTENT,
+        'No se encontró la lista de tiempos de respuesta de cada rol',
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -74,6 +86,12 @@ export class RoleResponseTimeService {
   }
 
   async findOnefindAllRoleResponseTime(id: number) {
+    if (!id) {
+      throw new HttpException(
+        'El identificador del tiempo de respuesta del rol es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
     const roleResponseTime = await this.roleResponseTimeRepository.findOne({
       where: { id, rest_r_status: true },
       relations: { role: true, severityClasification: true },
@@ -81,8 +99,8 @@ export class RoleResponseTimeService {
 
     if (!roleResponseTime) {
       throw new HttpException(
-        'No se encontró el tiempo de respuestas de este rol',
-        HttpStatus.NO_CONTENT,
+        'No se encontró el tiempo de respuesta de este rol',
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -93,6 +111,13 @@ export class RoleResponseTimeService {
     id: number,
     updateRoleResponseTimeDto: UpdateRoleResponseTimeDto,
   ) {
+    if (!updateRoleResponseTimeDto) {
+      throw new HttpException(
+        'Los datos para actualizar el tiempo de respuesta del rol son requeridos.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const roleResponseTime = await this.findOnefindAllRoleResponseTime(id);
     const result = await this.roleResponseTimeRepository.update(
       roleResponseTime.id,

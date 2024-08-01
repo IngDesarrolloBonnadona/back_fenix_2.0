@@ -16,9 +16,9 @@ import { CreateRiskTypeDto } from '../dto/create-risk-type.dto';
 import { UpdateRiskTypeDto } from '../dto/update-risk-type.dto';
 import { RiskType } from '../entities/risk-type.entity';
 import { ApiTags } from '@nestjs/swagger';
-import { PermissionGuard } from 'src/guards/permission.guard';
-import { Permission } from 'src/decorators/permission.decorator';
-import { permissions } from 'src/enums/permissions.enum';
+import { PermissionGuard } from 'src/utils/guards/permission.guard';
+import { Permission } from 'src/utils/decorators/permission.decorator';
+import { permissions } from 'src/utils/enums/permissions.enum';
 
 @ApiTags('risk-type')
 @Controller('risk-type')

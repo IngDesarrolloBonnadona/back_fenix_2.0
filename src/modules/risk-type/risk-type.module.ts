@@ -3,7 +3,7 @@ import { RiskTypeService } from './services/risk-type.service';
 import { RiskTypeController } from './controllers/risk-type.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RiskType } from './entities/risk-type.entity';
-import { PermissionGuard } from 'src/guards/permission.guard';
+import { PermissionGuard } from 'src/utils/guards/permission.guard';
 import { UserModule } from 'src/modules_bonnadonahub/user/user.module';
 
 @Module({

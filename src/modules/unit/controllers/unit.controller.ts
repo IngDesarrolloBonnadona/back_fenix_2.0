@@ -1,12 +1,24 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus, Put, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  HttpException,
+  HttpStatus,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import { UnitService } from '../services/unit.service';
 import { CreateUnitDto } from '../dto/create-unit.dto';
 import { UpdateUnitDto } from '../dto/update-unit.dto';
 import { Unit } from '../entities/unit.entity';
 import { ApiTags } from '@nestjs/swagger';
-import { PermissionGuard } from 'src/guards/permission.guard';
-import { permissions } from 'src/enums/permissions.enum';
-import { Permission } from 'src/decorators/permission.decorator';
+import { PermissionGuard } from 'src/utils/guards/permission.guard';
+import { permissions } from 'src/utils/enums/permissions.enum';
+import { Permission } from 'src/utils/decorators/permission.decorator';
 
 @ApiTags('unit')
 @Controller('unit')
@@ -37,7 +49,10 @@ export class UnitController {
 
   @Patch('/updateUnit/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  updateUnit(@Param('id') id: number, @Body() updateUnitDto: UpdateUnitDto): Promise<HttpException> {
+  updateUnit(
+    @Param('id') id: number,
+    @Body() updateUnitDto: UpdateUnitDto,
+  ): Promise<HttpException> {
     return this.unitService.updateUnit(id, updateUnitDto);
   }
 

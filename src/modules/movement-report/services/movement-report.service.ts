@@ -13,6 +13,17 @@ export class MovementReportService {
   ) {}
 
   async createMovementReport(createMovementReportDto: CreateMovementReportDto) {
+    if (
+      !createMovementReportDto ||
+      !createMovementReportDto.mov_r_name ||
+      !createMovementReportDto.mov_r_time
+    ) {
+      throw new HttpException(
+        'Algunos datos del movimiento de reporte es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const FindmovementReport = await this.movementReportRepository.findOne({
       where: {
         mov_r_name: createMovementReportDto.mov_r_name,
@@ -23,10 +34,11 @@ export class MovementReportService {
 
     if (FindmovementReport) {
       throw new HttpException(
-        'El movimiento del reporte ya existe.',
-        HttpStatus.CONFLICT,
+        'El movimiento de reporte ya existe.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
+
     const movementReport = this.movementReportRepository.create(
       createMovementReportDto,
     );
@@ -46,15 +58,12 @@ export class MovementReportService {
       order: {
         mov_r_name: 'ASC',
       },
-      // relations: {
-      //   caseReportValidate: true,
-      // },
     });
 
     if (movementReports.length === 0) {
       throw new HttpException(
-        'No se encontró la lista de movimientos de reportes.',
-        HttpStatus.NO_CONTENT,
+        'No se encontró la lista de movimientos de reporte.',
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -62,17 +71,21 @@ export class MovementReportService {
   }
 
   async findOneMovementReport(id: number) {
+    if (!id) {
+      throw new HttpException(
+        'El identificador del movimiento de reporte es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const movementReport = await this.movementReportRepository.findOne({
       where: { id, mov_r_status: true },
-      // relations: {
-      //   caseReportValidate: true,
-      // },
     });
 
     if (!movementReport) {
       throw new HttpException(
         'No se encontró el movimiento de reporte.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -80,6 +93,13 @@ export class MovementReportService {
   }
 
   async findOneMovementReportByName(movementName: string) {
+    if (!movementName) {
+      throw new HttpException(
+        'El nombre del movimiento de reporte es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const movementReportName = await this.movementReportRepository.findOne({
       where: {
         mov_r_name: movementName,
@@ -90,7 +110,7 @@ export class MovementReportService {
     if (!movementReportName) {
       throw new HttpException(
         `El movimiento ${movementName} no existe.`,
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -101,6 +121,13 @@ export class MovementReportService {
     id: number,
     updateMovementReportDto: UpdateMovementReportDto,
   ) {
+    if (!updateMovementReportDto) {
+      throw new HttpException(
+        'Los datos para actualizar el movimiento de reporte son requeridos.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const movementReport = await this.findOneMovementReport(id);
     const result = await this.movementReportRepository.update(
       movementReport.id,

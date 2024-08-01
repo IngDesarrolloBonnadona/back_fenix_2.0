@@ -14,9 +14,9 @@ import { CreateRoleResponseTimeDto } from '../dto/create-role-response-time.dto'
 import { UpdateRoleResponseTimeDto } from '../dto/update-role-response-time.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { RoleResponseTime } from '../entities/role-response-time.entity';
-import { PermissionGuard } from 'src/guards/permission.guard';
-import { Permission } from 'src/decorators/permission.decorator';
-import { permissions } from 'src/enums/permissions.enum';
+import { PermissionGuard } from 'src/utils/guards/permission.guard';
+import { Permission } from 'src/utils/decorators/permission.decorator';
+import { permissions } from 'src/utils/enums/permissions.enum';
 
 @ApiTags('role-response-time')
 @Controller('role-response-time')

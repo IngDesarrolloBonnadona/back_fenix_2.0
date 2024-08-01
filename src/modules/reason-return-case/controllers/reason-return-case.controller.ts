@@ -14,9 +14,9 @@ import { CreateReasonReturnCaseDto } from '../dto/create-reason-return-case.dto'
 import { UpdateReasonReturnCaseDto } from '../dto/update-reason-return-case.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { ReasonReturnCase } from '../entities/reason-return-case.entity';
-import { PermissionGuard } from 'src/guards/permission.guard';
-import { Permission } from 'src/decorators/permission.decorator';
-import { permissions } from 'src/enums/permissions.enum';
+import { PermissionGuard } from 'src/utils/guards/permission.guard';
+import { Permission } from 'src/utils/decorators/permission.decorator';
+import { permissions } from 'src/utils/enums/permissions.enum';
 
 @ApiTags('reason-return-case')
 @Controller('reason-return-case')
@@ -28,7 +28,9 @@ export class ReasonReturnCaseController {
 
   @Post('/createReasonReturnCase/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  create(@Body() createReasonReturnCaseDto: CreateReasonReturnCaseDto): Promise<HttpException> {
+  create(
+    @Body() createReasonReturnCaseDto: CreateReasonReturnCaseDto,
+  ): Promise<HttpException> {
     return this.reasonReturnCaseService.createReasonReturnCase(
       createReasonReturnCaseDto,
     );

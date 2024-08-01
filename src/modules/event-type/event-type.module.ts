@@ -4,7 +4,7 @@ import { EventTypeController } from './controllers/event-type.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { EventType } from './entities/event-type.entity';
 import { CaseTypeModule } from '../case-type/case-type.module';
-import { PermissionGuard } from 'src/guards/permission.guard';
+import { PermissionGuard } from 'src/utils/guards/permission.guard';
 import { UserModule } from 'src/modules_bonnadonahub/user/user.module';
 
 @Module({

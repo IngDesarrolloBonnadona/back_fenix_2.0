@@ -22,11 +22,11 @@ export class ReportAnalystAssignment {
   @Column()
   ana_position_id_fk: number;
 
-  @Column()
-  ana_useranalyst_id: number;
+  @Column({ type: 'varchar' })
+  ana_useranalyst_id: string;
 
-  @Column()
-  ana_uservalidator_id: number;
+  @Column({ type: 'varchar' })
+  ana_uservalidator_id: string;
 
   @Column()
   ana_days: number;

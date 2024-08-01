@@ -16,7 +16,7 @@ import { RoleResponseTime } from '../role-response-time/entities/role-response-t
 import { ReportAnalystAssignment } from '../report-analyst-assignment/entities/report-analyst-assignment.entity';
 import { MovementReportModule } from '../movement-report/movement-report.module';
 import { UserModule } from 'src/modules_bonnadonahub/user/user.module';
-import { PermissionGuard } from 'src/guards/permission.guard';
+import { PermissionGuard } from 'src/utils/guards/permission.guard';
 
 @Module({
   imports: [

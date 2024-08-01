@@ -18,15 +18,22 @@ export class OriginService {
   ) {}
 
   async createOrigin(createOriginDto: CreateOriginDto) {
-    const FindOrigin = await this.originRepository.findOne({
+    if (!createOriginDto || !createOriginDto.orig_name) {
+      throw new HttpException(
+        'El nombre del origen es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const findOrigin = await this.originRepository.findOne({
       where: {
         orig_name: createOriginDto.orig_name,
         orig_status: true,
       },
     });
 
-    if (FindOrigin) {
-      throw new HttpException('El origen ya existe.', HttpStatus.CONFLICT);
+    if (findOrigin) {
+      throw new HttpException('El origen ya existe.', HttpStatus.INTERNAL_SERVER_ERROR);
     }
     const origin = this.originRepository.create(createOriginDto);
     await this.originRepository.save(origin);
@@ -44,7 +51,6 @@ export class OriginService {
       },
       relations: {
         subOrigins: true,
-        // caseReportValidate: true,
       },
       order: {
         orig_name: 'ASC',
@@ -53,8 +59,8 @@ export class OriginService {
 
     if (origins.length === 0) {
       throw new HttpException(
-        'No se encontró la lista de fuentes',
-        HttpStatus.NO_CONTENT,
+        'No se encontró la lista de origenes',
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -62,18 +68,24 @@ export class OriginService {
   }
 
   async findOneOrigin(id: number) {
+    if (!id) {
+      throw new HttpException(
+        'El identificador del origen es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const origin = await this.originRepository.findOne({
       where: { id, orig_status: true },
       relations: {
         subOrigins: true,
-        // caseReportValidate: true,
       },
     });
 
     if (!origin) {
       throw new HttpException(
-        'No se encontró la fuente',
-        HttpStatus.NO_CONTENT,
+        'No se encontró el origen',
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -81,6 +93,13 @@ export class OriginService {
   }
 
   async updateOrigin(id: number, updateOriginDto: UpdateOriginDto) {
+    if (!updateOriginDto) {
+      throw new HttpException(
+        'Los datos para actualizar el origen son requeridos.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const origin = await this.findOneOrigin(id);
     const result = await this.originRepository.update(
       origin.id,
@@ -89,7 +108,7 @@ export class OriginService {
 
     if (result.affected === 0) {
       return new HttpException(
-        `No se pudo actualizar la fuente`,
+        `No se pudo actualizar el origen`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }

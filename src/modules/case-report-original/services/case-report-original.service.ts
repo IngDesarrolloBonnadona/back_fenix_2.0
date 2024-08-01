@@ -7,12 +7,12 @@ import { CaseReportValidateService } from 'src/modules/case-report-validate/serv
 import { OriDtoValidator } from '../utils/helpers/ori-dto-validator.helper';
 import { CaseType as CaseTypeEntity } from 'src/modules/case-type/entities/case-type.entity';
 import { LogService } from 'src/modules/log/services/log.service';
-import { MedicineService } from 'src/modules/medicine/services/medicine.service';
-import { DeviceService } from 'src/modules/device/services/device.service';
-import { logReports } from 'src/enums/logs.enum';
+import { MedicineService } from 'src/modules/medicine-case-report/services/medicine.service';
+import { DeviceService } from 'src/modules/device-case-report/services/device.service';
+import { logReports } from 'src/utils/enums/logs.enum';
 import { generateFilingNumber } from '../utils/helpers/generate_filing_number.helper';
-import { movementReport } from 'src/enums/movement-report.enum';
-import { caseTypeReport } from 'src/enums/caseType-report.enum';
+import { movementReport } from 'src/utils/enums/movement-report.enum';
+import { caseTypeReport } from 'src/utils/enums/caseType-report.enum';
 import { CreateOriRiskReportDto } from '../dto/create-ori-risk-report.dto';
 import { CreateOriAdverseEventReportDto } from '../dto/create-ori-adverse-event-report.dto';
 import { CreateOriIncidentReportDto } from '../dto/create-ori-incident-report.dto';
@@ -30,7 +30,7 @@ import { RiskLevelService } from 'src/modules/risk-level/services/risk-level.ser
 import { UnitService } from 'src/modules/unit/services/unit.service';
 import { Priority as PriorityEntity } from 'src/modules/priority/entities/priority.entity';
 import { SeverityClasification as SeverityClasificationEntity } from 'src/modules/severity-clasification/entities/severity-clasification.entity';
-import { severityClasification } from 'src/enums/severity-clasif.enum';
+import { severityClasification } from 'src/utils/enums/severity-clasif.enum';
 import { MovementReportService } from 'src/modules/movement-report/services/movement-report.service';
 
 @Injectable()
@@ -40,10 +40,10 @@ export class CaseReportOriginalService {
     private readonly caseReportOriginalRepository: Repository<CaseReportOriginalEntity>,
     @InjectRepository(CaseTypeEntity)
     private readonly caseTypeRepository: Repository<CaseTypeEntity>,
-    @InjectRepository(PriorityEntity)
-    private readonly priorityRepository: Repository<PriorityEntity>,
-    @InjectRepository(SeverityClasificationEntity)
-    private readonly severityClasificationRepository: Repository<SeverityClasificationEntity>,
+    // @InjectRepository(PriorityEntity)
+    // private readonly priorityRepository: Repository<PriorityEntity>,
+    // @InjectRepository(SeverityClasificationEntity)
+    // private readonly severityClasificationRepository: Repository<SeverityClasificationEntity>,
 
     private readonly caseReportValidateService: CaseReportValidateService,
     private readonly logService: LogService,
@@ -156,15 +156,17 @@ export class CaseReportOriginalService {
           movementReport.REPORT_CREATION,
         );
 
-      const severityClasificationFound =
-        await this.severityClasificationRepository.findOne({
+      const severityClasificationFound = await queryRunner.manager.findOne(
+        SeverityClasificationEntity,
+        {
           where: { sev_c_name: severityClasification.MODERATE_SEVERITY },
-        });
+        },
+      );
 
       if (!severityClasificationFound) {
         throw new HttpException(
           `La clasificación de severidad no existe`,
-          HttpStatus.NO_CONTENT,
+          HttpStatus.NOT_FOUND,
         );
       }
 
@@ -176,7 +178,7 @@ export class CaseReportOriginalService {
           severityClasificationFound.id;
       }
 
-      const priorityFind = await this.priorityRepository.findOne({
+      const priorityFind = await queryRunner.manager.findOne(PriorityEntity, {
         where: {
           prior_severityclasif_id_fk:
             createReportOriDto.ori_cr_severityclasif_id_fk,
@@ -186,7 +188,7 @@ export class CaseReportOriginalService {
       if (!priorityFind) {
         throw new HttpException(
           `La prioridad no existe`,
-          HttpStatus.NO_CONTENT,
+          HttpStatus.NOT_FOUND,
         );
       }
 
@@ -277,10 +279,10 @@ export class CaseReportOriginalService {
       },
     });
 
-    if (!caseReportsOriginal || caseReportsOriginal.length === 0) {
+    if (caseReportsOriginal.length === 0) {
       throw new HttpException(
         'No hay reportes para mostrar.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -288,6 +290,12 @@ export class CaseReportOriginalService {
   }
 
   async findOneReportOriginal(id: string) {
+    if (!id) {
+      throw new HttpException(
+        'El identificador del caso es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
     const caseReportsOriginal = await this.caseReportOriginalRepository.findOne(
       {
         where: { id },
@@ -314,35 +322,35 @@ export class CaseReportOriginalService {
     if (!caseReportsOriginal) {
       throw new HttpException(
         `No se encontró el reporte.`,
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
     return caseReportsOriginal;
   }
 
-  async updateReportOriginal(
-    id: string,
-    UpdateCaseReportOriginalDto: UpdateCaseReportOriginalDto,
-  ) {
-    const caseReportsOriginal = await this.findOneReportOriginal(id);
-    const result = await this.caseReportOriginalRepository.update(
-      caseReportsOriginal.id,
-      UpdateCaseReportOriginalDto,
-    );
+  // async updateReportOriginal(
+  //   id: string,
+  //   UpdateCaseReportOriginalDto: UpdateCaseReportOriginalDto,
+  // ) {
+  //   const caseReportsOriginal = await this.findOneReportOriginal(id);
+  //   const result = await this.caseReportOriginalRepository.update(
+  //     caseReportsOriginal.id,
+  //     UpdateCaseReportOriginalDto,
+  //   );
 
-    if (result.affected === 0) {
-      return new HttpException(
-        `No se pudo actualizar el caso original #${caseReportsOriginal.id}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+  //   if (result.affected === 0) {
+  //     return new HttpException(
+  //       `No se pudo actualizar el caso original #${caseReportsOriginal.id}`,
+  //       HttpStatus.INTERNAL_SERVER_ERROR,
+  //     );
+  //   }
 
-    return new HttpException(
-      `¡Datos actualizados correctamente!`,
-      HttpStatus.OK,
-    );
-  }
+  //   return new HttpException(
+  //     `¡Datos actualizados correctamente!`,
+  //     HttpStatus.OK,
+  //   );
+  // }
 
   async deleteReportOriginal(id: string) {
     const caseReportsOriginal = await this.findOneReportOriginal(id);

@@ -19,11 +19,11 @@ export class ReportResearcherAssignment {
   @Column({ type: 'uuid' })
   res_validatedcase_id_fk: string;
 
-  @Column()
-  res_useranalyst_id: number;
+  @Column({ type: 'varchar' })
+  res_useranalyst_id: string;
 
-  @Column()
-  res_userresearch_id: number;
+  @Column({ type: 'varchar' })
+  res_userresearch_id: string;
 
   @Column()
   res_days: number;

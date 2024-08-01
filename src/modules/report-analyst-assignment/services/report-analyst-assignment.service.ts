@@ -11,20 +11,20 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ReportAnalystAssignment as ReportAnalystAssignmentEntity } from '../entities/report-analyst-assignment.entity';
 import { FindOptionsWhere, Repository } from 'typeorm';
 import { LogService } from 'src/modules/log/services/log.service';
-import { logReports } from 'src/enums/logs.enum';
+import { logReports } from 'src/utils/enums/logs.enum';
 import { CaseReportValidateService } from 'src/modules/case-report-validate/services/case-report-validate.service';
 import { PositionService } from 'src/modules/position/services/position.service';
 import { HttpPositionService } from 'src/modules/position/http/http-position.service';
-import { movementReport } from 'src/enums/movement-report.enum';
+import { movementReport } from 'src/utils/enums/movement-report.enum';
 import { CaseReportValidate as CaseReportValidateEntity } from 'src/modules/case-report-validate/entities/case-report-validate.entity';
 import { RoleResponseTime as RoleResponseTimeEntity } from 'src/modules/role-response-time/entities/role-response-time.entity';
 import { RolePermission as RoleEntity } from 'src/modules/role-permission/entities/role-permission.entity';
-import { userRoles } from 'src/enums/user-roles.enum';
+import { userRoles } from 'src/utils/enums/user-roles.enum';
 import { CaseType as CaseTypeEntity } from 'src/modules/case-type/entities/case-type.entity';
-import { caseTypeReport } from 'src/enums/caseType-report.enum';
+import { caseTypeReport } from 'src/utils/enums/caseType-report.enum';
 import { SeverityClasification as SeverityClasificationEntity } from 'src/modules/severity-clasification/entities/severity-clasification.entity';
-import { severityClasification } from 'src/enums/severity-clasif.enum';
-import { sentinelTime } from '../../../enums/sentinel-time.enum';
+import { severityClasification } from 'src/utils/enums/severity-clasif.enum';
+import { sentinelTime } from '../../../utils/enums/sentinel-time.enum';
 import { QueryReportAnalystAssignmentDto } from '../dto/query-report-analyst-assignment.dto';
 import { MovementReportService } from 'src/modules/movement-report/services/movement-report.service';
 import { ReportResearcherAssignment as ReportResearcherAssignmentEntity } from 'src/modules/report-researchers-assignment/entities/report-researchers-assignment.entity';
@@ -69,7 +69,7 @@ export class ReportAnalystAssignmentService {
     if (analyst.length === 0) {
       throw new HttpException(
         'No se encontraron datos de analistas',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -79,8 +79,35 @@ export class ReportAnalystAssignmentService {
   async assingAnalyst(
     createReportAnalystAssignmentDto: CreateReportAnalystAssignmentDto,
     clientIp: string,
-    idValidator: number,
+    idValidator: string,
   ) {
+    if (
+      !createReportAnalystAssignmentDto ||
+      !createReportAnalystAssignmentDto.ana_useranalyst_id ||
+      !createReportAnalystAssignmentDto.ana_validatedcase_id_fk ||
+      !createReportAnalystAssignmentDto.ana_position_id_fk ||
+      !createReportAnalystAssignmentDto.ana_justifications
+    ) {
+      throw new HttpException(
+        'Algunos datos para asignar analistas son requeridos.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    if (!clientIp) {
+      throw new HttpException(
+        'La dirección IP del usuario es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    if (!idValidator) {
+      throw new HttpException(
+        'El identificador del validador es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const reportAssignmentFind =
       await this.reportAnalystAssignmentRepository.findOne({
         where: {
@@ -94,7 +121,7 @@ export class ReportAnalystAssignmentService {
     if (reportAssignmentFind) {
       throw new HttpException(
         'El reporte ya tiene un analista asignado',
-        HttpStatus.CONFLICT,
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
 
@@ -122,7 +149,7 @@ export class ReportAnalystAssignmentService {
     if (!findIdRole) {
       throw new HttpException(
         `El rol ${userRoles.ANALYST} no existe.`,
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -138,7 +165,7 @@ export class ReportAnalystAssignmentService {
     if (!findRoleResponseTime) {
       throw new HttpException(
         `El tiempo de respuesta del rol ${userRoles.ANALYST} no existe.`,
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -152,7 +179,7 @@ export class ReportAnalystAssignmentService {
     if (!findCaseType) {
       throw new HttpException(
         `El tipo de caso ${caseTypeReport.ADVERSE_EVENT} no existe.`,
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -167,7 +194,7 @@ export class ReportAnalystAssignmentService {
     if (!findSeverityClasification) {
       throw new HttpException(
         `La clasificacion de severidad ${severityClasification.SERIOUS_SEVERITY} no existe.`,
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -219,9 +246,37 @@ export class ReportAnalystAssignmentService {
   async reAssingAnalyst(
     updateReportAnalystAssignmentDto: UpdateReportAnalystAssignmentDto,
     clientIp: string,
-    idValidator: number,
+    idValidator: string,
     idCaseReportValidate: string,
   ) {
+    if (!updateReportAnalystAssignmentDto) {
+      throw new HttpException(
+        'Los datos para actualizar la asignación del analista son requeridos.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    if (!clientIp) {
+      throw new HttpException(
+        'La dirección IP del usuario es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    if (!idValidator) {
+      throw new HttpException(
+        'El identificador del validador es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    if (!idCaseReportValidate) {
+      throw new HttpException(
+        'El identificador del caso es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const reportAssignmentFind =
       await this.reportAnalystAssignmentRepository.findOne({
         where: {
@@ -235,7 +290,7 @@ export class ReportAnalystAssignmentService {
     if (!reportAssignmentFind) {
       throw new HttpException(
         'No se encontró el reporte asignado a analista',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -251,7 +306,7 @@ export class ReportAnalystAssignmentService {
     if (!caseReportValidate) {
       throw new HttpException(
         'No se encontró el reporte.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -314,8 +369,35 @@ export class ReportAnalystAssignmentService {
   async returnCaseBetweenAnalyst(
     createReportAnalystAssignmentDto: CreateReportAnalystAssignmentDto,
     clientIp: string,
-    idAnalystCurrent: number,
+    idAnalystCurrent: string,
   ) {
+    if (
+      !createReportAnalystAssignmentDto ||
+      !createReportAnalystAssignmentDto.ana_useranalyst_id ||
+      !createReportAnalystAssignmentDto.ana_validatedcase_id_fk ||
+      !createReportAnalystAssignmentDto.ana_position_id_fk ||
+      !createReportAnalystAssignmentDto.ana_justifications
+    ) {
+      throw new HttpException(
+        'Algunos datos para asignar analistas son requeridos.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    if (!clientIp) {
+      throw new HttpException(
+        'La dirección IP del usuario es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    if (!idAnalystCurrent) {
+      throw new HttpException(
+        'El identificador del analista actual es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const reportAssignmentFind =
       await this.reportAnalystAssignmentRepository.findOne({
         where: {
@@ -329,7 +411,7 @@ export class ReportAnalystAssignmentService {
     if (!reportAssignmentFind) {
       throw new HttpException(
         'No se encontró el caso asignado',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -357,7 +439,7 @@ export class ReportAnalystAssignmentService {
     if (analystAssignedFind) {
       throw new HttpException(
         'El analista que intentas devolver el caso ya se encuentra asignado con ese reporte.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
 
@@ -476,7 +558,7 @@ export class ReportAnalystAssignmentService {
     if (caseReportsValidate.length === 0) {
       throw new HttpException(
         'No hay reportes para mostrar.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -509,7 +591,7 @@ export class ReportAnalystAssignmentService {
     if (analystReporters.length === 0) {
       throw new HttpException(
         '¡No hay reportes asignados para mostrar.!',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -519,6 +601,13 @@ export class ReportAnalystAssignmentService {
   async findOneAssignedAnalyst(
     id: number,
   ): Promise<ReportAnalystAssignmentEntity> {
+    if (!id) {
+      throw new HttpException(
+        'El identificador del analista asignado es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const analystReporter =
       await this.reportAnalystAssignmentRepository.findOne({
         where: { id, ana_status: true, ana_isreturned: false },
@@ -531,7 +620,7 @@ export class ReportAnalystAssignmentService {
     if (!analystReporter) {
       throw new HttpException(
         'No se encontró el analista',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
     return analystReporter;
@@ -540,8 +629,29 @@ export class ReportAnalystAssignmentService {
   async returnCaseToValidator(
     idCaseReportValidate: string,
     clientIp: string,
-    idAnalyst: number,
+    idAnalyst: string,
   ) {
+    if (!clientIp) {
+      throw new HttpException(
+        'La dirección IP del usuario es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    if (!idAnalyst) {
+      throw new HttpException(
+        'El identificador del analista es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    if (!idCaseReportValidate) {
+      throw new HttpException(
+        'El identificador del caso es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    
     const findReportAnalystAssigned =
       await this.reportAnalystAssignmentRepository.findOne({
         where: {
@@ -554,7 +664,7 @@ export class ReportAnalystAssignmentService {
     if (!findReportAnalystAssigned) {
       throw new HttpException(
         'No se encontró el reporte asignado a analista.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 

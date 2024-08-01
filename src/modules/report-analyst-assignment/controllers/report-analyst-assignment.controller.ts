@@ -18,9 +18,9 @@ import { UpdateReportAnalystAssignmentDto } from '../dto/update-report-analyst-a
 import { ApiTags } from '@nestjs/swagger';
 import { ReportAnalystAssignment } from '../entities/report-analyst-assignment.entity';
 import { QueryReportAnalystAssignmentDto } from '../dto/query-report-analyst-assignment.dto';
-import { PermissionGuard } from 'src/guards/permission.guard';
-import { Permission } from 'src/decorators/permission.decorator';
-import { permissions } from 'src/enums/permissions.enum';
+import { PermissionGuard } from 'src/utils/guards/permission.guard';
+import { Permission } from 'src/utils/decorators/permission.decorator';
+import { permissions } from 'src/utils/enums/permissions.enum';
 
 @ApiTags('report-analyst-assignment')
 @Controller('report-analyst-assignment')
@@ -35,8 +35,7 @@ export class ReportAnalystAssignmentController {
   createAssingAnalystReporter(
     @Body() createAnalystReporterDto: CreateReportAnalystAssignmentDto,
     @Ip() clientIp: string,
-    @Param('idValidator') idValidator: number,
-    @Param('userIdPermission') userIdPermission: string,
+    @Param('idValidator') idValidator: string,
   ): Promise<HttpException> {
     return this.reportAnalisysAssignmentService.assingAnalyst(
       createAnalystReporterDto,
@@ -50,7 +49,7 @@ export class ReportAnalystAssignmentController {
   createReturnCaseBetweenAnalyst(
     @Body() createAnalystReporterDto: CreateReportAnalystAssignmentDto,
     @Ip() clientIp: string,
-    @Param('idAnalystCurrent') idAnalystCurrent: number,
+    @Param('idAnalystCurrent') idAnalystCurrent: string,
   ): Promise<HttpException> {
     return this.reportAnalisysAssignmentService.returnCaseBetweenAnalyst(
       createAnalystReporterDto,
@@ -97,12 +96,14 @@ export class ReportAnalystAssignmentController {
     );
   }
 
-  @Patch('reAssignedAnalyst/:idValidator/:idCaseReportValidate/:userIdPermission')
+  @Patch(
+    'reAssignedAnalyst/:idValidator/:idCaseReportValidate/:userIdPermission',
+  )
   @Permission(permissions.SUPER_ADMIN, permissions.VALIDATOR)
   updateReAssignedAnalyst(
     @Body() updateReportAnalystAssignmentDto: UpdateReportAnalystAssignmentDto,
     @Ip() clientIp: string,
-    @Param('idValidator') idValidator: number,
+    @Param('idValidator') idValidator: string,
     @Param('idCaseReportValidate') idCaseReportValidate: string,
   ): Promise<HttpException> {
     return this.reportAnalisysAssignmentService.reAssingAnalyst(
@@ -113,12 +114,14 @@ export class ReportAnalystAssignmentController {
     );
   }
 
-  @Patch('returnCaseToValidator/:idAnalyst/:idCaseReportValidate/:userIdPermission')
+  @Patch(
+    'returnCaseToValidator/:idAnalyst/:idCaseReportValidate/:userIdPermission',
+  )
   @Permission(permissions.SUPER_ADMIN, permissions.ANALYST)
   updateReturnCaseToValidator(
     @Param('idCaseReportValidate') idCaseReportValidate: string,
     @Ip() clientIp: string,
-    @Param('idAnalyst') idAnalyst: number,
+    @Param('idAnalyst') idAnalyst: string,
   ) {
     return this.reportAnalisysAssignmentService.returnCaseToValidator(
       idCaseReportValidate,

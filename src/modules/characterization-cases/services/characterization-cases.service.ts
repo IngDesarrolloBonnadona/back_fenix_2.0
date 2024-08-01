@@ -15,6 +15,16 @@ export class CharacterizationCasesService {
   async createCharacterization(
     createCharacterizationCaseDto: CreateCharacterizationCaseDto,
   ) {
+    if (
+      !createCharacterizationCaseDto ||
+      !createCharacterizationCaseDto.cha_c_name
+    ) {
+      throw new HttpException(
+        'El nombre de la caracterización de los casos es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const findCharacterization =
       await this.characterizationCaseRepository.findOne({
         where: {
@@ -26,7 +36,7 @@ export class CharacterizationCasesService {
     if (findCharacterization) {
       throw new HttpException(
         'La caracterización de los casos ya existe.',
-        HttpStatus.CONFLICT,
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
     const characterization = this.characterizationCaseRepository.create(
@@ -54,13 +64,20 @@ export class CharacterizationCasesService {
     if (characterization.length === 0) {
       throw new HttpException(
         'No se encontró la lista de caracterización de los casos',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
     return characterization;
   }
 
   async findOneCharacterization(id: number) {
+    if (!id) {
+      throw new HttpException(
+        'El identificador de la caracterización es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const characterization = await this.characterizationCaseRepository.findOne({
       where: { id, cha_c_status: true },
     });
@@ -68,7 +85,7 @@ export class CharacterizationCasesService {
     if (!characterization) {
       throw new HttpException(
         'No se encontró la caracterización de los casos',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -79,6 +96,13 @@ export class CharacterizationCasesService {
     id: number,
     updateCharacterizationCaseDto: UpdateCharacterizationCaseDto,
   ) {
+    if (!updateCharacterizationCaseDto) {
+      throw new HttpException(
+        'Los datos para actualizar la caracterización de los casos son requeridos.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const characterization = await this.findOneCharacterization(id);
     const result = await this.characterizationCaseRepository.update(
       characterization.id,

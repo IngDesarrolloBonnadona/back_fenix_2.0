@@ -10,8 +10,8 @@ export class CreateReportAnalystAssignmentDto {
   ana_position_id_fk: number;
 
   @IsNotEmpty()
-  @IsNumber()
-  ana_useranalyst_id: number;
+  @IsString()
+  ana_useranalyst_id: string;
 
   @IsString()
   @IsOptional()

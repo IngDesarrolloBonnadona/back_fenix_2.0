@@ -6,8 +6,8 @@ import { CaseReportOriginal } from './entities/case-report-original.entity';
 import { CaseReportValidateModule } from '../case-report-validate/case-report-validate.module';
 import { CaseType } from '../case-type/entities/case-type.entity';
 import { LogModule } from '../log/log.module';
-import { MedicineModule } from '../medicine/medicine.module';
-import { DeviceModule } from '../device/device.module';
+import { MedicineModule } from '../medicine-case-report/medicine.module';
+import { DeviceModule } from '../device-case-report/device.module';
 import { CaseTypeModule } from '../case-type/case-type.module';
 import { RiskTypeModule } from '../risk-type/risk-type.module';
 import { EventTypeModule } from '../event-type/event-type.module';
@@ -21,7 +21,7 @@ import { UnitModule } from '../unit/unit.module';
 import { Priority } from '../priority/entities/priority.entity';
 import { SeverityClasification } from '../severity-clasification/entities/severity-clasification.entity';
 import { MovementReportModule } from '../movement-report/movement-report.module';
-import { PermissionGuard } from 'src/guards/permission.guard';
+import { PermissionGuard } from 'src/utils/guards/permission.guard';
 import { UserModule } from 'src/modules_bonnadonahub/user/user.module';
 
 @Module({
@@ -29,8 +29,8 @@ import { UserModule } from 'src/modules_bonnadonahub/user/user.module';
     TypeOrmModule.forFeature([
       CaseReportOriginal,
       CaseType,
-      Priority,
-      SeverityClasification,
+      // Priority,
+      // SeverityClasification,
     ]),
     CaseReportValidateModule,
     LogModule,

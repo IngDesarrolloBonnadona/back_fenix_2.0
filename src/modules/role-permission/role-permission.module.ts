@@ -3,7 +3,7 @@ import { RolePermissionService } from './services/role-permission.service';
 import { RolePermissionController } from './controllers/role-permission.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RolePermission } from './entities/role-permission.entity';
-import { PermissionGuard } from 'src/guards/permission.guard';
+import { PermissionGuard } from 'src/utils/guards/permission.guard';
 import { UserModule } from 'src/modules_bonnadonahub/user/user.module';
 
 @Module({

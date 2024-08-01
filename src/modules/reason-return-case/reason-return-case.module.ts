@@ -5,7 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ReasonReturnCase } from './entities/reason-return-case.entity';
 import { RolePermissionModule } from '../role-permission/role-permission.module';
 import { UserModule } from 'src/modules_bonnadonahub/user/user.module';
-import { PermissionGuard } from 'src/guards/permission.guard';
+import { PermissionGuard } from 'src/utils/guards/permission.guard';
 
 @Module({
   imports: [

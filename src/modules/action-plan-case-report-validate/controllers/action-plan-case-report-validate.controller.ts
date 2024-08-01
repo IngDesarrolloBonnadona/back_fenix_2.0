@@ -7,10 +7,10 @@ import { UpdateActionPlanCaseReportValidateDto } from '../dto/update-action-plan
 export class ActionPlanCaseReportValidateController {
   constructor(private readonly actionPlanCaseReportValidateService: ActionPlanCaseReportValidateService) {}
 
-  @Get('/findActionPlanCaseReportValidateByIdCase/:idCase')
-  findActionPlanCaseReportValidateByIdCase(@Param('idCase') idCase: string) {
-    return this.actionPlanCaseReportValidateService.findOneActionPlanCaseReportValidateByIdCase(idCase);
-  }
+  // @Get('/findActionPlanCaseReportValidateByIdCase/:idCase')
+  // findActionPlanCaseReportValidateByIdCase(@Param('idCase') idCase: string) {
+  //   return this.actionPlanCaseReportValidateService.findOneActionPlanCaseReportValidateByIdCase(idCase);
+  // }
 
   @Delete('/deleteActionPlanCaseReportValidate/:id')
   deleteActionPlanCaseReportValidate(@Param('id') id: number) {

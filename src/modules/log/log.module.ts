@@ -4,7 +4,7 @@ import { LogController } from './controllers/log.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Log } from './entities/log.entity';
 import { UserModule } from 'src/modules_bonnadonahub/user/user.module';
-import { PermissionGuard } from 'src/guards/permission.guard';
+import { PermissionGuard } from 'src/utils/guards/permission.guard';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Log]), UserModule],

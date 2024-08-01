@@ -5,9 +5,9 @@ export class CreateLogDto {
   @IsNotEmpty()
   log_validatedcase_id_fk: string;
 
-  @IsNumber()
+  @IsString()
   @IsNotEmpty()
-  log_user_id: number;
+  log_user_id: string;
 
   @IsString()
   @IsNotEmpty()

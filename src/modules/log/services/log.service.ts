@@ -15,23 +15,37 @@ export class LogService {
   async createLogTransaction(
     queryRunner: QueryRunner,
     caseReportValidateId: string,
-    reporterId: number,
+    reporterId: string,
     clientIp: string,
     action: string,
   ) {
-    const log = this.logRepository.create({
+    const createLogDto: CreateLogDto = {
       log_validatedcase_id_fk: caseReportValidateId,
       log_user_id: reporterId,
       log_ip: clientIp,
       log_action: action,
-    });
+    };
 
+    if (
+      !createLogDto ||
+      !createLogDto.log_action ||
+      !createLogDto.log_ip ||
+      !createLogDto.log_user_id ||
+      !createLogDto.log_validatedcase_id_fk
+    ) {
+      throw new HttpException(
+        'Algunos datos del log son requeridos.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const log = this.logRepository.create(createLogDto);
     await queryRunner.manager.save(log);
   }
 
   async createLog(
     caseReportValidateId: string,
-    userId: number,
+    userId: string,
     clientIp: string,
     action: string,
   ) {
@@ -41,6 +55,19 @@ export class LogService {
       log_ip: clientIp,
       log_action: action,
     };
+
+    if (
+      !createLogDto ||
+      !createLogDto.log_action ||
+      !createLogDto.log_ip ||
+      !createLogDto.log_user_id ||
+      !createLogDto.log_validatedcase_id_fk
+    ) {
+      throw new HttpException(
+        'Algunos datos del log son requeridos.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
 
     const log = this.logRepository.create(createLogDto);
     await this.logRepository.save(log);
@@ -61,13 +88,20 @@ export class LogService {
     if (logs.length === 0) {
       throw new HttpException(
         'No se encontró la lista de logs.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
     return logs;
   }
 
   async findOneLog(id: number) {
+    if (!id) {
+      throw new HttpException(
+        'El identificador del log es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const log = await this.logRepository.findOne({
       where: { id },
       relations: {
@@ -76,27 +110,10 @@ export class LogService {
     });
 
     if (!log) {
-      throw new HttpException('No se encontró el log.', HttpStatus.NO_CONTENT);
+      throw new HttpException('No se encontró el log.', HttpStatus.NOT_FOUND);
     }
 
     return log;
-  }
-
-  async updateLog(id: number, updateLogDto: UpdateLogDto) {
-    const log = await this.findOneLog(id);
-    const result = await this.logRepository.update(log.id, updateLogDto);
-
-    if (result.affected === 0) {
-      return new HttpException(
-        `No se pudo actualizar el log`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-
-    return new HttpException(
-      `¡Datos actualizados correctamente!`,
-      HttpStatus.OK,
-    );
   }
 
   async deleteLog(id: number) {

@@ -9,8 +9,8 @@ import { SubOriginModule } from './modules/sub-origin/sub-origin.module';
 import { RiskLevelModule } from './modules/risk-level/risk-level.module';
 import { EventTypeModule } from './modules/event-type/event-type.module';
 import { EventModule } from './modules/event/event.module';
-import { MedicineModule } from './modules/medicine/medicine.module';
-import { DeviceModule } from './modules/device/device.module';
+import { MedicineModule } from './modules/medicine-case-report/medicine.module';
+import { DeviceModule } from './modules/device-case-report/device.module';
 import { ServiceModule } from './modules/service/service.module';
 import { UnitModule } from './modules/unit/unit.module';
 import { CaseReportValidateModule } from './modules/case-report-validate/case-report-validate.module';
@@ -31,6 +31,19 @@ import { UserModule } from './modules_bonnadonahub/user/user.module';
 import { ActionPlanModule } from './modules/action-plan/action-plan.module';
 import { ActionPlanActivitiesModule } from './modules/action-plan-activities/action-plan-activities.module';
 import { ActionPlanCaseReportValidateModule } from './modules/action-plan-case-report-validate/action-plan-case-report-validate.module';
+import { ResearchInstrumentModule } from './modules/research-instrument/research-instrument.module';
+import { DeviceTypeModule } from './modules/device-type/device-type.module';
+import { DamageTypeModule } from './modules/damage-type/damage-type.module';
+import { FluidTypeModule } from './modules/fluid-type/fluid-type.module';
+import { InfluencingFactorModule } from './modules/influencing-factor/influencing-factor.module';
+import { FailedMeasuresModule } from './modules/failed-measures/failed-measures.module';
+import { RiskFactorModule } from './modules/risk-factor/risk-factor.module';
+import { SafetyBarriersModule } from './modules/safety-barriers/safety-barriers.module';
+import { ClinicalResearchInfluencingFactorModule } from './modules/clinical-research-influencing-factor/clinical-research-influencing-factor.module';
+import { ClinicalResearchFailedMeasuresModule } from './modules/clinical-research-failed-measures/clinical-research-failed-measures.module';
+import { ClinicalResearchModule } from './modules/clinical-research/clinical-research.module';
+import { ProtocolModule } from './modules/protocol/protocol.module';
+import { UnsafeActionModule } from './modules/unsafe-action/unsafe-action.module';
 
 require('dotenv').config();
 
@@ -91,6 +104,19 @@ require('dotenv').config();
     ActionPlanModule,
     ActionPlanActivitiesModule,
     ActionPlanCaseReportValidateModule,
+    ResearchInstrumentModule,
+    DeviceTypeModule,
+    DamageTypeModule,
+    FluidTypeModule,
+    InfluencingFactorModule,
+    FailedMeasuresModule,
+    RiskFactorModule,
+    SafetyBarriersModule,
+    ClinicalResearchInfluencingFactorModule,
+    ClinicalResearchFailedMeasuresModule,
+    ClinicalResearchModule,
+    ProtocolModule,
+    UnsafeActionModule,
   ],
   controllers: [],
   providers: [],

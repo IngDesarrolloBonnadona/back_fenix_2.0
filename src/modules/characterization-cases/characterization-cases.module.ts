@@ -3,7 +3,7 @@ import { CharacterizationCasesService } from './services/characterization-cases.
 import { CharacterizationCasesController } from './controllers/characterization-cases.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CharacterizationCase } from './entities/characterization-case.entity';
-import { PermissionGuard } from 'src/guards/permission.guard';
+import { PermissionGuard } from 'src/utils/guards/permission.guard';
 import { UserModule } from 'src/modules_bonnadonahub/user/user.module';
 
 @Module({

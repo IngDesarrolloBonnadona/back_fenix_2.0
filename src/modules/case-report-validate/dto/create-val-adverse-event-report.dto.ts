@@ -1,7 +1,7 @@
 import { IsArray, IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID, ValidateNested } from "class-validator";
 import { Type } from "class-transformer";
-import { CreateDeviceDto } from "src/modules/device/dto/create-device.dto";
-import { CreateMedicineDto } from "src/modules/medicine/dto/create-medicine.dto";
+import { CreateDeviceDto } from "src/modules/device-case-report/dto/create-device.dto";
+import { CreateMedicineDto } from "src/modules/medicine-case-report/dto/create-medicine.dto";
 
 export class CreateValAdverseEventReportDto {
 

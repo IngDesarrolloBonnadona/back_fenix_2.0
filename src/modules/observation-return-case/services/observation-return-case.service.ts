@@ -29,6 +29,31 @@ export class ObservationReturnCaseService {
     idUser: number,
     idCaseValidate: string,
   ) {
+    if (
+      !createObservationReturnCaseDto ||
+      !createObservationReturnCaseDto.rec_o_observation ||
+      !createObservationReturnCaseDto.rec_o_reasonreturn_id_fk
+    ) {
+      throw new HttpException(
+        'Algunos datos de la observación de devolución del caso son requeridos.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    if (!idUser) {
+      throw new HttpException(
+        'El identificador del usuario es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    if (!idCaseValidate) {
+      throw new HttpException(
+        'El identificador del caso es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const findReportCaseValidate =
       await this.caseReportValidateService.findOneReportValidate(
         idCaseValidate,
@@ -64,13 +89,20 @@ export class ObservationReturnCaseService {
     if (observationReturns.length === 0) {
       throw new HttpException(
         `No se encontró la lista de observaciones de devolución del caso`,
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
     return observationReturns;
   }
 
   async findOneObservationReturnCase(id: number) {
+    if (!id) {
+      throw new HttpException(
+        'El identificador de la observación de devolución del caso es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const observationReturn = await this.observationReturnRepository.findOne({
       where: {
         id,
@@ -80,8 +112,8 @@ export class ObservationReturnCaseService {
 
     if (!observationReturn) {
       throw new HttpException(
-        'No se encontró la observación de devolución del caso',
-        HttpStatus.NO_CONTENT,
+        'No se encontró la observación de devolución del caso.',
+        HttpStatus.NOT_FOUND,
       );
     }
     return observationReturn;
@@ -91,6 +123,13 @@ export class ObservationReturnCaseService {
     id: number,
     updateObservationReturnCaseDto: UpdateObservationReturnCaseDto,
   ) {
+    if (!updateObservationReturnCaseDto) {
+      throw new HttpException(
+        'Los datos para actualizar la observación de devolución del caso son requeridos.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const observationReturn = await this.findOneObservationReturnCase(id);
     const result = await this.observationReturnRepository.update(
       observationReturn.id,
@@ -99,7 +138,7 @@ export class ObservationReturnCaseService {
 
     if (result.affected === 0) {
       return new HttpException(
-        `No se pudo actualizar la observación de devolución del caso`,
+        `No se pudo actualizar la observación de devolución del caso.`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }

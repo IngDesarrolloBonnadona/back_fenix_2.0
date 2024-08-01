@@ -1,9 +1,4 @@
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateEventTypeDto } from '../dto/create-event-type.dto';
 import { UpdateEventTypeDto } from '../dto/update-event-type.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -21,6 +16,17 @@ export class EventTypeService {
   ) {}
 
   async createEventType(createEventTypeDto: CreateEventTypeDto) {
+    if (
+      !createEventTypeDto ||
+      !createEventTypeDto.eve_t_name ||
+      !createEventTypeDto.eve_t_casetype_id_fk
+    ) {
+      throw new HttpException(
+        'Algunos datos del tipo de suceso son requeridos.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const findEventType = await this.eventTypeRepository.findOne({
       where: {
         eve_t_name: createEventTypeDto.eve_t_name,
@@ -30,8 +36,8 @@ export class EventTypeService {
 
     if (findEventType) {
       throw new HttpException(
-        'El tipo de suceso ya existe en el tipo de caso seleccionado.',
-        HttpStatus.NO_CONTENT,
+        'El tipo de suceso ya existe con el tipo de caso seleccionado.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
 
@@ -48,6 +54,7 @@ export class EventTypeService {
     );
   }
 
+  // Solo se usa para parametrizar cargando datos masivos
   async createEventTypesArray(createEventTypeDto: CreateEventTypeDto[]) {
     const eventTypesToCreate = [];
 
@@ -62,7 +69,7 @@ export class EventTypeService {
       if (findEventType) {
         throw new HttpException(
           `El tipo de suceso ${eventType.eve_t_name} ya existe en el tipo de caso seleccionado.`,
-          HttpStatus.NO_CONTENT,
+          HttpStatus.INTERNAL_SERVER_ERROR,
         );
       }
 
@@ -90,7 +97,6 @@ export class EventTypeService {
       relations: {
         event: true,
         caseType: true,
-        // caseReportValidate: true,
       },
       order: {
         eve_t_name: 'ASC',
@@ -100,26 +106,32 @@ export class EventTypeService {
     if (eventTypes.length === 0) {
       throw new HttpException(
         'No se encontró la lista de tipo de sucesos.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
     return eventTypes;
   }
 
   async findOneEventType(id: number) {
+    if (!id) {
+      throw new HttpException(
+        'El identificador del tipo de suceso es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const eventType = await this.eventTypeRepository.findOne({
       where: { id, eve_t_status: true },
       relations: {
         event: true,
         caseType: true,
-        // caseReportValidate: true,
       },
     });
 
     if (!eventType) {
       throw new HttpException(
         'No se encontró el tipo de suceso.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -127,6 +139,13 @@ export class EventTypeService {
   }
 
   async findEvenTypeByCaseType(caseTypeId: number) {
+    if (!caseTypeId) {
+      throw new HttpException(
+        'El identificador del tipo de caso es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const eventTypesByCaseType = await this.eventTypeRepository.find({
       where: {
         eve_t_casetype_id_fk: caseTypeId,
@@ -140,7 +159,7 @@ export class EventTypeService {
     if (!eventTypesByCaseType) {
       throw new HttpException(
         'No se encontró el tipo de suceso relacionado al tipo de caso.',
-        HttpStatus.CONFLICT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -148,6 +167,13 @@ export class EventTypeService {
   }
 
   async updateEventType(id: number, updateEventTypeDto: UpdateEventTypeDto) {
+    if (!updateEventTypeDto) {
+      throw new HttpException(
+        'Los datos para actualizar el tipo de suceso son requeridos.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const eventType = await this.findOneEventType(id);
     await this.caseTypeService.findOneCaseType(
       updateEventTypeDto.eve_t_casetype_id_fk,

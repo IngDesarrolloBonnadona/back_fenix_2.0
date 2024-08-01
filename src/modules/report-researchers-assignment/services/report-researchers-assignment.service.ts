@@ -13,18 +13,18 @@ import { ReportResearcherAssignment as ResearcherEntity } from '../entities/repo
 import { Repository } from 'typeorm';
 import { CaseReportValidateService } from 'src/modules/case-report-validate/services/case-report-validate.service';
 import { LogService } from 'src/modules/log/services/log.service';
-import { logReports } from 'src/enums/logs.enum';
+import { logReports } from 'src/utils/enums/logs.enum';
 import { MovementReport as MovementReportEntity } from 'src/modules/movement-report/entities/movement-report.entity';
-import { movementReport } from 'src/enums/movement-report.enum';
+import { movementReport } from 'src/utils/enums/movement-report.enum';
 import { CaseReportValidate as CaseReportValidateEntity } from 'src/modules/case-report-validate/entities/case-report-validate.entity';
 import { CaseType as CaseTypeEntity } from 'src/modules/case-type/entities/case-type.entity';
-import { caseTypeReport } from 'src/enums/caseType-report.enum';
+import { caseTypeReport } from 'src/utils/enums/caseType-report.enum';
 import { SeverityClasification as SeverityClasificationEntity } from 'src/modules/severity-clasification/entities/severity-clasification.entity';
-import { severityClasification } from 'src/enums/severity-clasif.enum';
+import { severityClasification } from 'src/utils/enums/severity-clasif.enum';
 import { RolePermission as RoleEntity } from 'src/modules/role-permission/entities/role-permission.entity';
-import { userRoles } from 'src/enums/user-roles.enum';
+import { userRoles } from 'src/utils/enums/user-roles.enum';
 import { RoleResponseTime as RoleResponseTimeEntity } from 'src/modules/role-response-time/entities/role-response-time.entity';
-import { sentinelTime } from 'src/enums/sentinel-time.enum';
+import { sentinelTime } from 'src/utils/enums/sentinel-time.enum';
 import { UpdateReportResearcherAssignmentDto } from '../dto/update-report-researcher-assignment.dto';
 import { ReportAnalystAssignment as ReportAnalystAssignmentEntity } from 'src/modules/report-analyst-assignment/entities/report-analyst-assignment.entity';
 import { MovementReportService } from 'src/modules/movement-report/services/movement-report.service';
@@ -72,7 +72,7 @@ export class ResearchersService {
     if (filteredResearchers.length === 0) {
       throw new HttpException(
         'No se encontraron investigadores que coincidan con los criterios de búsqueda.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -82,8 +82,33 @@ export class ResearchersService {
   async assingResearcher(
     createResearcherDto: CreateReportResearcherAssignmentDto,
     clientIp: string,
-    idAnalyst: number,
+    idAnalyst: string,
   ) {
+    if (
+      !createResearcherDto ||
+      !createResearcherDto.res_userresearch_id ||
+      !createResearcherDto.res_validatedcase_id_fk
+    ) {
+      throw new HttpException(
+        'Algunos datos para asignar investigador son requeridos.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    if (!clientIp) {
+      throw new HttpException(
+        'La dirección IP del usuario es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    if (!idAnalyst) {
+      throw new HttpException(
+        'El identificador del analista es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const reportAssignmentFind = await this.researcherRepository.findOne({
       where: {
         res_validatedcase_id_fk: createResearcherDto.res_validatedcase_id_fk,
@@ -95,7 +120,7 @@ export class ResearchersService {
     if (reportAssignmentFind) {
       throw new HttpException(
         'El reporte ya tiene un investigador asignado',
-        HttpStatus.CONFLICT,
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
 
@@ -114,7 +139,7 @@ export class ResearchersService {
     if (!findCaseType) {
       throw new HttpException(
         `El tipo de caso ${caseTypeReport.ADVERSE_EVENT} no existe.`,
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -129,7 +154,7 @@ export class ResearchersService {
     if (!findSeverityClasification) {
       throw new HttpException(
         `La clasificacion de severidad ${severityClasification.SERIOUS_SEVERITY} no existe.`,
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -143,7 +168,7 @@ export class ResearchersService {
     if (!findIdRole) {
       throw new HttpException(
         `El rol ${userRoles.INVESTIGATOR} no existe.`,
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -159,7 +184,7 @@ export class ResearchersService {
     if (!findRoleResponseTime) {
       throw new HttpException(
         `El tiempo de respuesta del rol ${userRoles.INVESTIGATOR} no existe.`,
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -276,7 +301,7 @@ export class ResearchersService {
     if (caseReportsValidate.length === 0) {
       throw new HttpException(
         'No hay reportes para mostrar.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -344,7 +369,7 @@ export class ResearchersService {
     if (caseReportsValidate.length === 0) {
       throw new HttpException(
         'No hay reportes para mostrar.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -352,6 +377,13 @@ export class ResearchersService {
   }
 
   async findOneAssignedResearch(id: number) {
+    if (!id) {
+      throw new HttpException(
+        'El identificador del investigador asignado es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const research = await this.researcherRepository.findOne({
       where: { id, res_status: true, res_isreturned: false },
     });
@@ -359,7 +391,7 @@ export class ResearchersService {
     if (!research) {
       throw new HttpException(
         'No se encontró el investigador',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
     return research;
@@ -368,9 +400,37 @@ export class ResearchersService {
   async reAssingResearcher(
     updateResearcherDto: UpdateReportResearcherAssignmentDto,
     clientIp: string,
-    idAnalyst: number,
+    idAnalyst: string,
     idCaseReportValidate: string,
   ) {
+    if (!updateResearcherDto) {
+      throw new HttpException(
+        'Los datos para actualizar la asignación del investigador son requeridos.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    if (!clientIp) {
+      throw new HttpException(
+        'La dirección IP del usuario es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    if (!idAnalyst) {
+      throw new HttpException(
+        'El identificador del analista es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    if (!idCaseReportValidate) {
+      throw new HttpException(
+        'El identificador del caso es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const findResearcherAssigned = await this.researcherRepository.findOne({
       where: {
         res_validatedcase_id_fk: idCaseReportValidate,
@@ -383,7 +443,7 @@ export class ResearchersService {
     if (!findResearcherAssigned) {
       throw new HttpException(
         'No se encontró el reporte asignado a investigador.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -399,7 +459,7 @@ export class ResearchersService {
     if (!caseReportValidate) {
       throw new HttpException(
         'No se encontró el reporte.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -457,8 +517,29 @@ export class ResearchersService {
   async returnCaseToAnalyst(
     idCaseReportValidate: string,
     clientIp: string,
-    idResearcher: number,
+    idResearcher: string,
   ) {
+    if (!idCaseReportValidate) {
+      throw new HttpException(
+        'El identificador del caso es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    if (!clientIp) {
+      throw new HttpException(
+        'La dirección IP del usuario es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    if (!idResearcher) {
+      throw new HttpException(
+        'El identificador del investigador es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const findReportResearcherAssigned =
       await this.researcherRepository.findOne({
         where: {
@@ -471,7 +552,7 @@ export class ResearchersService {
     if (!findReportResearcherAssigned) {
       throw new HttpException(
         'No se encontró el reporte asignado a investigador.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -487,7 +568,7 @@ export class ResearchersService {
     if (!reportAssignmentFind) {
       throw new HttpException(
         'No se encontró el reporte asignado a analista',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 

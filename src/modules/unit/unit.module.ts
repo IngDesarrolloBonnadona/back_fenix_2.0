@@ -4,7 +4,7 @@ import { UnitController } from './controllers/unit.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Unit } from './entities/unit.entity';
 // import { ServiceModule } from '../service/service.module';
-import { PermissionGuard } from 'src/guards/permission.guard';
+import { PermissionGuard } from 'src/utils/guards/permission.guard';
 import { UserModule } from 'src/modules_bonnadonahub/user/user.module';
 
 @Module({

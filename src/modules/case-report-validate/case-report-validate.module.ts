@@ -4,8 +4,8 @@ import { CaseReportValidateController } from './controllers/case-report-validate
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CaseReportValidate } from './entities/case-report-validate.entity';
 import { CaseType } from '../case-type/entities/case-type.entity';
-import { MedicineModule } from '../medicine/medicine.module';
-import { DeviceModule } from '../device/device.module';
+import { MedicineModule } from '../medicine-case-report/medicine.module';
+import { DeviceModule } from '../device-case-report/device.module';
 import { MovementReport } from '../movement-report/entities/movement-report.entity';
 import { LogModule } from '../log/log.module';
 import { ReportAnalystAssignment } from '../report-analyst-assignment/entities/report-analyst-assignment.entity';
@@ -28,7 +28,7 @@ import { Priority } from '../priority/entities/priority.entity';
 import { ObservationReturnCase } from '../observation-return-case/entities/observation-return-case.entity';
 import { ObservationReturnCaseModule } from '../observation-return-case/observation-return-case.module';
 import { MovementReportModule } from '../movement-report/movement-report.module';
-import { PermissionGuard } from 'src/guards/permission.guard';
+import { PermissionGuard } from 'src/utils/guards/permission.guard';
 import { UserModule } from 'src/modules_bonnadonahub/user/user.module';
 import { ActionPlanCaseReportValidate } from '../action-plan-case-report-validate/entities/action-plan-case-report-validate.entity';
 import { ActionPlanCaseReportValidateModule } from '../action-plan-case-report-validate/action-plan-case-report-validate.module';
@@ -43,7 +43,7 @@ import { ActionPlanModule } from '../action-plan/action-plan.module';
       ReportAnalystAssignment,
       Synergy,
       ReportResearcherAssignment,
-      Priority,
+      // Priority,
       ObservationReturnCase,
       ActionPlanCaseReportValidate,
     ]),

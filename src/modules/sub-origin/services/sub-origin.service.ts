@@ -21,18 +21,29 @@ export class SubOriginService {
   ) {}
 
   async createSubOrigin(createSubOriginDto: CreateSubOriginDto) {
-    const FindSubOrigin = await this.subOriginRepository.findOne({
-      where: {
-        sub_o_name: createSubOriginDto.sub_o_name,
-        sub_o_origin_id_fk: createSubOriginDto.sub_o_origin_id_fk,
-        sub_o_status: true,
-      },
-    });
+    if (
+      !createSubOriginDto ||
+      !createSubOriginDto.sub_o_name ||
+      !createSubOriginDto.sub_o_origin_id_fk
+    ) {
+      throw new HttpException(
+        'Algunos datos de sub origen son requeridos.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+      const FindSubOrigin = await this.subOriginRepository.findOne({
+        where: {
+          sub_o_name: createSubOriginDto.sub_o_name,
+          sub_o_origin_id_fk: createSubOriginDto.sub_o_origin_id_fk,
+          sub_o_status: true,
+        },
+      });
 
     if (FindSubOrigin) {
       throw new HttpException(
         'El sub origen ya existe con el origen seleccionado.',
-        HttpStatus.CONFLICT,
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
 
@@ -53,16 +64,12 @@ export class SubOriginService {
       order: {
         sub_o_name: 'ASC',
       },
-      // relations: {
-      //   origin: true,
-      //   caseReportValidate: true,
-      // },
     });
 
     if (subOrigins.length === 0) {
       throw new HttpException(
-        'No se encontró la lista de subfuentes',
-        HttpStatus.NO_CONTENT,
+        'No se encontró la lista de sub origenes.',
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -70,18 +77,21 @@ export class SubOriginService {
   }
 
   async findOneSubOrigin(id: number) {
+    if (!id) {
+      throw new HttpException(
+        'El identificador del sub origen es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const subOrigin = await this.subOriginRepository.findOne({
       where: { id, sub_o_status: true },
-      // relations: {
-      //   origin: true,
-      //   caseReportValidate: true,
-      // },
     });
 
     if (!subOrigin) {
       throw new HttpException(
-        'No se encontró el subfuente',
-        HttpStatus.NO_CONTENT,
+        'No se encontró el sub origen.',
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -89,6 +99,13 @@ export class SubOriginService {
   }
 
   async findSubOriginByOriginId(originId: number) {
+    if (!originId) {
+      throw new HttpException(
+        'El identificador del origen es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const subOriginByOrigin = await this.subOriginRepository.find({
       where: {
         sub_o_origin_id_fk: originId,
@@ -102,7 +119,7 @@ export class SubOriginService {
     if (!subOriginByOrigin) {
       throw new HttpException(
         'No se encontró el sub origen relacionado al origen.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -110,6 +127,13 @@ export class SubOriginService {
   }
 
   async updateSubOrigin(id: number, updateSubOriginDto: UpdateSubOriginDto) {
+    if (!updateSubOriginDto) {
+      throw new HttpException(
+        'Los datos para actualizar el sub origen son requeridos.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const subOrigin = await this.findOneSubOrigin(id);
     await this.originService.findOneOrigin(
       updateSubOriginDto.sub_o_origin_id_fk,
@@ -122,7 +146,7 @@ export class SubOriginService {
 
     if (result.affected === 0) {
       return new HttpException(
-        `No se pudo actualizar el sub fuente`,
+        `No se pudo actualizar el sub origen.`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
@@ -139,7 +163,7 @@ export class SubOriginService {
 
     if (result.affected === 0) {
       return new HttpException(
-        `No se pudo eliminar el suborigen.`,
+        `No se pudo eliminar el sub origen.`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }

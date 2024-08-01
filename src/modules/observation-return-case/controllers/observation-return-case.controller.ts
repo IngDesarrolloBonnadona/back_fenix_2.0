@@ -14,9 +14,9 @@ import { CreateObservationReturnCaseDto } from '../dto/create-observation-return
 import { UpdateObservationReturnCaseDto } from '../dto/update-observation-return-case.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { ObservationReturnCase } from '../entities/observation-return-case.entity';
-import { PermissionGuard } from 'src/guards/permission.guard';
-import { Permission } from 'src/decorators/permission.decorator';
-import { permissions } from 'src/enums/permissions.enum';
+import { PermissionGuard } from 'src/utils/guards/permission.guard';
+import { Permission } from 'src/utils/decorators/permission.decorator';
+import { permissions } from 'src/utils/enums/permissions.enum';
 
 @ApiTags('observation-return-case')
 @Controller('observation-return-case')
@@ -26,8 +26,14 @@ export class ObservationReturnCaseController {
     private readonly observationReturnCaseService: ObservationReturnCaseService,
   ) {}
 
-  @Post('/createObservationReturnCase/:idUser/:idCaseValidate/:userIdPermission')
-  @Permission(permissions.SUPER_ADMIN, permissions.ANALYST, permissions.INVESTIGATOR)
+  @Post(
+    '/createObservationReturnCase/:idUser/:idCaseValidate/:userIdPermission',
+  )
+  @Permission(
+    permissions.SUPER_ADMIN,
+    permissions.ANALYST,
+    permissions.INVESTIGATOR,
+  )
   createObservationReturnCase(
     @Param('idUser') idUser: number,
     @Param('idCaseValidate') idCaseValidate: string,
@@ -46,7 +52,9 @@ export class ObservationReturnCaseController {
   }
 
   @Get('/findObservationReturnCase/:id')
-  findObservationReturnCase(@Param('id') id: number): Promise<ObservationReturnCase> {
+  findObservationReturnCase(
+    @Param('id') id: number,
+  ): Promise<ObservationReturnCase> {
     return this.observationReturnCaseService.findOneObservationReturnCase(id);
   }
 

@@ -1,8 +1,8 @@
 import { IsNotEmpty, IsNumber, IsOptional, IsString, IsArray, ValidateNested } from "@nestjs/class-validator";
 import { Type } from "class-transformer";
-import { IsBoolean, IsUUID } from "class-validator";
-import { CreateDeviceDto } from "src/modules/device/dto/create-device.dto";
-import { CreateMedicineDto } from "src/modules/medicine/dto/create-medicine.dto";
+import { IsBoolean } from "class-validator";
+import { CreateDeviceDto } from "src/modules/device-case-report/dto/create-device.dto";
+import { CreateMedicineDto } from "src/modules/medicine-case-report/dto/create-medicine.dto";
 
 export class CreateValIncidentReportDto {
     

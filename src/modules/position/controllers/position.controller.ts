@@ -15,9 +15,9 @@ import { CreatePositionDto } from '../dto/create-position.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { Position } from '../entities/position.entity';
 import { UpdatePositionDto } from '../dto/update-position.dto';
-import { PermissionGuard } from 'src/guards/permission.guard';
-import { Permission } from 'src/decorators/permission.decorator';
-import { permissions } from 'src/enums/permissions.enum';
+import { PermissionGuard } from 'src/utils/guards/permission.guard';
+import { Permission } from 'src/utils/decorators/permission.decorator';
+import { permissions } from 'src/utils/enums/permissions.enum';
 
 @ApiTags('position')
 @Controller('position')
@@ -53,13 +53,13 @@ export class PositionController {
     return this.positionService.findEmployeeByCode(code);
   }
 
-  @Patch('/updateEnabledPosition/:id/:userIdPermission')
+  @Patch('/updatePosition/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  updateEnabledPosition(
+  updatePosition(
     @Param('id') id: number,
-    @Body() enabledPosition: UpdatePositionDto,
+    @Body() updatePositionDto: UpdatePositionDto,
   ): Promise<HttpException> {
-    return this.positionService.updateEnabledPosition(id, enabledPosition);
+    return this.positionService.updatePosition(id, updatePositionDto);
   }
 
   @Delete('/deletePosition/:id/:userIdPermission')

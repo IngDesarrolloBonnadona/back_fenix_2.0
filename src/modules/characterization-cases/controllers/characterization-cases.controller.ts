@@ -15,9 +15,9 @@ import { CreateCharacterizationCaseDto } from '../dto/create-characterization-ca
 import { UpdateCharacterizationCaseDto } from '../dto/update-characterization-case.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { CharacterizationCase } from '../entities/characterization-case.entity';
-import { PermissionGuard } from 'src/guards/permission.guard';
-import { Permission } from 'src/decorators/permission.decorator';
-import { permissions } from 'src/enums/permissions.enum';
+import { PermissionGuard } from 'src/utils/guards/permission.guard';
+import { Permission } from 'src/utils/decorators/permission.decorator';
+import { permissions } from 'src/utils/enums/permissions.enum';
 
 @ApiTags('characterization-cases')
 @Controller('characterization-cases')

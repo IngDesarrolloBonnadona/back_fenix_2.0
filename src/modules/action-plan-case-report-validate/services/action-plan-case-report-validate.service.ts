@@ -23,6 +23,13 @@ export class ActionPlanCaseReportValidateService {
   }
 
   async findOneActionPlanCaseReportValidateByIdCase(idCase: string) {
+    if (!idCase) {
+      throw new HttpException(
+        'El identificador del caso es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const actionPlanCRV =
       await this.actionPlanCaseReportValidateRepository.findOne({
         where: {
@@ -34,7 +41,7 @@ export class ActionPlanCaseReportValidateService {
     if (actionPlanCRV) {
       throw new HttpException(
         'El caso ya se encuentra en investigación.',
-        HttpStatus.CONFLICT,
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
 
@@ -42,6 +49,13 @@ export class ActionPlanCaseReportValidateService {
   }
 
   async findOneActionPlanCaseReportValidate(id: number) {
+    if (!id) {
+      throw new HttpException(
+        'El identificador del plan de acción relacionado con el caso es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    
     const actionPlanCRV =
       await this.actionPlanCaseReportValidateRepository.findOne({
         where: { id, plan_av_status: true },
@@ -50,7 +64,7 @@ export class ActionPlanCaseReportValidateService {
     if (!actionPlanCRV) {
       throw new HttpException(
         'No se encontró el caso asignado en plan de acción.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
     return actionPlanCRV;

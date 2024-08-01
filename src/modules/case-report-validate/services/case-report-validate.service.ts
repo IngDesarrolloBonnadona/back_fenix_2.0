@@ -21,19 +21,19 @@ import { CreateCaseReportOriginalDto } from 'src/modules/case-report-original/dt
 import { FindSimilarCaseReportValidateDto } from '../dto/find-similar-case-report-validate';
 import { ValDtoValidator } from '../helper/val-dto-validator.helper';
 import { CaseType as CaseTypeEntity } from 'src/modules/case-type/entities/case-type.entity';
-import { MedicineService } from 'src/modules/medicine/services/medicine.service';
-import { DeviceService } from 'src/modules/device/services/device.service';
+import { MedicineService } from 'src/modules/medicine-case-report/services/medicine.service';
+import { DeviceService } from 'src/modules/device-case-report/services/device.service';
 import { MovementReport as MovementReportEntity } from 'src/modules/movement-report/entities/movement-report.entity';
-import { movementReport } from 'src/enums/movement-report.enum';
+import { movementReport } from 'src/utils/enums/movement-report.enum';
 import { LogService } from 'src/modules/log/services/log.service';
-import { logReports } from 'src/enums/logs.enum';
+import { logReports } from 'src/utils/enums/logs.enum';
 import { ReportAnalystAssignment as ReportAnalystAssignmentEntity } from 'src/modules/report-analyst-assignment/entities/report-analyst-assignment.entity';
 import { ReportAnalystAssignmentService } from 'src/modules/report-analyst-assignment/services/report-analyst-assignment.service';
 import { Synergy as SynergyEntity } from 'src/modules/synergy/entities/synergy.entity';
 import { SynergyService } from 'src/modules/synergy/services/synergy.service';
 import { ReportResearcherAssignment as ReportResearcherAssignmentEntity } from 'src/modules/report-researchers-assignment/entities/report-researchers-assignment.entity';
 import { ResearchersService } from 'src/modules/report-researchers-assignment/services/report-researchers-assignment.service';
-import { caseTypeReport } from 'src/enums/caseType-report.enum';
+import { caseTypeReport } from 'src/utils/enums/caseType-report.enum';
 import { CreateValRiskReportDto } from '../dto/create-val-risk-report.dto';
 import { CreateValAdverseEventReportDto } from '../dto/create-val-adverse-event-report.dto';
 import { CreateValIncidentReportDto } from '../dto/create-val-incident-report.dto';
@@ -71,8 +71,8 @@ export class CaseReportValidateService {
     private readonly synergyRepository: Repository<SynergyEntity>,
     @InjectRepository(ReportResearcherAssignmentEntity)
     private readonly researchRepository: Repository<ReportResearcherAssignmentEntity>,
-    @InjectRepository(PriorityEntity)
-    private readonly priorityRepository: Repository<PriorityEntity>,
+    // @InjectRepository(PriorityEntity)
+    // private readonly priorityRepository: Repository<PriorityEntity>,
     @InjectRepository(ObservationReturnCaseEntity)
     private readonly observationReturnCaseRepository: Repository<ObservationReturnCaseEntity>,
     @InjectRepository(ActionPlanCaseReportValidateEntity)
@@ -106,6 +106,20 @@ export class CaseReportValidateService {
   async findSimilarCaseReportsValidate(
     similarCaseReportValidate: FindSimilarCaseReportValidateDto,
   ) {
+    if (
+      !similarCaseReportValidate ||
+      !similarCaseReportValidate.val_cr_casetype_id_fk ||
+      !similarCaseReportValidate.val_cr_documentpatient ||
+      !similarCaseReportValidate.val_cr_event_id_fk ||
+      !similarCaseReportValidate.val_cr_eventtype_id_fk ||
+      !similarCaseReportValidate.val_cr_unit_id_fk
+    ) {
+      throw new HttpException(
+        'Algunos datos del caso son requeridos.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const similarReport = await this.caseReportValidateRepository.find({
       where: {
         val_cr_casetype_id_fk: similarCaseReportValidate.val_cr_casetype_id_fk,
@@ -124,20 +138,28 @@ export class CaseReportValidateService {
     });
 
     if (similarReport.length > 0) {
-      return {
-        message: `¡Extisten ${similarReport.length} casos similares!`,
-        data: similarReport,
-      };
+      throw new HttpException(
+        {
+          message: `¡Extisten ${similarReport.length} casos similares!`,
+          data: similarReport,
+        },
+        HttpStatus.OK,
+      );
     } else {
-      return { message: '¡No existen casos similares!' };
+      throw new HttpException(
+        {
+          message: '¡No existen casos similares!',
+        },
+        HttpStatus.NOT_FOUND,
+      );
     }
   }
 
   async createReportValidate(
     createReportValDto: any,
     clientIp: string,
-    reportId: string,
-    idValidator: number,
+    caseReportId: string,
+    idValidator: string,
   ): Promise<any> {
     await ValDtoValidator(createReportValDto, this.caseTypeRepository);
 
@@ -178,9 +200,30 @@ export class CaseReportValidateService {
           ),
       ]);
 
+      if (!clientIp) {
+        throw new HttpException(
+          'La dirección IP del usuario es requerido.',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      if (!idValidator) {
+        throw new HttpException(
+          'El identificador del validador es requerido.',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      if (!caseReportId) {
+        throw new HttpException(
+          'El identificador del caso es requerido.',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
       const previousReport = await this.caseReportValidateRepository.findOne({
         where: {
-          id: reportId,
+          id: caseReportId,
           val_cr_validated: false,
         },
       });
@@ -188,13 +231,19 @@ export class CaseReportValidateService {
       if (!previousReport) {
         throw new HttpException(
           `El reporte no existe o ya fue validado.`,
-          HttpStatus.NO_CONTENT,
+          HttpStatus.NOT_FOUND,
         );
       }
 
       if (previousReport) {
-        previousReport.val_cr_validated = true;
+        await this.cancelReportValidate(
+          previousReport.id,
+          clientIp,
+          idValidator,
+        );
 
+        previousReport.val_cr_validated = true;
+        previousReport.deletedAt = new Date();
         await queryRunner.manager.save(previousReport);
       }
 
@@ -263,7 +312,7 @@ export class CaseReportValidateService {
         createReportValDto.val_cr_severityclasif_id_fk !== null &&
         createReportValDto.val_cr_severityclasif_id_fk !== undefined
       ) {
-        const priorityFind = await this.priorityRepository.findOne({
+        const priorityFind = await queryRunner.manager.findOne(PriorityEntity, {
           where: {
             prior_severityclasif_id_fk:
               createReportValDto.val_cr_severityclasif_id_fk,
@@ -274,7 +323,7 @@ export class CaseReportValidateService {
         if (!priorityFind) {
           throw new HttpException(
             `La prioridad no existe`,
-            HttpStatus.NO_CONTENT,
+            HttpStatus.NOT_FOUND,
           );
         }
 
@@ -461,7 +510,7 @@ export class CaseReportValidateService {
     if (caseReportsValidate.length === 0) {
       throw new HttpException(
         'No hay reportes para mostrar.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -525,7 +574,7 @@ export class CaseReportValidateService {
     if (caseReportsValidate.length === 0) {
       throw new HttpException(
         'No hay reportes para mostrar.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -604,7 +653,7 @@ export class CaseReportValidateService {
     if (caseReportsValidate.length === 0) {
       throw new HttpException(
         'No hay reportes para mostrar.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -640,7 +689,7 @@ export class CaseReportValidateService {
     if (caseReportValidates.length === 0) {
       throw new HttpException(
         'No hay reportes para mostrar.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -648,6 +697,13 @@ export class CaseReportValidateService {
   }
 
   async findOneReportValidate(id: string): Promise<CaseReportValidateEntity> {
+    if (!id) {
+      throw new HttpException(
+        'El identificador del caso es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const caseReportValidate = await this.caseReportValidateRepository.findOne({
       where: { id, val_cr_validated: false, val_cr_status: true },
       relations: {
@@ -673,7 +729,7 @@ export class CaseReportValidateService {
     if (!caseReportValidate) {
       throw new HttpException(
         'No se encontró el reporte.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -683,6 +739,13 @@ export class CaseReportValidateService {
   async findOneReportValidateByConsecutive(
     consecutive: string,
   ): Promise<CaseReportValidateEntity[]> {
+    if (!consecutive) {
+      throw new HttpException(
+        'El consecutivo del caso es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const caseReportValidate = await this.caseReportValidateRepository.find({
       where: {
         val_cr_filingnumber: Like(`%${consecutive}%`),
@@ -715,37 +778,58 @@ export class CaseReportValidateService {
     if (caseReportValidate.length === 0) {
       throw new HttpException(
         'No se encontró el reporte.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
     return caseReportValidate;
   }
 
-  async updateReportValidate(
-    id: string,
-    updateCaseReportValidateDto: UpdateCaseReportValidateDto,
-  ) {
-    const caseReportValidate = await this.findOneReportValidate(id);
-    const result = await this.caseReportValidateRepository.update(
-      caseReportValidate.id,
-      updateCaseReportValidateDto,
-    );
+  // async updateReportValidate(
+  //   id: string,
+  //   updateCaseReportValidateDto: UpdateCaseReportValidateDto,
+  // ) {
+  //   const caseReportValidate = await this.findOneReportValidate(id);
+  //   const result = await this.caseReportValidateRepository.update(
+  //     caseReportValidate.id,
+  //     updateCaseReportValidateDto,
+  //   );
 
-    if (result.affected === 0) {
-      return new HttpException(
-        `No se pudo actualizar caso validado ${caseReportValidate.id}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
+  //   if (result.affected === 0) {
+  //     return new HttpException(
+  //       `No se pudo actualizar caso validado ${caseReportValidate.id}`,
+  //       HttpStatus.INTERNAL_SERVER_ERROR,
+  //     );
+  //   }
+
+  //   return new HttpException(
+  //     `¡Datos actualizados correctamente!`,
+  //     HttpStatus.OK,
+  //   );
+  // }
+
+  async cancelReportValidate(id: string, clientIp: string, idUser: string) {
+    if (!id) {
+      throw new HttpException(
+        'El identificador del caso es requerido.',
+        HttpStatus.BAD_REQUEST,
       );
     }
 
-    return new HttpException(
-      `¡Datos actualizados correctamente!`,
-      HttpStatus.OK,
-    );
-  }
+    if (!clientIp) {
+      throw new HttpException(
+        'La dirección IP del usuario es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
 
-  async cancelReportValidate(id: string, clientIp: string) {
+    if (!idUser) {
+      throw new HttpException(
+        'El identificador del usuario es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const movementReportFound =
       await this.movementReportService.findOneMovementReportByName(
         movementReport.ANULATION,
@@ -787,7 +871,7 @@ export class CaseReportValidateService {
 
     await this.logService.createLog(
       caseReportValidate.id,
-      caseReportValidate.val_cr_reporter_id,
+      idUser,
       clientIp,
       logReports.LOG_ANULATION,
     );

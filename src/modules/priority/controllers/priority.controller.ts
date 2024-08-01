@@ -15,9 +15,9 @@ import { CreatePriorityDto } from '../dto/create-priority.dto';
 import { UpdatePriorityDto } from '../dto/update-priority.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { Priority } from '../entities/priority.entity';
-import { PermissionGuard } from 'src/guards/permission.guard';
-import { Permission } from 'src/decorators/permission.decorator';
-import { permissions } from 'src/enums/permissions.enum';
+import { PermissionGuard } from 'src/utils/guards/permission.guard';
+import { Permission } from 'src/utils/decorators/permission.decorator';
+import { permissions } from 'src/utils/enums/permissions.enum';
 
 @ApiTags('priority')
 @Controller('priority')
@@ -49,10 +49,7 @@ export class PriorityController {
     @Param('id') id: number,
     @Body() updateStatusPriority: UpdatePriorityDto,
   ): Promise<HttpException> {
-    return this.priorityService.updateStatusPriority(
-      id,
-      updateStatusPriority,
-    );
+    return this.priorityService.updateStatusPriority(id, updateStatusPriority);
   }
 
   @Delete('/deletePriority/:id/:userIdPermission')

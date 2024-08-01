@@ -16,6 +16,18 @@ export class PriorityService {
   ) {}
 
   async createPriority(createPriorityDto: CreatePriorityDto) {
+    if (
+      !createPriorityDto ||
+      !createPriorityDto.prior_name ||
+      !createPriorityDto.prior_severityclasif_id_fk ||
+      !createPriorityDto.prior_responsetime
+    ) {
+      throw new HttpException(
+        'Algunos datos de prioridad son requeridos.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     await this.severityClasificationService.findOneSeverityClasification(
       createPriorityDto.prior_severityclasif_id_fk,
     );
@@ -28,7 +40,10 @@ export class PriorityService {
     });
 
     if (FindPriority) {
-      throw new HttpException('La prioridad ya existe.', HttpStatus.CONFLICT);
+      throw new HttpException(
+        'La prioridad ya existe.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
 
     const priority = this.priorityRepository.create(createPriorityDto);
@@ -42,9 +57,6 @@ export class PriorityService {
 
   async findAllPriorities() {
     const priorities = await this.priorityRepository.find({
-      // relations: {
-      //   caseReportValidate: true,
-      // },
       where: {
         prior_status: true,
       },
@@ -56,24 +68,28 @@ export class PriorityService {
     if (priorities.length === 0) {
       throw new HttpException(
         'No se encontró la lista de prioridades.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
     return priorities;
   }
 
   async findOnePriority(id: number) {
+    if (!id) {
+      throw new HttpException(
+        'El identificador de prioridad es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const priority = await this.priorityRepository.findOne({
       where: { id, prior_status: true },
-      // relations: {
-      //   caseReportValidate: true,
-      // },
     });
 
     if (!priority) {
       throw new HttpException(
         'No se encontró la prioridad.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -84,6 +100,13 @@ export class PriorityService {
     id: number,
     updateStatusPriority: UpdatePriorityDto,
   ) {
+    if (!updateStatusPriority) {
+      throw new HttpException(
+        'Los datos para actualizar la prioridad son requeridos.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const priority = await this.findOnePriority(id);
     const result = await this.priorityRepository.update(
       priority.id,

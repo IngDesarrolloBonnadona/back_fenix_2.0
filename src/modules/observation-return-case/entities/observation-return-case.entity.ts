@@ -19,7 +19,7 @@ export class ObservationReturnCase {
   @Column()
   rec_o_reasonreturn_id_fk: number;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'uuid' })
   rec_o_validatedcase_id_fk: string;
 
   @Column()
