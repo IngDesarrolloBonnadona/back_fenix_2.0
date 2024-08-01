@@ -119,7 +119,7 @@ export class EventTypeService {
   async findOneEventType(id: number) {
     if (!id) {
       throw new HttpException(
-        'El tipo de suceso es requerido.',
+        'El identificador del tipo de suceso es requerido.',
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -145,7 +145,7 @@ export class EventTypeService {
   async findEvenTypeByCaseType(caseTypeId: number) {
     if (!caseTypeId) {
       throw new HttpException(
-        'El tipo de caso es requerido.',
+        'El identificador del tipo de caso es requerido.',
         HttpStatus.BAD_REQUEST,
       );
     }

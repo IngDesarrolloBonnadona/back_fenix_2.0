@@ -73,7 +73,7 @@ export class CharacterizationCasesService {
   async findOneCharacterization(id: number) {
     if (!id) {
       throw new HttpException(
-        'La caracterización de los casos es requerido.',
+        'El identificador de la caracterización es requerido.',
         HttpStatus.BAD_REQUEST,
       );
     }

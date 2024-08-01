@@ -66,7 +66,7 @@ export class CaseTypeService {
   async findOneCaseType(id: number) {
     if (!id) {
       throw new HttpException(
-        'El tipo de caso es requerido.',
+        'El identificador del tipo de caso es requerido.',
         HttpStatus.BAD_REQUEST,
       );
     }
