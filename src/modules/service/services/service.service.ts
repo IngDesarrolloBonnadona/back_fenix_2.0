@@ -21,6 +21,17 @@ export class ServiceService {
   ) {}
 
   async createService(createServiceDto: CreateServiceDto) {
+    if (
+      !createServiceDto ||
+      !createServiceDto.serv_name ||
+      !createServiceDto.serv_unit_id_fk
+    ) {
+      throw new HttpException(
+        'Algunos datos del servicio son requeridos.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const FindService = await this.serviceRepository.findOne({
       where: {
         serv_name: createServiceDto.serv_name,
@@ -30,10 +41,13 @@ export class ServiceService {
     });
 
     if (FindService) {
-      throw new HttpException('El  servicio ya existe con la unidad seleccionada.', HttpStatus.CONFLICT);
+      throw new HttpException(
+        'El servicio ya existe con la unidad seleccionada.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
 
-    await this.unitService.findOneUnit(createServiceDto.serv_unit_id_fk)
+    await this.unitService.findOneUnit(createServiceDto.serv_unit_id_fk);
 
     const service = this.serviceRepository.create(createServiceDto);
     await this.serviceRepository.save(service);
@@ -50,8 +64,7 @@ export class ServiceService {
         serv_status: true,
       },
       relations: {
-      unit: true,
-      // caseReportValidate: true,
+        unit: true,
       },
       order: {
         serv_name: 'ASC',
@@ -61,31 +74,44 @@ export class ServiceService {
     if (services.length === 0) {
       throw new HttpException(
         'No se encontró la lista de servicios',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
     return services;
   }
 
   async findOneService(id: number) {
+    if (!id) {
+      throw new HttpException(
+        'El identificador del servicio es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const service = await this.serviceRepository.findOne({
       where: { id, serv_status: true },
       relations: {
-      unit: true,
-      // caseReportValidate: true,
+        unit: true,
       },
     });
 
     if (!service) {
       throw new HttpException(
         'No se encontró el servicio',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
     return service;
   }
 
   async updateService(id: number, updateServiceDto: UpdateServiceDto) {
+    if (!updateServiceDto) {
+      throw new HttpException(
+        'Los datos para actualizar el servicio son requeridos.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const service = await this.findOneService(id);
 
     await this.unitService.findOneUnit(updateServiceDto.serv_unit_id_fk);
