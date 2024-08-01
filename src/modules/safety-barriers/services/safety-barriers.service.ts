@@ -13,6 +13,13 @@ export class SafetyBarriersService {
   ) {}
 
   async createSafetyBarrier(createSafetyBarrierDto: CreateSafetyBarrierDto) {
+    if (!createSafetyBarrierDto || !createSafetyBarrierDto.saf_b_name) {
+      throw new HttpException(
+        'El nombre de la barrera de seguridad es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const findSafetyBarrier = await this.safetyBarrierRepository.findOne({
       where: {
         saf_b_name: createSafetyBarrierDto.saf_b_name,
@@ -23,7 +30,7 @@ export class SafetyBarriersService {
     if (findSafetyBarrier) {
       throw new HttpException(
         'La barrera de seguridad ya existe.',
-        HttpStatus.CONFLICT,
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
     const safetyBarrier = this.safetyBarrierRepository.create(
@@ -45,13 +52,20 @@ export class SafetyBarriersService {
     if (safetyBarriers.length === 0) {
       throw new HttpException(
         'No se encontró la lista de barreras de seguridad.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
     return safetyBarriers;
   }
 
   async findOneSafetyBarrier(id: number) {
+    if (!id) {
+      throw new HttpException(
+        'El identificador de la barrera de seguridad es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const safetyBarrier = await this.safetyBarrierRepository.findOne({
       where: { id, saf_b_status: true },
     });
@@ -59,7 +73,7 @@ export class SafetyBarriersService {
     if (!safetyBarrier) {
       throw new HttpException(
         'No se encontró la barrera de seguridad.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
     return safetyBarrier;
@@ -69,6 +83,12 @@ export class SafetyBarriersService {
     id: number,
     updateSafetyBarrierDto: UpdateSafetyBarrierDto,
   ) {
+    if (!updateSafetyBarrierDto) {
+      throw new HttpException(
+        'Los datos para actualizar la barrera de seguridad son requeridos.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
     const safetyBarrier = await this.findOneSafetyBarrier(id);
     const result = await this.safetyBarrierRepository.update(
       safetyBarrier.id,
