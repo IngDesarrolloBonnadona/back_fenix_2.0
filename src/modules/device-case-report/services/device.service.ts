@@ -37,25 +37,17 @@ export class DeviceService {
     }
   }
 
-  // async createDevice(createDeviceDto: CreateDeviceDto): Promise<DeviceEntity> {
-  //   const device = this.deviceRepository.create(createDeviceDto);
-  //   return await this.deviceRepository.save(device);
-  // }
-
   async findAllDevices(): Promise<DeviceEntity[]> {
     const devices = await this.deviceRepository.find({
       order: {
         createdAt: 'DESC',
       },
-      // relations: {
-      //   caseReportOriginal: true,
-      // },
     });
 
     if (devices.length === 0) {
       throw new HttpException(
         'No se encontró la lista de dispositivos',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -63,17 +55,20 @@ export class DeviceService {
   }
 
   async findOneDevice(id: number): Promise<DeviceEntity> {
+    if (!id) {
+      throw new HttpException(
+        'El identificador del dispositivo es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
     const device = await this.deviceRepository.findOne({
       where: { id },
-      // relations: {
-      //   caseReportOriginal: true,
-      // },
     });
 
     if (!device) {
       throw new HttpException(
         'No se encontró el dispositivo',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -81,6 +76,13 @@ export class DeviceService {
   }
 
   async updateDevice(id: number, updateDeviceDto: UpdateDeviceDto) {
+    if (!updateDeviceDto) {
+      throw new HttpException(
+        'Los datos para actualizar el dispositivo son requeridos.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    
     const device = await this.findOneDevice(id);
     const result = await this.deviceRepository.update(
       device.id,
