@@ -26,7 +26,7 @@ export class EventTypeService {
       !createEventTypeDto.eve_t_casetype_id_fk
     ) {
       throw new HttpException(
-        'Los datos del tipo de suceso son requeridos.',
+        'Algunos datos del tipo de suceso son requeridos.',
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -40,7 +40,7 @@ export class EventTypeService {
 
     if (findEventType) {
       throw new HttpException(
-        'El tipo de suceso ya existe en el tipo de caso seleccionado.',
+        'El tipo de suceso ya existe con el tipo de caso seleccionado.',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
@@ -58,6 +58,7 @@ export class EventTypeService {
     );
   }
 
+  // Solo se usa para parametrizar cargando datos masivos
   async createEventTypesArray(createEventTypeDto: CreateEventTypeDto[]) {
     const eventTypesToCreate = [];
 
@@ -100,7 +101,6 @@ export class EventTypeService {
       relations: {
         event: true,
         caseType: true,
-        // caseReportValidate: true,
       },
       order: {
         eve_t_name: 'ASC',
