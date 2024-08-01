@@ -18,6 +18,13 @@ export class RiskTypeService {
   ) {}
 
   async createRiskType(createRiskTypeDto: CreateRiskTypeDto) {
+    if (!createRiskTypeDto || !createRiskTypeDto.ris_t_name) {
+      throw new HttpException(
+        'El nombre del tipo de riesgo es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const FindRiskType = await this.riskTypeRepository.findOne({
       where: {
         ris_t_name: createRiskTypeDto.ris_t_name,
@@ -27,8 +34,8 @@ export class RiskTypeService {
 
     if (FindRiskType) {
       throw new HttpException(
-        'El  tipo de riesgo ya existe.',
-        HttpStatus.CONFLICT,
+        'El tipo de riesgo ya existe.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
 
@@ -50,15 +57,12 @@ export class RiskTypeService {
       order: {
         ris_t_name: 'ASC',
       },
-      // relations: {
-      //   caseReportValidate: true,
-      // },
     });
 
     if (riskTypes.length === 0) {
       throw new HttpException(
-        'No se encontró la lista de tipos de riesgo',
-        HttpStatus.NO_CONTENT,
+        'No se encontró la lista de tipos de riesgo.',
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -66,17 +70,21 @@ export class RiskTypeService {
   }
 
   async findOneRiskType(id: number) {
+    if (!id) {
+      throw new HttpException(
+        'El identificador del tipo de riesgo es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const riskType = await this.riskTypeRepository.findOne({
       where: { id, ris_t_status: true },
-      // relations: {
-      //   caseReportValidate: true,
-      // },
     });
 
     if (!riskType) {
       throw new HttpException(
         'No se encontró el tipo de riesgo',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -84,6 +92,13 @@ export class RiskTypeService {
   }
 
   async updateRiskType(id: number, updateRiskTypeDto: UpdateRiskTypeDto) {
+    if (!updateRiskTypeDto) {
+      throw new HttpException(
+        'Los datos para actualizar el tipo de riesgo son requeridos.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const riskType = await this.findOneRiskType(id);
     const result = await this.riskTypeRepository.update(
       riskType.id,
@@ -92,7 +107,7 @@ export class RiskTypeService {
 
     if (result.affected === 0) {
       return new HttpException(
-        `No se pudo actualizar el tipo de riesgo`,
+        `No se pudo actualizar el tipo de riesgo.`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
