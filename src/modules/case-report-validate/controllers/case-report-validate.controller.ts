@@ -137,17 +137,17 @@ export class CaseReportValidateController {
     );
   }
 
-  @Patch('/updateReportValidate/:id/:userIdPermission')
-  @Permission(permissions.SUPER_ADMIN, permissions.VALIDATOR)
-  updateReportValidate(
-    @Param('id') id: string,
-    @Body() updateCaseReportValidateDto: UpdateCaseReportValidateDto,
-  ): Promise<HttpException> {
-    return this.caseReportValidateService.updateReportValidate(
-      id,
-      updateCaseReportValidateDto,
-    );
-  }
+  // @Patch('/updateReportValidate/:id/:userIdPermission')
+  // @Permission(permissions.SUPER_ADMIN, permissions.VALIDATOR)
+  // updateReportValidate(
+  //   @Param('id') id: string,
+  //   @Body() updateCaseReportValidateDto: UpdateCaseReportValidateDto,
+  // ): Promise<HttpException> {
+  //   return this.caseReportValidateService.updateReportValidate(
+  //     id,
+  //     updateCaseReportValidateDto,
+  //   );
+  // }
 
   @Delete('/cancelReportValidate/:id/:idUser/:userIdPermission')
   @Permission(
