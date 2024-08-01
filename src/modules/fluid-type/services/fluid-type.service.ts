@@ -13,14 +13,24 @@ export class FluidTypeService {
   ) {}
 
   async createFluidType(createFluidTypeDto: CreateFluidTypeDto) {
+    if (!createFluidTypeDto || !createFluidTypeDto.flu_t_name) {
+      throw new HttpException(
+        'El nombre del tipo de fluido es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const findFluidType = await this.fluidTypeRespository.findOne({
-      where: { flu_t_name: createFluidTypeDto.flu_t_name, flu_t_status: true },
+      where: {
+        flu_t_name: createFluidTypeDto.flu_t_name,
+        flu_t_status: true,
+      },
     });
 
     if (findFluidType) {
       throw new HttpException(
         'El tipo de fluido ya existe.',
-        HttpStatus.CONFLICT,
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
 
@@ -42,7 +52,7 @@ export class FluidTypeService {
     if (fluidTypes.length === 0) {
       throw new HttpException(
         'No se encontró la lista de tipos de fluido.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -50,6 +60,13 @@ export class FluidTypeService {
   }
 
   async findOneFluidTypes(id: number) {
+    if (!id) {
+      throw new HttpException(
+        'El identificador del tipo de fluido es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const fluidType = await this.fluidTypeRespository.findOne({
       where: { id, flu_t_status: true },
     });
@@ -57,7 +74,7 @@ export class FluidTypeService {
     if (!fluidType) {
       throw new HttpException(
         'No se encontró el tipo de fluido.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -65,6 +82,13 @@ export class FluidTypeService {
   }
 
   async updateFluidTypes(id: number, updateFluidTypeDto: UpdateFluidTypeDto) {
+    if (!updateFluidTypeDto) {
+      throw new HttpException(
+        'Los datos para actualizar el tipo de fluido son requeridos.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const fluidType = await this.findOneFluidTypes(id);
     const result = await this.fluidTypeRespository.update(
       fluidType.id,
