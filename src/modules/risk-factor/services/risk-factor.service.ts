@@ -13,6 +13,13 @@ export class RiskFactorService {
   ) {}
 
   async createRiskFactor(createRiskFactorDto: CreateRiskFactorDto) {
+    if (!createRiskFactorDto || !createRiskFactorDto.ris_f_name) {
+      throw new HttpException(
+        'El nombre del factor de riesgp es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const findRiskFactor = await this.riskFactorRepository.findOne({
       where: {
         ris_f_name: createRiskFactorDto.ris_f_name,
@@ -23,7 +30,7 @@ export class RiskFactorService {
     if (findRiskFactor) {
       throw new HttpException(
         'El factor de riesgo ya existe.',
-        HttpStatus.CONFLICT,
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
     const riskFactor = this.riskFactorRepository.create(createRiskFactorDto);
@@ -44,13 +51,20 @@ export class RiskFactorService {
     if (riskFactors.length === 0) {
       throw new HttpException(
         'No se encontró la lista de factores de riesgo.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
     return riskFactors;
   }
 
   async findOneRiskFactor(id: number) {
+    if (!id) {
+      throw new HttpException(
+        'El identificador del factor de riesgo es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const riskFactor = await this.riskFactorRepository.findOne({
       where: { id, ris_f_status: true },
     });
@@ -58,13 +72,19 @@ export class RiskFactorService {
     if (!riskFactor) {
       throw new HttpException(
         'No se encontró el factor de riesgo.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
     return riskFactor;
   }
 
   async updateRiskFactor(id: number, updateRiskFactorDto: UpdateRiskFactorDto) {
+    if (!updateRiskFactorDto) {
+      throw new HttpException(
+        'Los datos para actualizar el factor de riesgo son requeridos.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
     const riskFactor = await this.findOneRiskFactor(id);
     const result = await this.riskFactorRepository.update(
       riskFactor.id,
