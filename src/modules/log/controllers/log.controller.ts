@@ -49,15 +49,6 @@ export class LogController {
     return this.logService.findOneLog(id);
   }
 
-  @Patch('/updateLog/:id/:userIdPermission')
-  @Permission(permissions.SUPER_ADMIN)
-  updateLog(
-    @Param('id') id: number,
-    @Body() updateLogDto: UpdateLogDto,
-  ): Promise<HttpException> {
-    return this.logService.updateLog(id, updateLogDto);
-  }
-
   @Delete('/deleteLog/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN)
   deleteLog(@Param('id') id: number): Promise<HttpException> {
