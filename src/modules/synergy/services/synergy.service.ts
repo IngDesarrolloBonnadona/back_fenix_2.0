@@ -42,7 +42,7 @@ export class SynergyService {
     if (!adverseEventType) {
       throw new HttpException(
         `Tipo de caso ${caseTypeReport.ADVERSE_EVENT} no encontrado`,
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -60,7 +60,7 @@ export class SynergyService {
     if (existingCaseValidate.length !== synergyValidateCaseIds.length) {
       throw new HttpException(
         'No se encontró el reporte para algunos casos',
-        HttpStatus.CONFLICT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -73,7 +73,7 @@ export class SynergyService {
     if (existingSynergies.length > 0) {
       throw new HttpException(
         'Algunos casos ya fueron elevados a comité de sinergia',
-        HttpStatus.CONFLICT,
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
 
@@ -89,10 +89,13 @@ export class SynergyService {
       .map((caseValidateCode) => caseValidateCode.val_cr_filingnumber);
 
     if (invalidSynergyCodes.length > 0) {
-      return {
-        message: `Algunos reportes no coinciden con el tipo de caso ${caseTypeReport.ADVERSE_EVENT}`,
-        invalidSynergyCodes,
-      };
+      throw new HttpException(
+        {
+          message: `Algunos reportes no coinciden con el tipo de caso ${caseTypeReport.ADVERSE_EVENT}`,
+          invalidSynergyCodes,
+        },
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
     const synergies = createSynergy.map((syn) => {
@@ -153,7 +156,7 @@ export class SynergyService {
     if (synergies.length === 0) {
       throw new HttpException(
         'No se encontró la lista de casos en sinergia',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -161,6 +164,13 @@ export class SynergyService {
   }
 
   async findOneSynergy(id: number) {
+    if (!id) {
+      throw new HttpException(
+        'El identificador del caso en sinergia es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const synergy = await this.synergyRepository.findOne({
       where: { id, syn_status: false },
       relations: {
@@ -171,7 +181,7 @@ export class SynergyService {
     if (!synergy) {
       throw new HttpException(
         'No se encontró el caso en sinergia',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -179,6 +189,20 @@ export class SynergyService {
   }
 
   async rescheduleSynergy(id: number, clientIp: string, idValidator: string) {
+    if (!clientIp) {
+      throw new HttpException(
+        'La dirección IP del usuario es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    if (!idValidator) {
+      throw new HttpException(
+        'El identificador del validador es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const synergy = await this.findOneSynergy(id);
 
     const movementReportFound =
@@ -226,6 +250,20 @@ export class SynergyService {
   }
 
   async resolutionSynergy(id: number, clientIp: string, idValidator: string) {
+    if (!clientIp) {
+      throw new HttpException(
+        'La dirección IP del usuario es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    if (!idValidator) {
+      throw new HttpException(
+        'El identificador del validador es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    
     const synergy = await this.findOneSynergy(id);
 
     const movementReportFound =
