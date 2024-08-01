@@ -53,13 +53,13 @@ export class PositionController {
     return this.positionService.findEmployeeByCode(code);
   }
 
-  @Patch('/updateEnabledPosition/:id/:userIdPermission')
+  @Patch('/updatePosition/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  updateEnabledPosition(
+  updatePosition(
     @Param('id') id: number,
-    @Body() enabledPosition: UpdatePositionDto,
+    @Body() updatePositionDto: UpdatePositionDto,
   ): Promise<HttpException> {
-    return this.positionService.updateEnabledPosition(id, enabledPosition);
+    return this.positionService.updatePosition(id, updatePositionDto);
   }
 
   @Delete('/deletePosition/:id/:userIdPermission')

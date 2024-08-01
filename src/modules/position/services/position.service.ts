@@ -16,6 +16,18 @@ export class PositionService {
   ) {}
 
   async createPosition(createPositionDto: CreatePositionDto) {
+    if (
+      !createPositionDto ||
+      !createPositionDto.pos_name ||
+      !createPositionDto.pos_code_k ||
+      !createPositionDto.pos_level
+    ) {
+      throw new HttpException(
+        'Algunos datos del cargo son requeridos.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const FindPosition = await this.positionRepository.findOne({
       where: {
         pos_name: createPositionDto.pos_name,
@@ -24,8 +36,12 @@ export class PositionService {
     });
 
     if (FindPosition) {
-      throw new HttpException('La posicion ya existe.', HttpStatus.CONFLICT);
+      throw new HttpException(
+        'La posicion ya existe.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
+
     const position = this.positionRepository.create(createPositionDto);
     await this.positionRepository.save(position);
 
@@ -48,7 +64,7 @@ export class PositionService {
     if (externalData.data.data.length === 0) {
       throw new HttpException(
         'No se encontraron datos de cargos',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -87,7 +103,7 @@ export class PositionService {
     if (positions.length === 0) {
       throw new HttpException(
         'No se encontró la lista de cargos',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -95,17 +111,31 @@ export class PositionService {
   }
 
   async findOnePosition(id: number) {
+    if (!id) {
+      throw new HttpException(
+        'El identificador del cargo es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const position = await this.positionRepository.findOne({
       where: { id, pos_enabled: true },
     });
 
     if (!position) {
-      throw new HttpException('No se encontró el cargo', HttpStatus.NO_CONTENT);
+      throw new HttpException('No se encontró el cargo', HttpStatus.NOT_FOUND);
     }
     return position;
   }
 
   async findEmployeeByCode(code: number) {
+    if (!code) {
+      throw new HttpException(
+        'El codigo del cargo es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const externalData = await this.httpPositionService.getPositionData(code);
 
     if (!Array.isArray(externalData.data.data)) {
@@ -118,18 +148,25 @@ export class PositionService {
     if (externalData.data.data.length === 0) {
       throw new HttpException(
         'No se encontraron datos del empleado',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
     return externalData.data.data;
   }
 
-  async updateEnabledPosition(id: number, enabledPosition: UpdatePositionDto) {
+  async updatePosition(id: number, updatePositionDto: UpdatePositionDto) {
+    if (!updatePositionDto) {
+      throw new HttpException(
+        'Los datos para actualizar el cargo son requeridos.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const position = await this.findOnePosition(id);
     const result = await this.positionRepository.update(
       position.id,
-      enabledPosition,
+      updatePositionDto,
     );
 
     if (result.affected === 0) {
