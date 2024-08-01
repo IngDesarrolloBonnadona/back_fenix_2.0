@@ -33,7 +33,7 @@ export async function OriDtoValidator(
   if (!caseTypeFound) {
     throw new HttpException(
       `El tipo de caso no existe.`,
-      HttpStatus.NO_CONTENT,
+      HttpStatus.NOT_FOUND,
     );
   }
 

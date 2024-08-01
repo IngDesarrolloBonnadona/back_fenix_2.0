@@ -69,7 +69,7 @@ export class ActionPlanService {
       if (actionPlanExist) {
         throw new HttpException(
           `El plan de acción ya existe.`,
-          HttpStatus.NO_CONTENT,
+          HttpStatus.NOT_FOUND,
         );
       }
 
@@ -141,7 +141,7 @@ export class ActionPlanService {
     if (actionPlan.length === 0) {
       throw new HttpException(
         'No hay planes de acción para mostrar.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
     return actionPlan;
@@ -156,7 +156,7 @@ export class ActionPlanService {
     if (actionPlans.length === 0) {
       throw new HttpException(
         'No se encontró la lista de planes de acción.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -164,6 +164,12 @@ export class ActionPlanService {
   }
 
   async findOneActionPlan(id: number) {
+    if (!id) {
+      throw new HttpException(
+        'El identificador del plan de acción es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
     const actionPlan = await this.actionPlanRepository.findOne({
       where: { id, plan_a_status: true },
       relations: { actionPlanActivity: true },
@@ -172,7 +178,7 @@ export class ActionPlanService {
     if (!actionPlan) {
       throw new HttpException(
         'No se encontró el plan de acción.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
     return actionPlan;
