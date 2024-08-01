@@ -18,6 +18,13 @@ export class OriginService {
   ) {}
 
   async createOrigin(createOriginDto: CreateOriginDto) {
+    if (!createOriginDto || !createOriginDto.orig_name) {
+      throw new HttpException(
+        'El nombre del origen es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const findOrigin = await this.originRepository.findOne({
       where: {
         orig_name: createOriginDto.orig_name,
@@ -26,7 +33,7 @@ export class OriginService {
     });
 
     if (findOrigin) {
-      throw new HttpException('El origen ya existe.', HttpStatus.CONFLICT);
+      throw new HttpException('El origen ya existe.', HttpStatus.INTERNAL_SERVER_ERROR);
     }
     const origin = this.originRepository.create(createOriginDto);
     await this.originRepository.save(origin);
@@ -44,7 +51,6 @@ export class OriginService {
       },
       relations: {
         subOrigins: true,
-        // caseReportValidate: true,
       },
       order: {
         orig_name: 'ASC',
@@ -54,7 +60,7 @@ export class OriginService {
     if (origins.length === 0) {
       throw new HttpException(
         'No se encontró la lista de origenes',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -62,18 +68,24 @@ export class OriginService {
   }
 
   async findOneOrigin(id: number) {
+    if (!id) {
+      throw new HttpException(
+        'El identificador del origen es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const origin = await this.originRepository.findOne({
       where: { id, orig_status: true },
       relations: {
         subOrigins: true,
-        // caseReportValidate: true,
       },
     });
 
     if (!origin) {
       throw new HttpException(
         'No se encontró el origen',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
@@ -81,6 +93,13 @@ export class OriginService {
   }
 
   async updateOrigin(id: number, updateOriginDto: UpdateOriginDto) {
+    if (!updateOriginDto) {
+      throw new HttpException(
+        'Los datos para actualizar el origen son requeridos.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const origin = await this.findOneOrigin(id);
     const result = await this.originRepository.update(
       origin.id,
