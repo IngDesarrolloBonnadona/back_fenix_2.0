@@ -13,12 +13,19 @@ export class ProtocolService {
   ) {}
 
   async createProtocol(createProtocolDto: CreateProtocolDto) {
+    if (!createProtocolDto || !createProtocolDto.prot_name) {
+      throw new HttpException(
+        'El nombre del protocolo es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const findProtocol = await this.protocolRepository.findOne({
       where: { prot_name: createProtocolDto.prot_name, prot_status: true },
     });
 
     if (findProtocol) {
-      throw new HttpException('El protocolo ya existe.', HttpStatus.CONFLICT);
+      throw new HttpException('El protocolo ya existe.', HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     const protocol = this.protocolRepository.create(createProtocolDto);
@@ -39,13 +46,20 @@ export class ProtocolService {
     if (protocols.length === 0) {
       throw new HttpException(
         'No se encontró la lista de protocolos.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
     return protocols;
   }
 
   async findOneProtocol(id: number) {
+    if (!id) {
+      throw new HttpException(
+        'El identificador del protocolo es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const protocol = await this.protocolRepository.findOne({
       where: { id, prot_status: true },
     });
@@ -53,13 +67,20 @@ export class ProtocolService {
     if (!protocol) {
       throw new HttpException(
         'No se encontró el protocolo',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
     return protocol;
   }
 
   async updateProtocol(id: number, updateProtocolDto: UpdateProtocolDto) {
+    if (!updateProtocolDto) {
+      throw new HttpException(
+        'Los datos para actualizar el protocolo son requeridos.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const protocol = await this.findOneProtocol(id);
     const result = await this.protocolRepository.update(
       protocol.id,
