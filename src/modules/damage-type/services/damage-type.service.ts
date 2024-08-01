@@ -13,7 +13,7 @@ export class DamageTypeService {
   ) {}
 
   async createDamageType(createDamageTypeDto: CreateDamageTypeDto) {
-    if (!createDamageTypeDto || !createDamageTypeDto.dam_t_description) {
+    if (!createDamageTypeDto || !createDamageTypeDto.dam_t_name) {
       throw new HttpException(
         'El nombre del tipo de daño es requerido.',
         HttpStatus.BAD_REQUEST,
