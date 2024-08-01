@@ -30,7 +30,7 @@ export class UserService {
     if (permissions.length === 0) {
       throw new HttpException(
         'No se encontró la lista de permisos del usuario.',
-        HttpStatus.NO_CONTENT,
+        HttpStatus.NOT_FOUND,
       );
     }
 
