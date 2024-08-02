@@ -723,6 +723,10 @@ export class CaseReportValidateService {
         unit: true,
         priority: true,
         characterizationCase: true,
+        caseReportOriginal: {
+          medicine: true,
+          device: true
+        }
       },
     });
 
