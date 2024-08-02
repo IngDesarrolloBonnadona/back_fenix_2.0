@@ -18,14 +18,14 @@ export class Synergy {
   @Column({ type: 'uuid' })
   syn_validatedcase_id_fk: string;
 
-  @Column()
-  syn_programmingcounter: number;
+  // @Column()
+  // syn_programmingcounter: number;
 
   @Column()
   syn_evaluationdate: Date;
 
-  @Column({ nullable: true })
-  syn_reschedulingdate: Date;
+  // @Column({ nullable: true })
+  // syn_reschedulingdate: Date;
 
   @Column({ nullable: true })
   syn_resolutiondate: Date;
