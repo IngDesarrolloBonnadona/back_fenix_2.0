@@ -18,20 +18,50 @@ export class Synergy {
   @Column({ type: 'uuid' })
   syn_validatedcase_id_fk: string;
 
-  @Column()
-  syn_programmingcounter: number;
+  @Column({ type: 'varchar' })
+  syn_patient_id: String;
+
+  @Column({ type: 'varchar' })
+  syn_patientname: String;  // Quien es el paciente
 
   @Column()
-  syn_evaluationdate: Date;
+  syn_patientage: number; //edad
 
-  @Column({ nullable: true })
-  syn_reschedulingdate: Date;
+  @Column({ type: 'varchar' })
+  syn_patientmedicalhistory: String;  //antecedentes
+
+  @Column({ type: 'varchar' })
+  syn_patientcomorbidity: String; //comorbilidad 
+
+  @Column()
+  syn_proceduredate: Date;  // Nuevo campo para la Fecha de procedimiento
+
+  @Column({ type: 'varchar' })
+  syn_preliminaryCauses: String;  // Causas preliminares que dieron origen al caso
+
+  @Column({ type: 'varchar' })
+  syn_patientImpact: String;  // Impacto en el paciente
+
+  @Column({ type: 'varchar' })
+  syn_currentTreatmentAndFamilyStatus: String;   // Que le están haciendo actualmente y como está la familia y si hay molestias de parte de ellos
+
+  @Column({ default: false })
+  syn_clinicalStaffNotified: boolean; // Evaluar que el personal clínico se le haya notificado por mensaje y al jefe de la especialidad
+
+  @Column()
+  syn_evaluationdate: Date; //Fecha de procedimiento
 
   @Column({ nullable: true })
   syn_resolutiondate: Date;
 
   @Column({ default: false })
   syn_status: boolean;
+
+  // @Column()
+  // syn_programmingcounter: number;
+
+  // @Column({ nullable: true })
+  // syn_reschedulingdate: Date;
 
   @CreateDateColumn()
   createdAt: Date;

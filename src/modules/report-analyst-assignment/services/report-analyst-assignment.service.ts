@@ -85,8 +85,7 @@ export class ReportAnalystAssignmentService {
       !createReportAnalystAssignmentDto ||
       !createReportAnalystAssignmentDto.ana_useranalyst_id ||
       !createReportAnalystAssignmentDto.ana_validatedcase_id_fk ||
-      !createReportAnalystAssignmentDto.ana_position_id_fk ||
-      !createReportAnalystAssignmentDto.ana_justifications
+      !createReportAnalystAssignmentDto.ana_position_id_fk 
     ) {
       throw new HttpException(
         'Algunos datos para asignar analistas son requeridos.',

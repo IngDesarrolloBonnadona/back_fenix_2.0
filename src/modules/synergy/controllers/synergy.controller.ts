@@ -57,17 +57,17 @@ export class SynergyController {
     return this.synergyService.findOneSynergy(id);
   }
 
-  @Patch('/rescheduleSynergy/:id/:idValidator/:userIdPermission')
-  @Permission(permissions.SUPER_ADMIN, permissions.VALIDATOR)
-  rescheduleSynergy(
-    @Param('id') id: number,
-    @Ip() clientIp: string,
-    @Param('idValidator') idValidator: string,
-  ): Promise<HttpException> {
-    return this.synergyService.rescheduleSynergy(id, clientIp, idValidator);
-  }
+  // @Patch('/rescheduleSynergy/:id/:idValidator/:userIdPermission')
+  // @Permission(permissions.SUPER_ADMIN, permissions.VALIDATOR)
+  // rescheduleSynergy(
+  //   @Param('id') id: number,
+  //   @Ip() clientIp: string,
+  //   @Param('idValidator') idValidator: string,
+  // ): Promise<HttpException> {
+  //   return this.synergyService.rescheduleSynergy(id, clientIp, idValidator);
+  // }
 
-  @Post('/resolutionSynergy/:id/:idValidator/:userIdPermission')
+  @Patch('/resolutionSynergy/:id/:idValidator/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.VALIDATOR)
   resolutionSynergy(
     @Param('id') id: number,
