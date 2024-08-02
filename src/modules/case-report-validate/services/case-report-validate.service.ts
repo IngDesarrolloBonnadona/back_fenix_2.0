@@ -834,12 +834,12 @@ export class CaseReportValidateService {
       );
     }
 
+    const caseReportValidate = await this.findOneReportValidate(id);
+
     const movementReportFound =
       await this.movementReportService.findOneMovementReportByName(
         movementReport.ANULATION,
       );
-
-    const caseReportValidate = await this.findOneReportValidate(id);
 
     const updateStatusMovement = await this.caseReportValidateRepository.update(
       caseReportValidate.id,
