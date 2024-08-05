@@ -59,7 +59,7 @@ export class FluidTypeService {
     return fluidTypes;
   }
 
-  async findOneFluidTypes(id: number) {
+  async findOneFluidType(id: number) {
     if (!id) {
       throw new HttpException(
         'El identificador del tipo de fluido es requerido.',
@@ -81,7 +81,7 @@ export class FluidTypeService {
     return fluidType;
   }
 
-  async updateFluidTypes(id: number, updateFluidTypeDto: UpdateFluidTypeDto) {
+  async updateFluidType(id: number, updateFluidTypeDto: UpdateFluidTypeDto) {
     if (!updateFluidTypeDto) {
       throw new HttpException(
         'Los datos para actualizar el tipo de fluido son requeridos.',
@@ -89,7 +89,7 @@ export class FluidTypeService {
       );
     }
 
-    const fluidType = await this.findOneFluidTypes(id);
+    const fluidType = await this.findOneFluidType(id);
     const result = await this.fluidTypeRespository.update(
       fluidType.id,
       updateFluidTypeDto,
@@ -108,8 +108,8 @@ export class FluidTypeService {
     );
   }
 
-  async deleteFluidTypes(id: number) {
-    const fluidType = await this.findOneFluidTypes(id);
+  async deleteFluidType(id: number) {
+    const fluidType = await this.findOneFluidType(id);
     const result = await this.fluidTypeRespository.softDelete(fluidType.id);
 
     if (result.affected === 0) {

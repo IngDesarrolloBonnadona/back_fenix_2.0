@@ -32,28 +32,28 @@ export class FluidTypeController {
     return this.fluidTypeService.createFluidType(createFluidTypeDto);
   }
 
-  @Get('/listFluidType/')
+  @Get('/listFluidTypes/')
   listFluidType(): Promise<FluidType[]> {
     return this.fluidTypeService.findAllFluidTypes();
   }
 
-  @Get('/findFluidTypes/:id/')
-  findFluidTypes(@Param('id') id: number): Promise<FluidType> {
-    return this.fluidTypeService.findOneFluidTypes(id);
+  @Get('/findFluidType/:id/')
+  findFluidType(@Param('id') id: number): Promise<FluidType> {
+    return this.fluidTypeService.findOneFluidType(id);
   }
 
-  @Patch('/updateFluidTypes/:id/:userIdPermission')
+  @Patch('/updateFluidType/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
   updateFluidTypes(
     @Param('id') id: number,
     @Body() updateFluidTypeDto: UpdateFluidTypeDto,
   ): Promise<HttpException> {
-    return this.fluidTypeService.updateFluidTypes(id, updateFluidTypeDto);
+    return this.fluidTypeService.updateFluidType(id, updateFluidTypeDto);
   }
 
-  @Delete('/deleteFluidTypes/:id/:userIdPermission')
+  @Delete('/deleteFluidType/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
   deleteFluidTypes(@Param('id') id: number): Promise<HttpException> {
-    return this.fluidTypeService.deleteFluidTypes(id);
+    return this.fluidTypeService.deleteFluidType(id);
   }
 }
