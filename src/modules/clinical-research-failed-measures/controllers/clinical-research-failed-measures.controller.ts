@@ -16,41 +16,4 @@ export class ClinicalResearchFailedMeasuresController {
   constructor(
     private readonly clinicalResearchFailedMeasuresService: ClinicalResearchFailedMeasuresService,
   ) {}
-
-  // @Post()
-  // create(
-  //   @Body()
-  //   createClinicalResearchFailedMeasureDto: CreateClinicalResearchFailedMeasureDto,
-  // ) {
-  //   return this.clinicalResearchFailedMeasuresService.create(
-  //     createClinicalResearchFailedMeasureDto,
-  //   );
-  // }
-
-  @Get()
-  findAll() {
-    return this.clinicalResearchFailedMeasuresService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.clinicalResearchFailedMeasuresService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body()
-    updateClinicalResearchFailedMeasureDto: UpdateClinicalResearchFailedMeasureDto,
-  ) {
-    return this.clinicalResearchFailedMeasuresService.update(
-      +id,
-      updateClinicalResearchFailedMeasureDto,
-    );
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.clinicalResearchFailedMeasuresService.remove(+id);
-  }
 }

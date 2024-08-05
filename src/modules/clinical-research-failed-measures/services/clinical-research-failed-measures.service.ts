@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateClinicalResearchFailedMeasureDto } from '../dto/create-clinical-research-failed-measure.dto';
 import { UpdateClinicalResearchFailedMeasureDto } from '../dto/update-clinical-research-failed-measure.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -22,9 +22,7 @@ export class ClinicalResearchFailedMeasuresService {
       });
 
     if (existingClinicalResearchFailedMeasure.length > 0) {
-      await queryRunner.manager.remove(
-        existingClinicalResearchFailedMeasure,
-      );
+      await queryRunner.manager.remove(existingClinicalResearchFailedMeasure);
     }
 
     for (const clinicalResearchFM of clinicalResearchFailedMeasure) {
@@ -35,24 +33,5 @@ export class ClinicalResearchFailedMeasuresService {
 
       await queryRunner.manager.save(data);
     }
-  }
-
-  findAll() {
-    return `This action returns all clinicalResearchFailedMeasures`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} clinicalResearchFailedMeasure`;
-  }
-
-  update(
-    id: number,
-    updateClinicalResearchFailedMeasureDto: UpdateClinicalResearchFailedMeasureDto,
-  ) {
-    return `This action updates a #${id} clinicalResearchFailedMeasure`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} clinicalResearchFailedMeasure`;
   }
 }
