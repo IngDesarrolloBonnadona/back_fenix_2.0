@@ -37,23 +37,4 @@ export class ClinicalResearchInfluencingFactorService {
       await queryRunner.manager.save(data);
     }
   }
-
-  findAll() {
-    return `This action returns all clinicalResearchInfluencingFactor`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} clinicalResearchInfluencingFactor`;
-  }
-
-  update(
-    id: number,
-    updateClinicalResearchInfluencingFactorDto: UpdateClinicalResearchInfluencingFactorDto,
-  ) {
-    return `This action updates a #${id} clinicalResearchInfluencingFactor`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} clinicalResearchInfluencingFactor`;
-  }
 }

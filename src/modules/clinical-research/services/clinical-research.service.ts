@@ -57,7 +57,7 @@ export class ClinicalResearchService {
             createClinicalResearchDto.res_c_damagetype_id_fk,
           ),
         createClinicalResearchDto.res_c_fluidtype_id_fk &&
-          this.fluidTypeService.findOneFluidTypes(
+          this.fluidTypeService.findOneFluidType(
             createClinicalResearchDto.res_c_fluidtype_id_fk,
           ),
         createClinicalResearchDto.res_c_riskfactors_id_fk &&

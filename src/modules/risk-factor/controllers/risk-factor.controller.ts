@@ -32,8 +32,8 @@ export class RiskFactorController {
     return this.riskFactorService.createRiskFactor(createRiskFactorDto);
   }
 
-  @Get('/listRiskFactor/')
-  listRiskFactor(): Promise<RiskFactor[]> {
+  @Get('/listRiskFactors/')
+  listRiskFactors(): Promise<RiskFactor[]> {
     return this.riskFactorService.findAllRiskFactors();
   }
 

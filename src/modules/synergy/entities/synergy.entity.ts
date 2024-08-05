@@ -34,7 +34,7 @@ export class Synergy {
   syn_patientcomorbidity: String; //comorbilidad 
 
   @Column()
-  syn_proceduredate: Date;  // Nuevo campo para la Fecha de procedimiento
+  syn_proceduredate: Date;  // Fecha de procedimiento
 
   @Column({ type: 'varchar' })
   syn_preliminaryCauses: String;  // Causas preliminares que dieron origen al caso
@@ -49,7 +49,7 @@ export class Synergy {
   syn_clinicalStaffNotified: boolean; // Evaluar que el personal clínico se le haya notificado por mensaje y al jefe de la especialidad
 
   @Column()
-  syn_evaluationdate: Date; //Fecha de procedimiento
+  syn_evaluationdate: Date;
 
   @Column({ nullable: true })
   syn_resolutiondate: Date;
