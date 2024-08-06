@@ -1,4 +1,5 @@
 import { ActionPlan } from 'src/modules/action-plan/entities/action-plan.entity';
+import { ClinicalResearchCaseReportValidate } from 'src/modules/clinical-research-case-report-validate/entities/clinical-research-case-report-validate.entity';
 import { ClinicalResearchFailedMeasure } from 'src/modules/clinical-research-failed-measures/entities/clinical-research-failed-measure.entity';
 import { ClinicalResearchInfluencingFactor } from 'src/modules/clinical-research-influencing-factor/entities/clinical-research-influencing-factor.entity';
 import { DamageType } from 'src/modules/damage-type/entities/damage-type.entity';
@@ -131,6 +132,9 @@ export class ClinicalResearch {
 
   @OneToMany(() => ClinicalResearchFailedMeasure, (clinicalResearchFailedMeasure) => clinicalResearchFailedMeasure.clinicalResearch)
   clinicalResearchFailedMeasure: ClinicalResearchFailedMeasure[];
+
+  @OneToMany(() => ClinicalResearchCaseReportValidate, (clinicalResearchCaseReportValidate) => clinicalResearchCaseReportValidate.clinicalResearch)
+  clinicalResearchCaseReportValidate: ClinicalResearchCaseReportValidate[];
 
   @ManyToOne(() => ResearchInstrument, (researchInstrument) => researchInstrument.clinicalResearch)
   @JoinColumn({ name: 'res_c_instrument_id_fk' })
