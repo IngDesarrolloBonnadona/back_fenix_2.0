@@ -5,8 +5,8 @@ export class ClinicalResearchCaseReportValidate {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  res_crv_devicetype_id_fk: number;
+  @Column({ type: 'uuid' })
+  res_crv_clinicalresearch_id_fk: string;
 
   @Column({ type: 'uuid' })
   res_crv_validatedcase_id_fk: string;
