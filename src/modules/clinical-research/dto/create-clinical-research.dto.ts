@@ -128,6 +128,10 @@ export class CreateClinicalResearchDto {
   res_c_casepreventable: boolean;
 
   @IsOptional()
+  @IsNumber()
+  res_c_actionplan_id_fk: number;
+
+  @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CreateClinicalResearchInfluencingFactorDto)
