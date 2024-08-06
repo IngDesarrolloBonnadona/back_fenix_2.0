@@ -1,8 +1,10 @@
+import { ClinicalResearch } from 'src/modules/clinical-research/entities/clinical-research.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -29,4 +31,7 @@ export class DeviceType {
 
   @DeleteDateColumn()
   deletedAt: Date;
+
+  @OneToMany(() => ClinicalResearch, (clinicalResearch) => clinicalResearch.deviceType)
+  clinicalResearch: ClinicalResearch[];
 }
