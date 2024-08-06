@@ -11,7 +11,6 @@ import { ServiceModule } from '../service/service.module';
 import { UnitModule } from '../unit/unit.module';
 import { PriorityModule } from '../priority/priority.module';
 import { PositionModule } from '../position/position.module';
-import { ActionPlanCaseReportValidateModule } from '../action-plan-case-report-validate/action-plan-case-report-validate.module';
 import { ActionPlanActivitiesModule } from '../action-plan-activities/action-plan-activities.module';
 
 @Module({
@@ -25,7 +24,6 @@ import { ActionPlanActivitiesModule } from '../action-plan-activities/action-pla
     UnitModule,
     PriorityModule,
     PositionModule,
-    ActionPlanCaseReportValidateModule,
     ActionPlanActivitiesModule,
   ],
   controllers: [ActionPlanController],

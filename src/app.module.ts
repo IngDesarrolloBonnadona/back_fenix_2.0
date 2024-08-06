@@ -30,7 +30,6 @@ import { ObservationReturnCaseModule } from './modules/observation-return-case/o
 import { UserModule } from './modules_bonnadonahub/user/user.module';
 import { ActionPlanModule } from './modules/action-plan/action-plan.module';
 import { ActionPlanActivitiesModule } from './modules/action-plan-activities/action-plan-activities.module';
-import { ActionPlanCaseReportValidateModule } from './modules/action-plan-case-report-validate/action-plan-case-report-validate.module';
 import { ResearchInstrumentModule } from './modules/research-instrument/research-instrument.module';
 import { DeviceTypeModule } from './modules/device-type/device-type.module';
 import { DamageTypeModule } from './modules/damage-type/damage-type.module';
@@ -103,7 +102,6 @@ require('dotenv').config();
     UserModule,
     ActionPlanModule,
     ActionPlanActivitiesModule,
-    ActionPlanCaseReportValidateModule,
     ResearchInstrumentModule,
     DeviceTypeModule,
     DamageTypeModule,
