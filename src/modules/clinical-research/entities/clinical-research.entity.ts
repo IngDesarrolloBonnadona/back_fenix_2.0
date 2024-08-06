@@ -1,10 +1,19 @@
+import { ActionPlan } from 'src/modules/action-plan/entities/action-plan.entity';
 import { ClinicalResearchFailedMeasure } from 'src/modules/clinical-research-failed-measures/entities/clinical-research-failed-measure.entity';
 import { ClinicalResearchInfluencingFactor } from 'src/modules/clinical-research-influencing-factor/entities/clinical-research-influencing-factor.entity';
+import { DamageType } from 'src/modules/damage-type/entities/damage-type.entity';
+import { DeviceType } from 'src/modules/device-type/entities/device-type.entity';
+import { FluidType } from 'src/modules/fluid-type/entities/fluid-type.entity';
+import { ResearchInstrument } from 'src/modules/research-instrument/entities/research-instrument.entity';
+import { RiskFactor } from 'src/modules/risk-factor/entities/risk-factor.entity';
+import { SafetyBarrier } from 'src/modules/safety-barriers/entities/safety-barrier.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -122,4 +131,33 @@ export class ClinicalResearch {
 
   @OneToMany(() => ClinicalResearchFailedMeasure, (clinicalResearchFailedMeasure) => clinicalResearchFailedMeasure.clinicalResearch)
   clinicalResearchFailedMeasure: ClinicalResearchFailedMeasure[];
+
+  @ManyToOne(() => ResearchInstrument, (researchInstrument) => researchInstrument.clinicalResearch)
+  @JoinColumn({ name: 'res_c_instrument_id_fk' })
+  researchInstrument: ResearchInstrument;
+
+  @ManyToOne(() => DeviceType, (deviceType) => deviceType.clinicalResearch)
+  @JoinColumn({ name: 'res_c_devicetype_id_fk' })
+  deviceType: DeviceType;
+
+  @ManyToOne(() => DamageType, (damageType) => damageType.clinicalResearch)
+  @JoinColumn({ name: 'res_c_damagetype_id_fk' })
+  damageType: DamageType;
+
+  @ManyToOne(() => FluidType, (fluidType) => fluidType.clinicalResearch)
+  @JoinColumn({ name: 'res_c_fluidtype_id_fk' })
+  fluidType: FluidType;
+
+  @ManyToOne(() => RiskFactor, (riskFactor) => riskFactor.clinicalResearch)
+  @JoinColumn({ name: 'res_c_riskfactors_id_fk' })
+  riskFactor: RiskFactor;
+
+  @ManyToOne(() => SafetyBarrier, (safetyBarrier) => safetyBarrier.clinicalResearch)
+  @JoinColumn({ name: 'res_c_safetybarriers_id_fk' })
+  safetyBarrier: SafetyBarrier;
+
+
+  @ManyToOne(() => ActionPlan, (actionPlan) => actionPlan.clinicalResearch)
+  @JoinColumn({ name: 'res_c_actionplan_id_fk' })
+  actionPlan: ActionPlan;
 }
