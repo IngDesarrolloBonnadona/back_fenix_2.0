@@ -14,6 +14,7 @@ import { ClinicalResearchInfluencingFactorService } from 'src/modules/clinical-r
 import { InfluencingFactorService } from 'src/modules/influencing-factor/services/influencing-factor.service';
 import { FailedMeasuresService } from 'src/modules/failed-measures/services/failed-measures.service';
 import { ClinicalResearchFailedMeasuresService } from 'src/modules/clinical-research-failed-measures/services/clinical-research-failed-measures.service';
+import { ClinicalResearchCaseReportValidateService } from 'src/modules/clinical-research-case-report-validate/services/clinical-research-case-report-validate.service';
 
 @Injectable()
 export class ClinicalResearchService {
@@ -30,6 +31,7 @@ export class ClinicalResearchService {
     private readonly safetyBarriersService: SafetyBarriersService,
     private readonly clinicalResearchInfluencingFactorService: ClinicalResearchInfluencingFactorService,
     private readonly clinicalResearchFailedMeasureService: ClinicalResearchFailedMeasuresService,
+    private readonly clinicalResearchCaseReportValidateService: ClinicalResearchCaseReportValidateService,
     private readonly influencingFactorService: InfluencingFactorService,
     private readonly failedMeasureService: FailedMeasuresService,
   ) {}
@@ -70,13 +72,6 @@ export class ClinicalResearchService {
           ),
       ]);
 
-      if (!clinicalResearchId) {
-        throw new HttpException(
-          'El identificador de la investigación clínica es requerido.',
-          HttpStatus.BAD_REQUEST,
-        );
-      }
-
       if (createClinicalResearchDto.influencingFactor) {
         for (const factor of createClinicalResearchDto.influencingFactor) {
           await this.influencingFactorService.findOneInfluencingFactor(
@@ -107,8 +102,12 @@ export class ClinicalResearchService {
           );
         }
 
-        const { influencingFactor, failedMeasure, ...updateFields } =
-          createClinicalResearchDto;
+        const {
+          caseReportValidate,
+          influencingFactor,
+          failedMeasure,
+          ...updateFields
+        } = createClinicalResearchDto;
 
         queryRunner.manager.update(
           ClinicalResearchEntity,
@@ -143,6 +142,18 @@ export class ClinicalResearchService {
       if (hasClinicalResearchFailedMeasure) {
         await this.clinicalResearchFailedMeasureService.createClinicalResearchFailedMeasureTransaction(
           createClinicalResearchDto.failedMeasure,
+          progress.id,
+          queryRunner,
+        );
+      }
+
+      const hasClinicalResearchCaseReportValidate =
+        createClinicalResearchDto.caseReportValidate &&
+        createClinicalResearchDto.caseReportValidate.length > 0;
+
+      if (hasClinicalResearchCaseReportValidate) {
+        await this.clinicalResearchCaseReportValidateService.createClinicalResearchCaseReportValidateTransaction(
+          createClinicalResearchDto.caseReportValidate,
           progress.id,
           queryRunner,
         );

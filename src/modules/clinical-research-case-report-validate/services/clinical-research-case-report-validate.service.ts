@@ -1,31 +1,42 @@
 import { Injectable } from '@nestjs/common';
 import { CreateClinicalResearchCaseReportValidateDto } from '../dto/create-clinical-research-case-report-validate.dto';
 import { UpdateClinicalResearchCaseReportValidateDto } from '../dto/update-clinical-research-case-report-validate.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { ClinicalResearchCaseReportValidate as ClinicalResearchCaseReportValidateEntity } from '../entities/clinical-research-case-report-validate.entity';
+import { QueryRunner, Repository } from 'typeorm';
 
 @Injectable()
 export class ClinicalResearchCaseReportValidateService {
-  create(
-    createClinicalResearchCaseReportValidateDto: CreateClinicalResearchCaseReportValidateDto,
+  constructor(
+    @InjectRepository(ClinicalResearchCaseReportValidateEntity)
+    private readonly clinicalResearchCaseReportValidateRepository: Repository<ClinicalResearchCaseReportValidateEntity>,
+  ) {}
+  async createClinicalResearchCaseReportValidateTransaction(
+    clinicalResearchCaseReportValidate: CreateClinicalResearchCaseReportValidateDto[],
+    clinicalResearchId: string,
+    queryRunner: QueryRunner,
   ) {
-    return 'This action adds a new clinicalResearchCaseReportValidate';
-  }
+    const existingClinicalResearchCaseReportValidate =
+      await queryRunner.manager.find(ClinicalResearchCaseReportValidateEntity, {
+        where: { res_crv_clinicalresearch_id_fk: clinicalResearchId },
+      });
 
-  findAll() {
-    return `This action returns all clinicalResearchCaseReportValidate`;
-  }
+    if (existingClinicalResearchCaseReportValidate.length > 0) {
+      await queryRunner.manager.remove(
+        existingClinicalResearchCaseReportValidate,
+      );
+    }
 
-  findOne(id: number) {
-    return `This action returns a #${id} clinicalResearchCaseReportValidate`;
-  }
+    for (const clinicalResearchCRV of clinicalResearchCaseReportValidate) {
+      const data = queryRunner.manager.create(
+        ClinicalResearchCaseReportValidateEntity,
+        {
+          ...clinicalResearchCRV,
+          res_crv_clinicalresearch_id_fk: clinicalResearchId,
+        },
+      );
 
-  update(
-    id: number,
-    updateClinicalResearchCaseReportValidateDto: UpdateClinicalResearchCaseReportValidateDto,
-  ) {
-    return `This action updates a #${id} clinicalResearchCaseReportValidate`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} clinicalResearchCaseReportValidate`;
+      await queryRunner.manager.save(data);
+    }
   }
 }

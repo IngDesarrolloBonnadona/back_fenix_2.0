@@ -16,41 +16,4 @@ export class ClinicalResearchCaseReportValidateController {
   constructor(
     private readonly clinicalResearchCaseReportValidateService: ClinicalResearchCaseReportValidateService,
   ) {}
-
-  @Post()
-  create(
-    @Body()
-    createClinicalResearchCaseReportValidateDto: CreateClinicalResearchCaseReportValidateDto,
-  ) {
-    return this.clinicalResearchCaseReportValidateService.create(
-      createClinicalResearchCaseReportValidateDto,
-    );
-  }
-
-  @Get()
-  findAll() {
-    return this.clinicalResearchCaseReportValidateService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.clinicalResearchCaseReportValidateService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body()
-    updateClinicalResearchCaseReportValidateDto: UpdateClinicalResearchCaseReportValidateDto,
-  ) {
-    return this.clinicalResearchCaseReportValidateService.update(
-      +id,
-      updateClinicalResearchCaseReportValidateDto,
-    );
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.clinicalResearchCaseReportValidateService.remove(+id);
-  }
 }

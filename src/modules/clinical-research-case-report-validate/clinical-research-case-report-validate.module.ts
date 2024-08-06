@@ -8,5 +8,6 @@ import { ClinicalResearchCaseReportValidate } from './entities/clinical-research
   imports: [TypeOrmModule.forFeature([ClinicalResearchCaseReportValidate])],
   controllers: [ClinicalResearchCaseReportValidateController],
   providers: [ClinicalResearchCaseReportValidateService],
+  exports: [ClinicalResearchCaseReportValidateService],
 })
 export class ClinicalResearchCaseReportValidateModule {}
