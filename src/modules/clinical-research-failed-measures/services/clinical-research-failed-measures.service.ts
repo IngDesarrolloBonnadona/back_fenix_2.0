@@ -17,7 +17,7 @@ export class ClinicalResearchFailedMeasuresService {
     queryRunner: QueryRunner,
   ) {
     const existingClinicalResearchFailedMeasure =
-      await this.clinicalResearchFailedMeasureRepository.find({
+      await queryRunner.manager.find(ClinicalResearchFailedMeasureEntity, {
         where: { meas_fcr_clinicalresearch_id_fk: clinicalResearchId },
       });
 
@@ -26,10 +26,13 @@ export class ClinicalResearchFailedMeasuresService {
     }
 
     for (const clinicalResearchFM of clinicalResearchFailedMeasure) {
-      const data = this.clinicalResearchFailedMeasureRepository.create({
-        ...clinicalResearchFM,
-        meas_fcr_clinicalresearch_id_fk: clinicalResearchId,
-      });
+      const data = queryRunner.manager.create(
+        ClinicalResearchFailedMeasureEntity,
+        {
+          ...clinicalResearchFM,
+          meas_fcr_clinicalresearch_id_fk: clinicalResearchId,
+        },
+      );
 
       await queryRunner.manager.save(data);
     }
