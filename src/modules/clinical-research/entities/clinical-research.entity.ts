@@ -102,6 +102,9 @@ export class ClinicalResearch {
   @Column({ nullable: true })
   res_c_casepreventable: boolean;
 
+  @Column({ nullable: true })
+  res_c_actionplan_id_fk: number;
+
   @Column({ nullable: true, default: true })
   res_c_status: boolean;
 
