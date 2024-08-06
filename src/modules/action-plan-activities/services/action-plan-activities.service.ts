@@ -11,10 +11,9 @@ export class ActionPlanActivitiesService {
     @InjectRepository(ActionPlanActivityEntity)
     private readonly actionPlanActivityRepository: Repository<ActionPlanActivityEntity>,
   ) {}
-  async createActionPlanActivityTransaction(
+  async createActionPlanActivity(
     actionPlanActivities: CreateActionPlanActivityDto[],
     actionPlanId: number,
-    queryRunner: QueryRunner,
   ) {
     const existingActionPlanActivity =
       await this.actionPlanActivityRepository.find({
@@ -22,7 +21,9 @@ export class ActionPlanActivitiesService {
       });
 
     if (existingActionPlanActivity.length > 0) {
-      await queryRunner.manager.softRemove(existingActionPlanActivity)
+      await this.actionPlanActivityRepository.softRemove(
+        existingActionPlanActivity,
+      );
     }
 
     for (const actionPlanActivity of actionPlanActivities) {
@@ -31,7 +32,7 @@ export class ActionPlanActivitiesService {
         plan_aa_actionplan_id_fk: actionPlanId,
       });
 
-      await queryRunner.manager.save(actionPA);
+      await this.actionPlanActivityRepository.save(actionPA);
     }
   }
 

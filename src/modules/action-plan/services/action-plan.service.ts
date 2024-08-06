@@ -11,8 +11,6 @@ import { ServiceService } from 'src/modules/service/services/service.service';
 import { UnitService } from 'src/modules/unit/services/unit.service';
 import { PriorityService } from 'src/modules/priority/services/priority.service';
 import { PositionService } from 'src/modules/position/services/position.service';
-import { ActionPlanCaseReportValidateService } from 'src/modules/action-plan-case-report-validate/services/action-plan-case-report-validate.service';
-import { CreateActionPlanCaseReportValidateDto } from 'src/modules/action-plan-case-report-validate/dto/create-action-plan-case-report-validate.dto';
 import { ActionPlanActivitiesService } from 'src/modules/action-plan-activities/services/action-plan-activities.service';
 
 @Injectable()
@@ -30,84 +28,55 @@ export class ActionPlanService {
     private readonly unitService: UnitService,
     private readonly priorityService: PriorityService,
     private readonly prositionService: PositionService,
-    private readonly actionPlanCaseReportValidateService: ActionPlanCaseReportValidateService,
     private readonly actionPlanActivityService: ActionPlanActivitiesService,
   ) {}
   async createActionPlan(createActionPlanDto: CreateActionPlanDto) {
-    const queryRunner = this.dataSource.createQueryRunner();
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
+    await Promise.all([
+      this.caseTypeService.findOneCaseType(
+        createActionPlanDto.plan_a_casetype_id_fk,
+      ),
+      this.eventTypeService.findOneEventType(
+        createActionPlanDto.plan_a_eventtype_id_fk,
+      ),
+      this.eventService.findOneEvent(createActionPlanDto.plan_a_event_id_fk),
+      this.serviceService.findOneService(
+        createActionPlanDto.plan_a_service_id_fk,
+      ),
+      this.unitService.findOneUnit(createActionPlanDto.plan_a_unit_id_fk),
+      this.priorityService.findOnePriority(
+        createActionPlanDto.plan_a_priority_id_fk,
+      ),
+      this.prositionService.findOnePosition(
+        createActionPlanDto.plan_a_position_id_fk,
+      ),
+    ]);
 
-    try {
-      await Promise.all([
-        this.caseTypeService.findOneCaseType(
-          createActionPlanDto.plan_a_casetype_id_fk,
-        ),
-        this.eventTypeService.findOneEventType(
-          createActionPlanDto.plan_a_eventtype_id_fk,
-        ),
-        this.eventService.findOneEvent(createActionPlanDto.plan_a_event_id_fk),
-        this.serviceService.findOneService(
-          createActionPlanDto.plan_a_service_id_fk,
-        ),
-        this.unitService.findOneUnit(createActionPlanDto.plan_a_unit_id_fk),
-        this.priorityService.findOnePriority(
-          createActionPlanDto.plan_a_priority_id_fk,
-        ),
-        this.prositionService.findOnePosition(
-          createActionPlanDto.plan_a_position_id_fk,
-        ),
-      ]);
+    const actionPlanExist = await this.actionPlanRepository.findOne({
+      where: {
+        plan_a_name: createActionPlanDto.plan_a_name,
+        plan_a_status: true,
+      },
+    });
 
-      const actionPlanExist = await this.actionPlanRepository.findOne({
-        where: {
-          plan_a_name: createActionPlanDto.plan_a_name,
-          plan_a_status: true,
-        },
-      });
-
-      if (actionPlanExist) {
-        throw new HttpException(
-          `El plan de acción ya existe.`,
-          HttpStatus.NOT_FOUND,
-        );
-      }
-
-      const actionPlan = this.actionPlanRepository.create(createActionPlanDto);
-      await queryRunner.manager.save(actionPlan);
-
-      // const actionPlanRCV: CreateActionPlanCaseReportValidateDto = {
-      //   plan_av_actionplan_id_fk: actionPlan.id,
-      //   plan_av_validatedcase_id_fk: idCaseValidate,
-      // };
-
-      // await this.actionPlanCaseReportValidateService.createActionPlanCaseReportValidateTransaction(
-      //   queryRunner,
-      //   actionPlanRCV,
-      // );
-
-      await this.actionPlanActivityService.createActionPlanActivityTransaction(
-        createActionPlanDto.actionPlanActivity,
-        actionPlan.id,
-        queryRunner,
-      );
-
-      await queryRunner.commitTransaction();
-
-      return new HttpException(
-        `¡Has creado el plan de acción exitosamente.!`,
-        HttpStatus.CREATED,
-      );
-    } catch (error) {
-      await queryRunner.rollbackTransaction();
-
+    if (actionPlanExist) {
       throw new HttpException(
-        `${error.message}`,
+        `El plan de acción ya existe.`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
-    } finally {
-      await queryRunner.release();
     }
+
+    const actionPlan = this.actionPlanRepository.create(createActionPlanDto);
+    await this.actionPlanRepository.save(actionPlan);
+
+    await this.actionPlanActivityService.createActionPlanActivity(
+      createActionPlanDto.actionPlanActivity,
+      actionPlan.id,
+    );
+
+    return new HttpException(
+      `¡Has creado el plan de acción exitosamente.!`,
+      HttpStatus.CREATED,
+    );
   }
 
   async summaryActionPlan(
