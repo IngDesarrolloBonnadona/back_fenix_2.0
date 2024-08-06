@@ -43,6 +43,7 @@ import { ClinicalResearchFailedMeasuresModule } from './modules/clinical-researc
 import { ClinicalResearchModule } from './modules/clinical-research/clinical-research.module';
 import { ProtocolModule } from './modules/protocol/protocol.module';
 import { UnsafeActionModule } from './modules/unsafe-action/unsafe-action.module';
+import { ClinicalResearchCaseReportValidateModule } from './modules/clinical-research-case-report-validate/clinical-research-case-report-validate.module';
 
 require('dotenv').config();
 
@@ -115,6 +116,7 @@ require('dotenv').config();
     ClinicalResearchModule,
     ProtocolModule,
     UnsafeActionModule,
+    ClinicalResearchCaseReportValidateModule,
   ],
   controllers: [],
   providers: [],
