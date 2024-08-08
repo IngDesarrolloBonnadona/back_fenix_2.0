@@ -152,4 +152,18 @@ export class ActionPlanService {
     }
     return actionPlan;
   }
+
+  async deleteActionPlan(id: number) {
+    const actionPlan = await this.findOneActionPlan(id);
+    const result = await this.actionPlanRepository.softDelete(actionPlan.id);
+
+    if (result.affected === 0) {
+      return new HttpException(
+        `No se pudo eliminar el plan de acción.`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    return new HttpException(`¡Datos eliminados correctamente!`, HttpStatus.OK);
+  }
 }

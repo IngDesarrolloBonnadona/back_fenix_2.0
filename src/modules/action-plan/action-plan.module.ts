@@ -12,6 +12,7 @@ import { UnitModule } from '../unit/unit.module';
 import { PriorityModule } from '../priority/priority.module';
 import { PositionModule } from '../position/position.module';
 import { ActionPlanActivitiesModule } from '../action-plan-activities/action-plan-activities.module';
+import { UserModule } from 'src/modules_bonnadonahub/user/user.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { ActionPlanActivitiesModule } from '../action-plan-activities/action-pla
     PriorityModule,
     PositionModule,
     ActionPlanActivitiesModule,
+    UserModule,
   ],
   controllers: [ActionPlanController],
   providers: [ActionPlanService],
