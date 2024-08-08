@@ -38,7 +38,7 @@ export class ActionPlanController {
     return this.actionPlanService.createActionPlan(createActionPlanDto);
   }
 
-  @Get('/summaryActionPlan/')
+  @Get('/summaryActionPlan/:userIdPermission')
   summaryActionPlan(
     @Query('actionPlanName') actionPlanName?: string,
     @Query('eventTypeId') eventTypeId?: number,
@@ -61,7 +61,7 @@ export class ActionPlanController {
     return this.actionPlanService.findOneActionPlan(id);
   }
 
-  @Delete('/deleteActionPlan/:id')
+  @Delete('/deleteActionPlan/:id/:userIdPermission')
   @Permission(
     permissions.SUPER_ADMIN,
     permissions.PARAMETERIZER,
