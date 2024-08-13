@@ -1,16 +1,17 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { UpdateCaseReportOriginalDto } from '../dto/update-case-report-original.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CaseReportOriginal as CaseReportOriginalEntity } from '../entities/case-report-original.entity';
 import { DataSource, Repository } from 'typeorm';
-import { CaseReportValidateService } from 'src/modules/case-report-validate/services/case-report-validate.service';
-import { OriDtoValidator } from '../utils/helpers/ori-dto-validator.helper';
+
+import { CaseReportOriginal as CaseReportOriginalEntity } from '../entities/case-report-original.entity';
 import { CaseType as CaseTypeEntity } from 'src/modules/case-type/entities/case-type.entity';
+import { Priority as PriorityEntity } from 'src/modules/priority/entities/priority.entity';
+import { SeverityClasification as SeverityClasificationEntity } from 'src/modules/severity-clasification/entities/severity-clasification.entity';
+
+import { CaseReportValidateService } from 'src/modules/case-report-validate/services/case-report-validate.service';
 import { LogService } from 'src/modules/log/services/log.service';
 import { MedicineService } from 'src/modules/medicine-case-report/services/medicine.service';
 import { DeviceService } from 'src/modules/device-case-report/services/device.service';
 import { logReports } from 'src/utils/enums/logs.enum';
-import { generateFilingNumber } from '../utils/helpers/generate_filing_number.helper';
 import { movementReport } from 'src/utils/enums/movement-report.enum';
 import { caseTypeReport } from 'src/utils/enums/caseType-report.enum';
 import { CreateOriRiskReportDto } from '../dto/create-ori-risk-report.dto';
@@ -28,10 +29,11 @@ import { OriginService } from 'src/modules/origin/services/origin.service';
 import { SubOriginService } from 'src/modules/sub-origin/services/sub-origin.service';
 import { RiskLevelService } from 'src/modules/risk-level/services/risk-level.service';
 import { UnitService } from 'src/modules/unit/services/unit.service';
-import { Priority as PriorityEntity } from 'src/modules/priority/entities/priority.entity';
-import { SeverityClasification as SeverityClasificationEntity } from 'src/modules/severity-clasification/entities/severity-clasification.entity';
 import { severityClasification } from 'src/utils/enums/severity-clasif.enum';
 import { MovementReportService } from 'src/modules/movement-report/services/movement-report.service';
+
+import { OriDtoValidator } from '../utils/helpers/ori-dto-validator.helper';
+import { generateFilingNumber } from '../utils/helpers/generate_filing_number.helper';
 
 @Injectable()
 export class CaseReportOriginalService {
@@ -40,10 +42,6 @@ export class CaseReportOriginalService {
     private readonly caseReportOriginalRepository: Repository<CaseReportOriginalEntity>,
     @InjectRepository(CaseTypeEntity)
     private readonly caseTypeRepository: Repository<CaseTypeEntity>,
-    // @InjectRepository(PriorityEntity)
-    // private readonly priorityRepository: Repository<PriorityEntity>,
-    // @InjectRepository(SeverityClasificationEntity)
-    // private readonly severityClasificationRepository: Repository<SeverityClasificationEntity>,
 
     private readonly caseReportValidateService: CaseReportValidateService,
     private readonly logService: LogService,
