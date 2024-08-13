@@ -11,14 +11,6 @@ import { CaseReportValidateService } from 'src/modules/case-report-validate/serv
 import { LogService } from 'src/modules/log/services/log.service';
 import { MedicineService } from 'src/modules/medicine-case-report/services/medicine.service';
 import { DeviceService } from 'src/modules/device-case-report/services/device.service';
-import { logReports } from 'src/utils/enums/logs.enum';
-import { movementReport } from 'src/utils/enums/movement-report.enum';
-import { caseTypeReport } from 'src/utils/enums/caseType-report.enum';
-import { CreateOriRiskReportDto } from '../dto/create-ori-risk-report.dto';
-import { CreateOriAdverseEventReportDto } from '../dto/create-ori-adverse-event-report.dto';
-import { CreateOriIncidentReportDto } from '../dto/create-ori-incident-report.dto';
-import { CreateOriIndicatingUnsafeCareReportDto } from '../dto/create-ori-indicating-unsafe-care-report.dto';
-import { CreateOriComplicationsReportDto } from '../dto/create-ori-complications-report.dto';
 import { CaseTypeService } from 'src/modules/case-type/services/case-type.service';
 import { RiskTypeService } from 'src/modules/risk-type/services/risk-type.service';
 import { EventTypeService } from 'src/modules/event-type/services/event-type.service';
@@ -29,11 +21,21 @@ import { OriginService } from 'src/modules/origin/services/origin.service';
 import { SubOriginService } from 'src/modules/sub-origin/services/sub-origin.service';
 import { RiskLevelService } from 'src/modules/risk-level/services/risk-level.service';
 import { UnitService } from 'src/modules/unit/services/unit.service';
-import { severityClasification } from 'src/utils/enums/severity-clasif.enum';
 import { MovementReportService } from 'src/modules/movement-report/services/movement-report.service';
 
 import { OriDtoValidator } from '../utils/helpers/ori-dto-validator.helper';
 import { generateFilingNumber } from '../utils/helpers/generate_filing_number.helper';
+
+import { logReports } from 'src/utils/enums/logs.enum';
+import { movementReport } from 'src/utils/enums/movement-report.enum';
+import { caseTypeReport } from 'src/utils/enums/caseType-report.enum';
+import { severityClasification } from 'src/utils/enums/severity-clasif.enum';
+
+import { CreateOriRiskReportDto } from '../dto/create-ori-risk-report.dto';
+import { CreateOriAdverseEventReportDto } from '../dto/create-ori-adverse-event-report.dto';
+import { CreateOriIncidentReportDto } from '../dto/create-ori-incident-report.dto';
+import { CreateOriIndicatingUnsafeCareReportDto } from '../dto/create-ori-indicating-unsafe-care-report.dto';
+import { CreateOriComplicationsReportDto } from '../dto/create-ori-complications-report.dto';
 
 @Injectable()
 export class CaseReportOriginalService {
