@@ -34,12 +34,12 @@ export class CaseTypeController {
   }
 
   @Get('/listCaseTypes/')
-  listCaseTypes(): Promise<CaseType[]> {
+  listCaseTypes(): Promise<CaseType[] | HttpException> {
     return this.caseTypeService.findAllCaseTypes();
   }
 
   @Get('/findCaseType/:id/')
-  findCaseType(@Param('id') id: number): Promise<CaseType> {
+  findCaseType(@Param('id') id: number) {
     return this.caseTypeService.findOneCaseType(id);
   }
 
