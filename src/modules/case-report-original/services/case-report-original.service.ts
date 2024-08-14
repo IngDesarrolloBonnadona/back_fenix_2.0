@@ -100,9 +100,16 @@ export class CaseReportOriginalService {
           ),
       ]);
 
-      const caseTypeFound = await this.caseTypeService.findOneCaseType(
+      const caseTypeFound = await this.caseTypeRepository.findOne(
         createReportOriDto.ori_cr_casetype_id_fk,
       );
+
+      if (!caseTypeFound) {
+        return new HttpException(
+          'No se encontró el nombre del tipo de caso.',
+          HttpStatus.NOT_FOUND,
+        );
+      }
 
       let caseReportOriginal: any;
 
