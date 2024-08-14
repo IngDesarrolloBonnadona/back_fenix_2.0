@@ -1,7 +1,7 @@
 import { ActionPlanActivity } from 'src/modules/action-plan-activities/entities/action-plan-activity.entity';
-import { ActionPlanCaseReportValidate } from 'src/modules/action-plan-case-report-validate/entities/action-plan-case-report-validate.entity';
 import { CaseReportValidate } from 'src/modules/case-report-validate/entities/case-report-validate.entity';
 import { CaseType } from 'src/modules/case-type/entities/case-type.entity';
+import { ClinicalResearch } from 'src/modules/clinical-research/entities/clinical-research.entity';
 import { EventType } from 'src/modules/event-type/entities/event-type.entity';
 import { Event } from 'src/modules/event/entities/event.entity';
 import { Position } from 'src/modules/position/entities/position.entity';
@@ -85,12 +85,6 @@ export class ActionPlan {
   )
   actionPlanActivity: ActionPlanActivity[];
 
-  @OneToMany(
-    () => ActionPlanCaseReportValidate,
-    (actionPlanCaseReportValidate) => actionPlanCaseReportValidate.actionPlan,
-  )
-  actionPlanCaseReportValidate: ActionPlanCaseReportValidate[];
-
   @ManyToOne(() => Position, (position) => position.actionPlan)
   @JoinColumn({ name: 'plan_a_position_id_fk' })
   position: Position;
@@ -118,4 +112,7 @@ export class ActionPlan {
   @ManyToOne(() => Priority, (priority) => priority.actionPlan)
   @JoinColumn({ name: 'plan_a_priority_id_fk' })
   priority: Priority;
+
+  @OneToMany(() => ClinicalResearch, (clinicalResearch) => clinicalResearch.actionPlan)
+  clinicalResearch: ClinicalResearch[];
 }

@@ -14,6 +14,7 @@ import { ClinicalResearchInfluencingFactorModule } from '../clinical-research-in
 import { InfluencingFactorModule } from '../influencing-factor/influencing-factor.module';
 import { FailedMeasuresModule } from '../failed-measures/failed-measures.module';
 import { ClinicalResearchFailedMeasuresModule } from '../clinical-research-failed-measures/clinical-research-failed-measures.module';
+import { ClinicalResearchCaseReportValidateModule } from '../clinical-research-case-report-validate/clinical-research-case-report-validate.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { ClinicalResearchFailedMeasuresModule } from '../clinical-research-faile
     SafetyBarriersModule,
     ClinicalResearchInfluencingFactorModule,
     ClinicalResearchFailedMeasuresModule,
+    ClinicalResearchCaseReportValidateModule,
     InfluencingFactorModule,
     FailedMeasuresModule,
   ],

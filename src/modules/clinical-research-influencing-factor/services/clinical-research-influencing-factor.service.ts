@@ -18,7 +18,7 @@ export class ClinicalResearchInfluencingFactorService {
     queryRunner: QueryRunner,
   ) {
     const existingClinicalResearchInfluencingFactor =
-      await this.clinicalResearchInfluencingFactorRepository.find({
+      await queryRunner.manager.find(ClinicalResearchInfluencingFactorEntity, {
         where: { inf_fcr_clinicalresearch_id_fk: clinicalResearchId },
       });
 
@@ -29,10 +29,13 @@ export class ClinicalResearchInfluencingFactorService {
     }
 
     for (const clinicalResearchIF of clinicalResearchInfluencingFactor) {
-      const data = this.clinicalResearchInfluencingFactorRepository.create({
-        ...clinicalResearchIF,
-        inf_fcr_clinicalresearch_id_fk: clinicalResearchId,
-      });
+      const data = queryRunner.manager.create(
+        ClinicalResearchInfluencingFactorEntity,
+        {
+          ...clinicalResearchIF,
+          inf_fcr_clinicalresearch_id_fk: clinicalResearchId,
+        },
+      );
 
       await queryRunner.manager.save(data);
     }

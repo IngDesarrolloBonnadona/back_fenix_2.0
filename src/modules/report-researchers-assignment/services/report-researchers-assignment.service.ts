@@ -256,8 +256,8 @@ export class ResearchersService {
         'reportAnalystAssignment',
       )
       .leftJoinAndSelect(
-        'crv.actionPlanCaseReportValidate',
-        'actionPlanCaseReportValidate',
+        'crv.clinicalResearchCaseReportValidate',
+        'clinicalResearchCaseReportValidate',
       )
       .where('crv.val_cr_validated = :validated', { validated: false })
       .andWhere('crv.val_cr_status = :status', { status: true });
