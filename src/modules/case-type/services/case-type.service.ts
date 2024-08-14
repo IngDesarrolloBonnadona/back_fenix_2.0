@@ -14,7 +14,7 @@ export class CaseTypeService {
 
   async createCaseType(createCaseTypeDto: CreateCaseTypeDto) {
     if (!createCaseTypeDto || !createCaseTypeDto.cas_t_name) {
-      throw new HttpException(
+      return new HttpException(
         'El nombre del tipo de caso es requerido.',
         HttpStatus.BAD_REQUEST,
       );
@@ -27,7 +27,7 @@ export class CaseTypeService {
     });
 
     if (findCaseType) {
-      throw new HttpException(
+      return new HttpException(
         'El tipo de caso ya existe.',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
@@ -50,7 +50,7 @@ export class CaseTypeService {
     });
 
     if (caseTypes.length === 0) {
-      throw new HttpException(
+      return new HttpException(
         'No se encontró la lista de tipos de caso',
         HttpStatus.NOT_FOUND,
       );
@@ -61,7 +61,7 @@ export class CaseTypeService {
 
   async findOneCaseType(id: number) {
     if (!id) {
-      throw new HttpException(
+      return new HttpException(
         'El identificador del tipo de caso es requerido.',
         HttpStatus.BAD_REQUEST,
       );
@@ -75,7 +75,7 @@ export class CaseTypeService {
     });
 
     if (!caseType) {
-      throw new HttpException(
+      return new HttpException(
         'No se encontró el tipo de caso.',
         HttpStatus.NOT_FOUND,
       );
@@ -86,15 +86,15 @@ export class CaseTypeService {
 
   async updateCaseType(id: number, updateCaseTypeDto: UpdateCaseTypeDto) {
     if (!updateCaseTypeDto) {
-      throw new HttpException(
+      return new HttpException(
         'Los datos para actualizar el tipo de caso son requeridos.',
         HttpStatus.BAD_REQUEST,
       );
     }
 
-    const caseType = await this.findOneCaseType(id);
+    await this.findOneCaseType(id);
     const result = await this.caseTypeRepository.update(
-      caseType.id,
+      id,
       updateCaseTypeDto,
     );
 
@@ -112,8 +112,8 @@ export class CaseTypeService {
   }
 
   async deleteCaseType(id: number) {
-    const caseType = await this.findOneCaseType(id);
-    const result = await this.caseTypeRepository.softDelete(caseType.id);
+    await this.findOneCaseType(id);
+    const result = await this.caseTypeRepository.softDelete(id);
 
     if (result.affected === 0) {
       return new HttpException(
