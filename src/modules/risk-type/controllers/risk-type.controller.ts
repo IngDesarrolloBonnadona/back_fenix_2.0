@@ -35,12 +35,12 @@ export class RiskTypeController {
   }
 
   @Get('/listRisktypes/')
-  listRisktypes(): Promise<RiskType[]> {
+  listRisktypes(): Promise<RiskType[] | HttpException> {
     return this.riskTypeService.findAllRiskTypes();
   }
 
   @Get('/findRisktype/:id/')
-  findRisktype(@Param('id') id: number): Promise<RiskType> {
+  findRisktype(@Param('id') id: number): Promise<RiskType | HttpException> {
     return this.riskTypeService.findOneRiskType(id);
   }
 
