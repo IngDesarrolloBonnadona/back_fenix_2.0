@@ -42,19 +42,19 @@ export class EventTypeController {
   }
 
   @Get('/listEventTypes/')
-  listEventTypes(): Promise<EventType[]> {
+  listEventTypes(): Promise<EventType[] | HttpException> {
     return this.eventTypeService.findAllEventTypes();
   }
 
   @Get('/findEventType/:id/')
-  findEventType(@Param('id') id: number): Promise<EventType> {
+  findEventType(@Param('id') id: number): Promise<EventType | HttpException> {
     return this.eventTypeService.findOneEventType(id);
   }
 
   @Get('/findEvenTypeByCaseType/:caseTypeId')
   findEvenTypeByCaseType(
     @Param('caseTypeId') caseTypeId: number,
-  ): Promise<EventType[]> {
+  ): Promise<EventType[] | HttpException> {
     return this.eventTypeService.findEvenTypeByCaseType(caseTypeId);
   }
 
