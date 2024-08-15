@@ -37,14 +37,14 @@ export class SeverityClasificationController {
   }
 
   @Get('/listSeverityClasifications/')
-  listSeverityClasifications(): Promise<SeverityClasification[]> {
+  listSeverityClasifications(): Promise<SeverityClasification[] | HttpException> {
     return this.severityClasificationService.findAllSeverityClasifications();
   }
 
   @Get('findSeverityClasification/:id/')
   findSeverityClasification(
     @Param('id') id: number,
-  ): Promise<SeverityClasification> {
+  ): Promise<SeverityClasification | HttpException> {
     return this.severityClasificationService.findOneSeverityClasification(id);
   }
 
