@@ -34,12 +34,12 @@ export class PriorityController {
   }
 
   @Get('/listPriorities/')
-  listPriorities(): Promise<Priority[]> {
+  listPriorities(): Promise<Priority[] | HttpException> {
     return this.priorityService.findAllPriorities();
   }
 
   @Get('/findPriority/:id/')
-  findPriority(@Param('id') id: number): Promise<Priority> {
+  findPriority(@Param('id') id: number): Promise<Priority | HttpException> {
     return this.priorityService.findOnePriority(id);
   }
 

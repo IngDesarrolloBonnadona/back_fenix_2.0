@@ -60,9 +60,6 @@ export class SeverityClasificationService {
       where: {
         sev_c_status: true,
       },
-      relations: {
-        priority: true,
-      },
       order: {
         sev_c_name: 'ASC',
       },
@@ -88,9 +85,6 @@ export class SeverityClasificationService {
 
     const severityClasif = await this.severityClasifRepository.findOne({
       where: { id, sev_c_status: true },
-      relations: {
-        priority: true,
-      },
     });
 
     if (!severityClasif) {
