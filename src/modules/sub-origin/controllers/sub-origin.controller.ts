@@ -35,19 +35,19 @@ export class SubOriginController {
   }
 
   @Get('/listSubOrigins/')
-  listSubOrigins(): Promise<SubOrigin[]> {
+  listSubOrigins(): Promise<SubOrigin[] | HttpException> {
     return this.subOriginService.findAllSubOrigins();
   }
 
   @Get('/findSubOrigin/:id/')
-  findSubOrigin(@Param('id') id: number): Promise<SubOrigin> {
+  findSubOrigin(@Param('id') id: number): Promise<SubOrigin | HttpException> {
     return this.subOriginService.findOneSubOrigin(id);
   }
 
   @Get('/findSubOriginByOriginId/:originId')
   findSubOriginByOriginId(
     @Param('originId') originId: number,
-  ): Promise<SubOrigin[]> {
+  ): Promise<SubOrigin[] | HttpException> {
     return this.subOriginService.findSubOriginByOriginId(originId);
   }
 
