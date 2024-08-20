@@ -34,13 +34,13 @@ export class RiskLevelController {
     return this.riskLevelService.createRiskLevel(createRiskLevelDto);
   }
 
-  @Get('/listRisksLevel/')
-  listRiskLevel(): Promise<RiskLevel[]> {
+  @Get('/listRiskLevels/')
+  listRiskLevel(): Promise<HttpException | RiskLevel[]> {
     return this.riskLevelService.findAllRiskLevel();
   }
 
   @Get('/findRiskLevel/:id/')
-  findRiskLevel(@Param('id') id: number): Promise<RiskLevel> {
+  findRiskLevel(@Param('id') id: number): Promise<HttpException | RiskLevel> {
     return this.riskLevelService.findOneRiskLevel(id);
   }
 
