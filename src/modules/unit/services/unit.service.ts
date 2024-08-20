@@ -53,9 +53,9 @@ export class UnitService {
       where: {
         unit_status: true,
       },
-      relations: {
-        event: true,
-      },
+      // relations: {
+      //   event: true,
+      // },
       order: {
         unit_name: 'ASC',
       },
@@ -81,9 +81,9 @@ export class UnitService {
 
     const unit = await this.unitRepository.findOne({
       where: { id, unit_status: true },
-      relations: {
-        event: true,
-      },
+      // relations: {
+      //   event: true,
+      // },
     });
 
     if (!unit) {
