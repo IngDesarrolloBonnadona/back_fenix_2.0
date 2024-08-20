@@ -35,12 +35,12 @@ export class ServiceController {
   }
 
   @Get('/listServices/')
-  listServices(): Promise<Service[]> {
+  listServices(): Promise<Service[] | HttpException> {
     return this.serviceService.findAllServices();
   }
 
   @Get('/findService/:id/')
-  findService(@Param('id') id: number): Promise<Service> {
+  findService(@Param('id') id: number): Promise<Service | HttpException> {
     return this.serviceService.findOneService(id);
   }
 
