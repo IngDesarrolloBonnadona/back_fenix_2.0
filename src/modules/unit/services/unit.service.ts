@@ -19,7 +19,7 @@ export class UnitService {
 
   async createUnit(createUnitDto: CreateUnitDto) {
     if (!createUnitDto || !createUnitDto.unit_name) {
-      throw new HttpException(
+      return new HttpException(
         'El nombre de la unidad es requerido.',
         HttpStatus.BAD_REQUEST,
       );
@@ -33,7 +33,7 @@ export class UnitService {
     });
 
     if (FindUnit) {
-      throw new HttpException(
+      return new HttpException(
         'La unidad ya existe.',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
@@ -62,7 +62,7 @@ export class UnitService {
     });
 
     if (units.length === 0) {
-      throw new HttpException(
+      return new HttpException(
         'No se encontró la lista de unidades.',
         HttpStatus.NOT_FOUND,
       );
@@ -73,7 +73,7 @@ export class UnitService {
 
   async findOneUnit(id: number) {
     if (!id) {
-      throw new HttpException(
+      return new HttpException(
         'El identificador de la unidada es requerido.',
         HttpStatus.BAD_REQUEST,
       );
@@ -87,7 +87,7 @@ export class UnitService {
     });
 
     if (!unit) {
-      throw new HttpException(
+      return new HttpException(
         'No se encontró la unidad.',
         HttpStatus.NOT_FOUND,
       );
@@ -98,14 +98,14 @@ export class UnitService {
 
   async updateUnit(id: number, updateUnitDto: UpdateUnitDto) {
     if (!updateUnitDto) {
-      throw new HttpException(
+      return new HttpException(
         'Los datos para actualizar la unidad son requeridos.',
         HttpStatus.BAD_REQUEST,
       );
     }
 
     const unit = await this.findOneUnit(id);
-    const result = await this.unitRepository.update(unit.id, updateUnitDto);
+    const result = await this.unitRepository.update(id, updateUnitDto);
 
     if (result.affected === 0) {
       return new HttpException(
@@ -122,7 +122,7 @@ export class UnitService {
 
   async deleteUnit(id: number) {
     const unit = await this.findOneUnit(id);
-    const result = await this.unitRepository.softDelete(unit.id);
+    const result = await this.unitRepository.softDelete(id);
 
     if (result.affected === 0) {
       return new HttpException(

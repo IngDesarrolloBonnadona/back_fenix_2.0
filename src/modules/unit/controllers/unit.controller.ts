@@ -33,12 +33,12 @@ export class UnitController {
   }
 
   @Get('/listUnits/')
-  listUnits(): Promise<Unit[]> {
+  listUnits(): Promise<Unit[] | HttpException> {
     return this.unitService.findAllUnits();
   }
 
   @Get('/findUnit/:id/')
-  findUnit(@Param('id') id: number): Promise<Unit> {
+  findUnit(@Param('id') id: number): Promise<Unit | HttpException> {
     return this.unitService.findOneUnit(id);
   }
 
