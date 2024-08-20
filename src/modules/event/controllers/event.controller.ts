@@ -38,12 +38,12 @@ export class EventController {
   }
 
   @Get('/listEvents/')
-  listEvents(): Promise<Event[]> {
+  listEvents(): Promise<HttpException | Event[]> {
     return this.eventService.findAllEvents();
   }
 
   @Get('/findEvent/:id/')
-  findEvent(@Param('id') id: number): Promise<Event> {
+  findEvent(@Param('id') id: number): Promise<HttpException | Event> {
     return this.eventService.findOneEvent(id);
   }
 
@@ -51,7 +51,7 @@ export class EventController {
   findEventsByEventTypeIdAndUnitId(
     @Param('eventTypeId') eventTypeId: number,
     @Param('unitId') unitId?: string,
-  ): Promise<Event[]> {
+  ): Promise<HttpException | Event[]> {
     const unitIdNumber = unitId ? parseInt(unitId, 10) : undefined;
     return this.eventService.findEventByEventTypeAndIdUnitId(
       eventTypeId,

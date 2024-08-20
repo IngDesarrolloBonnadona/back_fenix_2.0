@@ -26,7 +26,7 @@ export class EventService {
       !createEventDto.eve_name ||
       !createEventDto.eve_eventtype_id_fk
     ) {
-      throw new HttpException(
+      return new HttpException(
         'Algunos datos del suceso son requeridos.',
         HttpStatus.BAD_REQUEST,
       );
@@ -42,7 +42,7 @@ export class EventService {
     });
 
     if (findEvents) {
-      throw new HttpException(
+      return new HttpException(
         `El suceso ya existe en el tipo de suceso seleccionado.`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
@@ -76,7 +76,7 @@ export class EventService {
       });
 
       if (findEvent) {
-        throw new HttpException(
+        return new HttpException(
           `El suceso ${event.eve_name} ya existe en el tipo de suceso seleccionado.`,
           HttpStatus.INTERNAL_SERVER_ERROR,
         );
@@ -99,13 +99,17 @@ export class EventService {
       where: {
         eve_status: true,
       },
+      relations: {
+        eventType: true,
+        unit: true,
+      },
       order: {
         eve_name: 'ASC',
       },
     });
 
     if (events.length === 0) {
-      throw new HttpException(
+      return new HttpException(
         'No se encontró la lista de sucesos.',
         HttpStatus.NOT_FOUND,
       );
@@ -116,7 +120,7 @@ export class EventService {
 
   async findOneEvent(id: number) {
     if (!id) {
-      throw new HttpException(
+      return new HttpException(
         'El identificador del suceso es requerido.',
         HttpStatus.BAD_REQUEST,
       );
@@ -127,7 +131,7 @@ export class EventService {
     });
 
     if (!event) {
-      throw new HttpException(
+      return new HttpException(
         'No se encontró el suceso.',
         HttpStatus.NOT_FOUND,
       );
@@ -153,7 +157,7 @@ export class EventService {
     });
 
     if (events.length === 0) {
-      throw new HttpException(
+      return new HttpException(
         'No se encontró la lista de sucesos relacionados con el tipo de suceso.',
         HttpStatus.NOT_FOUND,
       );
@@ -164,14 +168,14 @@ export class EventService {
 
   async updateEvent(id: number, updateEventDto: UpdateEventDto) {
     if (!updateEventDto) {
-      throw new HttpException(
+      return new HttpException(
         'Los datos para actualizar el suceso son requeridos.',
         HttpStatus.BAD_REQUEST,
       );
     }
 
-    const event = await this.findOneEvent(id);
-    const result = await this.eventRepository.update(event.id, updateEventDto);
+    await this.findOneEvent(id);
+    const result = await this.eventRepository.update(id, updateEventDto);
 
     if (result.affected === 0) {
       return new HttpException(
@@ -187,8 +191,8 @@ export class EventService {
   }
 
   async deleteEvent(id: number) {
-    const event = await this.findOneEvent(id);
-    const result = await this.eventRepository.softDelete(event.id);
+    await this.findOneEvent(id);
+    const result = await this.eventRepository.softDelete(id);
 
     if (result.affected === 0) {
       return new HttpException(
