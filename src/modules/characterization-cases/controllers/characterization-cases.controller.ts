@@ -38,12 +38,12 @@ export class CharacterizationCasesController {
   }
 
   @Get('/listCharacterizations/')
-  listCharacterizations(): Promise<CharacterizationCase[]> {
+  listCharacterizations(): Promise<HttpException | CharacterizationCase[]> {
     return this.characterizationCasesService.findAllCharacterizations();
   }
 
   @Get('/findCharacterization/:id/')
-  findCharacterization(@Param('id') id: number): Promise<CharacterizationCase> {
+  findCharacterization(@Param('id') id: number): Promise<HttpException | CharacterizationCase> {
     return this.characterizationCasesService.findOneCharacterization(id);
   }
 
