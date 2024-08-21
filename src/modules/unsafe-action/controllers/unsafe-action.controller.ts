@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  HttpException,
 } from '@nestjs/common';
 import { UnsafeActionService } from '../services/unsafe-action.service';
 import { CreateUnsafeActionDto } from '../dto/create-unsafe-action.dto';
@@ -15,6 +16,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { PermissionGuard } from 'src/utils/guards/permission.guard';
 import { Permission } from 'src/utils/decorators/permission.decorator';
 import { permissions } from 'src/utils/enums/permissions.enum';
+import { UnsafeAction } from '../entities/unsafe-action.entity';
 
 @ApiTags('unsafe-action')
 @Controller('unsafe-action')
@@ -24,17 +26,21 @@ export class UnsafeActionController {
 
   @Post('/createUnsafeAction/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  createUnsafeAction(@Body() createUnsafeActionDto: CreateUnsafeActionDto) {
+  createUnsafeAction(
+    @Body() createUnsafeActionDto: CreateUnsafeActionDto,
+  ): Promise<HttpException> {
     return this.unsafeActionService.createUnsafeAction(createUnsafeActionDto);
   }
 
   @Get('/listUnsafeActions/')
-  listUnsafeActions() {
+  listUnsafeActions(): Promise<HttpException | UnsafeAction[]> {
     return this.unsafeActionService.findAllUnsafeActions();
   }
 
   @Get('/findUnsafeAction/:id/')
-  findUnsafeAction(@Param('id') id: number) {
+  findUnsafeAction(
+    @Param('id') id: number,
+  ): Promise<HttpException | UnsafeAction> {
     return this.unsafeActionService.findOneUnsafeActions(id);
   }
 
@@ -43,7 +49,7 @@ export class UnsafeActionController {
   updateUnsafeAction(
     @Param('id') id: number,
     @Body() updateUnsafeActionDto: UpdateUnsafeActionDto,
-  ) {
+  ): Promise<HttpException> {
     return this.unsafeActionService.updateUnsafeAction(
       id,
       updateUnsafeActionDto,
@@ -52,7 +58,7 @@ export class UnsafeActionController {
 
   @Delete('/deleteUnsafeAction/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  deleteUnsafeAction(@Param('id') id: number) {
+  deleteUnsafeAction(@Param('id') id: number): Promise<HttpException> {
     return this.unsafeActionService.deleteUnsafeAction(id);
   }
 }
