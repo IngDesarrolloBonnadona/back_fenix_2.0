@@ -14,7 +14,7 @@ export class DamageTypeService {
 
   async createDamageType(createDamageTypeDto: CreateDamageTypeDto) {
     if (!createDamageTypeDto || !createDamageTypeDto.dam_t_name) {
-      throw new HttpException(
+      return new HttpException(
         'El nombre del tipo de daño es requerido.',
         HttpStatus.BAD_REQUEST,
       );
@@ -25,7 +25,7 @@ export class DamageTypeService {
     });
 
     if (findDamageType) {
-      throw new HttpException(
+      return new HttpException(
         'El tipo de daño ya existe.',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
@@ -47,7 +47,7 @@ export class DamageTypeService {
     });
 
     if (damageTypes.length === 0) {
-      throw new HttpException(
+      return new HttpException(
         'No se encontró la lista de tipos de daño.',
         HttpStatus.NOT_FOUND,
       );
@@ -57,7 +57,7 @@ export class DamageTypeService {
 
   async findOneDamageType(id: number) {
     if (!id) {
-      throw new HttpException(
+      return new HttpException(
         'El identificador del tipo de daño es requerido.',
         HttpStatus.BAD_REQUEST,
       );
@@ -68,7 +68,7 @@ export class DamageTypeService {
     });
 
     if (!damageType) {
-      throw new HttpException(
+      return new HttpException(
         'No se encontró el tipo de daño.',
         HttpStatus.NOT_FOUND,
       );
@@ -78,15 +78,15 @@ export class DamageTypeService {
 
   async updateDamageType(id: number, updateDamageTypeDto: UpdateDamageTypeDto) {
     if (!updateDamageTypeDto) {
-      throw new HttpException(
+      return new HttpException(
         'Los datos para actualizar el tipo de daño son requeridos.',
         HttpStatus.BAD_REQUEST,
       );
     }
 
-    const damageType = await this.findOneDamageType(id);
+    await this.findOneDamageType(id);
     const result = await this.damageTypeRepository.update(
-      damageType.id,
+      id,
       updateDamageTypeDto,
     );
 
@@ -104,8 +104,8 @@ export class DamageTypeService {
   }
 
   async deleteDamageType(id: number) {
-    const damageType = await this.findOneDamageType(id);
-    const result = await this.damageTypeRepository.softDelete(damageType.id);
+    await this.findOneDamageType(id);
+    const result = await this.damageTypeRepository.softDelete(id);
 
     if (result.affected === 0) {
       return new HttpException(

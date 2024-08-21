@@ -33,12 +33,12 @@ export class DamageTypeController {
   }
 
   @Get('/listDamageTypes/')
-  listDamageTypes(): Promise<DamageType[]> {
+  listDamageTypes(): Promise<HttpException | DamageType[]> {
     return this.damageTypeService.findAllDamageType();
   }
 
   @Get('/findDamageType/:id')
-  findDamageType(@Param('id') id: number): Promise<DamageType> {
+  findDamageType(@Param('id') id: number): Promise<HttpException | DamageType> {
     return this.damageTypeService.findOneDamageType(id);
   }
 
