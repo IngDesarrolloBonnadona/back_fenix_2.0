@@ -33,12 +33,12 @@ export class DeviceTypeController {
   }
 
   @Get('/listDeviceTypes/')
-  listDeviceTypes(): Promise<DeviceType[]> {
+  listDeviceTypes(): Promise<HttpException | DeviceType[]> {
     return this.deviceTypeService.findAllDeviceTypes();
   }
 
   @Get('/findDeviceType/:id')
-  findDeviceType(@Param('id') id: number): Promise<DeviceType> {
+  findDeviceType(@Param('id') id: number): Promise<HttpException | DeviceType> {
     return this.deviceTypeService.findOneDeviceType(id);
   }
 

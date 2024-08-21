@@ -13,7 +13,7 @@ export class DeviceTypeService {
   ) {}
   async createDeviceType(createDeviceTypeDto: CreateDeviceTypeDto) {
     if (!createDeviceTypeDto || !createDeviceTypeDto.dev_t_name) {
-      throw new HttpException(
+      return new HttpException(
         'El nombre del tipo de dispositivo es requerido.',
         HttpStatus.BAD_REQUEST,
       );
@@ -24,7 +24,7 @@ export class DeviceTypeService {
     });
 
     if (findDeviceType) {
-      throw new HttpException(
+      return new HttpException(
         'El tipo de dispositivo ya existe.',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
@@ -46,7 +46,7 @@ export class DeviceTypeService {
     });
 
     if (deviceTypes.length === 0) {
-      throw new HttpException(
+      return new HttpException(
         'No se encontró la lista de tipos de dispositivos.',
         HttpStatus.NOT_FOUND,
       );
@@ -56,7 +56,7 @@ export class DeviceTypeService {
 
   async findOneDeviceType(id: number) {
     if (!id) {
-      throw new HttpException(
+      return new HttpException(
         'El identificador del tipo de dispositivo es requerido.',
         HttpStatus.BAD_REQUEST,
       );
@@ -67,7 +67,7 @@ export class DeviceTypeService {
     });
 
     if (!deviceType) {
-      throw new HttpException(
+      return new HttpException(
         'No se encontró el tipo de dispositivo.',
         HttpStatus.NOT_FOUND,
       );
@@ -77,15 +77,15 @@ export class DeviceTypeService {
 
   async updateDeviceType(id: number, updateDeviceTypeDto: UpdateDeviceTypeDto) {
     if (!updateDeviceTypeDto) {
-      throw new HttpException(
+      return new HttpException(
         'Los datos para actualizar el tipo de dispositivo son requeridos.',
         HttpStatus.BAD_REQUEST,
       );
     }
 
-    const deviceType = await this.findOneDeviceType(id);
+    await this.findOneDeviceType(id);
     const result = await this.deviceTypeRepository.update(
-      deviceType.id,
+      id,
       updateDeviceTypeDto,
     );
 
@@ -103,8 +103,8 @@ export class DeviceTypeService {
   }
 
   async deleteDeviceType(id: number) {
-    const deviceType = await this.findOneDeviceType(id);
-    const result = await this.deviceTypeRepository.softDelete(deviceType.id);
+    await this.findOneDeviceType(id);
+    const result = await this.deviceTypeRepository.softDelete(id);
 
     if (result.affected === 0) {
       return new HttpException(
