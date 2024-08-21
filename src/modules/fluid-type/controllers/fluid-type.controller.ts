@@ -33,12 +33,12 @@ export class FluidTypeController {
   }
 
   @Get('/listFluidTypes/')
-  listFluidType(): Promise<FluidType[]> {
+  listFluidType(): Promise<HttpException | FluidType[]> {
     return this.fluidTypeService.findAllFluidTypes();
   }
 
   @Get('/findFluidType/:id/')
-  findFluidType(@Param('id') id: number): Promise<FluidType> {
+  findFluidType(@Param('id') id: number): Promise<HttpException | FluidType> {
     return this.fluidTypeService.findOneFluidType(id);
   }
 
