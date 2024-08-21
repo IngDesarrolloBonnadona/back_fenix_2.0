@@ -61,7 +61,7 @@ export class RoleResponseTimeService {
     await this.roleResponseTimeRepository.save(roleResponseTime);
 
     return new HttpException(
-      `¡El tiempo de respuesta para el rol ${findRole.role_name} se creó correctamente!`,
+      `¡El tiempo de respuesta se creó correctamente!`,
       HttpStatus.CREATED,
     );
   }

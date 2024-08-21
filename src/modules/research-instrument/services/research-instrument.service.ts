@@ -19,7 +19,7 @@ export class ResearchInstrumentService {
       !createResearchInstrumentDto ||
       !createResearchInstrumentDto.inst_r_name
     ) {
-      throw new HttpException(
+      return new HttpException(
         'El nombre del instrumento de investigación es requerido.',
         HttpStatus.BAD_REQUEST,
       );
@@ -34,7 +34,7 @@ export class ResearchInstrumentService {
       });
 
     if (findResearchInstrument) {
-      throw new HttpException(
+      return new HttpException(
         'El instrumento de investigación ya existe.',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
@@ -58,7 +58,7 @@ export class ResearchInstrumentService {
     });
 
     if (researchInstruments.length === 0) {
-      throw new HttpException(
+      return new HttpException(
         'No se encontro la lista de instrumentos de investigación.',
         HttpStatus.NOT_FOUND,
       );
@@ -69,7 +69,7 @@ export class ResearchInstrumentService {
 
   async findOneResearchInstrument(id: number) {
     if (!id) {
-      throw new HttpException(
+      return new HttpException(
         'El identificador del instrumento de investigación es requerido.',
         HttpStatus.BAD_REQUEST,
       );
@@ -80,7 +80,7 @@ export class ResearchInstrumentService {
     });
 
     if (!researchInstrument) {
-      throw new HttpException(
+      return new HttpException(
         'No se encontro el instrumento de investigación.',
         HttpStatus.NOT_FOUND,
       );
@@ -94,15 +94,15 @@ export class ResearchInstrumentService {
     updateResearchInstrumentDto: UpdateResearchInstrumentDto,
   ) {
     if (!updateResearchInstrumentDto) {
-      throw new HttpException(
+      return new HttpException(
         'Los datos para actualizar el instrumento de investigación son requeridos.',
         HttpStatus.BAD_REQUEST,
       );
     }
 
-    const researchInstrument = await this.findOneResearchInstrument(id);
+    await this.findOneResearchInstrument(id);
     const result = await this.researchInstrumentRepository.update(
-      researchInstrument.id,
+      id,
       updateResearchInstrumentDto,
     );
 
@@ -120,10 +120,8 @@ export class ResearchInstrumentService {
   }
 
   async deleteResearchInstrument(id: number) {
-    const researchInstrument = await this.findOneResearchInstrument(id);
-    const result = await this.researchInstrumentRepository.softDelete(
-      researchInstrument.id,
-    );
+    await this.findOneResearchInstrument(id);
+    const result = await this.researchInstrumentRepository.softDelete(id);
 
     if (result.affected === 0) {
       return new HttpException(

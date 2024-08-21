@@ -37,12 +37,12 @@ export class ResearchInstrumentController {
   }
 
   @Get('/listResearchInstruments/')
-  listResearchInstruments(): Promise<ResearchInstrument[]> {
+  listResearchInstruments(): Promise<HttpException | ResearchInstrument[]> {
     return this.researchInstrumentService.findAllResearchInstruments();
   }
 
   @Get('/findResearchInstrument/:id')
-  findResearchInstrument(@Param('id') id: number) {
+  findResearchInstrument(@Param('id') id: number): Promise<HttpException | ResearchInstrument> {
     return this.researchInstrumentService.findOneResearchInstrument(id);
   }
 
