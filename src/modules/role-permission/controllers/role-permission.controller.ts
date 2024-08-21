@@ -33,19 +33,19 @@ export class RolePermissionController {
   }
 
   @Get('/listRoles/')
-  listRoles(): Promise<RolePermission[]> {
+  listRoles(): Promise<HttpException | RolePermission[]> {
     return this.roleService.findAllRoles();
   }
 
   @Get('/findRole/:id/')
-  findRole(@Param('id') id: number): Promise<RolePermission> {
+  findRole(@Param('id') id: number): Promise<HttpException | RolePermission> {
     return this.roleService.findOneRole(id);
   }
 
   @Get('/findRoleByName/')
   findRoleByName(
     @Body() createRoleDto: CreateRolePermissionDto,
-  ): Promise<RolePermission> {
+  ): Promise<HttpException | RolePermission> {
     return this.roleService.findRoleByName(createRoleDto);
   }
 

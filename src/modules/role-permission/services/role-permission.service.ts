@@ -14,7 +14,7 @@ export class RolePermissionService {
 
   async createRole(createRoleDto: CreateRolePermissionDto) {
     if (!createRoleDto || !createRoleDto.role_name) {
-      throw new HttpException(
+      return new HttpException(
         'El nombre del rol es requerido.',
         HttpStatus.BAD_REQUEST,
       );
@@ -28,7 +28,7 @@ export class RolePermissionService {
     });
 
     if (findRole) {
-      throw new HttpException(
+      return new HttpException(
         'El rol ya existe.',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
@@ -53,7 +53,7 @@ export class RolePermissionService {
     });
 
     if (roles.length === 0) {
-      throw new HttpException(
+      return new HttpException(
         'No se encontró la lista de roles',
         HttpStatus.NOT_FOUND,
       );
@@ -63,7 +63,7 @@ export class RolePermissionService {
 
   async findOneRole(id: number) {
     if (!id) {
-      throw new HttpException(
+      return new HttpException(
         'El identificador del rol es requerido.',
         HttpStatus.BAD_REQUEST,
       );
@@ -74,7 +74,7 @@ export class RolePermissionService {
     });
 
     if (!role) {
-      throw new HttpException('No se encontró el rol', HttpStatus.NOT_FOUND);
+      return new HttpException('No se encontró el rol', HttpStatus.NOT_FOUND);
     }
 
     return role;
@@ -82,7 +82,7 @@ export class RolePermissionService {
 
   async findRoleByName(createRoleDto: CreateRolePermissionDto) {
     if (!createRoleDto.role_name) {
-      throw new HttpException(
+      return new HttpException(
         'El nombre del tipo de caso es requerido.',
         HttpStatus.BAD_REQUEST,
       );
@@ -92,7 +92,7 @@ export class RolePermissionService {
     });
 
     if (!roleName) {
-      throw new HttpException(
+      return new HttpException(
         'No se encontró el nombre del rol',
         HttpStatus.NOT_FOUND,
       );
@@ -103,14 +103,14 @@ export class RolePermissionService {
 
   async updateRole(id: number, updateRoleDto: UpdateRolePermissionDto) {
     if (!updateRoleDto) {
-      throw new HttpException(
+      return new HttpException(
         'Los datos para actualizar el rol son requeridos.',
         HttpStatus.BAD_REQUEST,
       );
     }
 
-    const role = await this.findOneRole(id);
-    const result = await this.roleRepository.update(role.id, updateRoleDto);
+    this.findOneRole(id);
+    const result = await this.roleRepository.update(id, updateRoleDto);
 
     if (result.affected === 0) {
       return new HttpException(
@@ -125,8 +125,8 @@ export class RolePermissionService {
   }
 
   async deleteRole(id: number) {
-    const role = await this.findOneRole(id);
-    const result = await this.roleRepository.softDelete(role.id);
+    await this.findOneRole(id);
+    const result = await this.roleRepository.softDelete(id);
 
     if (result.affected === 0) {
       return new HttpException(
