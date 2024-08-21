@@ -33,12 +33,12 @@ export class RiskFactorController {
   }
 
   @Get('/listRiskFactors/')
-  listRiskFactors(): Promise<RiskFactor[]> {
+  listRiskFactors(): Promise<HttpException | RiskFactor[]> {
     return this.riskFactorService.findAllRiskFactors();
   }
 
   @Get('/findRiskFactor/:id')
-  findRiskFactor(@Param('id') id: number): Promise<RiskFactor> {
+  findRiskFactor(@Param('id') id: number): Promise<HttpException | RiskFactor> {
     return this.riskFactorService.findOneRiskFactor(id);
   }
 

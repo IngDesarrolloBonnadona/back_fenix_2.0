@@ -14,7 +14,7 @@ export class RiskFactorService {
 
   async createRiskFactor(createRiskFactorDto: CreateRiskFactorDto) {
     if (!createRiskFactorDto || !createRiskFactorDto.ris_f_name) {
-      throw new HttpException(
+      return new HttpException(
         'El nombre del factor de riesgp es requerido.',
         HttpStatus.BAD_REQUEST,
       );
@@ -28,7 +28,7 @@ export class RiskFactorService {
     });
 
     if (findRiskFactor) {
-      throw new HttpException(
+      return new HttpException(
         'El factor de riesgo ya existe.',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
@@ -49,7 +49,7 @@ export class RiskFactorService {
     });
 
     if (riskFactors.length === 0) {
-      throw new HttpException(
+      return new HttpException(
         'No se encontró la lista de factores de riesgo.',
         HttpStatus.NOT_FOUND,
       );
@@ -59,7 +59,7 @@ export class RiskFactorService {
 
   async findOneRiskFactor(id: number) {
     if (!id) {
-      throw new HttpException(
+      return new HttpException(
         'El identificador del factor de riesgo es requerido.',
         HttpStatus.BAD_REQUEST,
       );
@@ -70,7 +70,7 @@ export class RiskFactorService {
     });
 
     if (!riskFactor) {
-      throw new HttpException(
+      return new HttpException(
         'No se encontró el factor de riesgo.',
         HttpStatus.NOT_FOUND,
       );
@@ -80,14 +80,14 @@ export class RiskFactorService {
 
   async updateRiskFactor(id: number, updateRiskFactorDto: UpdateRiskFactorDto) {
     if (!updateRiskFactorDto) {
-      throw new HttpException(
+      return new HttpException(
         'Los datos para actualizar el factor de riesgo son requeridos.',
         HttpStatus.BAD_REQUEST,
       );
     }
-    const riskFactor = await this.findOneRiskFactor(id);
+    await this.findOneRiskFactor(id);
     const result = await this.riskFactorRepository.update(
-      riskFactor.id,
+      id,
       updateRiskFactorDto,
     );
 
@@ -105,8 +105,8 @@ export class RiskFactorService {
   }
 
   async deleteRiskFactor(id: number) {
-    const origin = await this.findOneRiskFactor(id);
-    const result = await this.riskFactorRepository.softDelete(origin.id);
+    await this.findOneRiskFactor(id);
+    const result = await this.riskFactorRepository.softDelete(id);
 
     if (result.affected === 0) {
       return new HttpException(
