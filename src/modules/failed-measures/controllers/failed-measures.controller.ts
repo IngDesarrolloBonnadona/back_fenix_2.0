@@ -35,12 +35,12 @@ export class FailedMeasuresController {
   }
 
   @Get('/listFailedMeasures/')
-  listFailedMeasures(): Promise<FailedMeasure[]> {
+  listFailedMeasures(): Promise<HttpException | FailedMeasure[]> {
     return this.failedMeasuresService.findAllFailedMeasures();
   }
 
   @Get('/findFailedMeasure/:id/')
-  findFailedMeasure(@Param('id') id: number): Promise<FailedMeasure> {
+  findFailedMeasure(@Param('id') id: number): Promise<HttpException | FailedMeasure> {
     return this.failedMeasuresService.findOneFailedMeasure(id);
   }
 
