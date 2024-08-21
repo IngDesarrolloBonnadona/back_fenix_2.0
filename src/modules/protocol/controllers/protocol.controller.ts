@@ -33,12 +33,12 @@ export class ProtocolController {
   }
 
   @Get('/listProtocols')
-  listProtocols(): Promise<Protocol[]> {
+  listProtocols(): Promise<Protocol[] | HttpException> {
     return this.protocolService.findAllProtocols();
   }
 
   @Get('/findProtocol/:id')
-  findProtocol(@Param('id') id: number): Promise<Protocol> {
+  findProtocol(@Param('id') id: number): Promise<Protocol | HttpException> {
     return this.protocolService.findOneProtocol(id);
   }
 

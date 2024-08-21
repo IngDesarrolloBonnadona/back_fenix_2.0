@@ -14,7 +14,7 @@ export class ProtocolService {
 
   async createProtocol(createProtocolDto: CreateProtocolDto) {
     if (!createProtocolDto || !createProtocolDto.prot_name) {
-      throw new HttpException(
+      return new HttpException(
         'El nombre del protocolo es requerido.',
         HttpStatus.BAD_REQUEST,
       );
@@ -25,14 +25,17 @@ export class ProtocolService {
     });
 
     if (findProtocol) {
-      throw new HttpException('El protocolo ya existe.', HttpStatus.INTERNAL_SERVER_ERROR);
+      return new HttpException(
+        'El protocolo ya existe.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
 
     const protocol = this.protocolRepository.create(createProtocolDto);
     await this.protocolRepository.save(protocol);
 
     return new HttpException(
-      `¡El origen ${protocol.prot_name} se creó correctamente!`,
+      `¡El protocolo ${protocol.prot_name} se creó correctamente!`,
       HttpStatus.CREATED,
     );
   }
@@ -44,7 +47,7 @@ export class ProtocolService {
     });
 
     if (protocols.length === 0) {
-      throw new HttpException(
+      return new HttpException(
         'No se encontró la lista de protocolos.',
         HttpStatus.NOT_FOUND,
       );
@@ -54,7 +57,7 @@ export class ProtocolService {
 
   async findOneProtocol(id: number) {
     if (!id) {
-      throw new HttpException(
+      return new HttpException(
         'El identificador del protocolo es requerido.',
         HttpStatus.BAD_REQUEST,
       );
@@ -65,7 +68,7 @@ export class ProtocolService {
     });
 
     if (!protocol) {
-      throw new HttpException(
+      return new HttpException(
         'No se encontró el protocolo',
         HttpStatus.NOT_FOUND,
       );
@@ -75,17 +78,14 @@ export class ProtocolService {
 
   async updateProtocol(id: number, updateProtocolDto: UpdateProtocolDto) {
     if (!updateProtocolDto) {
-      throw new HttpException(
+      return new HttpException(
         'Los datos para actualizar el protocolo son requeridos.',
         HttpStatus.BAD_REQUEST,
       );
     }
 
-    const protocol = await this.findOneProtocol(id);
-    const result = await this.protocolRepository.update(
-      protocol.id,
-      updateProtocolDto,
-    );
+    await this.findOneProtocol(id);
+    const result = await this.protocolRepository.update(id, updateProtocolDto);
 
     if (result.affected === 0) {
       return new HttpException(
@@ -101,8 +101,8 @@ export class ProtocolService {
   }
 
   async deleteProtocol(id: number) {
-    const protocol = await this.findOneProtocol(id);
-    const result = await this.protocolRepository.softDelete(protocol.id);
+    await this.findOneProtocol(id);
+    const result = await this.protocolRepository.softDelete(id);
 
     if (result.affected === 0) {
       return new HttpException(
