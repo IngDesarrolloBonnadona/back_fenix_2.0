@@ -37,12 +37,12 @@ export class InfluencingFactorController {
   }
 
   @Get('/listInfluencingFactors/')
-  listInfluencingFactors(): Promise<InfluencingFactor[]> {
+  listInfluencingFactors(): Promise<HttpException | InfluencingFactor[]> {
     return this.influencingFactorService.findAllInfluencingFactors();
   }
 
   @Get('/findInfluencingFactor/:id')
-  findInfluencingFactor(@Param('id') id: number): Promise<InfluencingFactor> {
+  findInfluencingFactor(@Param('id') id: number): Promise<HttpException | InfluencingFactor> {
     return this.influencingFactorService.findOneInfluencingFactor(id);
   }
 
