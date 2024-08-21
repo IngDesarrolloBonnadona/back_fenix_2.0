@@ -37,12 +37,12 @@ export class ReasonReturnCaseController {
   }
 
   @Get('/listReasonReturnCases/')
-  listReasonReturnCases(): Promise<ReasonReturnCase[]> {
+  listReasonReturnCases(): Promise<ReasonReturnCase[] | HttpException> {
     return this.reasonReturnCaseService.findAllReasonReturnCases();
   }
 
   @Get('/findReasonReturnCase/:id/')
-  findReasonReturnCase(@Param('id') id: number): Promise<ReasonReturnCase> {
+  findReasonReturnCase(@Param('id') id: number): Promise<ReasonReturnCase | HttpException> {
     return this.reasonReturnCaseService.findOneReasonReturnCase(id);
   }
 

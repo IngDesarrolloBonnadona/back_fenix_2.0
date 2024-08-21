@@ -23,7 +23,7 @@ export class ReasonReturnCaseService {
       !createReasonReturnCaseDto.rec_r_cause ||
       !createReasonReturnCaseDto.rec_r_role_id_fk
     ) {
-      throw new HttpException(
+      return new HttpException(
         'Algunos datos del motivo de devolución son requeridos.',
         HttpStatus.BAD_REQUEST,
       );
@@ -38,7 +38,7 @@ export class ReasonReturnCaseService {
     });
 
     if (findReasonReturnCase) {
-      throw new HttpException(
+      return new HttpException(
         `El motivo de devolución para este rol ya existe.`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
@@ -69,7 +69,7 @@ export class ReasonReturnCaseService {
     });
 
     if (reasonReturnCases.length === 0) {
-      throw new HttpException(
+      return new HttpException(
         'No se encontró la lista de motivos de devolución.',
         HttpStatus.NOT_FOUND,
       );
@@ -79,7 +79,7 @@ export class ReasonReturnCaseService {
 
   async findOneReasonReturnCase(id: number) {
     if (!id) {
-      throw new HttpException(
+      return new HttpException(
         'El identificador del motivo de devolución es requerido.',
         HttpStatus.BAD_REQUEST,
       );
@@ -91,7 +91,7 @@ export class ReasonReturnCaseService {
     });
 
     if (!reasonReturnCase) {
-      throw new HttpException(
+      return new HttpException(
         'No se encontró el motivo de devolución.',
         HttpStatus.NOT_FOUND,
       );
@@ -104,15 +104,15 @@ export class ReasonReturnCaseService {
     updateReasonReturnCaseDto: UpdateReasonReturnCaseDto,
   ) {
     if (!updateReasonReturnCaseDto) {
-      throw new HttpException(
+      return new HttpException(
         'Los datos para actualizar el motivo de devolución son requeridos.',
         HttpStatus.BAD_REQUEST,
       );
     }
 
-    const reasonReturnCase = await this.findOneReasonReturnCase(id);
+    await this.findOneReasonReturnCase(id);
     const result = await this.reasonReturnCaseRepository.update(
-      reasonReturnCase.id,
+      id,
       updateReasonReturnCaseDto,
     );
 
@@ -130,10 +130,8 @@ export class ReasonReturnCaseService {
   }
 
   async deleteReasonReturnCase(id: number) {
-    const reasonReturnCase = await this.findOneReasonReturnCase(id);
-    const result = await this.reasonReturnCaseRepository.softDelete(
-      reasonReturnCase.id,
-    );
+    await this.findOneReasonReturnCase(id);
+    const result = await this.reasonReturnCaseRepository.softDelete(id);
 
     if (result.affected === 0) {
       return new HttpException(
