@@ -35,12 +35,12 @@ export class SafetyBarriersController {
   }
 
   @Get('/listSafetyBarriers')
-  listSafetyBarriers(): Promise<SafetyBarrier[]> {
+  listSafetyBarriers(): Promise<SafetyBarrier[] | HttpException> {
     return this.safetyBarriersService.findAllSafetyBarriers();
   }
 
   @Get('/findSafetyBarrier/:id')
-  findSafetyBarrier(@Param('id') id: number): Promise<SafetyBarrier> {
+  findSafetyBarrier(@Param('id') id: number): Promise<SafetyBarrier | HttpException> {
     return this.safetyBarriersService.findOneSafetyBarrier(id);
   }
 
