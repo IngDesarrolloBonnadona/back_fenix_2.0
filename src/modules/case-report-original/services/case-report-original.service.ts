@@ -100,9 +100,11 @@ export class CaseReportOriginalService {
           ),
       ]);
 
-      const caseTypeFound = await this.caseTypeRepository.findOne(
-        createReportOriDto.ori_cr_casetype_id_fk,
-      );
+      const caseTypeFound = await this.caseTypeRepository.findOne({
+        where: {
+          id: createReportOriDto.ori_cr_casetype_id_fk,
+        },
+      });
 
       if (!caseTypeFound) {
         return new HttpException(
@@ -193,10 +195,7 @@ export class CaseReportOriginalService {
         },
       });
       if (!priorityFind) {
-        throw new HttpException(
-          `La prioridad no existe`,
-          HttpStatus.NOT_FOUND,
-        );
+        throw new HttpException(`La prioridad no existe`, HttpStatus.NOT_FOUND);
       }
 
       caseReportOriginal.ori_cr_severityclasif_id_fk =
@@ -340,9 +339,9 @@ export class CaseReportOriginalService {
   //   id: string,
   //   UpdateCaseReportOriginalDto: UpdateCaseReportOriginalDto,
   // ) {
-  //   const caseReportsOriginal = await this.findOneReportOriginal(id);
+  //   await this.findOneReportOriginal(id);
   //   const result = await this.caseReportOriginalRepository.update(
-  //     caseReportsOriginal.id,
+  //     id,
   //     UpdateCaseReportOriginalDto,
   //   );
 
