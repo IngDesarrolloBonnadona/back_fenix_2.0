@@ -27,8 +27,7 @@ export class EventService {
     if (
       !createEventDto ||
       !createEventDto.eve_name ||
-      !createEventDto.eve_eventtype_id_fk ||
-      !createEventDto.eve_unit_id_fk
+      !createEventDto.eve_eventtype_id_fk
     ) {
       return new HttpException(
         'Algunos datos del suceso son requeridos.',
@@ -40,7 +39,6 @@ export class EventService {
       where: {
         eve_name: createEventDto.eve_name,
         eve_eventtype_id_fk: createEventDto.eve_eventtype_id_fk,
-        eve_unit_id_fk: createEventDto.eve_unit_id_fk,
         eve_status: true,
       },
     });
@@ -63,12 +61,14 @@ export class EventService {
       );
     }
 
-    const unitFound = await this.unitRepository.findOneBy({
-      id: createEventDto.eve_unit_id_fk,
-    });
+    if (createEventDto.eve_unit_id_fk) {
+      const unitFound = await this.unitRepository.findOneBy({
+        id: createEventDto.eve_unit_id_fk,
+      });
 
-    if (!unitFound) {
-      return new HttpException(`Unidad no encontrada.`, HttpStatus.NOT_FOUND);
+      if (!unitFound) {
+        return new HttpException(`Unidad no encontrada.`, HttpStatus.NOT_FOUND);
+      }
     }
 
     const event = this.eventRepository.create(createEventDto);
@@ -120,7 +120,7 @@ export class EventService {
       },
       relations: {
         eventType: {
-          caseType: true
+          caseType: true,
         },
         unit: true,
       },
