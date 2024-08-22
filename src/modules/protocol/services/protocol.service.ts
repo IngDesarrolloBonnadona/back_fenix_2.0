@@ -101,7 +101,15 @@ export class ProtocolService {
   }
 
   async deleteProtocol(id: number) {
-    await this.findOneProtocol(id);
+    const protocolFound = await this.protocolRepository.findOneBy({ id });
+
+    if (!protocolFound) {
+      return new HttpException(
+        `Protocolo no encontrado, favor recargar.`,
+        HttpStatus.NOT_FOUND
+      )
+    }
+
     const result = await this.protocolRepository.softDelete(id);
 
     if (result.affected === 0) {

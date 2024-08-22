@@ -103,7 +103,15 @@ export class DeviceTypeService {
   }
 
   async deleteDeviceType(id: number) {
-    await this.findOneDeviceType(id);
+    const deviceTypeFound = await this.deviceTypeRepository.findOneBy({ id });
+
+    if (!deviceTypeFound) {
+      return new HttpException(
+        `Tipo de dispositivo no encontrado, favor recargar.`,
+        HttpStatus.NOT_FOUND
+      )
+    }
+
     const result = await this.deviceTypeRepository.softDelete(id);
 
     if (result.affected === 0) {

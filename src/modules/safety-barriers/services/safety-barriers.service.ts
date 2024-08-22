@@ -109,7 +109,17 @@ export class SafetyBarriersService {
   }
 
   async deleteSafetyBarrier(id: number) {
-    await this.findOneSafetyBarrier(id);
+    const safetyBarrierFound = await this.safetyBarrierRepository.findOneBy({
+      id,
+    });
+
+    if (!safetyBarrierFound) {
+      return new HttpException(
+        `Barrera de seguridad no encontrada, favor recargar.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
     const result = await this.safetyBarrierRepository.softDelete(id);
 
     if (result.affected === 0) {

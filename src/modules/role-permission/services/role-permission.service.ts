@@ -125,7 +125,15 @@ export class RolePermissionService {
   }
 
   async deleteRole(id: number) {
-    await this.findOneRole(id);
+    const roleFound = await this.roleRepository.findOneBy({ id });
+    
+    if (!roleFound) {
+      return new HttpException(
+        `Rol no encontrado, favor recargar.`,
+        HttpStatus.NOT_FOUND
+      )
+    }
+
     const result = await this.roleRepository.softDelete(id);
 
     if (result.affected === 0) {

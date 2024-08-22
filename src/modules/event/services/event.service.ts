@@ -191,7 +191,15 @@ export class EventService {
   }
 
   async deleteEvent(id: number) {
-    await this.findOneEvent(id);
+    const eventFound = await this.eventRepository.findOneBy({ id });
+
+    if (!eventFound) {
+      return new HttpException(
+        `Suceso no encontrado, favor recargar.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
     const result = await this.eventRepository.softDelete(id);
 
     if (result.affected === 0) {

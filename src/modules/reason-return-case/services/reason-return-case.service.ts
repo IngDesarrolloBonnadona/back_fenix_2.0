@@ -130,7 +130,15 @@ export class ReasonReturnCaseService {
   }
 
   async deleteReasonReturnCase(id: number) {
-    await this.findOneReasonReturnCase(id);
+    const reasonFound = await this.reasonReturnCaseRepository.findOneBy({ id });
+
+    if (!reasonFound) {
+      return new HttpException(
+        `Razón devolución de caso no encontrado, favor recargar.`,
+        HttpStatus.NOT_FOUND
+      )
+    }
+
     const result = await this.reasonReturnCaseRepository.softDelete(id);
 
     if (result.affected === 0) {

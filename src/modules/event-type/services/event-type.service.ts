@@ -198,7 +198,14 @@ export class EventTypeService {
   }
 
   async deleteEventType(id: number) {
-    await this.findOneEventType(id);
+    const eventTypeFound = await this.eventTypeRepository.findOneBy({ id });
+
+    if (!eventTypeFound) {
+      return new HttpException(
+        `Estrategia no encontrada, favor recargar.`,
+        HttpStatus.NOT_FOUND
+      )
+    }
 
     const result = await this.eventTypeRepository.softDelete(id);
 

@@ -112,7 +112,15 @@ export class RiskLevelService {
   }
 
   async deleteRiskLevel(id: number) {
-    await this.findOneRiskLevel(id);
+    const riskLevelFound = await this.riskLevelRepository.findOneBy({ id });
+
+    if (!riskLevelFound) {
+      return new HttpException(
+        `Nivel de riesgo no encontrado, favor recargar.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
     const result = await this.riskLevelRepository.softDelete(id);
 
     if (result.affected === 0) {

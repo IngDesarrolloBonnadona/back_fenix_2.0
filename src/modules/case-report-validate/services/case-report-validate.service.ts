@@ -784,29 +784,6 @@ export class CaseReportValidateService {
     return caseReportValidate;
   }
 
-  // async updateReportValidate(
-  //   id: string,
-  //   updateCaseReportValidateDto: UpdateCaseReportValidateDto,
-  // ) {
-  //   const caseReportValidate = await this.findOneReportValidate(id);
-  //   const result = await this.caseReportValidateRepository.update(
-  //     caseReportValidate.id,
-  //     updateCaseReportValidateDto,
-  //   );
-
-  //   if (result.affected === 0) {
-  //     return new HttpException(
-  //       `No se pudo actualizar caso validado ${caseReportValidate.id}`,
-  //       HttpStatus.INTERNAL_SERVER_ERROR,
-  //     );
-  //   }
-
-  //   return new HttpException(
-  //     `¡Datos actualizados correctamente!`,
-  //     HttpStatus.OK,
-  //   );
-  // }
-
   async cancelReportValidate(id: string, clientIp: string, idUser: string) {
     if (!id) {
       throw new HttpException(

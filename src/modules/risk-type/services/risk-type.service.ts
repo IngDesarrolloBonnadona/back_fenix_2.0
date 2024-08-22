@@ -100,10 +100,7 @@ export class RiskTypeService {
     }
 
     const riskType = await this.findOneRiskType(id);
-    const result = await this.riskTypeRepository.update(
-      id,
-      updateRiskTypeDto,
-    );
+    const result = await this.riskTypeRepository.update(id, updateRiskTypeDto);
 
     if (result.affected === 0) {
       return new HttpException(
@@ -119,7 +116,15 @@ export class RiskTypeService {
   }
 
   async deleteRiskType(id: number) {
-    const riskType = await this.findOneRiskType(id);
+    const riskTypeFound = await this.riskTypeRepository.findOneBy({ id });
+
+    if (!riskTypeFound) {
+      return new HttpException(
+        `Tipo de riesgo no encontrado, favor recargar.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
     const result = await this.riskTypeRepository.softDelete(id);
 
     if (result.affected === 0) {

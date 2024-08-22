@@ -104,7 +104,15 @@ export class DamageTypeService {
   }
 
   async deleteDamageType(id: number) {
-    await this.findOneDamageType(id);
+    const damageTypeFound = await this.damageTypeRepository.findOneBy({ id });
+
+    if (!damageTypeFound) {
+      return new HttpException(
+        `Tipo de daño no encontrado, favor recargar.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
     const result = await this.damageTypeRepository.softDelete(id);
 
     if (result.affected === 0) {

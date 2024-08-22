@@ -122,7 +122,15 @@ export class CharacterizationCasesService {
   }
 
   async deleteCharacterization(id: number) {
-    await this.findOneCharacterization(id);
+    const CharacterizationCaseFound =
+      await this.characterizationCaseRepository.findOneBy({ id });
+
+    if (!CharacterizationCaseFound) {
+      return new HttpException(
+        `Caracterización de caso no encontrado, favor recargar.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
     const result = await this.characterizationCaseRepository.softDelete(id);
 
     if (result.affected === 0) {

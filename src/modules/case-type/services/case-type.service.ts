@@ -93,10 +93,7 @@ export class CaseTypeService {
     }
 
     await this.findOneCaseType(id);
-    const result = await this.caseTypeRepository.update(
-      id,
-      updateCaseTypeDto,
-    );
+    const result = await this.caseTypeRepository.update(id, updateCaseTypeDto);
 
     if (result.affected === 0) {
       return new HttpException(
@@ -112,7 +109,15 @@ export class CaseTypeService {
   }
 
   async deleteCaseType(id: number) {
-    await this.findOneCaseType(id);
+    const caseTypeFound = await this.caseTypeRepository.findOneBy({ id });
+
+    if (!caseTypeFound) {
+      return new HttpException(
+        `Tipo de caso no encontrado, favor recargar.`,
+        HttpStatus.NOT_FOUND
+      )
+    }
+
     const result = await this.caseTypeRepository.softDelete(id);
 
     if (result.affected === 0) {

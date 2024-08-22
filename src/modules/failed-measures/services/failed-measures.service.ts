@@ -111,7 +111,17 @@ export class FailedMeasuresService {
   }
 
   async deleteFailedMeasure(id: number) {
-    await this.findOneFailedMeasure(id);
+    const failedMeasureFound = await this.failedMeasureRepository.findOneBy({
+      id,
+    });
+
+    if (!failedMeasureFound) {
+      return new HttpException(
+        `Medida fallida no encontrada, favor recargar.`,
+        HttpStatus.NOT_FOUND
+      )
+    }
+
     const result = await this.failedMeasureRepository.softDelete(id);
 
     if (result.affected === 0) {

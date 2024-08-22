@@ -120,7 +120,16 @@ export class ResearchInstrumentService {
   }
 
   async deleteResearchInstrument(id: number) {
-    await this.findOneResearchInstrument(id);
+    const researchInstrumentFound =
+      await this.researchInstrumentRepository.findOneBy({ id });
+
+    if (!researchInstrumentFound) {
+      return new HttpException(
+        `Instrumento no encontrado, favor recargar.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
     const result = await this.researchInstrumentRepository.softDelete(id);
 
     if (result.affected === 0) {

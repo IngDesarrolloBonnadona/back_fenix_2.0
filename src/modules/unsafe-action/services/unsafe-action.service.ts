@@ -114,7 +114,17 @@ export class UnsafeActionService {
   }
 
   async deleteUnsafeAction(id: number) {
-    await this.findOneUnsafeActions(id);
+    const unsafeActionFound = await this.unsafeActionRepository.findOneBy({
+      id,
+    });
+
+    if (!unsafeActionFound) {
+      return new HttpException(
+        `Acción insegura no encontrada, favor recargar.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
     const result = await this.unsafeActionRepository.softDelete(id);
 
     if (result.affected === 0) {

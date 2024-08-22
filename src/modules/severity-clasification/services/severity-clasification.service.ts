@@ -128,7 +128,17 @@ export class SeverityClasificationService {
   }
 
   async deleteSeverityClasification(id: number) {
-    await this.findOneSeverityClasification(id);
+    const severityClasifFound = await this.severityClasifRepository.findOneBy({
+      id,
+    });
+
+    if (!severityClasifFound) {
+      return new HttpException(
+        `Clasificación de severidad no encontrada, favor recargar.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
     const result = await this.severityClasifRepository.softDelete(id);
 
     if (result.affected === 0) {

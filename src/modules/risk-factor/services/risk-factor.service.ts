@@ -105,7 +105,15 @@ export class RiskFactorService {
   }
 
   async deleteRiskFactor(id: number) {
-    await this.findOneRiskFactor(id);
+    const riskFactorFound = await this.riskFactorRepository.findOneBy({ id });
+
+    if (!riskFactorFound) {
+      return new HttpException(
+        `Factor de riesgo no encontrado, favor recargar.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
     const result = await this.riskFactorRepository.softDelete(id);
 
     if (result.affected === 0) {

@@ -164,7 +164,15 @@ export class SubOriginService {
   }
 
   async deleteSubOrigin(id: number) {
-    await this.findOneSubOrigin(id);
+    const subOriginFound = await this.subOriginRepository.findOneBy({ id });
+
+    if (!subOriginFound) {
+      return new HttpException(
+        `Sub origen no encontrado, favor recargar.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
     const result = await this.subOriginRepository.softDelete(id);
 
     if (result.affected === 0) {

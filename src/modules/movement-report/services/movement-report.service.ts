@@ -148,9 +148,19 @@ export class MovementReportService {
   }
 
   async deleteMovementReport(id: number) {
-    const movementReport = await this.findOneMovementReport(id);
+    const movementReportFound = await this.movementReportRepository.findOneBy({
+      id,
+    });
+
+    if (!movementReportFound) {
+      return new HttpException(
+        `Movimiento de reporte no encontrado, favor recargar.`,
+        HttpStatus.NOT_FOUND
+      )
+    }
+
     const result = await this.movementReportRepository.softDelete(
-      movementReport.id,
+      id,
     );
 
     if (result.affected === 0) {

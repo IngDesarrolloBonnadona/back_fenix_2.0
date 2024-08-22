@@ -634,8 +634,17 @@ export class ResearchersService {
   }
 
   async deleteAssignedResearcher(id: number) {
-    const Researcher = await this.findOneAssignedResearch(id);
-    const result = await this.researcherRepository.softDelete(Researcher.id);
+    const ResearcherFound =
+      await this.reportAnalystAssignmentRepository.findOneBy({ id });
+
+    if (!ResearcherFound) {
+      return new HttpException(
+        `Investigador no encontrado, favor recargar.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    const result = await this.researcherRepository.softDelete(id);
 
     if (result.affected === 0) {
       return new HttpException(

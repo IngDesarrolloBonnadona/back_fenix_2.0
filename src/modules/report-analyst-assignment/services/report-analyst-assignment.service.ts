@@ -85,7 +85,7 @@ export class ReportAnalystAssignmentService {
       !createReportAnalystAssignmentDto ||
       !createReportAnalystAssignmentDto.ana_useranalyst_id ||
       !createReportAnalystAssignmentDto.ana_validatedcase_id_fk ||
-      !createReportAnalystAssignmentDto.ana_position_id_fk 
+      !createReportAnalystAssignmentDto.ana_position_id_fk
     ) {
       throw new HttpException(
         'Algunos datos para asignar analistas son requeridos.',
@@ -564,9 +564,7 @@ export class ReportAnalystAssignmentService {
     return caseReportsValidate;
   }
 
-  async findAssignedAnalystsByPosition(
-    query: QueryReportAnalystAssignmentDto,
-  ) {
+  async findAssignedAnalystsByPosition(query: QueryReportAnalystAssignmentDto) {
     const where: FindOptionsWhere<ReportAnalystAssignmentEntity> = {};
 
     if (query.positionId) {
@@ -597,9 +595,7 @@ export class ReportAnalystAssignmentService {
     return analystReporters;
   }
 
-  async findOneAssignedAnalyst(
-    id: number,
-  ) {
+  async findOneAssignedAnalyst(id: number) {
     if (!id) {
       throw new HttpException(
         'El identificador del analista asignado es requerido.',
@@ -650,7 +646,7 @@ export class ReportAnalystAssignmentService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    
+
     const findReportAnalystAssigned =
       await this.reportAnalystAssignmentRepository.findOne({
         where: {
@@ -752,10 +748,17 @@ export class ReportAnalystAssignmentService {
   }
 
   async deleteAssignedAnalyst(id: number) {
-    const analystReporter = await this.findOneAssignedAnalyst(id);
-    const result = await this.reportAnalystAssignmentRepository.softDelete(
-      analystReporter.id,
-    );
+    const analystReporterFound =
+      await this.reportAnalystAssignmentRepository.findOneBy({ id });
+
+    if (!analystReporterFound) {
+      return new HttpException(
+        `Analista no encontrado, favor recargar.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    const result = await this.reportAnalystAssignmentRepository.softDelete(id);
 
     if (result.affected === 0) {
       return new HttpException(

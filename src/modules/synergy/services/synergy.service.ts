@@ -263,7 +263,7 @@ export class SynergyService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    
+
     const synergy = await this.findOneSynergy(id);
 
     const movementReportFound =
@@ -299,10 +299,13 @@ export class SynergyService {
       );
     }
 
-    const resolutionDateSynergy = await this.synergyRepository.update(synergy.id,{
-      syn_resolutiondate: new Date(),
-      syn_status: true,
-    });
+    const resolutionDateSynergy = await this.synergyRepository.update(
+      synergy.id,
+      {
+        syn_resolutiondate: new Date(),
+        syn_status: true,
+      },
+    );
 
     if (resolutionDateSynergy.affected === 0) {
       throw new HttpException(
@@ -325,8 +328,16 @@ export class SynergyService {
   }
 
   async deleteSynergy(id: number) {
-    const synergy = await this.findOneSynergy(id);
-    const result = await this.synergyRepository.softDelete(synergy.id);
+    const synergyFound = await this.synergyRepository.findOneBy({ id });
+
+    if (!synergyFound) {
+      return new HttpException(
+        `Sinergia no encontrada, favor recargar.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    const result = await this.synergyRepository.softDelete(id);
 
     if (result.affected === 0) {
       return new HttpException(

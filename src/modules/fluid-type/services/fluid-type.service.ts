@@ -109,7 +109,15 @@ export class FluidTypeService {
   }
 
   async deleteFluidType(id: number) {
-    await this.findOneFluidType(id);
+    const fluidTypeFound = await this.fluidTypeRespository.findOneBy({ id });
+
+    if (!fluidTypeFound) {
+      return new HttpException(
+        `Tipo de fluido no encontrado, favor recargar.`,
+        HttpStatus.NOT_FOUND
+      )
+    }
+
     const result = await this.fluidTypeRespository.softDelete(id);
 
     if (result.affected === 0) {

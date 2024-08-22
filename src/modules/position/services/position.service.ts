@@ -183,8 +183,16 @@ export class PositionService {
   }
 
   async deletePosition(id: number) {
-    const position = await this.findOnePosition(id);
-    const result = await this.positionRepository.softDelete(position.id);
+    const positionFound = await this.positionRepository.findOneBy({ id });
+
+    if (!positionFound) {
+      return new HttpException(
+        `Cargo no encontrado, favor recargar.`,
+        HttpStatus.NOT_FOUND
+      )
+    }
+
+    const result = await this.positionRepository.softDelete(id);
 
     if (result.affected === 0) {
       return new HttpException(

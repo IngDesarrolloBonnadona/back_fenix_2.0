@@ -132,7 +132,15 @@ export class PriorityService {
   }
 
   async deletePriority(id: number) {
-    await this.findOnePriority(id);
+    const priorityFound = await this.priorityRepository.findOneBy({ id });
+
+    if (!priorityFound) {
+      return new HttpException(
+        `Prioridad no encontrada, favor recargar.`,
+        HttpStatus.NOT_FOUND
+      )
+    }
+
     const result = await this.priorityRepository.softDelete(id);
 
     if (result.affected === 0) {

@@ -131,7 +131,15 @@ export class ServiceService {
   }
 
   async deleteService(id: number) {
-    await this.findOneService(id);
+    const serviceFound = await this.serviceRepository.findOneBy({ id });
+
+    if (!serviceFound) {
+      return new HttpException(
+        `Servicio no encontrado, favor recargar.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
     const result = await this.serviceRepository.softDelete(id);
 
     if (result.affected === 0) {

@@ -121,7 +121,15 @@ export class UnitService {
   }
 
   async deleteUnit(id: number) {
-    const unit = await this.findOneUnit(id);
+    const unitFound = await this.unitRepository.findOneBy({ id });
+
+    if (!unitFound) {
+      return new HttpException(
+        `Unidad no encontrada, favor recargar.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
     const result = await this.unitRepository.softDelete(id);
 
     if (result.affected === 0) {

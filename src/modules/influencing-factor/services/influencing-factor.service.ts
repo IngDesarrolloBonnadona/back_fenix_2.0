@@ -117,7 +117,16 @@ export class InfluencingFactorService {
   }
 
   async deleteInfluencingFactor(id: number) {
-    await this.findOneInfluencingFactor(id);
+    const influencingFactorFound =
+      await this.influencingFactoryRepository.findOneBy({ id });
+
+    if (!influencingFactorFound) {
+      return new HttpException(
+        `Factor de influencia no encontrado, favor recargar.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
     const result = await this.influencingFactoryRepository.softDelete(id);
 
     if (result.affected === 0) {

@@ -334,43 +334,4 @@ export class CaseReportOriginalService {
 
     return caseReportsOriginal;
   }
-
-  // async updateReportOriginal(
-  //   id: string,
-  //   UpdateCaseReportOriginalDto: UpdateCaseReportOriginalDto,
-  // ) {
-  //   await this.findOneReportOriginal(id);
-  //   const result = await this.caseReportOriginalRepository.update(
-  //     id,
-  //     UpdateCaseReportOriginalDto,
-  //   );
-
-  //   if (result.affected === 0) {
-  //     return new HttpException(
-  //       `No se pudo actualizar el caso original #${caseReportsOriginal.id}`,
-  //       HttpStatus.INTERNAL_SERVER_ERROR,
-  //     );
-  //   }
-
-  //   return new HttpException(
-  //     `¡Datos actualizados correctamente!`,
-  //     HttpStatus.OK,
-  //   );
-  // }
-
-  async deleteReportOriginal(id: string) {
-    const caseReportsOriginal = await this.findOneReportOriginal(id);
-    const result = await this.caseReportOriginalRepository.softDelete(
-      caseReportsOriginal.id,
-    );
-
-    if (result.affected === 0) {
-      return new HttpException(
-        `No se pudo eliminar el caso #${id}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-
-    return new HttpException(`¡Datos eliminados correctamente!`, HttpStatus.OK);
-  }
 }
