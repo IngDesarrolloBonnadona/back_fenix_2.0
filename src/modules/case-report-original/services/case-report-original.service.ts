@@ -21,7 +21,6 @@ import { OriginService } from 'src/modules/origin/services/origin.service';
 import { SubOriginService } from 'src/modules/sub-origin/services/sub-origin.service';
 import { RiskLevelService } from 'src/modules/risk-level/services/risk-level.service';
 import { UnitService } from 'src/modules/unit/services/unit.service';
-import { MovementReportService } from 'src/modules/movement-report/services/movement-report.service';
 
 import { OriDtoValidator } from '../utils/helpers/ori-dto-validator.helper';
 import { generateFilingNumber } from '../utils/helpers/generate_filing_number.helper';
@@ -45,8 +44,6 @@ export class CaseReportOriginalService {
     private readonly caseReportOriginalRepository: Repository<CaseReportOriginalEntity>,
     @InjectRepository(CaseTypeEntity)
     private readonly caseTypeRepository: Repository<CaseTypeEntity>,
-    @InjectRepository(MovementReportEntity)
-    private readonly movementReportRepository: Repository<MovementReportEntity>,
 
     private readonly caseReportValidateService: CaseReportValidateService,
     private readonly logService: LogService,
@@ -162,12 +159,9 @@ export class CaseReportOriginalService {
         this.caseReportOriginalRepository,
       );
 
-      // const movementReportFound =
-      //   await this.movementReportService.findOneMovementReportByName(
-      //     movementReport.REPORT_CREATION,
-      //   );
-
-      const movementReportFound = await this.movementReportRepository.findOne({
+      const movementReportFound = await queryRunner.manager.findOne(
+        MovementReportEntity,
+        {
         where: {
           mov_r_name: movementReport.REPORT_CREATION,
           mov_r_status: true,

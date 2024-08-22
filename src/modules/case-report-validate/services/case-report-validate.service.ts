@@ -297,14 +297,12 @@ export class CaseReportValidateService {
       const consecutiveId = previousReport.val_cr_consecutive_id + 1;
       const previousId = previousReport.val_cr_previous_id + 1;
 
-      // const movementReportFound =
-      //   await this.movementReportService.findOneMovementReportByName(
-      //     movementReport.VALIDATION,
-      //   );
-
-      const movementReportFound = await this.movementReportRepository.findOne({
-        where: { mov_r_name: movementReport.VALIDATION, mov_r_status: true },
-      });
+      const movementReportFound = await queryRunner.manager.findOne(
+        MovementReportEntity,
+        {
+          where: { mov_r_name: movementReport.VALIDATION, mov_r_status: true },
+        },
+      );
 
       if (!movementReportFound) {
         return new HttpException(
@@ -814,11 +812,6 @@ export class CaseReportValidateService {
     }
 
     const caseReportValidate = await this.findOneReportValidate(id);
-
-    // const movementReportFound =
-    //   await this.movementReportService.findOneMovementReportByName(
-    //     movementReport.ANULATION,
-    //   );
 
     const movementReportFound = await this.movementReportRepository.findOne({
       where: { mov_r_name: movementReport.ANULATION, mov_r_status: true },
