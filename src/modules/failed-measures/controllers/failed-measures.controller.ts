@@ -26,21 +26,21 @@ export class FailedMeasuresController {
 
   @Post('/createFailedMeasure/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  createFailedMeasure(
-    @Body() createFailedMeasureDto: CreateFailedMeasureDto,
-  ): Promise<HttpException> {
+  createFailedMeasure(@Body() createFailedMeasureDto: CreateFailedMeasureDto) {
     return this.failedMeasuresService.createFailedMeasure(
       createFailedMeasureDto,
     );
   }
 
   @Get('/listFailedMeasures/')
-  listFailedMeasures(): Promise<HttpException | FailedMeasure[]> {
+  listFailedMeasures() {
     return this.failedMeasuresService.findAllFailedMeasures();
   }
 
   @Get('/findFailedMeasure/:id/')
-  findFailedMeasure(@Param('id') id: number): Promise<HttpException | FailedMeasure> {
+  findFailedMeasure(
+    @Param('id') id: number,
+  ) {
     return this.failedMeasuresService.findOneFailedMeasure(id);
   }
 
@@ -49,7 +49,7 @@ export class FailedMeasuresController {
   updateFailedMeasure(
     @Param('id') id: number,
     @Body() updateFailedMeasureDto: UpdateFailedMeasureDto,
-  ): Promise<HttpException> {
+  ) {
     return this.failedMeasuresService.updateFailedMeasure(
       id,
       updateFailedMeasureDto,
@@ -58,7 +58,7 @@ export class FailedMeasuresController {
 
   @Delete('/deleteFailedMeasure/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  deleteFailedMeasure(@Param('id') id: number): Promise<HttpException> {
+  deleteFailedMeasure(@Param('id') id: number) {
     return this.failedMeasuresService.deleteFailedMeasure(id);
   }
 }

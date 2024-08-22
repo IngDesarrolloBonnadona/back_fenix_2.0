@@ -31,7 +31,7 @@ export class CaseReportOriginalController {
   async createReportOriginal(
     @Body() createReportOriDto: CreateReportOriDto,
     @Ip() clientIp: string,
-  ): Promise<any> {
+  ) {
     return await this.CaseReportOriginalService.createReportOriginal(
       createReportOriDto,
       clientIp,
@@ -40,7 +40,7 @@ export class CaseReportOriginalController {
 
   @Get('/listReportsOriginal/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN)
-  async listReportsOriginal(): Promise<CaseReportOriginal[]> {
+  async listReportsOriginal() {
     return await this.CaseReportOriginalService.findAllReportsOriginal();
   }
 
@@ -48,7 +48,7 @@ export class CaseReportOriginalController {
   @Permission(permissions.SUPER_ADMIN)
   async findReportOriginal(
     @Param('id') id: string,
-  ): Promise<CaseReportOriginal> {
+  ) {
     return await this.CaseReportOriginalService.findOneReportOriginal(id);
   }
 
@@ -57,7 +57,7 @@ export class CaseReportOriginalController {
   // async updateReportOriginal(
   //   @Param('id') id: string,
   //   @Body() UpdateCaseReportOriginalDto: UpdateCaseReportOriginalDto,
-  // ): Promise<HttpException> {
+  // ) {
   //   return await this.CaseReportOriginalService.updateReportOriginal(
   //     id,
   //     UpdateCaseReportOriginalDto,
@@ -66,7 +66,7 @@ export class CaseReportOriginalController {
 
   @Delete('/deleteReportOriginal/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN)
-  async deleteReportOriginal(@Param('id') id: string): Promise<HttpException> {
+  async deleteReportOriginal(@Param('id') id: string) {
     return await this.CaseReportOriginalService.deleteReportOriginal(id);
   }
 }

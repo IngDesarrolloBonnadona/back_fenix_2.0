@@ -12,7 +12,7 @@ export class HttpPatientService {
   async getPatientData(
     idNumber: string,
     idType: string,
-  ): Promise<AxiosResponse<any>> {
+  ) {
     try {
       const url = `${process.env.URL_PATIENTS}/${idNumber}/${idType}`;
 

@@ -26,19 +26,17 @@ export class RiskFactorController {
 
   @Post('/createRiskFactor/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  createRiskFactor(
-    @Body() createRiskFactorDto: CreateRiskFactorDto,
-  ): Promise<HttpException> {
+  createRiskFactor(@Body() createRiskFactorDto: CreateRiskFactorDto) {
     return this.riskFactorService.createRiskFactor(createRiskFactorDto);
   }
 
   @Get('/listRiskFactors/')
-  listRiskFactors(): Promise<HttpException | RiskFactor[]> {
+  listRiskFactors() {
     return this.riskFactorService.findAllRiskFactors();
   }
 
   @Get('/findRiskFactor/:id')
-  findRiskFactor(@Param('id') id: number): Promise<HttpException | RiskFactor> {
+  findRiskFactor(@Param('id') id: number) {
     return this.riskFactorService.findOneRiskFactor(id);
   }
 
@@ -47,13 +45,13 @@ export class RiskFactorController {
   updateRiskFactor(
     @Param('id') id: number,
     @Body() updateRiskFactorDto: UpdateRiskFactorDto,
-  ): Promise<HttpException> {
+  ) {
     return this.riskFactorService.updateRiskFactor(id, updateRiskFactorDto);
   }
 
   @Delete('/deleteRiskFactor/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  deleteRiskFactor(@Param('id') id: number): Promise<HttpException> {
+  deleteRiskFactor(@Param('id') id: number) {
     return this.riskFactorService.deleteRiskFactor(id);
   }
 }

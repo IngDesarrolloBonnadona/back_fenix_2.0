@@ -30,7 +30,7 @@ export class MovementReportController {
   @Permission(permissions.SUPER_ADMIN)
   createMovementReport(
     @Body() createMovementReportDto: CreateMovementReportDto,
-  ): Promise<HttpException> {
+  ) {
     return this.movementReportService.createMovementReport(
       createMovementReportDto,
     );
@@ -38,13 +38,13 @@ export class MovementReportController {
 
   @Get('/listMovementReports/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN)
-  listMovementReport(): Promise<MovementReport[]> {
+  listMovementReport() {
     return this.movementReportService.findAllMovementReports();
   }
 
   @Get('/findMovementReport/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN)
-  findMovementReport(@Param('id') id: number): Promise<MovementReport> {
+  findMovementReport(@Param('id') id: number) {
     return this.movementReportService.findOneMovementReport(id);
   }
 
@@ -53,7 +53,7 @@ export class MovementReportController {
   updateMovementReport(
     @Param('id') id: number,
     @Body() updateMovementReportDto: UpdateMovementReportDto,
-  ): Promise<HttpException> {
+  ) {
     return this.movementReportService.updateMovementReport(
       id,
       updateMovementReportDto,
@@ -62,7 +62,7 @@ export class MovementReportController {
 
   @Delete('/deleteMovementReport/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN)
-  deleteMovementReport(@Param('id') id: number): Promise<HttpException> {
+  deleteMovementReport(@Param('id') id: number) {
     return this.movementReportService.deleteMovementReport(id);
   }
 }

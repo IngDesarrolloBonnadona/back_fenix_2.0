@@ -26,19 +26,17 @@ export class FluidTypeController {
 
   @Post('/createFluidType/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  createFluidType(
-    @Body() createFluidTypeDto: CreateFluidTypeDto,
-  ): Promise<HttpException> {
+  createFluidType(@Body() createFluidTypeDto: CreateFluidTypeDto) {
     return this.fluidTypeService.createFluidType(createFluidTypeDto);
   }
 
   @Get('/listFluidTypes/')
-  listFluidType(): Promise<HttpException | FluidType[]> {
+  listFluidType() {
     return this.fluidTypeService.findAllFluidTypes();
   }
 
   @Get('/findFluidType/:id/')
-  findFluidType(@Param('id') id: number): Promise<HttpException | FluidType> {
+  findFluidType(@Param('id') id: number) {
     return this.fluidTypeService.findOneFluidType(id);
   }
 
@@ -47,13 +45,13 @@ export class FluidTypeController {
   updateFluidTypes(
     @Param('id') id: number,
     @Body() updateFluidTypeDto: UpdateFluidTypeDto,
-  ): Promise<HttpException> {
+  ) {
     return this.fluidTypeService.updateFluidType(id, updateFluidTypeDto);
   }
 
   @Delete('/deleteFluidType/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  deleteFluidTypes(@Param('id') id: number): Promise<HttpException> {
+  deleteFluidTypes(@Param('id') id: number) {
     return this.fluidTypeService.deleteFluidType(id);
   }
 }

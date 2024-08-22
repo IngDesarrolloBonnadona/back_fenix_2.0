@@ -28,19 +28,17 @@ export class RiskLevelController {
 
   @Post('/createRiskLevel/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  createRiskLevel(
-    @Body() createRiskLevelDto: CreateRiskLevelDto,
-  ): Promise<HttpException> {
+  createRiskLevel(@Body() createRiskLevelDto: CreateRiskLevelDto) {
     return this.riskLevelService.createRiskLevel(createRiskLevelDto);
   }
 
   @Get('/listRiskLevels/')
-  listRiskLevel(): Promise<HttpException | RiskLevel[]> {
+  listRiskLevel() {
     return this.riskLevelService.findAllRiskLevel();
   }
 
   @Get('/findRiskLevel/:id/')
-  findRiskLevel(@Param('id') id: number): Promise<HttpException | RiskLevel> {
+  findRiskLevel(@Param('id') id: number) {
     return this.riskLevelService.findOneRiskLevel(id);
   }
 
@@ -49,13 +47,13 @@ export class RiskLevelController {
   updateRiskLevel(
     @Param('id') id: number,
     @Body() updateRiskLevelDto: UpdateRiskLevelDto,
-  ): Promise<HttpException> {
+  ) {
     return this.riskLevelService.updateRiskLevel(id, updateRiskLevelDto);
   }
 
   @Delete('/deleteRiskLevel/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  deleteRiskLevel(@Param('id') id: number): Promise<HttpException> {
+  deleteRiskLevel(@Param('id') id: number) {
     return this.riskLevelService.deleteRiskLevel(id);
   }
 }

@@ -26,21 +26,19 @@ export class UnsafeActionController {
 
   @Post('/createUnsafeAction/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  createUnsafeAction(
-    @Body() createUnsafeActionDto: CreateUnsafeActionDto,
-  ): Promise<HttpException> {
+  createUnsafeAction(@Body() createUnsafeActionDto: CreateUnsafeActionDto) {
     return this.unsafeActionService.createUnsafeAction(createUnsafeActionDto);
   }
 
   @Get('/listUnsafeActions/')
-  listUnsafeActions(): Promise<HttpException | UnsafeAction[]> {
+  listUnsafeActions() {
     return this.unsafeActionService.findAllUnsafeActions();
   }
 
   @Get('/findUnsafeAction/:id/')
   findUnsafeAction(
     @Param('id') id: number,
-  ): Promise<HttpException | UnsafeAction> {
+  ) {
     return this.unsafeActionService.findOneUnsafeActions(id);
   }
 
@@ -49,7 +47,7 @@ export class UnsafeActionController {
   updateUnsafeAction(
     @Param('id') id: number,
     @Body() updateUnsafeActionDto: UpdateUnsafeActionDto,
-  ): Promise<HttpException> {
+  ) {
     return this.unsafeActionService.updateUnsafeAction(
       id,
       updateUnsafeActionDto,
@@ -58,7 +56,7 @@ export class UnsafeActionController {
 
   @Delete('/deleteUnsafeAction/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  deleteUnsafeAction(@Param('id') id: number): Promise<HttpException> {
+  deleteUnsafeAction(@Param('id') id: number) {
     return this.unsafeActionService.deleteUnsafeAction(id);
   }
 }

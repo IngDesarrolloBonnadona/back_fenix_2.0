@@ -21,12 +21,12 @@ export class DeviceController {
   constructor(private readonly deviceService: DeviceService) {}
 
   @Get('/listDevice')
-  listDevice(): Promise<Device[]> {
+  listDevice() {
     return this.deviceService.findAllDevices();
   }
 
   @Get('/findDevice/:id')
-  findDevice(@Param('id') id: number): Promise<Device> {
+  findDevice(@Param('id') id: number) {
     return this.deviceService.findOneDevice(id);
   }
 
@@ -34,12 +34,12 @@ export class DeviceController {
   updateDevice(
     @Param('id') id: number,
     @Body() updateDeviceDto: UpdateDeviceDto,
-  ): Promise<HttpException> {
+  ) {
     return this.deviceService.updateDevice(id, updateDeviceDto);
   }
 
   @Delete('/deleteDevice/:id')
-  deleteDevice(@Param('id') id: number): Promise<HttpException> {
+  deleteDevice(@Param('id') id: number) {
     return this.deviceService.deleteDevice(id);
   }
 }

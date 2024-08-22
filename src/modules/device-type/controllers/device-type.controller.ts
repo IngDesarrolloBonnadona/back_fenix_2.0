@@ -28,17 +28,17 @@ export class DeviceTypeController {
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
   createDeviceType(
     @Body() createDeviceTypeDto: CreateDeviceTypeDto,
-  ): Promise<HttpException> {
+  ) {
     return this.deviceTypeService.createDeviceType(createDeviceTypeDto);
   }
 
   @Get('/listDeviceTypes/')
-  listDeviceTypes(): Promise<HttpException | DeviceType[]> {
+  listDeviceTypes() {
     return this.deviceTypeService.findAllDeviceTypes();
   }
 
   @Get('/findDeviceType/:id')
-  findDeviceType(@Param('id') id: number): Promise<HttpException | DeviceType> {
+  findDeviceType(@Param('id') id: number) {
     return this.deviceTypeService.findOneDeviceType(id);
   }
 
@@ -47,13 +47,13 @@ export class DeviceTypeController {
   updateDeviceType(
     @Param('id') id: number,
     @Body() updateDeviceTypeDto: UpdateDeviceTypeDto,
-  ): Promise<HttpException> {
+  ) {
     return this.deviceTypeService.updateDeviceType(id, updateDeviceTypeDto);
   }
 
   @Delete('/deleteDeviceType/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  deleteDeviceType(@Param('id') id: number): Promise<HttpException> {
+  deleteDeviceType(@Param('id') id: number) {
     return this.deviceTypeService.deleteDeviceType(id);
   }
 }

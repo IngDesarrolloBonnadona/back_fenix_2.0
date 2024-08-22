@@ -28,26 +28,24 @@ export class SubOriginController {
 
   @Post('/createSubOrigin/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  createSubOrigin(
-    @Body() createSubOriginDto: CreateSubOriginDto,
-  ): Promise<HttpException> {
+  createSubOrigin(@Body() createSubOriginDto: CreateSubOriginDto) {
     return this.subOriginService.createSubOrigin(createSubOriginDto);
   }
 
   @Get('/listSubOrigins/')
-  listSubOrigins(): Promise<SubOrigin[] | HttpException> {
+  listSubOrigins() {
     return this.subOriginService.findAllSubOrigins();
   }
 
   @Get('/findSubOrigin/:id/')
-  findSubOrigin(@Param('id') id: number): Promise<SubOrigin | HttpException> {
+  findSubOrigin(@Param('id') id: number) {
     return this.subOriginService.findOneSubOrigin(id);
   }
 
   @Get('/findSubOriginByOriginId/:originId')
   findSubOriginByOriginId(
     @Param('originId') originId: number,
-  ): Promise<SubOrigin[] | HttpException> {
+  ) {
     return this.subOriginService.findSubOriginByOriginId(originId);
   }
 
@@ -56,13 +54,13 @@ export class SubOriginController {
   updateSubOrigin(
     @Param('id') id: number,
     @Body() updateSubOriginDto: UpdateSubOriginDto,
-  ): Promise<HttpException> {
+  ) {
     return this.subOriginService.updateSubOrigin(id, updateSubOriginDto);
   }
 
   @Delete('/deleteSubOrigin/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  deleteSubOrigin(@Param('id') id: number): Promise<HttpException> {
+  deleteSubOrigin(@Param('id') id: number) {
     return this.subOriginService.deleteSubOrigin(id);
   }
 }

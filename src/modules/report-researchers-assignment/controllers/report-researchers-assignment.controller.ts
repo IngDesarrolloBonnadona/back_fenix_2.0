@@ -32,7 +32,7 @@ export class ReportResearchersAssignmentController {
   @Permission(permissions.SUPER_ADMIN, permissions.ANALYST)
   filterResearchers(
     @Query() query: QueryReportResearchersAssignmentDto,
-  ): Promise<FilterReportResearcherAssignmentDto[]> {
+  ) {
     const filter = new FilterReportResearcherAssignmentDto();
     filter.empImmediateBoss = query.empImmediateBoss;
     filter.empPosition = query.empPosition;
@@ -43,7 +43,7 @@ export class ReportResearchersAssignmentController {
   @Get('findAssignedResearch/:id')
   findAssignedResearch(
     @Param('id') id: number,
-  ): Promise<ReportResearcherAssignment> {
+  ) {
     return this.researchersService.findOneAssignedResearch(id);
   }
 
@@ -81,7 +81,7 @@ export class ReportResearchersAssignmentController {
     @Body() createResearcherDto: CreateReportResearcherAssignmentDto,
     @Ip() clientIp: string,
     @Param('idAnalyst') idAnalyst: string,
-  ): Promise<HttpException> {
+  ) {
     return this.researchersService.assingResearcher(
       createResearcherDto,
       clientIp,
@@ -96,7 +96,7 @@ export class ReportResearchersAssignmentController {
     @Ip() clientIp: string,
     @Param('idAnalyst') idAnalyst: string,
     @Param('idCaseReportValidate') idCaseReportValidate: string,
-  ): Promise<HttpException> {
+  ) {
     return this.researchersService.reAssingResearcher(
       updateResearcherDto,
       clientIp,
@@ -113,7 +113,7 @@ export class ReportResearchersAssignmentController {
     @Param('idResearcher') idResearcher: string,
     @Param('idCaseReportValidate') idCaseReportValidate: string,
     @Ip() clientIp: string,
-  ): Promise<HttpException> {
+  ) {
     return this.researchersService.returnCaseToAnalyst(
       idCaseReportValidate,
       clientIp,
@@ -123,7 +123,7 @@ export class ReportResearchersAssignmentController {
 
   @Delete('deleteAssignedResearch/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.ANALYST)
-  deleteAssignedResearch(@Param('id') id: number): Promise<HttpException> {
+  deleteAssignedResearch(@Param('id') id: number) {
     return this.researchersService.deleteAssignedResearcher(id);
   }
 }

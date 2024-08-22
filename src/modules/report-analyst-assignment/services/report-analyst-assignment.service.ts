@@ -503,7 +503,7 @@ export class ReportAnalystAssignmentService {
     caseTypeId?: number,
     eventId?: number,
     priorityId?: number,
-  ): Promise<CaseReportValidateEntity[]> {
+  ) {
     const query = this.caseReportValidateRepository
       .createQueryBuilder('crv')
       .innerJoinAndSelect('crv.reportAnalystAssignment', 'raa')
@@ -566,7 +566,7 @@ export class ReportAnalystAssignmentService {
 
   async findAssignedAnalystsByPosition(
     query: QueryReportAnalystAssignmentDto,
-  ): Promise<ReportAnalystAssignmentEntity[]> {
+  ) {
     const where: FindOptionsWhere<ReportAnalystAssignmentEntity> = {};
 
     if (query.positionId) {
@@ -599,7 +599,7 @@ export class ReportAnalystAssignmentService {
 
   async findOneAssignedAnalyst(
     id: number,
-  ): Promise<ReportAnalystAssignmentEntity> {
+  ) {
     if (!id) {
       throw new HttpException(
         'El identificador del analista asignado es requerido.',

@@ -30,19 +30,21 @@ export class ResearchInstrumentController {
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
   createResearchInstrument(
     @Body() createResearchInstrumentDto: CreateResearchInstrumentDto,
-  ): Promise<HttpException> {
+  ) {
     return this.researchInstrumentService.createResearchInstrument(
       createResearchInstrumentDto,
     );
   }
 
   @Get('/listResearchInstruments/')
-  listResearchInstruments(): Promise<HttpException | ResearchInstrument[]> {
+  listResearchInstruments() {
     return this.researchInstrumentService.findAllResearchInstruments();
   }
 
   @Get('/findResearchInstrument/:id')
-  findResearchInstrument(@Param('id') id: number): Promise<HttpException | ResearchInstrument> {
+  findResearchInstrument(
+    @Param('id') id: number,
+  ) {
     return this.researchInstrumentService.findOneResearchInstrument(id);
   }
 

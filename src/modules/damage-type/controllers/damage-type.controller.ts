@@ -28,17 +28,17 @@ export class DamageTypeController {
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
   createDamageType(
     @Body() createDamageTypeDto: CreateDamageTypeDto,
-  ): Promise<HttpException> {
+  ) {
     return this.damageTypeService.createDamageType(createDamageTypeDto);
   }
 
   @Get('/listDamageTypes/')
-  listDamageTypes(): Promise<HttpException | DamageType[]> {
+  listDamageTypes() {
     return this.damageTypeService.findAllDamageType();
   }
 
   @Get('/findDamageType/:id')
-  findDamageType(@Param('id') id: number): Promise<HttpException | DamageType> {
+  findDamageType(@Param('id') id: number) {
     return this.damageTypeService.findOneDamageType(id);
   }
 
@@ -47,13 +47,13 @@ export class DamageTypeController {
   updateDamageType(
     @Param('id') id: number,
     @Body() updateDamageTypeDto: UpdateDamageTypeDto,
-  ): Promise<HttpException> {
+  ) {
     return this.damageTypeService.updateDamageType(id, updateDamageTypeDto);
   }
 
   @Delete('/deleteDamageType/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  deleteDamageType(@Param('id') id: number): Promise<HttpException> {
+  deleteDamageType(@Param('id') id: number) {
     return this.damageTypeService.deleteDamageType(id);
   }
 }

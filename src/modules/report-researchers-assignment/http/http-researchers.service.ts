@@ -9,7 +9,7 @@ require('dotenv').config();
 export class HttpResearchersService {
   constructor(private readonly httpResearchersService: NestHttpService) {}
 
-  async getResearchersData(): Promise<AxiosResponse<any>> {
+  async getResearchersData() {
     try {
       const url = process.env.URL_RESEARCHERS;
       const response = firstValueFrom(

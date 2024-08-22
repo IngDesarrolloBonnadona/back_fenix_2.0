@@ -8,12 +8,7 @@ export class UserController {
   constructor(private readonly userPermissionsService: UserService) {}
 
   @Get('/listPermissions/:userId')
-  listPermissionsUser(@Param('userId') userId: string): Promise<
-    {
-      nombre: string;
-      authorized: boolean;
-    }[]
-  > {
+  listPermissionsUser(@Param('userId') userId: string) {
     return this.userPermissionsService.getUserPermissions(userId);
   }
 }

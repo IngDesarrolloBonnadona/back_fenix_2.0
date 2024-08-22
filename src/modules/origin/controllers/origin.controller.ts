@@ -28,19 +28,17 @@ export class OriginController {
 
   @Post('/createOrigin/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  createOrigin(
-    @Body() createOriginDto: CreateOriginDto,
-  ): Promise<HttpException> {
+  createOrigin(@Body() createOriginDto: CreateOriginDto) {
     return this.originService.createOrigin(createOriginDto);
   }
 
   @Get('/listOrigins/')
-  listOrigins(): Promise<Origin[]> {
+  listOrigins() {
     return this.originService.findAllOrigins();
   }
 
   @Get('/findOrigin/:id/')
-  findOrigin(@Param('id') id: number): Promise<Origin> {
+  findOrigin(@Param('id') id: number) {
     return this.originService.findOneOrigin(id);
   }
 
@@ -49,13 +47,13 @@ export class OriginController {
   updateOrigin(
     @Param('id') id: number,
     @Body() updateOriginDto: UpdateOriginDto,
-  ): Promise<HttpException> {
+  ) {
     return this.originService.updateOrigin(id, updateOriginDto);
   }
 
   @Delete('/deleteOrigin/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  deleteOrigin(@Param('id') id: number): Promise<HttpException> {
+  deleteOrigin(@Param('id') id: number) {
     return this.originService.deleteOrigin(id);
   }
 }

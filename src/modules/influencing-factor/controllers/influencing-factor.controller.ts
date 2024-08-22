@@ -30,19 +30,21 @@ export class InfluencingFactorController {
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
   createInfluencingFactor(
     @Body() createInfluencingFactorDto: CreateInfluencingFactorDto,
-  ): Promise<HttpException> {
+  ) {
     return this.influencingFactorService.createInfluencingFactor(
       createInfluencingFactorDto,
     );
   }
 
   @Get('/listInfluencingFactors/')
-  listInfluencingFactors(): Promise<HttpException | InfluencingFactor[]> {
+  listInfluencingFactors() {
     return this.influencingFactorService.findAllInfluencingFactors();
   }
 
   @Get('/findInfluencingFactor/:id')
-  findInfluencingFactor(@Param('id') id: number): Promise<HttpException | InfluencingFactor> {
+  findInfluencingFactor(
+    @Param('id') id: number,
+  ) {
     return this.influencingFactorService.findOneInfluencingFactor(id);
   }
 
@@ -51,7 +53,7 @@ export class InfluencingFactorController {
   updateInfluencingFactor(
     @Param('id') id: number,
     @Body() updateInfluencingFactorDto: UpdateInfluencingFactorDto,
-  ): Promise<HttpException> {
+  ) {
     return this.influencingFactorService.updateInfluencingFactor(
       id,
       updateInfluencingFactorDto,
@@ -60,7 +62,7 @@ export class InfluencingFactorController {
 
   @Delete('/deleteInfluencingFactor/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  deleteInfluencingFactor(@Param('id') id: number): Promise<HttpException> {
+  deleteInfluencingFactor(@Param('id') id: number) {
     return this.influencingFactorService.deleteInfluencingFactor(id);
   }
 }

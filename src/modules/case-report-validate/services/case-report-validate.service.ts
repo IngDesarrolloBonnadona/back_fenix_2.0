@@ -156,7 +156,7 @@ export class CaseReportValidateService {
     clientIp: string,
     caseReportId: string,
     idValidator: string,
-  ): Promise<any> {
+  ) {
     await ValDtoValidator(createReportValDto, this.caseTypeRepository);
 
     const queryRunner = this.dataSource.createQueryRunner();
@@ -390,7 +390,7 @@ export class CaseReportValidateService {
     queryRunner: QueryRunner,
     caseReportOriginal: CreateCaseReportOriginalDto,
     caseReportOriginalId: string,
-  ): Promise<CaseReportValidateEntity> {
+  ) {
     const caseReportValidate = this.caseReportValidateRepository.create({
       val_cr_consecutive_id: 1,
       val_cr_previous_id: 0,
@@ -442,7 +442,7 @@ export class CaseReportValidateService {
     priorityId?: number,
     unitId?: number,
     severityClasificationId?: number,
-  ): Promise<CaseReportValidateEntity[]> {
+  ) {
     const where: FindOptionsWhere<CaseReportValidateEntity> = {};
 
     if (creationDate) {
@@ -520,7 +520,7 @@ export class CaseReportValidateService {
     patientDoc?: string,
     priorityId?: number,
     creationDate?: Date,
-  ): Promise<CaseReportValidateEntity[]> {
+  ) {
     const where: FindOptionsWhere<CaseReportValidateEntity> = {};
 
     if (creationDate) {
@@ -584,7 +584,7 @@ export class CaseReportValidateService {
     patientDoc?: string,
     priorityId?: number,
     creationDate?: Date,
-  ): Promise<CaseReportValidateEntity[]> {
+  ) {
     const where: FindOptionsWhere<CaseReportValidateEntity> = {};
 
     if (creationDate) {
@@ -656,7 +656,7 @@ export class CaseReportValidateService {
     return caseReportsValidate;
   }
 
-  async findAllReportsValidate(): Promise<CaseReportValidateEntity[]> {
+  async findAllReportsValidate() {
     const caseReportValidates = await this.caseReportValidateRepository.find({
       where: { val_cr_validated: false, val_cr_status: true },
       relations: {
@@ -692,7 +692,7 @@ export class CaseReportValidateService {
     return caseReportValidates;
   }
 
-  async findOneReportValidate(id: string): Promise<CaseReportValidateEntity> {
+  async findOneReportValidate(id: string) {
     if (!id) {
       throw new HttpException(
         'El identificador del caso es requerido.',
@@ -738,7 +738,7 @@ export class CaseReportValidateService {
 
   async findOneReportValidateByConsecutive(
     consecutive: string,
-  ): Promise<CaseReportValidateEntity[]> {
+  ) {
     if (!consecutive) {
       throw new HttpException(
         'El consecutivo del caso es requerido.',

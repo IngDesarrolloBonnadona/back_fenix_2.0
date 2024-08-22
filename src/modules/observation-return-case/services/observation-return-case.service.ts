@@ -76,7 +76,7 @@ export class ObservationReturnCaseService {
     );
   }
 
-  async findAllObservationReturnCase(): Promise<ObservationReturnCaseEntity[]> {
+  async findAllObservationReturnCase() {
     const observationReturns = await this.observationReturnRepository.find({
       where: {
         rec_o_status: true,

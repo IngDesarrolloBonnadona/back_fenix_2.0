@@ -1,4 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus, Put } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  HttpException,
+  HttpStatus,
+  Put,
+} from '@nestjs/common';
 import { MedicineService } from '../services/medicine.service';
 import { CreateMedicineDto } from '../dto/create-medicine.dto';
 import { UpdateMedicineDto } from '../dto/update-medicine.dto';
@@ -11,27 +22,30 @@ export class MedicineController {
   constructor(private readonly medicineService: MedicineService) {}
 
   // @Post('/createMedicine')
-  // createMedicine(@Body() createMedicineDto: CreateMedicineDto): Promise<Medicine> {
+  // createMedicine(@Body() createMedicineDto: CreateMedicineDto) {
   //   return this.medicineService.createMedicine(createMedicineDto);
   // }
 
   @Get('/listMedicines')
-  listMedicines(): Promise<Medicine[]> {
+  listMedicines() {
     return this.medicineService.findAllMedicines();
   }
 
   @Get('/findMedicine/:id')
-  findMedicine(@Param('id') id: number): Promise<Medicine> {
+  findMedicine(@Param('id') id: number) {
     return this.medicineService.findOneMedicine(id);
   }
 
   @Patch('/updateMedicine/:id')
-  updateMedicine(@Param('id') id: number, @Body() updateMedicineDto: UpdateMedicineDto): Promise<HttpException> {
+  updateMedicine(
+    @Param('id') id: number,
+    @Body() updateMedicineDto: UpdateMedicineDto,
+  ) {
     return this.medicineService.updateMedicine(id, updateMedicineDto);
   }
 
   @Delete('/DeleteMedicine/:id')
-  DeleteMedicine(@Param('id') id: number): Promise<HttpException> {
+  DeleteMedicine(@Param('id') id: number) {
     return this.medicineService.deleteMedicine(id);
   }
 }

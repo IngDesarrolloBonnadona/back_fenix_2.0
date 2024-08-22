@@ -26,21 +26,21 @@ export class SafetyBarriersController {
 
   @Post('/createSafetyBarrier/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  createSafetyBarrier(
-    @Body() createSafetyBarrierDto: CreateSafetyBarrierDto,
-  ): Promise<HttpException> {
+  createSafetyBarrier(@Body() createSafetyBarrierDto: CreateSafetyBarrierDto) {
     return this.safetyBarriersService.createSafetyBarrier(
       createSafetyBarrierDto,
     );
   }
 
   @Get('/listSafetyBarriers')
-  listSafetyBarriers(): Promise<SafetyBarrier[] | HttpException> {
+  listSafetyBarriers() {
     return this.safetyBarriersService.findAllSafetyBarriers();
   }
 
   @Get('/findSafetyBarrier/:id')
-  findSafetyBarrier(@Param('id') id: number): Promise<SafetyBarrier | HttpException> {
+  findSafetyBarrier(
+    @Param('id') id: number,
+  ) {
     return this.safetyBarriersService.findOneSafetyBarrier(id);
   }
 
@@ -49,7 +49,7 @@ export class SafetyBarriersController {
   updateSafetyBarrier(
     @Param('id') id: number,
     @Body() updateSafetyBarrierDto: UpdateSafetyBarrierDto,
-  ): Promise<HttpException> {
+  ) {
     return this.safetyBarriersService.updateSafetyBarrier(
       id,
       updateSafetyBarrierDto,
@@ -58,7 +58,7 @@ export class SafetyBarriersController {
 
   @Delete('/deleteSafetyBarrier/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  deleteSafetyBarrier(@Param('id') id: number): Promise<HttpException> {
+  deleteSafetyBarrier(@Param('id') id: number) {
     return this.safetyBarriersService.deleteSafetyBarrier(id);
   }
 }

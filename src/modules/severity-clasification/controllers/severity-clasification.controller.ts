@@ -30,21 +30,21 @@ export class SeverityClasificationController {
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
   createSeverityClasification(
     @Body() createSeverityClasificationDto: CreateSeverityClasificationDto,
-  ): Promise<HttpException> {
+  ) {
     return this.severityClasificationService.createSeverityClasification(
       createSeverityClasificationDto,
     );
   }
 
   @Get('/listSeverityClasifications/')
-  listSeverityClasifications(): Promise<SeverityClasification[] | HttpException> {
+  listSeverityClasifications() {
     return this.severityClasificationService.findAllSeverityClasifications();
   }
 
   @Get('findSeverityClasification/:id/')
   findSeverityClasification(
     @Param('id') id: number,
-  ): Promise<SeverityClasification | HttpException> {
+  ) {
     return this.severityClasificationService.findOneSeverityClasification(id);
   }
 
@@ -53,7 +53,7 @@ export class SeverityClasificationController {
   updateSeverityClasification(
     @Param('id') id: number,
     @Body() updateSeverityClasificationDto: UpdateSeverityClasificationDto,
-  ): Promise<HttpException> {
+  ) {
     return this.severityClasificationService.updateSeverityClasification(
       id,
       updateSeverityClasificationDto,
@@ -62,7 +62,7 @@ export class SeverityClasificationController {
 
   @Delete('/deleteSeverityClasification/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  deleteSeverityClasification(@Param('id') id: number): Promise<HttpException> {
+  deleteSeverityClasification(@Param('id') id: number) {
     return this.severityClasificationService.deleteSeverityClasification(id);
   }
 }

@@ -38,7 +38,7 @@ export class ObservationReturnCaseController {
     @Param('idUser') idUser: number,
     @Param('idCaseValidate') idCaseValidate: string,
     @Body() createObservationReturnCaseDto: CreateObservationReturnCaseDto,
-  ): Promise<HttpException> {
+  ) {
     return this.observationReturnCaseService.createObservationReturnCase(
       createObservationReturnCaseDto,
       idUser,
@@ -47,14 +47,14 @@ export class ObservationReturnCaseController {
   }
 
   @Get('/listObservationReturnCases')
-  listObservationReturnCases(): Promise<ObservationReturnCase[]> {
+  listObservationReturnCases() {
     return this.observationReturnCaseService.findAllObservationReturnCase();
   }
 
   @Get('/findObservationReturnCase/:id')
   findObservationReturnCase(
     @Param('id') id: number,
-  ): Promise<ObservationReturnCase> {
+  ) {
     return this.observationReturnCaseService.findOneObservationReturnCase(id);
   }
 
@@ -63,7 +63,7 @@ export class ObservationReturnCaseController {
   updateObservationReturnCase(
     @Param('id') id: number,
     @Body() updateObservationReturnCaseDto: UpdateObservationReturnCaseDto,
-  ): Promise<HttpException> {
+  ) {
     return this.observationReturnCaseService.updateObservationReturnCase(
       id,
       updateObservationReturnCaseDto,
@@ -72,7 +72,7 @@ export class ObservationReturnCaseController {
 
   @Delete('deleteObservationReturnCase:id/:idCaseValidate/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN)
-  deleteObservationReturnCase(@Param('id') id: number): Promise<HttpException> {
+  deleteObservationReturnCase(@Param('id') id: number) {
     return this.observationReturnCaseService.deleteObservationReturnCase(id);
   }
 }

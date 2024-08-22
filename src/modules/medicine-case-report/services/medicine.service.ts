@@ -37,7 +37,7 @@ export class MedicineService {
     }
   }
 
-  async findAllMedicines(): Promise<MedicineEntity[]> {
+  async findAllMedicines() {
     const medicines = await this.medicineRepository.find({
       order: {
         createdAt: 'DESC',
@@ -54,7 +54,7 @@ export class MedicineService {
     return medicines;
   }
 
-  async findOneMedicine(id: number): Promise<MedicineEntity> {
+  async findOneMedicine(id: number) {
     if (!id) {
       throw new HttpException(
         'El identificador del medicamento es requerido.',

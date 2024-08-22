@@ -31,19 +31,19 @@ export class CharacterizationCasesController {
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
   create(
     @Body() createCharacterizationCaseDto: CreateCharacterizationCaseDto,
-  ): Promise<HttpException> {
+  ) {
     return this.characterizationCasesService.createCharacterization(
       createCharacterizationCaseDto,
     );
   }
 
   @Get('/listCharacterizationsCase/')
-  listCharacterizations(): Promise<HttpException | CharacterizationCase[]> {
+  listCharacterizations() {
     return this.characterizationCasesService.findAllCharacterizations();
   }
 
   @Get('/findCharacterizationCase/:id/')
-  findCharacterization(@Param('id') id: number): Promise<HttpException | CharacterizationCase> {
+  findCharacterization(@Param('id') id: number) {
     return this.characterizationCasesService.findOneCharacterization(id);
   }
 
@@ -52,7 +52,7 @@ export class CharacterizationCasesController {
   updateCharacterization(
     @Param('id') id: number,
     @Body() updateCharacterizationCaseDto: UpdateCharacterizationCaseDto,
-  ): Promise<HttpException> {
+  ) {
     return this.characterizationCasesService.updateCharacterization(
       id,
       updateCharacterizationCaseDto,
@@ -61,7 +61,7 @@ export class CharacterizationCasesController {
 
   @Delete('/deleteCharacterization/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  deleteCharacterization(@Param('id') id: number): Promise<HttpException> {
+  deleteCharacterization(@Param('id') id: number) {
     return this.characterizationCasesService.deleteCharacterization(id);
   }
 }

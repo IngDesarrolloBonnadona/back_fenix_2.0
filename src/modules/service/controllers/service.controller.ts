@@ -28,19 +28,17 @@ export class ServiceController {
 
   @Post('/createService/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  createService(
-    @Body() createServiceDto: CreateServiceDto,
-  ): Promise<HttpException> {
+  createService(@Body() createServiceDto: CreateServiceDto) {
     return this.serviceService.createService(createServiceDto);
   }
 
   @Get('/listServices/')
-  listServices(): Promise<Service[] | HttpException> {
+  listServices() {
     return this.serviceService.findAllServices();
   }
 
   @Get('/findService/:id/')
-  findService(@Param('id') id: number): Promise<Service | HttpException> {
+  findService(@Param('id') id: number) {
     return this.serviceService.findOneService(id);
   }
 
@@ -49,13 +47,13 @@ export class ServiceController {
   updateService(
     @Param('id') id: number,
     @Body() updateServiceDto: UpdateServiceDto,
-  ): Promise<HttpException> {
+  ) {
     return this.serviceService.updateService(id, updateServiceDto);
   }
 
   @Delete('/deleteService/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  deleteService(@Param('id') id: number): Promise<HttpException> {
+  deleteService(@Param('id') id: number) {
     return this.serviceService.deleteService(id);
   }
 }
