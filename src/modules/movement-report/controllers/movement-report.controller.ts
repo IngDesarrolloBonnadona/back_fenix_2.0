@@ -36,14 +36,12 @@ export class MovementReportController {
     );
   }
 
-  @Get('/listMovementReports/:userIdPermission')
-  @Permission(permissions.SUPER_ADMIN)
+  @Get('/listMovementReports/')
   listMovementReport() {
     return this.movementReportService.findAllMovementReports();
   }
 
-  @Get('/findMovementReport/:id/:userIdPermission')
-  @Permission(permissions.SUPER_ADMIN)
+  @Get('/findMovementReport/:id/')
   findMovementReport(@Param('id') id: number) {
     return this.movementReportService.findOneMovementReport(id);
   }
