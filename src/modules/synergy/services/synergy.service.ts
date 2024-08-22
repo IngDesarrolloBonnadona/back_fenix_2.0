@@ -4,7 +4,6 @@ import { UpdateSynergyDto } from '../dto/update-synergy.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Synergy as SynergyEntity } from '../entities/synergy.entity';
 import { In, Repository } from 'typeorm';
-import { CaseReportValidateService } from 'src/modules/case-report-validate/services/case-report-validate.service';
 import { CaseType as CaseTypeEntity } from 'src/modules/case-type/entities/case-type.entity';
 import { caseTypeReport } from 'src/utils/enums/caseType-report.enum';
 import { LogService } from 'src/modules/log/services/log.service';
@@ -23,9 +22,10 @@ export class SynergyService {
     private readonly caseTypeRepository: Repository<CaseTypeEntity>,
     @InjectRepository(CaseReportValidateEntity)
     private readonly caseReportValidateRepository: Repository<CaseReportValidateEntity>,
+    @InjectRepository(MovementReportEntity)
+    private readonly movementReportRepository: Repository<MovementReportEntity>,
 
     private readonly logService: LogService,
-    private readonly movementReportService: MovementReportService,
   ) {}
 
   async createSynergy(
@@ -77,10 +77,14 @@ export class SynergyService {
       );
     }
 
-    const movementReportFound =
-      await this.movementReportService.findOneMovementReportByName(
-        movementReport.CASE_RAISED_SYNERGY_COMMITTEE,
-      );
+    // const movementReportFound =
+    //   await this.movementReportService.findOneMovementReportByName(
+    //     movementReport.CASE_RAISED_SYNERGY_COMMITTEE,
+    //   );
+
+    const movementReportFound = await this.movementReportRepository.findOne({
+      where: { mov_r_name: movementReport.CASE_RAISED_SYNERGY_COMMITTEE },
+    });
 
     const invalidSynergyCodes = existingCaseValidate
       .filter(
@@ -266,10 +270,14 @@ export class SynergyService {
 
     const synergy = await this.findOneSynergy(id);
 
-    const movementReportFound =
-      await this.movementReportService.findOneMovementReportByName(
-        movementReport.SOLUTION_CASE_SYNERGY,
-      );
+    // const movementReportFound =
+    //   await this.movementReportService.findOneMovementReportByName(
+    //     movementReport.SOLUTION_CASE_SYNERGY,
+    //   );
+
+    const movementReportFound = await this.movementReportRepository.findOne({
+      where: { mov_r_name: movementReport.SOLUTION_CASE_SYNERGY },
+    });
 
     const updateStatusSynergy = await this.synergyRepository.update(
       synergy.id,
