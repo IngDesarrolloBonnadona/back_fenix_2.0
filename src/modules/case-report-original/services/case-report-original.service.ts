@@ -36,6 +36,7 @@ import { CreateOriAdverseEventReportDto } from '../dto/create-ori-adverse-event-
 import { CreateOriIncidentReportDto } from '../dto/create-ori-incident-report.dto';
 import { CreateOriIndicatingUnsafeCareReportDto } from '../dto/create-ori-indicating-unsafe-care-report.dto';
 import { CreateOriComplicationsReportDto } from '../dto/create-ori-complications-report.dto';
+import { MovementReport as MovementReportEntity } from 'src/modules/movement-report/entities/movement-report.entity';
 
 @Injectable()
 export class CaseReportOriginalService {
@@ -44,6 +45,8 @@ export class CaseReportOriginalService {
     private readonly caseReportOriginalRepository: Repository<CaseReportOriginalEntity>,
     @InjectRepository(CaseTypeEntity)
     private readonly caseTypeRepository: Repository<CaseTypeEntity>,
+    @InjectRepository(MovementReportEntity)
+    private readonly movementReportRepository: Repository<MovementReportEntity>,
 
     private readonly caseReportValidateService: CaseReportValidateService,
     private readonly logService: LogService,
@@ -59,7 +62,6 @@ export class CaseReportOriginalService {
     private readonly subOriginService: SubOriginService,
     private readonly riskLevelService: RiskLevelService,
     private readonly unitService: UnitService,
-    private readonly movementReportService: MovementReportService,
     private dataSource: DataSource,
   ) {}
 
@@ -160,10 +162,24 @@ export class CaseReportOriginalService {
         this.caseReportOriginalRepository,
       );
 
-      const movementReportFound =
-        await this.movementReportService.findOneMovementReportByName(
-          movementReport.REPORT_CREATION,
+      // const movementReportFound =
+      //   await this.movementReportService.findOneMovementReportByName(
+      //     movementReport.REPORT_CREATION,
+      //   );
+
+      const movementReportFound = await this.movementReportRepository.findOne({
+        where: {
+          mov_r_name: movementReport.REPORT_CREATION,
+          mov_r_status: true,
+        },
+      });
+
+      if (!movementReportFound) {
+        return new HttpException(
+          `El movimiento no existe.`,
+          HttpStatus.NOT_FOUND,
         );
+      }
 
       const severityClasificationFound = await queryRunner.manager.findOne(
         SeverityClasificationEntity,

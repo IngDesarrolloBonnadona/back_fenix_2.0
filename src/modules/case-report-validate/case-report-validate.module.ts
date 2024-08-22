@@ -58,7 +58,6 @@ import { ActionPlanModule } from '../action-plan/action-plan.module';
     SubOriginModule,
     RiskLevelModule,
     UnitModule,
-    MovementReportModule,
     UserModule,
     forwardRef(() => ResearchersModule),
     forwardRef(() => ReportAnalystAssignmentModule),

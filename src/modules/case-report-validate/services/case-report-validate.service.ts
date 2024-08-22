@@ -74,7 +74,6 @@ export class CaseReportValidateService {
     @InjectRepository(ObservationReturnCaseEntity)
     private readonly observationReturnCaseRepository: Repository<ObservationReturnCaseEntity>,
 
-
     private dataSource: DataSource,
     private readonly medicineService: MedicineService,
     private readonly deviceService: DeviceService,
@@ -90,7 +89,6 @@ export class CaseReportValidateService {
     private readonly subOriginService: SubOriginService,
     private readonly riskLevelService: RiskLevelService,
     private readonly unitService: UnitService,
-    private readonly movementReportService: MovementReportService,
     @Inject(forwardRef(() => ObservationReturnCaseService))
     private readonly observationReturnCaseService: ObservationReturnCaseService,
     @Inject(forwardRef(() => ResearchersService))
@@ -299,10 +297,21 @@ export class CaseReportValidateService {
       const consecutiveId = previousReport.val_cr_consecutive_id + 1;
       const previousId = previousReport.val_cr_previous_id + 1;
 
-      const movementReportFound =
-        await this.movementReportService.findOneMovementReportByName(
-          movementReport.VALIDATION,
+      // const movementReportFound =
+      //   await this.movementReportService.findOneMovementReportByName(
+      //     movementReport.VALIDATION,
+      //   );
+
+      const movementReportFound = await this.movementReportRepository.findOne({
+        where: { mov_r_name: movementReport.VALIDATION, mov_r_status: true },
+      });
+
+      if (!movementReportFound) {
+        return new HttpException(
+          `El movimiento no existe.`,
+          HttpStatus.NOT_FOUND,
         );
+      }
 
       if (
         createReportValDto.val_cr_severityclasif_id_fk !== null &&
@@ -721,8 +730,8 @@ export class CaseReportValidateService {
         characterizationCase: true,
         caseReportOriginal: {
           medicine: true,
-          device: true
-        }
+          device: true,
+        },
       },
     });
 
@@ -736,9 +745,7 @@ export class CaseReportValidateService {
     return caseReportValidate;
   }
 
-  async findOneReportValidateByConsecutive(
-    consecutive: string,
-  ) {
+  async findOneReportValidateByConsecutive(consecutive: string) {
     if (!consecutive) {
       throw new HttpException(
         'El consecutivo del caso es requerido.',
@@ -808,10 +815,21 @@ export class CaseReportValidateService {
 
     const caseReportValidate = await this.findOneReportValidate(id);
 
-    const movementReportFound =
-      await this.movementReportService.findOneMovementReportByName(
-        movementReport.ANULATION,
+    // const movementReportFound =
+    //   await this.movementReportService.findOneMovementReportByName(
+    //     movementReport.ANULATION,
+    //   );
+
+    const movementReportFound = await this.movementReportRepository.findOne({
+      where: { mov_r_name: movementReport.ANULATION, mov_r_status: true },
+    });
+
+    if (!movementReportFound) {
+      return new HttpException(
+        `El movimiento no existe.`,
+        HttpStatus.NOT_FOUND,
       );
+    }
 
     const updateStatusMovement = await this.caseReportValidateRepository.update(
       caseReportValidate.id,

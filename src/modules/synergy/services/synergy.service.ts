@@ -83,8 +83,18 @@ export class SynergyService {
     //   );
 
     const movementReportFound = await this.movementReportRepository.findOne({
-      where: { mov_r_name: movementReport.CASE_RAISED_SYNERGY_COMMITTEE },
+      where: {
+        mov_r_name: movementReport.CASE_RAISED_SYNERGY_COMMITTEE,
+        mov_r_status: true,
+      },
     });
+
+    if (!movementReportFound) {
+      return new HttpException(
+        `El movimiento no existe.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
 
     const invalidSynergyCodes = existingCaseValidate
       .filter(
@@ -276,8 +286,18 @@ export class SynergyService {
     //   );
 
     const movementReportFound = await this.movementReportRepository.findOne({
-      where: { mov_r_name: movementReport.SOLUTION_CASE_SYNERGY },
+      where: {
+        mov_r_name: movementReport.SOLUTION_CASE_SYNERGY,
+        mov_r_status: true,
+      },
     });
+
+    if (!movementReportFound) {
+      return new HttpException(
+        `El movimiento no existe.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
 
     const updateStatusSynergy = await this.synergyRepository.update(
       synergy.id,
