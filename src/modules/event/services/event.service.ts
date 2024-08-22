@@ -119,7 +119,9 @@ export class EventService {
         eve_status: true,
       },
       relations: {
-        eventType: true,
+        eventType: {
+          caseType: true
+        },
         unit: true,
       },
       order: {
