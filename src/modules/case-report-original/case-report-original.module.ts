@@ -30,9 +30,6 @@ import { MovementReport } from '../movement-report/entities/movement-report.enti
     TypeOrmModule.forFeature([
       CaseReportOriginal,
       CaseType,
-      MovementReport
-      // Priority,
-      // SeverityClasification,
     ]),
     CaseReportValidateModule,
     LogModule,
