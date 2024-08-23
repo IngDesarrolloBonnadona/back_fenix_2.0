@@ -19,7 +19,7 @@ export class CharacterizationCasesService {
       !createCharacterizationCaseDto ||
       !createCharacterizationCaseDto.cha_c_name
     ) {
-      throw new HttpException(
+      return new HttpException(
         'El nombre de la caracterización de los casos es requerido.',
         HttpStatus.BAD_REQUEST,
       );
@@ -34,7 +34,7 @@ export class CharacterizationCasesService {
       });
 
     if (findCharacterization) {
-      throw new HttpException(
+      return new HttpException(
         'La caracterización de los casos ya existe.',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
@@ -62,7 +62,7 @@ export class CharacterizationCasesService {
     });
 
     if (characterization.length === 0) {
-      throw new HttpException(
+      return new HttpException(
         'No se encontró la lista de caracterización de los casos',
         HttpStatus.NOT_FOUND,
       );
@@ -72,7 +72,7 @@ export class CharacterizationCasesService {
 
   async findOneCharacterization(id: number) {
     if (!id) {
-      throw new HttpException(
+      return new HttpException(
         'El identificador de la caracterización es requerido.',
         HttpStatus.BAD_REQUEST,
       );
@@ -83,7 +83,7 @@ export class CharacterizationCasesService {
     });
 
     if (!characterization) {
-      throw new HttpException(
+      return new HttpException(
         'No se encontró la caracterización de los casos',
         HttpStatus.NOT_FOUND,
       );
@@ -97,15 +97,15 @@ export class CharacterizationCasesService {
     updateCharacterizationCaseDto: UpdateCharacterizationCaseDto,
   ) {
     if (!updateCharacterizationCaseDto) {
-      throw new HttpException(
+      return new HttpException(
         'Los datos para actualizar la caracterización de los casos son requeridos.',
         HttpStatus.BAD_REQUEST,
       );
     }
 
-    const characterization = await this.findOneCharacterization(id);
+    await this.findOneCharacterization(id);
     const result = await this.characterizationCaseRepository.update(
-      characterization.id,
+      id,
       updateCharacterizationCaseDto,
     );
 
@@ -122,10 +122,16 @@ export class CharacterizationCasesService {
   }
 
   async deleteCharacterization(id: number) {
-    const characterization = await this.findOneCharacterization(id);
-    const result = await this.characterizationCaseRepository.softDelete(
-      characterization.id,
-    );
+    const CharacterizationCaseFound =
+      await this.characterizationCaseRepository.findOneBy({ id });
+
+    if (!CharacterizationCaseFound) {
+      return new HttpException(
+        `Caracterización de caso no encontrado, favor recargar.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    const result = await this.characterizationCaseRepository.softDelete(id);
 
     if (result.affected === 0) {
       return new HttpException(

@@ -47,7 +47,7 @@ export class CaseReportValidateController {
     @Ip() clientIp: string,
     @Param('reportId') reportId: string,
     @Param('idValidator') idValidator: string,
-  ): Promise<any> {
+  ) {
     return await this.caseReportValidateService.createReportValidate(
       createReportValDto,
       clientIp,
@@ -59,7 +59,7 @@ export class CaseReportValidateController {
   @Get('/summaryReports')
   async SummaryReports(
     @Query() query: QueryCaseReportValidateDto,
-  ): Promise<CaseReportValidate[]> {
+  ) {
     const creationDateObj = query.creationDate
       ? new Date(query.creationDate)
       : undefined;
@@ -86,7 +86,7 @@ export class CaseReportValidateController {
     @Query('patientDoc') patientDoc?: string,
     @Query('priorityId') priorityId?: number,
     @Query('creationDate') creationDate?: string,
-  ): Promise<CaseReportValidate[]> {
+  ) {
     const creationDateObj = creationDate ? new Date(creationDate) : undefined;
 
     return await this.caseReportValidateService.summaryReportsForValidator(
@@ -103,7 +103,7 @@ export class CaseReportValidateController {
   @Permission(permissions.SUPER_ADMIN, permissions.VALIDATOR)
   async summaryReportsForReview(
     @Query() query: QueryCaseReportValidateDto,
-  ): Promise<CaseReportValidate[]> {
+  ) {
     const creationDateObj = query.creationDate
       ? new Date(query.creationDate)
       : undefined;
@@ -119,19 +119,19 @@ export class CaseReportValidateController {
   }
 
   @Get('/listReportsValidate')
-  listReportsValidate(): Promise<CaseReportValidate[]> {
+  listReportsValidate() {
     return this.caseReportValidateService.findAllReportsValidate();
   }
 
   @Get('/findReportValidate/:id')
-  findReportValidate(@Param('id') id: string): Promise<CaseReportValidate> {
+  findReportValidate(@Param('id') id: string) {
     return this.caseReportValidateService.findOneReportValidate(id);
   }
 
   @Get('/findReportValidateByConsecutive/:consecutive')
   findReportValidateByConsecutive(
     @Param('consecutive') consecutive: string,
-  ): Promise<CaseReportValidate[]> {
+  ) {
     return this.caseReportValidateService.findOneReportValidateByConsecutive(
       consecutive,
     );
@@ -142,7 +142,7 @@ export class CaseReportValidateController {
   // updateReportValidate(
   //   @Param('id') id: string,
   //   @Body() updateCaseReportValidateDto: UpdateCaseReportValidateDto,
-  // ): Promise<HttpException> {
+  // ) {
   //   return this.caseReportValidateService.updateReportValidate(
   //     id,
   //     updateCaseReportValidateDto,
@@ -160,7 +160,7 @@ export class CaseReportValidateController {
     @Param('id') id: string,
     @Ip() clientIp: string,
     @Param('idUser') idUser: string,
-  ): Promise<Promise<HttpException>> {
+  ) {
     return await this.caseReportValidateService.cancelReportValidate(
       id,
       clientIp,

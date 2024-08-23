@@ -28,6 +28,7 @@ import { sentinelTime } from '../../../utils/enums/sentinel-time.enum';
 import { QueryReportAnalystAssignmentDto } from '../dto/query-report-analyst-assignment.dto';
 import { MovementReportService } from 'src/modules/movement-report/services/movement-report.service';
 import { ReportResearcherAssignment as ReportResearcherAssignmentEntity } from 'src/modules/report-researchers-assignment/entities/report-researchers-assignment.entity';
+import { MovementReport as MovementReportEntity } from 'src/modules/movement-report/entities/movement-report.entity';
 
 @Injectable()
 export class ReportAnalystAssignmentService {
@@ -46,11 +47,12 @@ export class ReportAnalystAssignmentService {
     private readonly severityClasificationRepository: Repository<SeverityClasificationEntity>,
     @InjectRepository(ReportResearcherAssignmentEntity)
     private readonly reportResearcherAssignmentRepository: Repository<ReportResearcherAssignmentEntity>,
+    @InjectRepository(MovementReportEntity)
+    private readonly movementReportRepository: Repository<MovementReportEntity>,
 
     private readonly logService: LogService,
     private readonly positionService: PositionService,
     private readonly httpPositionService: HttpPositionService,
-    private readonly movementReportService: MovementReportService,
     @Inject(forwardRef(() => CaseReportValidateService))
     private readonly caseReportValidateService: CaseReportValidateService,
   ) {}
@@ -85,7 +87,7 @@ export class ReportAnalystAssignmentService {
       !createReportAnalystAssignmentDto ||
       !createReportAnalystAssignmentDto.ana_useranalyst_id ||
       !createReportAnalystAssignmentDto.ana_validatedcase_id_fk ||
-      !createReportAnalystAssignmentDto.ana_position_id_fk 
+      !createReportAnalystAssignmentDto.ana_position_id_fk
     ) {
       throw new HttpException(
         'Algunos datos para asignar analistas son requeridos.',
@@ -133,10 +135,24 @@ export class ReportAnalystAssignmentService {
       createReportAnalystAssignmentDto.ana_position_id_fk,
     );
 
-    const movementReportFound =
-      await this.movementReportService.findOneMovementReportByName(
-        movementReport.ASSIGNMENT_ANALYST,
+    // const movementReportFound =
+    //   await this.movementReportService.findOneMovementReportByName(
+    //     movementReport.ASSIGNMENT_ANALYST,
+    //   );
+
+    const movementReportFound = await this.movementReportRepository.findOne({
+      where: {
+        mov_r_name: movementReport.ASSIGNMENT_ANALYST,
+        mov_r_status: true,
+      },
+    });
+
+    if (!movementReportFound) {
+      return new HttpException(
+        `El movimiento no existe.`,
+        HttpStatus.NOT_FOUND,
       );
+    }
 
     const findIdRole = await this.roleRepository.findOne({
       where: {
@@ -331,10 +347,24 @@ export class ReportAnalystAssignmentService {
       );
     }
 
-    const movementReportFound =
-      await this.movementReportService.findOneMovementReportByName(
-        movementReport.REASSIGNMENT_ANALYST,
+    // const movementReportFound =
+    //   await this.movementReportService.findOneMovementReportByName(
+    //     movementReport.REASSIGNMENT_ANALYST,
+    //   );
+
+    const movementReportFound = await this.movementReportRepository.findOne({
+      where: {
+        mov_r_name: movementReport.REASSIGNMENT_ANALYST,
+        mov_r_status: true,
+      },
+    });
+
+    if (!movementReportFound) {
+      return new HttpException(
+        `El movimiento no existe.`,
+        HttpStatus.NOT_FOUND,
       );
+    }
 
     const updateStatusMovement = await this.caseReportValidateRepository.update(
       caseReportValidate.id,
@@ -456,10 +486,24 @@ export class ReportAnalystAssignmentService {
       reportAssignmentFind.id,
     );
 
-    const movementReportFound =
-      await this.movementReportService.findOneMovementReportByName(
-        movementReport.RETURN_CASE_ANALYST,
+    // const movementReportFound =
+    //   await this.movementReportService.findOneMovementReportByName(
+    //     movementReport.RETURN_CASE_ANALYST,
+    //   );
+
+    const movementReportFound = await this.movementReportRepository.findOne({
+      where: {
+        mov_r_name: movementReport.RETURN_CASE_ANALYST,
+        mov_r_status: true,
+      },
+    });
+
+    if (!movementReportFound) {
+      return new HttpException(
+        `El movimiento no existe.`,
+        HttpStatus.NOT_FOUND,
       );
+    }
 
     const analyst = this.reportAnalystAssignmentRepository.create({
       ...createReportAnalystAssignmentDto,
@@ -503,7 +547,7 @@ export class ReportAnalystAssignmentService {
     caseTypeId?: number,
     eventId?: number,
     priorityId?: number,
-  ): Promise<CaseReportValidateEntity[]> {
+  ) {
     const query = this.caseReportValidateRepository
       .createQueryBuilder('crv')
       .innerJoinAndSelect('crv.reportAnalystAssignment', 'raa')
@@ -564,9 +608,7 @@ export class ReportAnalystAssignmentService {
     return caseReportsValidate;
   }
 
-  async findAssignedAnalystsByPosition(
-    query: QueryReportAnalystAssignmentDto,
-  ): Promise<ReportAnalystAssignmentEntity[]> {
+  async findAssignedAnalystsByPosition(query: QueryReportAnalystAssignmentDto) {
     const where: FindOptionsWhere<ReportAnalystAssignmentEntity> = {};
 
     if (query.positionId) {
@@ -597,9 +639,7 @@ export class ReportAnalystAssignmentService {
     return analystReporters;
   }
 
-  async findOneAssignedAnalyst(
-    id: number,
-  ): Promise<ReportAnalystAssignmentEntity> {
+  async findOneAssignedAnalyst(id: number) {
     if (!id) {
       throw new HttpException(
         'El identificador del analista asignado es requerido.',
@@ -650,7 +690,7 @@ export class ReportAnalystAssignmentService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    
+
     const findReportAnalystAssigned =
       await this.reportAnalystAssignmentRepository.findOne({
         where: {
@@ -719,10 +759,24 @@ export class ReportAnalystAssignmentService {
       }
     }
 
-    const movementReportFound =
-      await this.movementReportService.findOneMovementReportByName(
-        movementReport.RETURN_CASE_VALIDATOR,
+    // const movementReportFound =
+    //   await this.movementReportService.findOneMovementReportByName(
+    //     movementReport.RETURN_CASE_VALIDATOR,
+    //   );
+
+    const movementReportFound = await this.movementReportRepository.findOne({
+      where: {
+        mov_r_name: movementReport.RETURN_CASE_VALIDATOR,
+        mov_r_status: true,
+      },
+    });
+
+    if (!movementReportFound) {
+      return new HttpException(
+        `El movimiento no existe.`,
+        HttpStatus.NOT_FOUND,
       );
+    }
 
     const updateStatusMovement = await this.caseReportValidateRepository.update(
       idCaseReportValidate,
@@ -752,10 +806,17 @@ export class ReportAnalystAssignmentService {
   }
 
   async deleteAssignedAnalyst(id: number) {
-    const analystReporter = await this.findOneAssignedAnalyst(id);
-    const result = await this.reportAnalystAssignmentRepository.softDelete(
-      analystReporter.id,
-    );
+    const analystReporterFound =
+      await this.reportAnalystAssignmentRepository.findOneBy({ id });
+
+    if (!analystReporterFound) {
+      return new HttpException(
+        `Analista no encontrado, favor recargar.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    const result = await this.reportAnalystAssignmentRepository.softDelete(id);
 
     if (result.affected === 0) {
       return new HttpException(

@@ -34,7 +34,7 @@ export class ActionPlanController {
   )
   createActionPlan(
     @Body() createActionPlanDto: CreateActionPlanDto,
-  ): Promise<HttpException> {
+  ) {
     return this.actionPlanService.createActionPlan(createActionPlanDto);
   }
 
@@ -43,7 +43,7 @@ export class ActionPlanController {
     @Query('actionPlanName') actionPlanName?: string,
     @Query('eventTypeId') eventTypeId?: number,
     @Query('eventId') eventId?: number,
-  ): Promise<ActionPlan[]> {
+  ) {
     return this.actionPlanService.summaryActionPlan(
       actionPlanName,
       eventTypeId,
@@ -52,7 +52,7 @@ export class ActionPlanController {
   }
 
   @Get('/listActionPlans/')
-  listActionPlans(): Promise<ActionPlan[]> {
+  listActionPlans() {
     return this.actionPlanService.findAllActionPlan();
   }
 

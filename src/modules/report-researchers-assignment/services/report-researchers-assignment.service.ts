@@ -27,7 +27,6 @@ import { RoleResponseTime as RoleResponseTimeEntity } from 'src/modules/role-res
 import { sentinelTime } from 'src/utils/enums/sentinel-time.enum';
 import { UpdateReportResearcherAssignmentDto } from '../dto/update-report-researcher-assignment.dto';
 import { ReportAnalystAssignment as ReportAnalystAssignmentEntity } from 'src/modules/report-analyst-assignment/entities/report-analyst-assignment.entity';
-import { MovementReportService } from 'src/modules/movement-report/services/movement-report.service';
 
 @Injectable()
 export class ResearchersService {
@@ -46,10 +45,11 @@ export class ResearchersService {
     private readonly roleResponseTimeRepository: Repository<RoleResponseTimeEntity>,
     @InjectRepository(ReportAnalystAssignmentEntity)
     private readonly reportAnalystAssignmentRepository: Repository<ReportAnalystAssignmentEntity>,
+    @InjectRepository(MovementReportEntity)
+    private readonly movementReportRepository: Repository<MovementReportEntity>,
 
     private readonly httpResearchersService: HttpResearchersService,
     private readonly logService: LogService,
-    private readonly movementReportService: MovementReportService,
     @Inject(forwardRef(() => CaseReportValidateService))
     private readonly caseReportValidateService: CaseReportValidateService,
   ) {}
@@ -188,10 +188,24 @@ export class ResearchersService {
       );
     }
 
-    const movementReportFound =
-      await this.movementReportService.findOneMovementReportByName(
-        movementReport.ASSIGNMENT_RESEARCHER,
+    // const movementReportFound =
+    //   await this.movementReportService.findOneMovementReportByName(
+    //     movementReport.ASSIGNMENT_RESEARCHER,
+    //   );
+
+    const movementReportFound = await this.movementReportRepository.findOne({
+      where: {
+        mov_r_name: movementReport.ASSIGNMENT_RESEARCHER,
+        mov_r_status: true,
+      },
+    });
+
+    if (!movementReportFound) {
+      return new HttpException(
+        `El movimiento no existe.`,
+        HttpStatus.NOT_FOUND,
       );
+    }
 
     const updateStatusMovement = await this.caseReportValidateRepository.update(
       createResearcherDto.res_validatedcase_id_fk,
@@ -463,10 +477,24 @@ export class ResearchersService {
       );
     }
 
-    const movementReportFound =
-      await this.movementReportService.findOneMovementReportByName(
-        movementReport.REASSIGNMENT_RESEARCHER,
+    // const movementReportFound =
+    //   await this.movementReportService.findOneMovementReportByName(
+    //     movementReport.REASSIGNMENT_RESEARCHER,
+    //   );
+
+    const movementReportFound = await this.movementReportRepository.findOne({
+      where: {
+        mov_r_name: movementReport.REASSIGNMENT_RESEARCHER,
+        mov_r_status: true,
+      },
+    });
+
+    if (!movementReportFound) {
+      return new HttpException(
+        `El movimiento no existe.`,
+        HttpStatus.NOT_FOUND,
       );
+    }
 
     const updateStatusMovement = await this.caseReportValidateRepository.update(
       caseReportValidate.id,
@@ -601,10 +629,24 @@ export class ResearchersService {
       );
     }
 
-    const movementReportFound =
-      await this.movementReportService.findOneMovementReportByName(
-        movementReport.RETURN_CASE_ANALYST,
+    // const movementReportFound =
+    //   await this.movementReportService.findOneMovementReportByName(
+    //     movementReport.RETURN_CASE_ANALYST,
+    //   );
+
+    const movementReportFound = await this.movementReportRepository.findOne({
+      where: {
+        mov_r_name: movementReport.RETURN_CASE_ANALYST,
+        mov_r_status: true,
+      },
+    });
+
+    if (!movementReportFound) {
+      return new HttpException(
+        `El movimiento no existe.`,
+        HttpStatus.NOT_FOUND,
       );
+    }
 
     const updateStatusMovement = await this.caseReportValidateRepository.update(
       idCaseReportValidate,
@@ -634,8 +676,17 @@ export class ResearchersService {
   }
 
   async deleteAssignedResearcher(id: number) {
-    const Researcher = await this.findOneAssignedResearch(id);
-    const result = await this.researcherRepository.softDelete(Researcher.id);
+    const ResearcherFound =
+      await this.reportAnalystAssignmentRepository.findOneBy({ id });
+
+    if (!ResearcherFound) {
+      return new HttpException(
+        `Investigador no encontrado, favor recargar.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    const result = await this.researcherRepository.softDelete(id);
 
     if (result.affected === 0) {
       return new HttpException(

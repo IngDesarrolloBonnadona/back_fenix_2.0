@@ -19,7 +19,7 @@ export class RiskTypeService {
 
   async createRiskType(createRiskTypeDto: CreateRiskTypeDto) {
     if (!createRiskTypeDto || !createRiskTypeDto.ris_t_name) {
-      throw new HttpException(
+      return new HttpException(
         'El nombre del tipo de riesgo es requerido.',
         HttpStatus.BAD_REQUEST,
       );
@@ -33,7 +33,7 @@ export class RiskTypeService {
     });
 
     if (FindRiskType) {
-      throw new HttpException(
+      return new HttpException(
         'El tipo de riesgo ya existe.',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
@@ -60,7 +60,7 @@ export class RiskTypeService {
     });
 
     if (riskTypes.length === 0) {
-      throw new HttpException(
+      return new HttpException(
         'No se encontró la lista de tipos de riesgo.',
         HttpStatus.NOT_FOUND,
       );
@@ -71,7 +71,7 @@ export class RiskTypeService {
 
   async findOneRiskType(id: number) {
     if (!id) {
-      throw new HttpException(
+      return new HttpException(
         'El identificador del tipo de riesgo es requerido.',
         HttpStatus.BAD_REQUEST,
       );
@@ -82,7 +82,7 @@ export class RiskTypeService {
     });
 
     if (!riskType) {
-      throw new HttpException(
+      return new HttpException(
         'No se encontró el tipo de riesgo',
         HttpStatus.NOT_FOUND,
       );
@@ -93,17 +93,14 @@ export class RiskTypeService {
 
   async updateRiskType(id: number, updateRiskTypeDto: UpdateRiskTypeDto) {
     if (!updateRiskTypeDto) {
-      throw new HttpException(
+      return new HttpException(
         'Los datos para actualizar el tipo de riesgo son requeridos.',
         HttpStatus.BAD_REQUEST,
       );
     }
 
     const riskType = await this.findOneRiskType(id);
-    const result = await this.riskTypeRepository.update(
-      riskType.id,
-      updateRiskTypeDto,
-    );
+    const result = await this.riskTypeRepository.update(id, updateRiskTypeDto);
 
     if (result.affected === 0) {
       return new HttpException(
@@ -119,8 +116,16 @@ export class RiskTypeService {
   }
 
   async deleteRiskType(id: number) {
-    const riskType = await this.findOneRiskType(id);
-    const result = await this.riskTypeRepository.softDelete(riskType.id);
+    const riskTypeFound = await this.riskTypeRepository.findOneBy({ id });
+
+    if (!riskTypeFound) {
+      return new HttpException(
+        `Tipo de riesgo no encontrado, favor recargar.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    const result = await this.riskTypeRepository.softDelete(id);
 
     if (result.affected === 0) {
       return new HttpException(

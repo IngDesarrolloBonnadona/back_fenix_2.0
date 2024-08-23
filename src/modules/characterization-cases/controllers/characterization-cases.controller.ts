@@ -19,40 +19,40 @@ import { PermissionGuard } from 'src/utils/guards/permission.guard';
 import { Permission } from 'src/utils/decorators/permission.decorator';
 import { permissions } from 'src/utils/enums/permissions.enum';
 
-@ApiTags('characterization-cases')
-@Controller('characterization-cases')
+@ApiTags('characterization-case')
+@Controller('characterization-case')
 @UseGuards(PermissionGuard)
 export class CharacterizationCasesController {
   constructor(
     private readonly characterizationCasesService: CharacterizationCasesService,
   ) {}
 
-  @Post('/createCharacterizationCases/:userIdPermission')
+  @Post('/createCharacterizationCase/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
   create(
     @Body() createCharacterizationCaseDto: CreateCharacterizationCaseDto,
-  ): Promise<HttpException> {
+  ) {
     return this.characterizationCasesService.createCharacterization(
       createCharacterizationCaseDto,
     );
   }
 
-  @Get('/listCharacterizations/')
-  listCharacterizations(): Promise<CharacterizationCase[]> {
+  @Get('/listCharacterizationsCase/')
+  listCharacterizations() {
     return this.characterizationCasesService.findAllCharacterizations();
   }
 
-  @Get('/findCharacterization/:id/')
-  findCharacterization(@Param('id') id: number): Promise<CharacterizationCase> {
+  @Get('/findCharacterizationCase/:id/')
+  findCharacterization(@Param('id') id: number) {
     return this.characterizationCasesService.findOneCharacterization(id);
   }
 
-  @Patch('/updateCharacterization/:id/:userIdPermission')
+  @Patch('/updateCharacterizationCase/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
   updateCharacterization(
     @Param('id') id: number,
     @Body() updateCharacterizationCaseDto: UpdateCharacterizationCaseDto,
-  ): Promise<HttpException> {
+  ) {
     return this.characterizationCasesService.updateCharacterization(
       id,
       updateCharacterizationCaseDto,
@@ -61,7 +61,7 @@ export class CharacterizationCasesController {
 
   @Delete('/deleteCharacterization/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  deleteCharacterization(@Param('id') id: number): Promise<HttpException> {
+  deleteCharacterization(@Param('id') id: number) {
     return this.characterizationCasesService.deleteCharacterization(id);
   }
 }

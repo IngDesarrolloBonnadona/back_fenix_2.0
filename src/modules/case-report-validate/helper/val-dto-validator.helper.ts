@@ -20,7 +20,7 @@ export type CreateReportValDto =
 export async function ValDtoValidator(
   createReportValDto: any,
   caseTypeRepository: Repository<CaseType>,
-): Promise<CreateReportValDto> {
+) {
   let dtoInstance: CreateReportValDto;
 
   const caseTypeFound = await caseTypeRepository.findOne({

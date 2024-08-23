@@ -1,9 +1,13 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreatePriorityDto {
   @IsString()
   @IsNotEmpty()
   prior_name: string;
+
+  @IsString()
+  @IsOptional()
+  prior_description: string;
 
   @IsNumber()
   @IsNotEmpty()

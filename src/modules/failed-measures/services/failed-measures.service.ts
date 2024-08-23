@@ -14,7 +14,7 @@ export class FailedMeasuresService {
 
   async createFailedMeasure(createFailedMeasureDto: CreateFailedMeasureDto) {
     if (!createFailedMeasureDto || !createFailedMeasureDto.meas_f_name) {
-      throw new HttpException(
+      return new HttpException(
         'El nombre de la medida fallida es requerida.',
         HttpStatus.BAD_REQUEST,
       );
@@ -28,7 +28,7 @@ export class FailedMeasuresService {
     });
 
     if (findFailedMeasure) {
-      throw new HttpException(
+      return new HttpException(
         'La medida fallida ya existe.',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
@@ -51,7 +51,7 @@ export class FailedMeasuresService {
     });
 
     if (failedMeasures.length === 0) {
-      throw new HttpException(
+      return new HttpException(
         'No se encontró la lista de medidas fallida.',
         HttpStatus.NOT_FOUND,
       );
@@ -61,7 +61,7 @@ export class FailedMeasuresService {
 
   async findOneFailedMeasure(id: number) {
     if (!id) {
-      throw new HttpException(
+      return new HttpException(
         'El identificador de la medida fallida es requerida.',
         HttpStatus.BAD_REQUEST,
       );
@@ -72,7 +72,7 @@ export class FailedMeasuresService {
     });
 
     if (!failedMeasures) {
-      throw new HttpException(
+      return new HttpException(
         'No se encontró la medida fallida.',
         HttpStatus.NOT_FOUND,
       );
@@ -86,15 +86,15 @@ export class FailedMeasuresService {
     updateFailedMeasureDto: UpdateFailedMeasureDto,
   ) {
     if (!updateFailedMeasureDto) {
-      throw new HttpException(
+      return new HttpException(
         'Los datos para actualizar la medida fallida es requerida.',
         HttpStatus.BAD_REQUEST,
       );
     }
 
-    const failedMeasure = await this.findOneFailedMeasure(id);
+    await this.findOneFailedMeasure(id);
     const result = await this.failedMeasureRepository.update(
-      failedMeasure.id,
+      id,
       updateFailedMeasureDto,
     );
 
@@ -111,10 +111,18 @@ export class FailedMeasuresService {
   }
 
   async deleteFailedMeasure(id: number) {
-    const failedMeasure = await this.findOneFailedMeasure(id);
-    const result = await this.failedMeasureRepository.softDelete(
-      failedMeasure.id,
-    );
+    const failedMeasureFound = await this.failedMeasureRepository.findOneBy({
+      id,
+    });
+
+    if (!failedMeasureFound) {
+      return new HttpException(
+        `Medida fallida no encontrada, favor recargar.`,
+        HttpStatus.NOT_FOUND
+      )
+    }
+
+    const result = await this.failedMeasureRepository.softDelete(id);
 
     if (result.affected === 0) {
       return new HttpException(

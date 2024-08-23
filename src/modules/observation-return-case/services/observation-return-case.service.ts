@@ -76,7 +76,7 @@ export class ObservationReturnCaseService {
     );
   }
 
-  async findAllObservationReturnCase(): Promise<ObservationReturnCaseEntity[]> {
+  async findAllObservationReturnCase() {
     const observationReturns = await this.observationReturnRepository.find({
       where: {
         rec_o_status: true,
@@ -150,9 +150,18 @@ export class ObservationReturnCaseService {
   }
 
   async deleteObservationReturnCase(id: number) {
-    const observationReturn = await this.findOneObservationReturnCase(id);
+    const observationReturnFound =
+      await this.observationReturnRepository.findOneBy({ id });
+
+      if (!observationReturnFound) {
+        return new HttpException(
+          `Observación no encontrado, favor recargar.`,
+          HttpStatus.NOT_FOUND
+        )
+      }
+
     const result = await this.observationReturnRepository.softDelete(
-      observationReturn.id,
+      id,
     );
 
     if (result.affected === 0) {

@@ -30,7 +30,7 @@ export class RoleResponseTimeController {
   @Permission(permissions.SUPER_ADMIN)
   createRoleResponseTime(
     @Body() createRoleResponseTimeDto: CreateRoleResponseTimeDto,
-  ): Promise<HttpException> {
+  ) {
     return this.roleResponseTimeService.createRoleResponseTime(
       createRoleResponseTimeDto,
     );
@@ -38,13 +38,13 @@ export class RoleResponseTimeController {
 
   @Get('/listRoleResponseTimes/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN)
-  listRoleResponseTimes(): Promise<RoleResponseTime[]> {
+  listRoleResponseTimes() {
     return this.roleResponseTimeService.findAllRoleResponseTimes();
   }
 
   @Get('/findRoleResponseTime/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN)
-  findRoleResponseTime(@Param('id') id: number): Promise<RoleResponseTime> {
+  findRoleResponseTime(@Param('id') id: number) {
     return this.roleResponseTimeService.findOnefindAllRoleResponseTime(id);
   }
 
@@ -53,7 +53,7 @@ export class RoleResponseTimeController {
   updateCreateRoleResponseTime(
     @Param('id') id: number,
     @Body() updateCaseResponseTimeDto: UpdateRoleResponseTimeDto,
-  ): Promise<HttpException> {
+  ) {
     return this.roleResponseTimeService.updateRoleResponseTime(
       id,
       updateCaseResponseTimeDto,
@@ -62,9 +62,7 @@ export class RoleResponseTimeController {
 
   @Delete('/deleteRoleResponseTime/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN)
-  deleteCreateRoleResponseTime(
-    @Param('id') id: number,
-  ): Promise<HttpException> {
+  deleteCreateRoleResponseTime(@Param('id') id: number) {
     return this.roleResponseTimeService.deleteRoleResponseTime(id);
   }
 }

@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateReasonReturnCaseDto {
   @IsNotEmpty()
@@ -8,4 +8,8 @@ export class CreateReasonReturnCaseDto {
   @IsNotEmpty()
   @IsString()
   rec_r_cause: string;
+
+  @IsOptional()
+  @IsString()
+  rec_r_description: string;
 }

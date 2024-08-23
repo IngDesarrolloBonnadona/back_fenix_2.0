@@ -21,7 +21,7 @@ export class EventTypeService {
       !createEventTypeDto.eve_t_name ||
       !createEventTypeDto.eve_t_casetype_id_fk
     ) {
-      throw new HttpException(
+      return new HttpException(
         'Algunos datos del tipo de suceso son requeridos.',
         HttpStatus.BAD_REQUEST,
       );
@@ -35,7 +35,7 @@ export class EventTypeService {
     });
 
     if (findEventType) {
-      throw new HttpException(
+      return new HttpException(
         'El tipo de suceso ya existe con el tipo de caso seleccionado.',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
@@ -67,7 +67,7 @@ export class EventTypeService {
       });
 
       if (findEventType) {
-        throw new HttpException(
+        return new HttpException(
           `El tipo de suceso ${eventType.eve_t_name} ya existe en el tipo de caso seleccionado.`,
           HttpStatus.INTERNAL_SERVER_ERROR,
         );
@@ -104,7 +104,7 @@ export class EventTypeService {
     });
 
     if (eventTypes.length === 0) {
-      throw new HttpException(
+      return new HttpException(
         'No se encontró la lista de tipo de sucesos.',
         HttpStatus.NOT_FOUND,
       );
@@ -114,7 +114,7 @@ export class EventTypeService {
 
   async findOneEventType(id: number) {
     if (!id) {
-      throw new HttpException(
+      return new HttpException(
         'El identificador del tipo de suceso es requerido.',
         HttpStatus.BAD_REQUEST,
       );
@@ -129,7 +129,7 @@ export class EventTypeService {
     });
 
     if (!eventType) {
-      throw new HttpException(
+      return new HttpException(
         'No se encontró el tipo de suceso.',
         HttpStatus.NOT_FOUND,
       );
@@ -140,7 +140,7 @@ export class EventTypeService {
 
   async findEvenTypeByCaseType(caseTypeId: number) {
     if (!caseTypeId) {
-      throw new HttpException(
+      return new HttpException(
         'El identificador del tipo de caso es requerido.',
         HttpStatus.BAD_REQUEST,
       );
@@ -157,7 +157,7 @@ export class EventTypeService {
     });
 
     if (!eventTypesByCaseType) {
-      throw new HttpException(
+      return new HttpException(
         'No se encontró el tipo de suceso relacionado al tipo de caso.',
         HttpStatus.NOT_FOUND,
       );
@@ -168,19 +168,19 @@ export class EventTypeService {
 
   async updateEventType(id: number, updateEventTypeDto: UpdateEventTypeDto) {
     if (!updateEventTypeDto) {
-      throw new HttpException(
+      return new HttpException(
         'Los datos para actualizar el tipo de suceso son requeridos.',
         HttpStatus.BAD_REQUEST,
       );
     }
 
-    const eventType = await this.findOneEventType(id);
+    await this.findOneEventType(id);
     await this.caseTypeService.findOneCaseType(
       updateEventTypeDto.eve_t_casetype_id_fk,
     );
 
     const result = await this.eventTypeRepository.update(
-      eventType.id,
+      id,
       updateEventTypeDto,
     );
 
@@ -198,9 +198,16 @@ export class EventTypeService {
   }
 
   async deleteEventType(id: number) {
-    const eventType = await this.findOneEventType(id);
+    const eventTypeFound = await this.eventTypeRepository.findOneBy({ id });
 
-    const result = await this.eventTypeRepository.softDelete(eventType.id);
+    if (!eventTypeFound) {
+      return new HttpException(
+        `Estrategia no encontrada, favor recargar.`,
+        HttpStatus.NOT_FOUND
+      )
+    }
+
+    const result = await this.eventTypeRepository.softDelete(id);
 
     if (result.affected === 0) {
       return new HttpException(

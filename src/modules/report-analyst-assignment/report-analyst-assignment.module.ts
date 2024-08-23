@@ -17,6 +17,7 @@ import { MovementReportModule } from '../movement-report/movement-report.module'
 import { PermissionGuard } from 'src/utils/guards/permission.guard';
 import { UserModule } from 'src/modules_bonnadonahub/user/user.module';
 import { ReportResearcherAssignment } from '../report-researchers-assignment/entities/report-researchers-assignment.entity';
+import { MovementReport } from '../movement-report/entities/movement-report.entity';
 
 @Module({
   imports: [
@@ -28,11 +29,11 @@ import { ReportResearcherAssignment } from '../report-researchers-assignment/ent
       CaseType,
       SeverityClasification,
       ReportResearcherAssignment,
+      MovementReport,
     ]),
     LogModule,
     PositionModule,
     HttpModule,
-    MovementReportModule,
     UserModule,
     forwardRef(() => CaseReportValidateModule),
   ],

@@ -14,7 +14,7 @@ export class UnsafeActionService {
 
   async createUnsafeAction(createUnsafeActionDto: CreateUnsafeActionDto) {
     if (!createUnsafeActionDto || !createUnsafeActionDto.uns_a_name) {
-      throw new HttpException(
+      return new HttpException(
         'El nombre de la acción insegura es requerido.',
         HttpStatus.BAD_REQUEST,
       );
@@ -28,7 +28,7 @@ export class UnsafeActionService {
     });
 
     if (findUnsafeAction) {
-      throw new HttpException(
+      return new HttpException(
         'la acción insegura ya existe.',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
@@ -52,7 +52,7 @@ export class UnsafeActionService {
     });
 
     if (unsafeAction.length === 0) {
-      throw new HttpException(
+      return new HttpException(
         'No se encontró la lista de acciones inseguras.',
         HttpStatus.NOT_FOUND,
       );
@@ -63,7 +63,7 @@ export class UnsafeActionService {
 
   async findOneUnsafeActions(id: number) {
     if (!id) {
-      throw new HttpException(
+      return new HttpException(
         'El identificador de la acción insegura es requerido.',
         HttpStatus.BAD_REQUEST,
       );
@@ -74,7 +74,7 @@ export class UnsafeActionService {
     });
 
     if (!unsafeAction) {
-      throw new HttpException(
+      return new HttpException(
         'No se encontró la acción insegura.',
         HttpStatus.NOT_FOUND,
       );
@@ -88,15 +88,15 @@ export class UnsafeActionService {
     updateUnsafeActionDto: UpdateUnsafeActionDto,
   ) {
     if (!updateUnsafeActionDto) {
-      throw new HttpException(
+      return new HttpException(
         'Los datos para actualizar la acción insegura son requeridos.',
         HttpStatus.BAD_REQUEST,
       );
     }
 
-    const unsafeAction = await this.findOneUnsafeActions(id);
+    await this.findOneUnsafeActions(id);
     const result = await this.unsafeActionRepository.update(
-      unsafeAction.id,
+      id,
       updateUnsafeActionDto,
     );
 
@@ -114,10 +114,18 @@ export class UnsafeActionService {
   }
 
   async deleteUnsafeAction(id: number) {
-    const unsafeAction = await this.findOneUnsafeActions(id);
-    const result = await this.unsafeActionRepository.softDelete(
-      unsafeAction.id,
-    );
+    const unsafeActionFound = await this.unsafeActionRepository.findOneBy({
+      id,
+    });
+
+    if (!unsafeActionFound) {
+      return new HttpException(
+        `Acción insegura no encontrada, favor recargar.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    const result = await this.unsafeActionRepository.softDelete(id);
 
     if (result.affected === 0) {
       return new HttpException(

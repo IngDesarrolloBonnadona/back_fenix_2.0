@@ -21,7 +21,7 @@ export type CreateReportOriDto = //Discriminador que define los Dto
 export async function OriDtoValidator(
   createReportDto: any,
   caseTypeRepository: Repository<CaseType>,
-): Promise<CreateReportOriDto> {
+) {
   let dtoInstance: CreateReportOriDto;
 
   const caseTypeFound = await caseTypeRepository.findOne({

@@ -23,14 +23,13 @@ import { SeverityClasification } from '../severity-clasification/entities/severi
 import { MovementReportModule } from '../movement-report/movement-report.module';
 import { PermissionGuard } from 'src/utils/guards/permission.guard';
 import { UserModule } from 'src/modules_bonnadonahub/user/user.module';
+import { MovementReport } from '../movement-report/entities/movement-report.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       CaseReportOriginal,
       CaseType,
-      // Priority,
-      // SeverityClasification,
     ]),
     CaseReportValidateModule,
     LogModule,
@@ -46,7 +45,6 @@ import { UserModule } from 'src/modules_bonnadonahub/user/user.module';
     SubOriginModule,
     RiskLevelModule,
     UnitModule,
-    MovementReportModule,
     UserModule,
   ],
   controllers: [CaseReportOriginalController],

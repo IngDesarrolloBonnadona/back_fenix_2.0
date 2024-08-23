@@ -22,7 +22,7 @@ import { PermissionGuard } from 'src/utils/guards/permission.guard';
   imports: [
     TypeOrmModule.forFeature([
       ReportResearcherAssignment,
-      // MovementReport,
+      MovementReport,
       CaseReportValidate,
       CaseType,
       SeverityClasification,
@@ -32,7 +32,7 @@ import { PermissionGuard } from 'src/utils/guards/permission.guard';
     ]),
     HttpModule,
     LogModule,
-    MovementReportModule,
+    // MovementReportModule,
     UserModule,
     forwardRef(() => CaseReportValidateModule),
   ],

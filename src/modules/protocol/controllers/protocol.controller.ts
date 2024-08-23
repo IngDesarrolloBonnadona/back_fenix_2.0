@@ -26,19 +26,17 @@ export class ProtocolController {
 
   @Post('/createProtocol/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  createProtocol(
-    @Body() createProtocolDto: CreateProtocolDto,
-  ): Promise<HttpException> {
+  createProtocol(@Body() createProtocolDto: CreateProtocolDto) {
     return this.protocolService.createProtocol(createProtocolDto);
   }
 
   @Get('/listProtocols')
-  listProtocols(): Promise<Protocol[]> {
+  listProtocols() {
     return this.protocolService.findAllProtocols();
   }
 
   @Get('/findProtocol/:id')
-  findProtocol(@Param('id') id: number): Promise<Protocol> {
+  findProtocol(@Param('id') id: number) {
     return this.protocolService.findOneProtocol(id);
   }
 
@@ -47,13 +45,13 @@ export class ProtocolController {
   updateProtocol(
     @Param('id') id: number,
     @Body() updateProtocolDto: UpdateProtocolDto,
-  ): Promise<HttpException> {
+  ) {
     return this.protocolService.updateProtocol(id, updateProtocolDto);
   }
 
   @Delete('/deleteProtocol/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  deleteProtocol(@Param('id') id: number): Promise<HttpException> {
+  deleteProtocol(@Param('id') id: number) {
     return this.protocolService.deleteProtocol(id);
   }
 }

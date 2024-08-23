@@ -31,13 +31,7 @@ export class SynergyController {
     @Body() createSynergyDto: CreateSynergyDto[],
     @Ip() clientIp: string,
     @Param('idValidator') idValidator: string,
-  ): Promise<
-    | HttpException
-    | {
-        message: string;
-        invalidSynergyCodes: string[];
-      }
-  > {
+  ) {
     return this.synergyService.createSynergy(
       createSynergyDto,
       clientIp,
@@ -47,13 +41,13 @@ export class SynergyController {
 
   @Get('/listSynergies/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.VALIDATOR)
-  listSynergies(): Promise<Synergy[]> {
+  listSynergies() {
     return this.synergyService.findAllSynergy();
   }
 
   @Get('/findSynergy/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.VALIDATOR)
-  findSynergy(@Param('id') id: number): Promise<Synergy> {
+  findSynergy(@Param('id') id: number) {
     return this.synergyService.findOneSynergy(id);
   }
 
@@ -63,7 +57,7 @@ export class SynergyController {
   //   @Param('id') id: number,
   //   @Ip() clientIp: string,
   //   @Param('idValidator') idValidator: string,
-  // ): Promise<HttpException> {
+  // ) {
   //   return this.synergyService.rescheduleSynergy(id, clientIp, idValidator);
   // }
 
@@ -73,13 +67,13 @@ export class SynergyController {
     @Param('id') id: number,
     @Ip() clientIp: string,
     @Param('idValidator') idValidator: string,
-  ): Promise<HttpException> {
+  ) {
     return this.synergyService.resolutionSynergy(id, clientIp, idValidator);
   }
 
   @Delete('/deleteSynergy/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.VALIDATOR)
-  deleteSynergy(@Param('id') id: number): Promise<HttpException> {
+  deleteSynergy(@Param('id') id: number) {
     return this.synergyService.deleteSynergy(id);
   }
 }

@@ -14,7 +14,7 @@ export class FluidTypeService {
 
   async createFluidType(createFluidTypeDto: CreateFluidTypeDto) {
     if (!createFluidTypeDto || !createFluidTypeDto.flu_t_name) {
-      throw new HttpException(
+      return new HttpException(
         'El nombre del tipo de fluido es requerido.',
         HttpStatus.BAD_REQUEST,
       );
@@ -28,7 +28,7 @@ export class FluidTypeService {
     });
 
     if (findFluidType) {
-      throw new HttpException(
+      return new HttpException(
         'El tipo de fluido ya existe.',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
@@ -50,7 +50,7 @@ export class FluidTypeService {
     });
 
     if (fluidTypes.length === 0) {
-      throw new HttpException(
+      return new HttpException(
         'No se encontró la lista de tipos de fluido.',
         HttpStatus.NOT_FOUND,
       );
@@ -61,7 +61,7 @@ export class FluidTypeService {
 
   async findOneFluidType(id: number) {
     if (!id) {
-      throw new HttpException(
+      return new HttpException(
         'El identificador del tipo de fluido es requerido.',
         HttpStatus.BAD_REQUEST,
       );
@@ -72,7 +72,7 @@ export class FluidTypeService {
     });
 
     if (!fluidType) {
-      throw new HttpException(
+      return new HttpException(
         'No se encontró el tipo de fluido.',
         HttpStatus.NOT_FOUND,
       );
@@ -83,15 +83,15 @@ export class FluidTypeService {
 
   async updateFluidType(id: number, updateFluidTypeDto: UpdateFluidTypeDto) {
     if (!updateFluidTypeDto) {
-      throw new HttpException(
+      return new HttpException(
         'Los datos para actualizar el tipo de fluido son requeridos.',
         HttpStatus.BAD_REQUEST,
       );
     }
 
-    const fluidType = await this.findOneFluidType(id);
+    await this.findOneFluidType(id);
     const result = await this.fluidTypeRespository.update(
-      fluidType.id,
+      id,
       updateFluidTypeDto,
     );
 
@@ -109,8 +109,16 @@ export class FluidTypeService {
   }
 
   async deleteFluidType(id: number) {
-    const fluidType = await this.findOneFluidType(id);
-    const result = await this.fluidTypeRespository.softDelete(fluidType.id);
+    const fluidTypeFound = await this.fluidTypeRespository.findOneBy({ id });
+
+    if (!fluidTypeFound) {
+      return new HttpException(
+        `Tipo de fluido no encontrado, favor recargar.`,
+        HttpStatus.NOT_FOUND
+      )
+    }
+
+    const result = await this.fluidTypeRespository.softDelete(id);
 
     if (result.affected === 0) {
       return new HttpException(

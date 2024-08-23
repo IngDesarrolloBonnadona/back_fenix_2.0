@@ -21,7 +21,6 @@ import { OriginService } from 'src/modules/origin/services/origin.service';
 import { SubOriginService } from 'src/modules/sub-origin/services/sub-origin.service';
 import { RiskLevelService } from 'src/modules/risk-level/services/risk-level.service';
 import { UnitService } from 'src/modules/unit/services/unit.service';
-import { MovementReportService } from 'src/modules/movement-report/services/movement-report.service';
 
 import { OriDtoValidator } from '../utils/helpers/ori-dto-validator.helper';
 import { generateFilingNumber } from '../utils/helpers/generate_filing_number.helper';
@@ -36,6 +35,7 @@ import { CreateOriAdverseEventReportDto } from '../dto/create-ori-adverse-event-
 import { CreateOriIncidentReportDto } from '../dto/create-ori-incident-report.dto';
 import { CreateOriIndicatingUnsafeCareReportDto } from '../dto/create-ori-indicating-unsafe-care-report.dto';
 import { CreateOriComplicationsReportDto } from '../dto/create-ori-complications-report.dto';
+import { MovementReport as MovementReportEntity } from 'src/modules/movement-report/entities/movement-report.entity';
 
 @Injectable()
 export class CaseReportOriginalService {
@@ -59,7 +59,6 @@ export class CaseReportOriginalService {
     private readonly subOriginService: SubOriginService,
     private readonly riskLevelService: RiskLevelService,
     private readonly unitService: UnitService,
-    private readonly movementReportService: MovementReportService,
     private dataSource: DataSource,
   ) {}
 
@@ -100,9 +99,18 @@ export class CaseReportOriginalService {
           ),
       ]);
 
-      const caseTypeFound = await this.caseTypeService.findOneCaseType(
-        createReportOriDto.ori_cr_casetype_id_fk,
-      );
+      const caseTypeFound = await this.caseTypeRepository.findOne({
+        where: {
+          id: createReportOriDto.ori_cr_casetype_id_fk,
+        },
+      });
+
+      if (!caseTypeFound) {
+        return new HttpException(
+          'No se encontró el nombre del tipo de caso.',
+          HttpStatus.NOT_FOUND,
+        );
+      }
 
       let caseReportOriginal: any;
 
@@ -151,10 +159,21 @@ export class CaseReportOriginalService {
         this.caseReportOriginalRepository,
       );
 
-      const movementReportFound =
-        await this.movementReportService.findOneMovementReportByName(
-          movementReport.REPORT_CREATION,
+      const movementReportFound = await queryRunner.manager.findOne(
+        MovementReportEntity,
+        {
+        where: {
+          mov_r_name: movementReport.REPORT_CREATION,
+          mov_r_status: true,
+        },
+      });
+
+      if (!movementReportFound) {
+        return new HttpException(
+          `El movimiento no existe.`,
+          HttpStatus.NOT_FOUND,
         );
+      }
 
       const severityClasificationFound = await queryRunner.manager.findOne(
         SeverityClasificationEntity,
@@ -186,10 +205,7 @@ export class CaseReportOriginalService {
         },
       });
       if (!priorityFind) {
-        throw new HttpException(
-          `La prioridad no existe`,
-          HttpStatus.NOT_FOUND,
-        );
+        throw new HttpException(`La prioridad no existe`, HttpStatus.NOT_FOUND);
       }
 
       caseReportOriginal.ori_cr_severityclasif_id_fk =
@@ -327,44 +343,5 @@ export class CaseReportOriginalService {
     }
 
     return caseReportsOriginal;
-  }
-
-  // async updateReportOriginal(
-  //   id: string,
-  //   UpdateCaseReportOriginalDto: UpdateCaseReportOriginalDto,
-  // ) {
-  //   const caseReportsOriginal = await this.findOneReportOriginal(id);
-  //   const result = await this.caseReportOriginalRepository.update(
-  //     caseReportsOriginal.id,
-  //     UpdateCaseReportOriginalDto,
-  //   );
-
-  //   if (result.affected === 0) {
-  //     return new HttpException(
-  //       `No se pudo actualizar el caso original #${caseReportsOriginal.id}`,
-  //       HttpStatus.INTERNAL_SERVER_ERROR,
-  //     );
-  //   }
-
-  //   return new HttpException(
-  //     `¡Datos actualizados correctamente!`,
-  //     HttpStatus.OK,
-  //   );
-  // }
-
-  async deleteReportOriginal(id: string) {
-    const caseReportsOriginal = await this.findOneReportOriginal(id);
-    const result = await this.caseReportOriginalRepository.softDelete(
-      caseReportsOriginal.id,
-    );
-
-    if (result.affected === 0) {
-      return new HttpException(
-        `No se pudo eliminar el caso #${id}`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-
-    return new HttpException(`¡Datos eliminados correctamente!`, HttpStatus.OK);
   }
 }

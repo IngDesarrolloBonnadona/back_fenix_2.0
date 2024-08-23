@@ -9,15 +9,18 @@ import { UpdateEventDto } from '../dto/update-event.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Event as EventEntity } from '../entities/event.entity';
 import { Repository } from 'typeorm';
-import { EventTypeService } from 'src/modules/event-type/services/event-type.service';
+import { EventType as EventTypeEntity } from 'src/modules/event-type/entities/event-type.entity';
+import { Unit as UnitEntity } from 'src/modules/unit/entities/unit.entity';
 
 @Injectable()
 export class EventService {
   constructor(
     @InjectRepository(EventEntity)
     private readonly eventRepository: Repository<EventEntity>,
-
-    private readonly eventTypeService: EventTypeService,
+    @InjectRepository(EventTypeEntity)
+    private readonly eventTypeRepository: Repository<EventTypeEntity>,
+    @InjectRepository(UnitEntity)
+    private readonly unitRepository: Repository<UnitEntity>,
   ) {}
 
   async createEvent(createEventDto: CreateEventDto) {
@@ -26,7 +29,7 @@ export class EventService {
       !createEventDto.eve_name ||
       !createEventDto.eve_eventtype_id_fk
     ) {
-      throw new HttpException(
+      return new HttpException(
         'Algunos datos del suceso son requeridos.',
         HttpStatus.BAD_REQUEST,
       );
@@ -36,21 +39,37 @@ export class EventService {
       where: {
         eve_name: createEventDto.eve_name,
         eve_eventtype_id_fk: createEventDto.eve_eventtype_id_fk,
-        eve_unit_id_fk: createEventDto.eve_unit_id_fk,
         eve_status: true,
       },
     });
 
     if (findEvents) {
-      throw new HttpException(
+      return new HttpException(
         `El suceso ya existe en el tipo de suceso seleccionado.`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
 
-    await this.eventTypeService.findOneEventType(
-      createEventDto.eve_eventtype_id_fk,
-    );
+    const eventTypeFound = await this.eventTypeRepository.findOneBy({
+      id: createEventDto.eve_eventtype_id_fk,
+    });
+
+    if (!eventTypeFound) {
+      return new HttpException(
+        `Estrategia no encontrada.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    if (createEventDto.eve_unit_id_fk) {
+      const unitFound = await this.unitRepository.findOneBy({
+        id: createEventDto.eve_unit_id_fk,
+      });
+
+      if (!unitFound) {
+        return new HttpException(`Unidad no encontrada.`, HttpStatus.NOT_FOUND);
+      }
+    }
 
     const event = this.eventRepository.create(createEventDto);
     await this.eventRepository.save(event);
@@ -76,7 +95,7 @@ export class EventService {
       });
 
       if (findEvent) {
-        throw new HttpException(
+        return new HttpException(
           `El suceso ${event.eve_name} ya existe en el tipo de suceso seleccionado.`,
           HttpStatus.INTERNAL_SERVER_ERROR,
         );
@@ -99,13 +118,19 @@ export class EventService {
       where: {
         eve_status: true,
       },
+      relations: {
+        eventType: {
+          caseType: true,
+        },
+        unit: true,
+      },
       order: {
         eve_name: 'ASC',
       },
     });
 
     if (events.length === 0) {
-      throw new HttpException(
+      return new HttpException(
         'No se encontró la lista de sucesos.',
         HttpStatus.NOT_FOUND,
       );
@@ -116,7 +141,7 @@ export class EventService {
 
   async findOneEvent(id: number) {
     if (!id) {
-      throw new HttpException(
+      return new HttpException(
         'El identificador del suceso es requerido.',
         HttpStatus.BAD_REQUEST,
       );
@@ -127,7 +152,7 @@ export class EventService {
     });
 
     if (!event) {
-      throw new HttpException(
+      return new HttpException(
         'No se encontró el suceso.',
         HttpStatus.NOT_FOUND,
       );
@@ -153,7 +178,7 @@ export class EventService {
     });
 
     if (events.length === 0) {
-      throw new HttpException(
+      return new HttpException(
         'No se encontró la lista de sucesos relacionados con el tipo de suceso.',
         HttpStatus.NOT_FOUND,
       );
@@ -164,14 +189,38 @@ export class EventService {
 
   async updateEvent(id: number, updateEventDto: UpdateEventDto) {
     if (!updateEventDto) {
-      throw new HttpException(
+      return new HttpException(
         'Los datos para actualizar el suceso son requeridos.',
         HttpStatus.BAD_REQUEST,
       );
     }
 
-    const event = await this.findOneEvent(id);
-    const result = await this.eventRepository.update(event.id, updateEventDto);
+    const eventTypeFound = await this.eventTypeRepository.findOneBy({
+      id: updateEventDto.eve_eventtype_id_fk,
+    });
+
+    if (!eventTypeFound) {
+      return new HttpException(
+        `Estrategia no encontrada.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    const unitFound = await this.unitRepository.findOneBy({
+      id: updateEventDto.eve_unit_id_fk,
+    });
+
+    if (!unitFound) {
+      return new HttpException(`Unidad no encontrada.`, HttpStatus.NOT_FOUND);
+    }
+
+    const eventFound = await this.eventRepository.findOneBy({ id });
+
+    if (!eventFound) {
+      return new HttpException(`Suceso no encontrado.`, HttpStatus.NOT_FOUND);
+    }
+
+    const result = await this.eventRepository.update(id, updateEventDto);
 
     if (result.affected === 0) {
       return new HttpException(
@@ -187,8 +236,16 @@ export class EventService {
   }
 
   async deleteEvent(id: number) {
-    const event = await this.findOneEvent(id);
-    const result = await this.eventRepository.softDelete(event.id);
+    const eventFound = await this.eventRepository.findOneBy({ id });
+
+    if (!eventFound) {
+      return new HttpException(
+        `Suceso no encontrado, favor recargar.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    const result = await this.eventRepository.softDelete(id);
 
     if (result.affected === 0) {
       return new HttpException(

@@ -28,33 +28,29 @@ export class EventTypeController {
 
   @Post('/createEventType/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  createEventType(
-    @Body() createEventTypeDto: CreateEventTypeDto,
-  ): Promise<HttpException> {
+  createEventType(@Body() createEventTypeDto: CreateEventTypeDto) {
     return this.eventTypeService.createEventType(createEventTypeDto);
   }
 
   @Post('/createEventTypeArray') //es para cargar datos masivos
-  createEventTypeArray(
-    @Body() createEventTypeDto: CreateEventTypeDto[],
-  ): Promise<HttpException> {
+  createEventTypeArray(@Body() createEventTypeDto: CreateEventTypeDto[]) {
     return this.eventTypeService.createEventTypesArray(createEventTypeDto);
   }
 
   @Get('/listEventTypes/')
-  listEventTypes(): Promise<EventType[]> {
+  listEventTypes() {
     return this.eventTypeService.findAllEventTypes();
   }
 
   @Get('/findEventType/:id/')
-  findEventType(@Param('id') id: number): Promise<EventType> {
+  findEventType(@Param('id') id: number) {
     return this.eventTypeService.findOneEventType(id);
   }
 
   @Get('/findEvenTypeByCaseType/:caseTypeId')
   findEvenTypeByCaseType(
     @Param('caseTypeId') caseTypeId: number,
-  ): Promise<EventType[]> {
+  ) {
     return this.eventTypeService.findEvenTypeByCaseType(caseTypeId);
   }
 
@@ -63,13 +59,13 @@ export class EventTypeController {
   updateEventType(
     @Param('id') id: number,
     @Body() updateEventTypeDto: UpdateEventTypeDto,
-  ): Promise<HttpException> {
+  ) {
     return this.eventTypeService.updateEventType(id, updateEventTypeDto);
   }
 
   @Delete('/deleteEventType/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  deleteEventType(@Param('id') id: number): Promise<HttpException> {
+  deleteEventType(@Param('id') id: number) {
     return this.eventTypeService.deleteEventType(id);
   }
 }

@@ -28,37 +28,34 @@ export class UnitController {
 
   @Post('/createUnit/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  createUnit(@Body() createUnitDto: CreateUnitDto): Promise<HttpException> {
+  createUnit(@Body() createUnitDto: CreateUnitDto) {
     return this.unitService.createUnit(createUnitDto);
   }
 
   @Get('/listUnits/')
-  listUnits(): Promise<Unit[]> {
+  listUnits() {
     return this.unitService.findAllUnits();
   }
 
   @Get('/findUnit/:id/')
-  findUnit(@Param('id') id: number): Promise<Unit> {
+  findUnit(@Param('id') id: number) {
     return this.unitService.findOneUnit(id);
   }
 
   // @Get('/findUnitByService/:serviceId')
-  // findUnitByService(@Param('serviceId') serviceId: number): Promise<Unit[]> {
+  // findUnitByService(@Param('serviceId') serviceId: number) {
   //   return this.unitService.findUnitByService(serviceId);
   // }
 
   @Patch('/updateUnit/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  updateUnit(
-    @Param('id') id: number,
-    @Body() updateUnitDto: UpdateUnitDto,
-  ): Promise<HttpException> {
+  updateUnit(@Param('id') id: number, @Body() updateUnitDto: UpdateUnitDto) {
     return this.unitService.updateUnit(id, updateUnitDto);
   }
 
   @Delete('/deleteUnit/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  deleteUnit(@Param('id') id: number): Promise<HttpException> {
+  deleteUnit(@Param('id') id: number) {
     return this.unitService.deleteUnit(id);
   }
 }

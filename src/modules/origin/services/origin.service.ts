@@ -33,7 +33,10 @@ export class OriginService {
     });
 
     if (findOrigin) {
-      throw new HttpException('El origen ya existe.', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(
+        'El origen ya existe.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
     const origin = this.originRepository.create(createOriginDto);
     await this.originRepository.save(origin);
@@ -83,10 +86,7 @@ export class OriginService {
     });
 
     if (!origin) {
-      throw new HttpException(
-        'No se encontró el origen',
-        HttpStatus.NOT_FOUND,
-      );
+      throw new HttpException('No se encontró el origen', HttpStatus.NOT_FOUND);
     }
 
     return origin;
@@ -120,8 +120,16 @@ export class OriginService {
   }
 
   async deleteOrigin(id: number) {
-    const origin = await this.findOneOrigin(id);
-    const result = await this.originRepository.softDelete(origin.id);
+    const originFound = await this.originRepository.findOneBy({ id });
+
+    if (!originFound) {
+      return new HttpException(
+        `Origen no encontrado, favor recargar.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    const result = await this.originRepository.softDelete(id);
 
     if (result.affected === 0) {
       return new HttpException(

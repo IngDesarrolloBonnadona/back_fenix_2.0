@@ -27,24 +27,22 @@ export class PositionController {
 
   @Post('/createPosition/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  createPosition(
-    @Body() createPositionDto: CreatePositionDto,
-  ): Promise<HttpException> {
+  createPosition(@Body() createPositionDto: CreatePositionDto) {
     return this.positionService.createPosition(createPositionDto);
   }
 
   @Post('/synchronizePositions')
-  syncronizePositions(): Promise<number> {
+  syncronizePositions() {
     return this.positionService.synchronizePositions();
   }
 
   @Get('/listPositions')
-  listPositions(): Promise<Position[]> {
+  listPositions() {
     return this.positionService.findAllPosition();
   }
 
   @Get('/findPosition/:id')
-  findPosition(@Param('id') id: number): Promise<Position> {
+  findPosition(@Param('id') id: number) {
     return this.positionService.findOnePosition(id);
   }
 
@@ -58,13 +56,13 @@ export class PositionController {
   updatePosition(
     @Param('id') id: number,
     @Body() updatePositionDto: UpdatePositionDto,
-  ): Promise<HttpException> {
+  ) {
     return this.positionService.updatePosition(id, updatePositionDto);
   }
 
   @Delete('/deletePosition/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  async deletePosition(@Param('id') id: number): Promise<HttpException> {
+  async deletePosition(@Param('id') id: number) {
     return await this.positionService.deletePosition(id);
   }
 }

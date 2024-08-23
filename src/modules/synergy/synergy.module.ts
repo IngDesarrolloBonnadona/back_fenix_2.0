@@ -13,9 +13,13 @@ import { PermissionGuard } from 'src/utils/guards/permission.guard';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Synergy, CaseType, CaseReportValidate]),
+    TypeOrmModule.forFeature([
+      Synergy,
+      CaseType,
+      CaseReportValidate,
+      MovementReport,
+    ]),
     LogModule,
-    MovementReportModule,
     UserModule,
   ],
   controllers: [SynergyController],

@@ -14,7 +14,7 @@ export class RiskLevelService {
 
   async createRiskLevel(createRiskLevelDto: CreateRiskLevelDto) {
     if (!createRiskLevelDto || !createRiskLevelDto.ris_l_name) {
-      throw new HttpException(
+      return new HttpException(
         'El nombre del nivel de riesgo es requerido.',
         HttpStatus.BAD_REQUEST,
       );
@@ -28,7 +28,7 @@ export class RiskLevelService {
     });
 
     if (FindRiskLevel) {
-      throw new HttpException(
+      return new HttpException(
         'El nivel de riesgo ya existe.',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
@@ -53,7 +53,7 @@ export class RiskLevelService {
     });
 
     if (riskLevels.length === 0) {
-      throw new HttpException(
+      return new HttpException(
         'No se encontró la lista de niveles de riesgo',
         HttpStatus.NOT_FOUND,
       );
@@ -64,7 +64,7 @@ export class RiskLevelService {
 
   async findOneRiskLevel(id: number) {
     if (!id) {
-      throw new HttpException(
+      return new HttpException(
         'El identificador del nivel de riesgo es requerido.',
         HttpStatus.BAD_REQUEST,
       );
@@ -75,7 +75,7 @@ export class RiskLevelService {
     });
 
     if (!riskLevel) {
-      throw new HttpException(
+      return new HttpException(
         'No se encontró el nivel de riesgo',
         HttpStatus.NOT_FOUND,
       );
@@ -86,15 +86,15 @@ export class RiskLevelService {
 
   async updateRiskLevel(id: number, updateRiskLevelDto: UpdateRiskLevelDto) {
     if (!updateRiskLevelDto) {
-      throw new HttpException(
+      return new HttpException(
         'Los datos para actualizar el nivel de riesgo son requeridos.',
         HttpStatus.BAD_REQUEST,
       );
     }
-    
-    const riskLevel = await this.findOneRiskLevel(id);
+
+    await this.findOneRiskLevel(id);
     const result = await this.riskLevelRepository.update(
-      riskLevel.id,
+      id,
       updateRiskLevelDto,
     );
 
@@ -112,8 +112,16 @@ export class RiskLevelService {
   }
 
   async deleteRiskLevel(id: number) {
-    const riskLevel = await this.findOneRiskLevel(id);
-    const result = await this.riskLevelRepository.softDelete(riskLevel.id);
+    const riskLevelFound = await this.riskLevelRepository.findOneBy({ id });
+
+    if (!riskLevelFound) {
+      return new HttpException(
+        `Nivel de riesgo no encontrado, favor recargar.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    const result = await this.riskLevelRepository.softDelete(id);
 
     if (result.affected === 0) {
       return new HttpException(

@@ -36,7 +36,7 @@ export class ReportAnalystAssignmentController {
     @Body() createAnalystReporterDto: CreateReportAnalystAssignmentDto,
     @Ip() clientIp: string,
     @Param('idValidator') idValidator: string,
-  ): Promise<HttpException> {
+  ) {
     return this.reportAnalisysAssignmentService.assingAnalyst(
       createAnalystReporterDto,
       clientIp,
@@ -50,7 +50,7 @@ export class ReportAnalystAssignmentController {
     @Body() createAnalystReporterDto: CreateReportAnalystAssignmentDto,
     @Ip() clientIp: string,
     @Param('idAnalystCurrent') idAnalystCurrent: string,
-  ): Promise<HttpException> {
+  ) {
     return this.reportAnalisysAssignmentService.returnCaseBetweenAnalyst(
       createAnalystReporterDto,
       clientIp,
@@ -62,7 +62,7 @@ export class ReportAnalystAssignmentController {
   @Permission(permissions.SUPER_ADMIN, permissions.VALIDATOR)
   async listAssignedAnalystsByPosition(
     @Query() query: QueryReportAnalystAssignmentDto,
-  ): Promise<ReportAnalystAssignment[]> {
+  ) {
     return await this.reportAnalisysAssignmentService.findAssignedAnalystsByPosition(
       query,
     );
@@ -72,7 +72,7 @@ export class ReportAnalystAssignmentController {
   @Permission(permissions.SUPER_ADMIN, permissions.VALIDATOR)
   findAssignedAnalyst(
     @Param('id') id: number,
-  ): Promise<ReportAnalystAssignment> {
+  ) {
     return this.reportAnalisysAssignmentService.findOneAssignedAnalyst(id);
   }
 
@@ -105,7 +105,7 @@ export class ReportAnalystAssignmentController {
     @Ip() clientIp: string,
     @Param('idValidator') idValidator: string,
     @Param('idCaseReportValidate') idCaseReportValidate: string,
-  ): Promise<HttpException> {
+  ) {
     return this.reportAnalisysAssignmentService.reAssingAnalyst(
       updateReportAnalystAssignmentDto,
       clientIp,
@@ -132,7 +132,7 @@ export class ReportAnalystAssignmentController {
 
   @Delete('deleteAssignedAnalyst/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.VALIDATOR)
-  deleteAssignedAnalyst(@Param('id') id: number): Promise<HttpException> {
+  deleteAssignedAnalyst(@Param('id') id: number) {
     return this.reportAnalisysAssignmentService.deleteAssignedAnalyst(id);
   }
 }

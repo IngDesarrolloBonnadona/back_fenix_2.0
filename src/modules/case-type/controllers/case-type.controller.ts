@@ -29,32 +29,32 @@ export class CaseTypeController {
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
   createCaseType(
     @Body() createCaseTypeDto: CreateCaseTypeDto,
-  ): Promise<HttpException> {
+  ) {
     return this.caseTypeService.createCaseType(createCaseTypeDto);
   }
 
   @Get('/listCaseTypes/')
-  listCaseTypes(): Promise<CaseType[]> {
+  listCaseTypes() {
     return this.caseTypeService.findAllCaseTypes();
   }
 
   @Get('/findCaseType/:id/')
-  findCaseType(@Param('id') id: number): Promise<CaseType> {
+  findCaseType(@Param('id') id: number) {
     return this.caseTypeService.findOneCaseType(id);
   }
 
-  @Patch('/updateCaseType/:id/:userIdPermission')
+  @Put('/updateCaseType/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
   updateCaseType(
     @Param('id') id: number,
     @Body() updateCaseTypeDto: UpdateCaseTypeDto,
-  ): Promise<HttpException> {
+  ) {
     return this.caseTypeService.updateCaseType(id, updateCaseTypeDto);
   }
 
   @Delete('/deleteCaseType/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  deleteCaseType(@Param('id') id: number): Promise<HttpException> {
+  deleteCaseType(@Param('id') id: number) {
     return this.caseTypeService.deleteCaseType(id);
   }
 }

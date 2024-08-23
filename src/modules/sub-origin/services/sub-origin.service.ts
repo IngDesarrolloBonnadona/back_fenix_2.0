@@ -26,22 +26,22 @@ export class SubOriginService {
       !createSubOriginDto.sub_o_name ||
       !createSubOriginDto.sub_o_origin_id_fk
     ) {
-      throw new HttpException(
+      return new HttpException(
         'Algunos datos de sub origen son requeridos.',
         HttpStatus.BAD_REQUEST,
       );
     }
 
-      const FindSubOrigin = await this.subOriginRepository.findOne({
-        where: {
-          sub_o_name: createSubOriginDto.sub_o_name,
-          sub_o_origin_id_fk: createSubOriginDto.sub_o_origin_id_fk,
-          sub_o_status: true,
-        },
-      });
+    const FindSubOrigin = await this.subOriginRepository.findOne({
+      where: {
+        sub_o_name: createSubOriginDto.sub_o_name,
+        sub_o_origin_id_fk: createSubOriginDto.sub_o_origin_id_fk,
+        sub_o_status: true,
+      },
+    });
 
     if (FindSubOrigin) {
-      throw new HttpException(
+      return new HttpException(
         'El sub origen ya existe con el origen seleccionado.',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
@@ -61,13 +61,16 @@ export class SubOriginService {
       where: {
         sub_o_status: true,
       },
+      relations: {
+        origin: true,
+      },
       order: {
         sub_o_name: 'ASC',
       },
     });
 
     if (subOrigins.length === 0) {
-      throw new HttpException(
+      return new HttpException(
         'No se encontró la lista de sub origenes.',
         HttpStatus.NOT_FOUND,
       );
@@ -78,7 +81,7 @@ export class SubOriginService {
 
   async findOneSubOrigin(id: number) {
     if (!id) {
-      throw new HttpException(
+      return new HttpException(
         'El identificador del sub origen es requerido.',
         HttpStatus.BAD_REQUEST,
       );
@@ -86,10 +89,13 @@ export class SubOriginService {
 
     const subOrigin = await this.subOriginRepository.findOne({
       where: { id, sub_o_status: true },
+      relations: {
+        origin: true,
+      },
     });
 
     if (!subOrigin) {
-      throw new HttpException(
+      return new HttpException(
         'No se encontró el sub origen.',
         HttpStatus.NOT_FOUND,
       );
@@ -100,7 +106,7 @@ export class SubOriginService {
 
   async findSubOriginByOriginId(originId: number) {
     if (!originId) {
-      throw new HttpException(
+      return new HttpException(
         'El identificador del origen es requerido.',
         HttpStatus.BAD_REQUEST,
       );
@@ -117,7 +123,7 @@ export class SubOriginService {
     });
 
     if (!subOriginByOrigin) {
-      throw new HttpException(
+      return new HttpException(
         'No se encontró el sub origen relacionado al origen.',
         HttpStatus.NOT_FOUND,
       );
@@ -128,19 +134,19 @@ export class SubOriginService {
 
   async updateSubOrigin(id: number, updateSubOriginDto: UpdateSubOriginDto) {
     if (!updateSubOriginDto) {
-      throw new HttpException(
+      return new HttpException(
         'Los datos para actualizar el sub origen son requeridos.',
         HttpStatus.BAD_REQUEST,
       );
     }
 
-    const subOrigin = await this.findOneSubOrigin(id);
+    await this.findOneSubOrigin(id);
     await this.originService.findOneOrigin(
       updateSubOriginDto.sub_o_origin_id_fk,
     );
 
     const result = await this.subOriginRepository.update(
-      subOrigin.id,
+      id,
       updateSubOriginDto,
     );
 
@@ -158,8 +164,16 @@ export class SubOriginService {
   }
 
   async deleteSubOrigin(id: number) {
-    const subOrigin = await this.findOneSubOrigin(id);
-    const result = await this.subOriginRepository.softDelete(subOrigin.id);
+    const subOriginFound = await this.subOriginRepository.findOneBy({ id });
+
+    if (!subOriginFound) {
+      return new HttpException(
+        `Sub origen no encontrado, favor recargar.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    const result = await this.subOriginRepository.softDelete(id);
 
     if (result.affected === 0) {
       return new HttpException(

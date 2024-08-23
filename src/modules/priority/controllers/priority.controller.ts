@@ -27,19 +27,17 @@ export class PriorityController {
 
   @Post('/createPriority/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  createPriority(
-    @Body() createPriorityDto: CreatePriorityDto,
-  ): Promise<HttpException> {
+  createPriority(@Body() createPriorityDto: CreatePriorityDto) {
     return this.priorityService.createPriority(createPriorityDto);
   }
 
   @Get('/listPriorities/')
-  listPriorities(): Promise<Priority[]> {
+  listPriorities() {
     return this.priorityService.findAllPriorities();
   }
 
   @Get('/findPriority/:id/')
-  findPriority(@Param('id') id: number): Promise<Priority> {
+  findPriority(@Param('id') id: number) {
     return this.priorityService.findOnePriority(id);
   }
 
@@ -48,13 +46,13 @@ export class PriorityController {
   updateStatusPriority(
     @Param('id') id: number,
     @Body() updateStatusPriority: UpdatePriorityDto,
-  ): Promise<HttpException> {
+  ) {
     return this.priorityService.updateStatusPriority(id, updateStatusPriority);
   }
 
   @Delete('/deletePriority/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  deletePriority(@Param('id') id: number): Promise<HttpException> {
+  deletePriority(@Param('id') id: number) {
     return this.priorityService.deletePriority(id);
   }
 }

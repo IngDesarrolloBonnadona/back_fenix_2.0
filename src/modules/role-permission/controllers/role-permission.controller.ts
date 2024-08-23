@@ -26,26 +26,24 @@ export class RolePermissionController {
 
   @Post('/createRole/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN)
-  createRole(
-    @Body() createRoleDto: CreateRolePermissionDto,
-  ): Promise<HttpException> {
+  createRole(@Body() createRoleDto: CreateRolePermissionDto) {
     return this.roleService.createRole(createRoleDto);
   }
 
   @Get('/listRoles/')
-  listRoles(): Promise<RolePermission[]> {
+  listRoles() {
     return this.roleService.findAllRoles();
   }
 
   @Get('/findRole/:id/')
-  findRole(@Param('id') id: number): Promise<RolePermission> {
+  findRole(@Param('id') id: number) {
     return this.roleService.findOneRole(id);
   }
 
   @Get('/findRoleByName/')
   findRoleByName(
     @Body() createRoleDto: CreateRolePermissionDto,
-  ): Promise<RolePermission> {
+  ) {
     return this.roleService.findRoleByName(createRoleDto);
   }
 
@@ -54,13 +52,13 @@ export class RolePermissionController {
   updateRole(
     @Param('id') id: number,
     @Body() updateRoleDto: UpdateRolePermissionDto,
-  ): Promise<HttpException> {
+  ) {
     return this.roleService.updateRole(id, updateRoleDto);
   }
 
   @Delete('/deleteRole/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN)
-  deleteRole(@Param('id') id: number): Promise<HttpException> {
+  deleteRole(@Param('id') id: number) {
     return this.roleService.deleteRole(id);
   }
 }

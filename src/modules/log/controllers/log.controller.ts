@@ -28,7 +28,7 @@ export class LogController {
 
   @Post('/createLog/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN)
-  createLog(@Body() createLogDto: CreateLogDto): Promise<HttpException> {
+  createLog(@Body() createLogDto: CreateLogDto) {
     return this.logService.createLog(
       createLogDto.log_validatedcase_id_fk,
       createLogDto.log_user_id,
@@ -39,19 +39,19 @@ export class LogController {
 
   @Get('/listLogs/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN)
-  listLogs(): Promise<Log[]> {
+  listLogs() {
     return this.logService.findAllLogs();
   }
 
   @Get('/findOneLog/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN)
-  findOneLog(@Param('id') id: number): Promise<Log> {
+  findOneLog(@Param('id') id: number) {
     return this.logService.findOneLog(id);
   }
 
   @Delete('/deleteLog/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN)
-  deleteLog(@Param('id') id: number): Promise<HttpException> {
+  deleteLog(@Param('id') id: number) {
     return this.logService.deleteLog(id);
   }
 }

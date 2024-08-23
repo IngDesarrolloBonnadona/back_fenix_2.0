@@ -28,7 +28,7 @@ export class EventController {
 
   @Post('/createEvent/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  createEvent(@Body() createEventDto: CreateEventDto): Promise<HttpException> {
+  createEvent(@Body() createEventDto: CreateEventDto) {
     return this.eventService.createEvent(createEventDto);
   }
 
@@ -38,12 +38,12 @@ export class EventController {
   }
 
   @Get('/listEvents/')
-  listEvents(): Promise<Event[]> {
+  listEvents() {
     return this.eventService.findAllEvents();
   }
 
   @Get('/findEvent/:id/')
-  findEvent(@Param('id') id: number): Promise<Event> {
+  findEvent(@Param('id') id: number) {
     return this.eventService.findOneEvent(id);
   }
 
@@ -51,7 +51,7 @@ export class EventController {
   findEventsByEventTypeIdAndUnitId(
     @Param('eventTypeId') eventTypeId: number,
     @Param('unitId') unitId?: string,
-  ): Promise<Event[]> {
+  ) {
     const unitIdNumber = unitId ? parseInt(unitId, 10) : undefined;
     return this.eventService.findEventByEventTypeAndIdUnitId(
       eventTypeId,
@@ -64,13 +64,13 @@ export class EventController {
   updateEvent(
     @Param('id') id: number,
     @Body() updateEventDto: UpdateEventDto,
-  ): Promise<HttpException> {
+  ) {
     return this.eventService.updateEvent(id, updateEventDto);
   }
 
   @Delete('/deleteEvent/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  deleteEvent(@Param('id') id: number): Promise<HttpException> {
+  deleteEvent(@Param('id') id: number) {
     return this.eventService.deleteEvent(id);
   }
 }

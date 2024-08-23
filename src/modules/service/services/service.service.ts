@@ -7,7 +7,7 @@ import {
 import { CreateServiceDto } from '../dto/create-service.dto';
 import { UpdateServiceDto } from '../dto/update-service.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Service, Service as ServiceEntity } from '../entities/service.entity';
+import { Service as ServiceEntity } from '../entities/service.entity';
 import { Repository } from 'typeorm';
 import { UnitService } from 'src/modules/unit/services/unit.service';
 
@@ -26,7 +26,7 @@ export class ServiceService {
       !createServiceDto.serv_name ||
       !createServiceDto.serv_unit_id_fk
     ) {
-      throw new HttpException(
+      return new HttpException(
         'Algunos datos del servicio son requeridos.',
         HttpStatus.BAD_REQUEST,
       );
@@ -41,7 +41,7 @@ export class ServiceService {
     });
 
     if (FindService) {
-      throw new HttpException(
+      return new HttpException(
         'El servicio ya existe con la unidad seleccionada.',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
@@ -72,7 +72,7 @@ export class ServiceService {
     });
 
     if (services.length === 0) {
-      throw new HttpException(
+      return new HttpException(
         'No se encontró la lista de servicios',
         HttpStatus.NOT_FOUND,
       );
@@ -82,7 +82,7 @@ export class ServiceService {
 
   async findOneService(id: number) {
     if (!id) {
-      throw new HttpException(
+      return new HttpException(
         'El identificador del servicio es requerido.',
         HttpStatus.BAD_REQUEST,
       );
@@ -96,7 +96,7 @@ export class ServiceService {
     });
 
     if (!service) {
-      throw new HttpException(
+      return new HttpException(
         'No se encontró el servicio',
         HttpStatus.NOT_FOUND,
       );
@@ -106,20 +106,16 @@ export class ServiceService {
 
   async updateService(id: number, updateServiceDto: UpdateServiceDto) {
     if (!updateServiceDto) {
-      throw new HttpException(
+      return new HttpException(
         'Los datos para actualizar el servicio son requeridos.',
         HttpStatus.BAD_REQUEST,
       );
     }
 
-    const service = await this.findOneService(id);
-
+    await this.findOneService(id);
     await this.unitService.findOneUnit(updateServiceDto.serv_unit_id_fk);
 
-    const result = await this.serviceRepository.update(
-      service.id,
-      updateServiceDto,
-    );
+    const result = await this.serviceRepository.update(id, updateServiceDto);
 
     if (result.affected === 0) {
       return new HttpException(
@@ -135,8 +131,16 @@ export class ServiceService {
   }
 
   async deleteService(id: number) {
-    const service = await this.findOneService(id);
-    const result = await this.serviceRepository.softDelete(service.id);
+    const serviceFound = await this.serviceRepository.findOneBy({ id });
+
+    if (!serviceFound) {
+      return new HttpException(
+        `Servicio no encontrado, favor recargar.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    const result = await this.serviceRepository.softDelete(id);
 
     if (result.affected === 0) {
       return new HttpException(

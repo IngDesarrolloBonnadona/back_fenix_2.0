@@ -61,7 +61,7 @@ export class RoleResponseTimeService {
     await this.roleResponseTimeRepository.save(roleResponseTime);
 
     return new HttpException(
-      `¡El tiempo de respuesta para el rol ${findRole.role_name} se creó correctamente!`,
+      `¡El tiempo de respuesta se creó correctamente!`,
       HttpStatus.CREATED,
     );
   }
@@ -137,10 +137,17 @@ export class RoleResponseTimeService {
   }
 
   async deleteRoleResponseTime(id: number) {
-    const roleResponseTime = await this.findOnefindAllRoleResponseTime(id);
-    const result = await this.roleResponseTimeRepository.softDelete(
-      roleResponseTime.id,
-    );
+    const roleResponseTimeFound =
+      await this.roleResponseTimeRepository.findOneBy({ id });
+
+    if (!roleResponseTimeFound) {
+      return new HttpException(
+        `Tiempo de respuesta del rol no encontrado, favor recargar.`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    const result = await this.roleResponseTimeRepository.softDelete(id);
 
     if (result.affected === 0) {
       return new HttpException(

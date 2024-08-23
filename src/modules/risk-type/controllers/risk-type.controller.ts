@@ -28,19 +28,17 @@ export class RiskTypeController {
 
   @Post('/createRisktype/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  createRisktype(
-    @Body() createRiskTypeDto: CreateRiskTypeDto,
-  ): Promise<HttpException> {
+  createRisktype(@Body() createRiskTypeDto: CreateRiskTypeDto) {
     return this.riskTypeService.createRiskType(createRiskTypeDto);
   }
 
   @Get('/listRisktypes/')
-  listRisktypes(): Promise<RiskType[]> {
+  listRisktypes() {
     return this.riskTypeService.findAllRiskTypes();
   }
 
   @Get('/findRisktype/:id/')
-  findRisktype(@Param('id') id: number): Promise<RiskType> {
+  findRisktype(@Param('id') id: number) {
     return this.riskTypeService.findOneRiskType(id);
   }
 
@@ -49,13 +47,13 @@ export class RiskTypeController {
   updateRisktype(
     @Param('id') id: number,
     @Body() updateRiskTypeDto: UpdateRiskTypeDto,
-  ): Promise<HttpException> {
+  ) {
     return this.riskTypeService.updateRiskType(id, updateRiskTypeDto);
   }
 
   @Delete('/deleteRisktype/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  deleteRisktype(@Param('id') id: number): Promise<HttpException> {
+  deleteRisktype(@Param('id') id: number) {
     return this.riskTypeService.deleteRiskType(id);
   }
 }

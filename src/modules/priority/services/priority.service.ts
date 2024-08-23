@@ -22,7 +22,7 @@ export class PriorityService {
       !createPriorityDto.prior_severityclasif_id_fk ||
       !createPriorityDto.prior_responsetime
     ) {
-      throw new HttpException(
+      return new HttpException(
         'Algunos datos de prioridad son requeridos.',
         HttpStatus.BAD_REQUEST,
       );
@@ -40,7 +40,7 @@ export class PriorityService {
     });
 
     if (FindPriority) {
-      throw new HttpException(
+      return new HttpException(
         'La prioridad ya existe.',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
@@ -60,13 +60,16 @@ export class PriorityService {
       where: {
         prior_status: true,
       },
+      relations: {
+        severityClasification: true,
+      },
       order: {
         prior_name: 'ASC',
       },
     });
 
     if (priorities.length === 0) {
-      throw new HttpException(
+      return new HttpException(
         'No se encontró la lista de prioridades.',
         HttpStatus.NOT_FOUND,
       );
@@ -76,7 +79,7 @@ export class PriorityService {
 
   async findOnePriority(id: number) {
     if (!id) {
-      throw new HttpException(
+      return new HttpException(
         'El identificador de prioridad es requerido.',
         HttpStatus.BAD_REQUEST,
       );
@@ -84,10 +87,13 @@ export class PriorityService {
 
     const priority = await this.priorityRepository.findOne({
       where: { id, prior_status: true },
+      relations: {
+        severityClasification: true,
+      },
     });
 
     if (!priority) {
-      throw new HttpException(
+      return new HttpException(
         'No se encontró la prioridad.',
         HttpStatus.NOT_FOUND,
       );
@@ -101,15 +107,15 @@ export class PriorityService {
     updateStatusPriority: UpdatePriorityDto,
   ) {
     if (!updateStatusPriority) {
-      throw new HttpException(
+      return new HttpException(
         'Los datos para actualizar la prioridad son requeridos.',
         HttpStatus.BAD_REQUEST,
       );
     }
 
-    const priority = await this.findOnePriority(id);
+    await this.findOnePriority(id);
     const result = await this.priorityRepository.update(
-      priority.id,
+      id,
       updateStatusPriority,
     );
 
@@ -126,8 +132,16 @@ export class PriorityService {
   }
 
   async deletePriority(id: number) {
-    const priority = await this.findOnePriority(id);
-    const result = await this.priorityRepository.softDelete(priority.id);
+    const priorityFound = await this.priorityRepository.findOneBy({ id });
+
+    if (!priorityFound) {
+      return new HttpException(
+        `Prioridad no encontrada, favor recargar.`,
+        HttpStatus.NOT_FOUND
+      )
+    }
+
+    const result = await this.priorityRepository.softDelete(id);
 
     if (result.affected === 0) {
       return new HttpException(

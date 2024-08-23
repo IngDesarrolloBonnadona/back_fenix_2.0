@@ -28,21 +28,21 @@ export class ReasonReturnCaseController {
 
   @Post('/createReasonReturnCase/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  create(
-    @Body() createReasonReturnCaseDto: CreateReasonReturnCaseDto,
-  ): Promise<HttpException> {
+  create(@Body() createReasonReturnCaseDto: CreateReasonReturnCaseDto) {
     return this.reasonReturnCaseService.createReasonReturnCase(
       createReasonReturnCaseDto,
     );
   }
 
   @Get('/listReasonReturnCases/')
-  listReasonReturnCases(): Promise<ReasonReturnCase[]> {
+  listReasonReturnCases() {
     return this.reasonReturnCaseService.findAllReasonReturnCases();
   }
 
   @Get('/findReasonReturnCase/:id/')
-  findReasonReturnCase(@Param('id') id: number): Promise<ReasonReturnCase> {
+  findReasonReturnCase(
+    @Param('id') id: number,
+  ) {
     return this.reasonReturnCaseService.findOneReasonReturnCase(id);
   }
 
@@ -51,7 +51,7 @@ export class ReasonReturnCaseController {
   updateReasonReturnCase(
     @Param('id') id: number,
     @Body() updateReasonReturnCaseDto: UpdateReasonReturnCaseDto,
-  ): Promise<HttpException> {
+  ) {
     return this.reasonReturnCaseService.updateReasonReturnCase(
       id,
       updateReasonReturnCaseDto,
@@ -60,7 +60,7 @@ export class ReasonReturnCaseController {
 
   @Delete('/deleteReasonReturnCase/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  deleteReasonReturnCase(@Param('id') id: number): Promise<HttpException> {
+  deleteReasonReturnCase(@Param('id') id: number) {
     return this.reasonReturnCaseService.deleteReasonReturnCase(id);
   }
 }

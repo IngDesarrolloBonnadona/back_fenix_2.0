@@ -37,7 +37,7 @@ export class DeviceService {
     }
   }
 
-  async findAllDevices(): Promise<DeviceEntity[]> {
+  async findAllDevices() {
     const devices = await this.deviceRepository.find({
       order: {
         createdAt: 'DESC',
@@ -54,7 +54,7 @@ export class DeviceService {
     return devices;
   }
 
-  async findOneDevice(id: number): Promise<DeviceEntity> {
+  async findOneDevice(id: number) {
     if (!id) {
       throw new HttpException(
         'El identificador del dispositivo es requerido.',
