@@ -31,7 +31,7 @@ export class PositionService {
     const FindPosition = await this.positionRepository.findOne({
       where: {
         pos_name: createPositionDto.pos_name,
-        pos_enabled: true,
+        pos_status: true,
       },
     });
 
@@ -94,7 +94,7 @@ export class PositionService {
 
   async findAllPosition() {
     const positions = await this.positionRepository.find({
-      where: { pos_enabled: true },
+      where: { pos_status: true },
       order: {
         pos_name: 'ASC',
       },
@@ -119,7 +119,7 @@ export class PositionService {
     }
 
     const position = await this.positionRepository.findOne({
-      where: { id, pos_enabled: true },
+      where: { id, pos_status: true },
     });
 
     if (!position) {
@@ -188,8 +188,8 @@ export class PositionService {
     if (!positionFound) {
       return new HttpException(
         `Cargo no encontrado, favor recargar.`,
-        HttpStatus.NOT_FOUND
-      )
+        HttpStatus.NOT_FOUND,
+      );
     }
 
     const result = await this.positionRepository.softDelete(id);

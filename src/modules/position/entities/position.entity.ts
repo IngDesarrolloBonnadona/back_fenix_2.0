@@ -26,7 +26,7 @@ export class Position {
   pos_level: number;
 
   @Column({ type: 'boolean', default: true })
-  pos_enabled: boolean;
+  pos_status: boolean;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -46,6 +46,9 @@ export class Position {
   @OneToMany(() => ActionPlan, (actionPlan) => actionPlan.position)
   actionPlan: ActionPlan[];
 
-  @OneToMany(() => ActionPlanActivity, (actionPlanActivity) => actionPlanActivity.position)
+  @OneToMany(
+    () => ActionPlanActivity,
+    (actionPlanActivity) => actionPlanActivity.position,
+  )
   actionPlanActivity: ActionPlanActivity[];
 }
