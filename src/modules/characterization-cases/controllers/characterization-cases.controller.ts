@@ -59,7 +59,7 @@ export class CharacterizationCasesController {
     );
   }
 
-  @Delete('/deleteCharacterization/:id/:userIdPermission')
+  @Delete('/deleteCharacterizationCase/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
   deleteCharacterization(@Param('id') id: number) {
     return this.characterizationCasesService.deleteCharacterization(id);
