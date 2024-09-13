@@ -43,7 +43,7 @@ export class CaseTypeController {
     return this.caseTypeService.findOneCaseType(id);
   }
 
-  @Put('/updateCaseType/:id/:userIdPermission')
+  @Patch('/updateCaseType/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
   updateCaseType(
     @Param('id') id: number,
