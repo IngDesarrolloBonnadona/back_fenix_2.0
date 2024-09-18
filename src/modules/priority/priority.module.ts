@@ -6,10 +6,11 @@ import { Priority } from './entities/priority.entity';
 import { SeverityClasificationModule } from '../severity-clasification/severity-clasification.module';
 import { UserModule } from 'src/modules_bonnadonahub/user/user.module';
 import { PermissionGuard } from 'src/utils/guards/permission.guard';
+import { SeverityClasification } from '../severity-clasification/entities/severity-clasification.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Priority]),
+    TypeOrmModule.forFeature([Priority, SeverityClasification]),
     SeverityClasificationModule,
     UserModule,
   ],
