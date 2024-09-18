@@ -5,12 +5,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Priority as PriorityEntity } from '../entities/priority.entity';
 import { Repository } from 'typeorm';
 import { SeverityClasificationService } from 'src/modules/severity-clasification/services/severity-clasification.service';
+import { SeverityClasification as SeverityClasificationEntity } from 'src/modules/severity-clasification/entities/severity-clasification.entity';
 
 @Injectable()
 export class PriorityService {
   constructor(
     @InjectRepository(PriorityEntity)
     private readonly priorityRepository: Repository<PriorityEntity>,
+    @InjectRepository(SeverityClasificationEntity)
+    private readonly severityClasificationRepository: Repository<SeverityClasificationEntity>,
 
     private readonly severityClasificationService: SeverityClasificationService,
   ) {}
@@ -28,22 +31,45 @@ export class PriorityService {
       );
     }
 
-    await this.severityClasificationService.findOneSeverityClasification(
-      createPriorityDto.prior_severityclasif_id_fk,
-    );
-
-    const FindPriority = await this.priorityRepository.findOne({
-      where: {
-        prior_name: createPriorityDto.prior_name,
-        prior_status: true,
-      },
+    const findSeverityClasif = await this.severityClasificationRepository.findOne({
+      where: { id: createPriorityDto.prior_severityclasif_id_fk, sev_c_status: true },
     });
 
-    if (FindPriority) {
+    if (!findSeverityClasif) {
       return new HttpException(
-        'La prioridad ya existe.',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        'No se encontró la clasificación de severidad.',
+        HttpStatus.NOT_FOUND,
       );
+    }
+
+    const findPriority = await this.priorityRepository.findOne({
+      where: [
+        { prior_name: createPriorityDto.prior_name, prior_status: true },
+        {
+          prior_severityclasif_id_fk:
+            createPriorityDto.prior_severityclasif_id_fk,
+          prior_status: true,
+        },
+      ],
+    });
+
+    if (findPriority) {
+      if (findPriority.prior_name === createPriorityDto.prior_name) {
+        return new HttpException(
+          'El nombre de la prioridad ya existe.',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
+
+      if (
+        findPriority.prior_severityclasif_id_fk ===
+        createPriorityDto.prior_severityclasif_id_fk
+      ) {
+        return new HttpException(
+          'La clasificación de severidad ya existe.',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
     }
 
     const priority = this.priorityRepository.create(createPriorityDto);
@@ -137,8 +163,8 @@ export class PriorityService {
     if (!priorityFound) {
       return new HttpException(
         `Prioridad no encontrada, favor recargar.`,
-        HttpStatus.NOT_FOUND
-      )
+        HttpStatus.NOT_FOUND,
+      );
     }
 
     const result = await this.priorityRepository.softDelete(id);
