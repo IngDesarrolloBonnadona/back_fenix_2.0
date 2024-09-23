@@ -1,4 +1,4 @@
-import { IsBoolean, IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class CreateCompressionConceptReportDto {
   @IsNotEmpty()
@@ -6,6 +6,6 @@ export class CreateCompressionConceptReportDto {
   comp_c_user_id: string;
 
   @IsNotEmpty()
-  @IsBoolean()
-  comp_c_report_understood: boolean;
+  @IsNumber()
+  comp_c_casetype_id_fk: number;
 }

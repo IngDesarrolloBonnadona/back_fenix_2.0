@@ -1,6 +1,7 @@
 import { ActionPlan } from 'src/modules/action-plan/entities/action-plan.entity';
 import { CaseReportOriginal } from 'src/modules/case-report-original/entities/case-report-original.entity';
 import { CaseReportValidate } from 'src/modules/case-report-validate/entities/case-report-validate.entity';
+import { CompressionConceptReport } from 'src/modules/compression-concept-report/entities/compression-concept-report.entity';
 import { EventType } from 'src/modules/event-type/entities/event-type.entity';
 import {
   Column,
@@ -55,4 +56,10 @@ export class CaseType {
 
   @OneToMany(() => ActionPlan, (actionPlan) => actionPlan.caseType)
   actionPlan: ActionPlan[];
+
+  @OneToMany(
+    () => CompressionConceptReport,
+    (compressionConceptReport) => compressionConceptReport.caseType,
+  )
+  compressionConceptReport: CompressionConceptReport[];
 }

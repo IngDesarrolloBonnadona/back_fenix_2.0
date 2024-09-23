@@ -17,7 +17,7 @@ export class CompressionConceptReportService {
   ) {
     if (
       !createCompressionConceptReportDto ||
-      !createCompressionConceptReportDto.comp_c_report_understood ||
+      !createCompressionConceptReportDto.comp_c_casetype_id_fk ||
       !createCompressionConceptReportDto.comp_c_user_id
     ) {
       return new HttpException(
@@ -35,7 +35,7 @@ export class CompressionConceptReportService {
     );
 
     return new HttpException(
-      `¡el tipo de caso se creó correctamente!`,
+      `¡la compresion de los conceptos de reportes se creó correctamente!`,
       HttpStatus.CREATED,
     );
   }
