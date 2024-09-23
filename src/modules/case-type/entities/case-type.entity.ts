@@ -23,6 +23,9 @@ export class CaseType {
   @Column({ type: 'varchar', nullable: true })
   cas_t_description: string;
 
+  @Column({ type: 'varchar', nullable: true })
+  cas_t_image: string;
+
   @Column({ type: 'boolean', default: true })
   cas_t_status: boolean;
 
