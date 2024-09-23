@@ -35,7 +35,7 @@ export class CompressionConceptReportService {
     );
 
     return new HttpException(
-      `¡el tipo de caso se creó correctamente!`,
+      `¡la compresion de los conceptos de reportes se creó correctamente!`,
       HttpStatus.CREATED,
     );
   }
