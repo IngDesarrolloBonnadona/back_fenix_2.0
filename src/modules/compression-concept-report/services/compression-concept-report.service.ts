@@ -17,7 +17,7 @@ export class CompressionConceptReportService {
   ) {
     if (
       !createCompressionConceptReportDto ||
-      !createCompressionConceptReportDto.comp_c_report_understood ||
+      !createCompressionConceptReportDto.comp_c_casetype_id_fk ||
       !createCompressionConceptReportDto.comp_c_user_id
     ) {
       return new HttpException(
