@@ -67,7 +67,7 @@ export class CaseReportOriginal {
   ori_cr_admconsecutivepatient: number;
 
   @Column({ nullable: true })
-  ori_cr_reporter_id: number;
+  ori_cr_reporter_id: string;
 
   @Column({ nullable: true })
   ori_cr_eventtype_id_fk: number;
