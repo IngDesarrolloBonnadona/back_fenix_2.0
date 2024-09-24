@@ -9,9 +9,9 @@ export class CreateOriAdverseEventReportDto {
     @IsNotEmpty()
     ori_cr_casetype_id_fk: number
 
-    @IsNumber()
+    @IsString()
     @IsNotEmpty()
-    ori_cr_reporter_id: number;
+    ori_cr_reporter_id: string;
 
     @IsNumber()
     @IsNotEmpty()

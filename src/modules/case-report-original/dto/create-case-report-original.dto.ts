@@ -15,9 +15,9 @@ export class CreateCaseReportOriginalDto {
   @IsString()
   ori_cr_filingnumber: string;
 
-  @IsNumber()
+  @IsString()
   @IsNotEmpty()
-  ori_cr_reporter_id: number;
+  ori_cr_reporter_id: string;
 
   @IsNumber()
   @IsNotEmpty()

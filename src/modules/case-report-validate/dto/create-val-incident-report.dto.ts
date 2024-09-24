@@ -10,9 +10,9 @@ export class CreateValIncidentReportDto {
     @IsNotEmpty()
     val_cr_casetype_id_fk: number
 
-    @IsNumber()
+    @IsString()
     @IsNotEmpty()
-    val_cr_reporter_id: number;
+    val_cr_reporter_id: string;
 
     @IsNumber()
     @IsNotEmpty()
