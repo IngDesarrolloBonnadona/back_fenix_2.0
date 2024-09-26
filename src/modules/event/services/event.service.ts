@@ -161,17 +161,45 @@ export class EventService {
     return event;
   }
 
-  async findEventByEventTypeAndIdUnitId(eventTypeId: number, unitId?: number) {
-    const where: any = { eve_eventtype_id_fk: eventTypeId };
+  // async findEventByEventTypeAndIdUnitId(eventTypeId: number, unitId?: number) {
+  //   const where: any = { eve_eventtype_id_fk: eventTypeId };
 
-    if (unitId !== undefined) {
-      where.eve_unit_id_fk = unitId;
+  //   if (unitId !== undefined) {
+  //     where.eve_unit_id_fk = unitId;
+  //   }
+
+  //   where.eve_status = true;
+
+  //   const events = await this.eventRepository.find({
+  //     where,
+  //     order: {
+  //       eve_name: 'ASC',
+  //     },
+  //   });
+
+  //   if (events.length === 0) {
+  //     return new HttpException(
+  //       'No se encontró la lista de sucesos relacionados con el tipo de suceso.',
+  //       HttpStatus.NOT_FOUND,
+  //     );
+  //   }
+
+  //   return events;
+  // }
+
+  async findEventByEventTypeId(eventTypeId: number) {
+    if (!eventTypeId) {
+      return new HttpException(
+        'El identificador de la estrategia es requerida.',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
-    where.eve_status = true;
-
     const events = await this.eventRepository.find({
-      where,
+      where: {
+        eve_eventtype_id_fk: eventTypeId,
+        eve_status: true,
+      },
       order: {
         eve_name: 'ASC',
       },
@@ -179,7 +207,7 @@ export class EventService {
 
     if (events.length === 0) {
       return new HttpException(
-        'No se encontró la lista de sucesos relacionados con el tipo de suceso.',
+        'No se encontró la lista de sucesos relacionados con la estrategia.',
         HttpStatus.NOT_FOUND,
       );
     }
