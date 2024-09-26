@@ -41,24 +41,8 @@ export class Unit {
   @DeleteDateColumn()
   deletedAt: Date;
 
-  // @ManyToOne(() => Service, (service) => service.unit)
-  // @JoinColumn({ name: 'unit_service_id_fk' })
-  // service: Service;
-
   @OneToMany(() => Service, (service) => service.unit)
   service: Service[];
-
-  @OneToMany(
-    () => CaseReportOriginal,
-    (caseReportOriginal) => caseReportOriginal.unit,
-  )
-  caseReportOriginal: CaseReportOriginal[];
-
-  @OneToMany(
-    () => CaseReportValidate,
-    (caseReportValidate) => caseReportValidate.unit,
-  )
-  caseReportValidate: CaseReportValidate[];
 
   @OneToMany(() => ActionPlan, (actionPlan) => actionPlan.unit)
   actionPlan: ActionPlan[];

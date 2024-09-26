@@ -20,7 +20,6 @@ import { SeverityClasificationService } from 'src/modules/severity-clasification
 import { OriginService } from 'src/modules/origin/services/origin.service';
 import { SubOriginService } from 'src/modules/sub-origin/services/sub-origin.service';
 import { RiskLevelService } from 'src/modules/risk-level/services/risk-level.service';
-import { UnitService } from 'src/modules/unit/services/unit.service';
 
 import { OriDtoValidator } from '../utils/helpers/ori-dto-validator.helper';
 import { generateFilingNumber } from '../utils/helpers/generate_filing_number.helper';
@@ -58,7 +57,6 @@ export class CaseReportOriginalService {
     private readonly originService: OriginService,
     private readonly subOriginService: SubOriginService,
     private readonly riskLevelService: RiskLevelService,
-    private readonly unitService: UnitService,
     private dataSource: DataSource,
   ) {}
 
@@ -76,7 +74,10 @@ export class CaseReportOriginalService {
         ),
         this.eventService.findOneEvent(createReportOriDto.ori_cr_event_id_fk),
         this.serviceService.findOneService(
-          createReportOriDto.ori_cr_service_id_fk,
+          createReportOriDto.ori_cr_originservice_id_fk,
+        ),
+        this.serviceService.findOneService(
+          createReportOriDto.ori_cr_reportingservice_id_fk,
         ),
         this.originService.findOneOrigin(
           createReportOriDto.ori_cr_origin_id_fk,
@@ -84,7 +85,6 @@ export class CaseReportOriginalService {
         this.subOriginService.findOneSubOrigin(
           createReportOriDto.ori_cr_suborigin_id_fk,
         ),
-        this.unitService.findOneUnit(createReportOriDto.ori_cr_unit_id_fk),
         createReportOriDto.ori_cr_risktype_id_fk &&
           this.riskTypeService.findOneRiskType(
             createReportOriDto.ori_cr_risktype_id_fk,
@@ -162,11 +162,12 @@ export class CaseReportOriginalService {
       const movementReportFound = await queryRunner.manager.findOne(
         MovementReportEntity,
         {
-        where: {
-          mov_r_name: movementReport.REPORT_CREATION,
-          mov_r_status: true,
+          where: {
+            mov_r_name: movementReport.REPORT_CREATION,
+            mov_r_status: true,
+          },
         },
-      });
+      );
 
       if (!movementReportFound) {
         return new HttpException(
@@ -286,8 +287,8 @@ export class CaseReportOriginalService {
         riskLevel: true,
         event: true,
         eventType: true,
-        service: true,
-        unit: true,
+        originService: true,
+        reportingService: true,
         priority: true,
       },
       order: {
@@ -329,8 +330,8 @@ export class CaseReportOriginalService {
           riskLevel: true,
           event: true,
           eventType: true,
-          service: true,
-          unit: true,
+          originService: true,
+          reportingService: true
         },
       },
     );

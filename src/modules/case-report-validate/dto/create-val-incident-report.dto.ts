@@ -64,11 +64,11 @@ export class CreateValIncidentReportDto {
     
     @IsNumber()
     @IsNotEmpty()
-    val_cr_service_id_fk: number;
-        
+    val_cr_originservice_id_fk: number;
+
     @IsNumber()
     @IsNotEmpty()
-    val_cr_unit_id_fk: number;
+    val_cr_reportingservice_id_fk: number;
 
     @IsNumber()
     @IsNotEmpty()

@@ -87,15 +87,18 @@ export class CaseReportValidate {
   val_cr_eventtype_id_fk: number;
 
   @Column({ nullable: true })
-  val_cr_service_id_fk: number;
+  val_cr_originservice_id_fk: number;
+
+  @Column({ nullable: true })
+  val_cr_reportingservice_id_fk: number;
 
   @Column({ nullable: true })
   val_cr_event_id_fk: number;
 
-  @Column({ nullable: true }) //
+  @Column({ nullable: true })
   val_cr_risktype_id_fk: number;
 
-  @Column({ nullable: true }) //
+  @Column({ nullable: true })
   val_cr_severityclasif_id_fk: number;
 
   @Column({ nullable: true })
@@ -106,9 +109,6 @@ export class CaseReportValidate {
 
   @Column({ nullable: true }) //
   val_cr_risklevel_id_fk: number;
-
-  @Column({ nullable: true })
-  val_cr_unit_id_fk: number;
 
   @Column({ nullable: true })
   val_cr_priority_id_fk: number;
@@ -198,12 +198,12 @@ export class CaseReportValidate {
   event: Event;
 
   @ManyToOne(() => Service, (service) => service.caseReportValidate)
-  @JoinColumn({ name: 'val_cr_service_id_fk' })
-  service: Service;
+  @JoinColumn({ name: 'val_cr_originservice_id_fk' })
+  originService: Service;
 
-  @ManyToOne(() => Unit, (unit) => unit.caseReportValidate)
-  @JoinColumn({ name: 'val_cr_unit_id_fk' })
-  unit: Unit;
+  @ManyToOne(() => Service, (service) => service.caseReportValidate)
+  @JoinColumn({ name: 'val_cr_reportingservice_id_fk' })
+  reportingService: Service;
 
   @ManyToOne(() => Priority, (priority) => priority.caseReportValidate)
   @JoinColumn({ name: 'val_cr_priority_id_fk' })

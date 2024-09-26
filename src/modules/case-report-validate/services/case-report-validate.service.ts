@@ -48,7 +48,6 @@ import { SeverityClasificationService } from 'src/modules/severity-clasification
 import { OriginService } from 'src/modules/origin/services/origin.service';
 import { SubOriginService } from 'src/modules/sub-origin/services/sub-origin.service';
 import { RiskLevelService } from 'src/modules/risk-level/services/risk-level.service';
-import { UnitService } from 'src/modules/unit/services/unit.service';
 import { Priority as PriorityEntity } from 'src/modules/priority/entities/priority.entity';
 import { ObservationReturnCase as ObservationReturnCaseEntity } from 'src/modules/observation-return-case/entities/observation-return-case.entity';
 import { ObservationReturnCaseService } from 'src/modules/observation-return-case/services/observation-return-case.service';
@@ -88,7 +87,6 @@ export class CaseReportValidateService {
     private readonly originService: OriginService,
     private readonly subOriginService: SubOriginService,
     private readonly riskLevelService: RiskLevelService,
-    private readonly unitService: UnitService,
     @Inject(forwardRef(() => ObservationReturnCaseService))
     private readonly observationReturnCaseService: ObservationReturnCaseService,
     @Inject(forwardRef(() => ResearchersService))
@@ -106,7 +104,7 @@ export class CaseReportValidateService {
       !similarCaseReportValidate.val_cr_documentpatient ||
       !similarCaseReportValidate.val_cr_event_id_fk ||
       !similarCaseReportValidate.val_cr_eventtype_id_fk ||
-      !similarCaseReportValidate.val_cr_unit_id_fk
+      !similarCaseReportValidate.val_cr_reportingservice_id_fk 
     ) {
       throw new HttpException(
         'Algunos datos del caso son requeridos.',
@@ -117,7 +115,7 @@ export class CaseReportValidateService {
     const similarReport = await this.caseReportValidateRepository.find({
       where: {
         val_cr_casetype_id_fk: similarCaseReportValidate.val_cr_casetype_id_fk,
-        val_cr_unit_id_fk: similarCaseReportValidate.val_cr_unit_id_fk,
+        val_cr_reportingservice_id_fk: similarCaseReportValidate.val_cr_reportingservice_id_fk,
         val_cr_documentpatient:
           similarCaseReportValidate.val_cr_documentpatient,
         val_cr_event_id_fk: similarCaseReportValidate.val_cr_event_id_fk,
@@ -171,7 +169,10 @@ export class CaseReportValidateService {
         ),
         this.eventService.findOneEvent(createReportValDto.val_cr_event_id_fk),
         this.serviceService.findOneService(
-          createReportValDto.val_cr_service_id_fk,
+          createReportValDto.val_cr_originservice_id_fk,
+        ),
+        this.serviceService.findOneService(
+          createReportValDto.val_cr_reportingservice_id_fk,
         ),
         this.originService.findOneOrigin(
           createReportValDto.val_cr_origin_id_fk,
@@ -179,7 +180,6 @@ export class CaseReportValidateService {
         this.subOriginService.findOneSubOrigin(
           createReportValDto.val_cr_suborigin_id_fk,
         ),
-        this.unitService.findOneUnit(createReportValDto.val_cr_unit_id_fk),
         createReportValDto.val_cr_risktype_id_fk &&
           this.riskTypeService.findOneRiskType(
             createReportValDto.ori_cr_risktype_id_fk,
@@ -419,7 +419,8 @@ export class CaseReportValidateService {
         caseReportOriginal.ori_cr_admconsecutivepatient,
       val_cr_reporter_id: caseReportOriginal.ori_cr_reporter_id,
       val_cr_eventtype_id_fk: caseReportOriginal.ori_cr_eventtype_id_fk,
-      val_cr_service_id_fk: caseReportOriginal.ori_cr_service_id_fk,
+      val_cr_originservice_id_fk: caseReportOriginal.ori_cr_originservice_id_fk, 
+      val_cr_reportingservice_id_fk: caseReportOriginal.ori_cr_reportingservice_id_fk, 
       val_cr_event_id_fk: caseReportOriginal.ori_cr_event_id_fk,
       val_cr_risktype_id_fk: caseReportOriginal.ori_cr_risktype_id_fk,
       val_cr_severityclasif_id_fk:
@@ -427,7 +428,6 @@ export class CaseReportValidateService {
       val_cr_origin_id_fk: caseReportOriginal.ori_cr_origin_id_fk,
       val_cr_suborigin_id_fk: caseReportOriginal.ori_cr_suborigin_id_fk,
       val_cr_risklevel_id_fk: caseReportOriginal.ori_cr_risklevel_id_fk,
-      val_cr_unit_id_fk: caseReportOriginal.ori_cr_unit_id_fk,
       val_cr_priority_id_fk: caseReportOriginal.ori_cr_priority_id_fk,
       val_cr_statusmovement_id_fk:
         caseReportOriginal.ori_cr_statusmovement_id_fk,
@@ -447,7 +447,6 @@ export class CaseReportValidateService {
     caseTypeId?: number,
     eventTypeId?: number,
     priorityId?: number,
-    unitId?: number,
     severityClasificationId?: number,
   ) {
     const where: FindOptionsWhere<CaseReportValidateEntity> = {};
@@ -475,10 +474,6 @@ export class CaseReportValidateService {
       where.val_cr_casetype_id_fk = caseTypeId;
     }
 
-    if (unitId) {
-      where.val_cr_unit_id_fk = unitId;
-    }
-
     if (priorityId) {
       where.val_cr_priority_id_fk = priorityId;
     }
@@ -500,7 +495,6 @@ export class CaseReportValidateService {
         caseType: true,
         severityClasification: true,
         event: true,
-        unit: true,
         priority: true,
         movementReport: true,
       },
@@ -679,8 +673,8 @@ export class CaseReportValidateService {
         riskLevel: true,
         eventType: true,
         event: true,
-        service: true,
-        unit: true,
+        originService: true,
+        reportingService: true,
         priority: true,
         characterizationCase: true,
       },
@@ -722,8 +716,8 @@ export class CaseReportValidateService {
         riskLevel: true,
         eventType: true,
         event: true,
-        service: true,
-        unit: true,
+        originService: true,
+        reportingService: true,
         priority: true,
         characterizationCase: true,
         caseReportOriginal: {
@@ -769,8 +763,8 @@ export class CaseReportValidateService {
         riskLevel: true,
         eventType: true,
         event: true,
-        service: true,
-        unit: true,
+        originService: true,
+        reportingService: true,
         priority: true,
         characterizationCase: true,
       },

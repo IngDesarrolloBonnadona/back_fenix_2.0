@@ -12,7 +12,6 @@ import { RiskType } from 'src/modules/risk-type/entities/risk-type.entity';
 import { Service } from 'src/modules/service/entities/service.entity';
 import { SeverityClasification } from 'src/modules/severity-clasification/entities/severity-clasification.entity';
 import { SubOrigin } from 'src/modules/sub-origin/entities/sub-origin.entity';
-import { Unit } from 'src/modules/unit/entities/unit.entity';
 import {
   Column,
   CreateDateColumn,
@@ -73,7 +72,10 @@ export class CaseReportOriginal {
   ori_cr_eventtype_id_fk: number;
 
   @Column({ nullable: true })
-  ori_cr_service_id_fk: number;
+  ori_cr_originservice_id_fk: number;
+
+  @Column({ nullable: true })
+  ori_cr_reportingservice_id_fk: number;
 
   @Column({ nullable: true })
   ori_cr_event_id_fk: number;
@@ -92,9 +94,6 @@ export class CaseReportOriginal {
 
   @Column({ nullable: true }) //
   ori_cr_risklevel_id_fk: number;
-
-  @Column({ nullable: true })
-  ori_cr_unit_id_fk: number;
 
   @Column({ nullable: true })
   ori_cr_priority_id_fk: number;
@@ -193,12 +192,12 @@ export class CaseReportOriginal {
   event: Event;
 
   @ManyToOne(() => Service, (service) => service.caseReportOriginal)
-  @JoinColumn({ name: 'ori_cr_service_id_fk' })
-  service: Service;
+  @JoinColumn({ name: 'ori_cr_originservice_id_fk' })
+  originService: Service;
 
-  @ManyToOne(() => Unit, (unit) => unit.caseReportOriginal)
-  @JoinColumn({ name: 'ori_cr_unit_id_fk' })
-  unit: Unit;
+  @ManyToOne(() => Service, (service) => service.caseReportOriginal)
+  @JoinColumn({ name: 'ori_cr_reportingservice_id_fk' })
+  reportingService: Service;
 
   @ManyToOne(() => Priority, (priority) => priority.caseReportOriginal)
   @JoinColumn({ name: 'ori_cr_priority_id_fk' })

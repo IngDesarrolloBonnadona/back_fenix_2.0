@@ -49,15 +49,27 @@ export class Service {
 
   @OneToMany(
     () => CaseReportOriginal,
-    (caseReportOriginal) => caseReportOriginal.service,
+    (caseReportOriginal) => caseReportOriginal.originService,
   )
   caseReportOriginal: CaseReportOriginal[];
 
   @OneToMany(
+    () => CaseReportOriginal,
+    (caseReportOriginal) => caseReportOriginal.reportingService,
+  )
+  caseReportOriginal2: CaseReportOriginal[];
+
+  @OneToMany(
     () => CaseReportValidate,
-    (caseReportValidate) => caseReportValidate.service,
+    (caseReportValidate) => caseReportValidate.originService,
   )
   caseReportValidate: CaseReportValidate[];
+
+  @OneToMany(
+    () => CaseReportValidate,
+    (caseReportValidate) => caseReportValidate.reportingService,
+  )
+  caseReportValidate2: CaseReportValidate[];
 
   @OneToMany(() => ActionPlan, (actionPlan) => actionPlan.service)
   actionPlan: ActionPlan[];

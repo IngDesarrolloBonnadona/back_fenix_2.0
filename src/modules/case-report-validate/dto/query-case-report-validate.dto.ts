@@ -30,10 +30,10 @@ export class QueryCaseReportValidateDto {
   @Type(() => Number)
   eventTypeId: number;
 
-  @IsNumber()
-  @IsOptional()
-  @Type(() => Number)
-  unitId: number;
+  // @IsNumber()
+  // @IsOptional()
+  // @Type(() => Number)
+  // unitId: number;
 
   @IsNumber()
   @IsOptional()
