@@ -19,6 +19,6 @@ export class FindSimilarCaseReportValidateDto {
  
     @IsNumber()
     @IsNotEmpty()
-    val_cr_unit_id_fk: number;
+    val_cr_reportingservice_id_fk: number;
 
 }

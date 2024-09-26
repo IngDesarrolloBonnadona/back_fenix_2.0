@@ -73,7 +73,11 @@ export class CreateCaseReportOriginalDto {
 
   @IsNumber()
   @IsNotEmpty()
-  ori_cr_service_id_fk: number;
+  ori_cr_originservice_id_fk: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  ori_cr_reportingservice_id_fk: number;
 
   @IsNumber()
   @IsNotEmpty()
@@ -90,10 +94,6 @@ export class CreateCaseReportOriginalDto {
   @IsNumber()
   @IsOptional()
   ori_cr_risklevel_id_fk: number; //
-
-  @IsNumber()
-  @IsNotEmpty()
-  ori_cr_unit_id_fk: number;
 
   @IsNumber()
   @IsNotEmpty()

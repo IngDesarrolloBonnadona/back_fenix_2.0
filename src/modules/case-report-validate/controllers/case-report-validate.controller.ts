@@ -70,7 +70,6 @@ export class CaseReportValidateController {
       query.statusMovementId,
       query.patientDoc,
       query.caseTypeId,
-      query.unitId,
       query.priorityId,
       query.severityClasificationId,
       query.eventTypeId,

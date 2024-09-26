@@ -23,11 +23,11 @@ export class CreateOriAdverseEventReportDto {
     
     @IsNumber()
     @IsNotEmpty()
-    ori_cr_service_id_fk: number;
-        
+    ori_cr_originservice_id_fk: number;
+
     @IsNumber()
     @IsNotEmpty()
-    ori_cr_unit_id_fk: number;
+    ori_cr_reportingservice_id_fk: number;
 
     @IsString()
     @IsNotEmpty()
