@@ -104,34 +104,6 @@ export class ServiceService {
     return service;
   }
 
-  async findServiceByUnit(unitId: number) {
-    if (!unitId) {
-      return new HttpException(
-        'El identificador de la unidad es requerida.',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
-    const serviceByUnit = await this.serviceRepository.find({
-      where: {
-        serv_unit_id_fk: unitId,
-        serv_status: true,
-      },
-      order: {
-        serv_name: 'ASC',
-      },
-    });
-
-    if (serviceByUnit.length === 0) {
-      return new HttpException(
-        'No se encontró el servicio relacionado con la unidad.',
-        HttpStatus.NOT_FOUND,
-      );
-    }
-
-    return serviceByUnit;
-  }
-
   async updateService(id: number, updateServiceDto: UpdateServiceDto) {
     if (!updateServiceDto) {
       return new HttpException(
