@@ -47,24 +47,26 @@ export class EventController {
     return this.eventService.findOneEvent(id);
   }
 
-  @Get('/findEventsByEventTypeIdAndUnitId/:eventTypeId/:unitId?/')
-  findEventsByEventTypeIdAndUnitId(
-    @Param('eventTypeId') eventTypeId: number,
-    @Param('unitId') unitId?: string,
-  ) {
-    const unitIdNumber = unitId ? parseInt(unitId, 10) : undefined;
-    return this.eventService.findEventByEventTypeAndIdUnitId(
-      eventTypeId,
-      unitIdNumber,
-    );
+  // @Get('/findEventsByEventTypeIdAndUnitId/:eventTypeId/:unitId?/')
+  // findEventsByEventTypeIdAndUnitId(
+  //   @Param('eventTypeId') eventTypeId: number,
+  //   @Param('unitId') unitId?: string,
+  // ) {
+  //   const unitIdNumber = unitId ? parseInt(unitId, 10) : undefined;
+  //   return this.eventService.findEventByEventTypeAndIdUnitId(
+  //     eventTypeId,
+  //     unitIdNumber,
+  //   );
+  // }
+
+  @Get('/findEventsByEventTypeId/:eventTypeId/')
+  findEventsByEventTypeId(@Param('eventTypeId') eventTypeId: number) {
+    return this.eventService.findEventByEventTypeId(eventTypeId);
   }
 
   @Patch('/updateEvent/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
-  updateEvent(
-    @Param('id') id: number,
-    @Body() updateEventDto: UpdateEventDto,
-  ) {
+  updateEvent(@Param('id') id: number, @Body() updateEventDto: UpdateEventDto) {
     return this.eventService.updateEvent(id, updateEventDto);
   }
 
