@@ -42,13 +42,6 @@ export class ServiceController {
     return this.serviceService.findOneService(id);
   }
 
-  @Get('/findServiceByUnit/:unitId')
-  findServiceByUnit(
-    @Param('unitId') unitId: number,
-  ) {
-    return this.serviceService.findServiceByUnit(unitId);
-  }
-
   @Patch('/updateService/:id/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.PARAMETERIZER)
   updateService(
