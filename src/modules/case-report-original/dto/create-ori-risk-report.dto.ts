@@ -89,7 +89,7 @@ export class CreateOriRiskReportDto {
     ori_cr_description: string;
 
     @IsBoolean()
-    @IsNotEmpty()
+    @IsOptional()
     ori_cr_materializedrisk: boolean;
 
     @IsBoolean()
