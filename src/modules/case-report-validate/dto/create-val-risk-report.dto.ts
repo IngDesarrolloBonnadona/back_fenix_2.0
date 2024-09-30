@@ -34,7 +34,7 @@ export class CreateValRiskReportDto {
   val_cr_originservice_id_fk: number;
 
   @IsNumber()
-  @IsNotEmpty()
+  @IsOptional()
   val_cr_reportingservice_id_fk: number;
 
   @IsString()
@@ -94,7 +94,7 @@ export class CreateValRiskReportDto {
   val_cr_description: string;
 
   @IsBoolean()
-  @IsNotEmpty()
+  @IsOptional()
   val_cr_materializedrisk: boolean;
 
   @IsBoolean()
