@@ -85,6 +85,10 @@ export class CreateValRiskReportDto {
   @IsNotEmpty()
   val_cr_event_id_fk: number;
 
+  @IsString()
+  @IsOptional()
+  val_cr_descriptionOthers: string;
+
   @IsNumber()
   @IsOptional()
   val_cr_risktype_id_fk: number;

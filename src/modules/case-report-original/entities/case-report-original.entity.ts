@@ -80,6 +80,9 @@ export class CaseReportOriginal {
   @Column({ nullable: true })
   ori_cr_event_id_fk: number;
 
+  @Column({ type: 'varchar', nullable: true })
+  ori_cr_descriptionOthers: string;
+
   @Column({ nullable: true }) //
   ori_cr_risktype_id_fk: number;
 
