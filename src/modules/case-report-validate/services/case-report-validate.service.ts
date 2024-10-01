@@ -104,7 +104,7 @@ export class CaseReportValidateService {
       !similarCaseReportValidate.val_cr_documentpatient ||
       !similarCaseReportValidate.val_cr_event_id_fk ||
       !similarCaseReportValidate.val_cr_eventtype_id_fk ||
-      !similarCaseReportValidate.val_cr_reportingservice_id_fk 
+      !similarCaseReportValidate.val_cr_reportingservice_id_fk
     ) {
       throw new HttpException(
         'Algunos datos del caso son requeridos.',
@@ -115,7 +115,8 @@ export class CaseReportValidateService {
     const similarReport = await this.caseReportValidateRepository.find({
       where: {
         val_cr_casetype_id_fk: similarCaseReportValidate.val_cr_casetype_id_fk,
-        val_cr_reportingservice_id_fk: similarCaseReportValidate.val_cr_reportingservice_id_fk,
+        val_cr_reportingservice_id_fk:
+          similarCaseReportValidate.val_cr_reportingservice_id_fk,
         val_cr_documentpatient:
           similarCaseReportValidate.val_cr_documentpatient,
         val_cr_event_id_fk: similarCaseReportValidate.val_cr_event_id_fk,
@@ -417,10 +418,12 @@ export class CaseReportValidateService {
       val_cr_epspatient: caseReportOriginal.ori_cr_epspatient,
       val_cr_admconsecutivepatient:
         caseReportOriginal.ori_cr_admconsecutivepatient,
+      val_cr_anonymoususer: caseReportOriginal.ori_cr_anonymoususer,
       val_cr_reporter_id: caseReportOriginal.ori_cr_reporter_id,
       val_cr_eventtype_id_fk: caseReportOriginal.ori_cr_eventtype_id_fk,
-      val_cr_originservice_id_fk: caseReportOriginal.ori_cr_originservice_id_fk, 
-      val_cr_reportingservice_id_fk: caseReportOriginal.ori_cr_reportingservice_id_fk, 
+      val_cr_originservice_id_fk: caseReportOriginal.ori_cr_originservice_id_fk,
+      val_cr_reportingservice_id_fk:
+        caseReportOriginal.ori_cr_reportingservice_id_fk,
       val_cr_event_id_fk: caseReportOriginal.ori_cr_event_id_fk,
       val_cr_risktype_id_fk: caseReportOriginal.ori_cr_risktype_id_fk,
       val_cr_severityclasif_id_fk:

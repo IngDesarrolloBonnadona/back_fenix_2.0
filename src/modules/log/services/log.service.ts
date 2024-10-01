@@ -30,7 +30,6 @@ export class LogService {
       !createLogDto ||
       !createLogDto.log_action ||
       !createLogDto.log_ip ||
-      !createLogDto.log_user_id ||
       !createLogDto.log_validatedcase_id_fk
     ) {
       throw new HttpException(

@@ -15,8 +15,12 @@ export class CreateCaseReportOriginalDto {
   @IsString()
   ori_cr_filingnumber: string;
 
-  @IsString()
+  @IsBoolean()
   @IsNotEmpty()
+  ori_cr_anonymoususer: boolean;
+
+  @IsString()
+  @IsOptional()
   ori_cr_reporter_id: string;
 
   @IsNumber()
@@ -62,6 +66,14 @@ export class CreateCaseReportOriginalDto {
   @IsString()
   @IsOptional()
   ori_cr_epspatient: string;
+
+  @IsString()
+  @IsOptional()
+  ori_cr_diagnosticcode: string;
+
+  @IsString()
+  @IsOptional()
+  ori_cr_diagnosticdescription: string;
 
   @IsNumber()
   @IsOptional()

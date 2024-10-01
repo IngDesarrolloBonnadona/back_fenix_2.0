@@ -16,8 +16,12 @@ export class CreateOriRiskReportDto {
   @IsNotEmpty()
   ori_cr_casetype_id_fk: number;
 
-  @IsString()
+  @IsBoolean()
   @IsNotEmpty()
+  ori_cr_anonymoususer: boolean;
+  
+  @IsString()
+  @IsOptional()
   ori_cr_reporter_id: string;
 
   @IsNumber()
@@ -71,6 +75,14 @@ export class CreateOriRiskReportDto {
   @IsString()
   @IsOptional()
   ori_cr_epspatient: string;
+
+  @IsString()
+  @IsOptional()
+  ori_cr_diagnosticcode: string;
+
+  @IsString()
+  @IsOptional()
+  ori_cr_diagnosticdescription: string;
 
   @IsNumber()
   @IsOptional()

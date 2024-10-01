@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsString, IsUUID } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID } from 'class-validator';
 
 export class CreateLogDto {
   @IsUUID()
@@ -6,7 +6,7 @@ export class CreateLogDto {
   log_validatedcase_id_fk: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   log_user_id: string;
 
   @IsString()

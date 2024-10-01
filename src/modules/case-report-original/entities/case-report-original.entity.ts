@@ -62,8 +62,17 @@ export class CaseReportOriginal {
   @Column({ type: 'varchar', nullable: true })
   ori_cr_epspatient: string;
 
+  @Column({ type: 'varchar', nullable: true })
+  ori_cr_diagnosticcode: string;
+
+  @Column({ type: 'varchar', nullable: true })
+  ori_cr_diagnosticdescription: string;
+
   @Column({ nullable: true })
   ori_cr_admconsecutivepatient: number;
+
+  @Column({ nullable: true })
+  ori_cr_anonymoususer: boolean;
 
   @Column({ nullable: true })
   ori_cr_reporter_id: string;

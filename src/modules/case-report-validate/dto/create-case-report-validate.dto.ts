@@ -20,8 +20,12 @@ export class CreateCaseReportValidateDto {
   @IsNotEmpty()
   val_cr_previous_id: number;
 
-  @IsString()
+  @IsBoolean()
   @IsNotEmpty()
+  val_cr_anonymoususer: boolean;
+
+  @IsString()
+  @IsOptional()
   val_cr_reporter_id: string;
 
   @IsNumber()
@@ -71,6 +75,14 @@ export class CreateCaseReportValidateDto {
   @IsString()
   @IsOptional()
   val_cr_epspatient: string;
+
+  @IsString()
+  @IsOptional()
+  val_cr_diagnosticcode: string;
+
+  @IsString()
+  @IsOptional()
+  val_cr_diagnosticdescription: string;
 
   @IsNumber()
   @IsOptional()
