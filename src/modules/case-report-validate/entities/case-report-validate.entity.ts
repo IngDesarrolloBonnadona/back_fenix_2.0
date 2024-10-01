@@ -95,6 +95,9 @@ export class CaseReportValidate {
   @Column({ nullable: true })
   val_cr_event_id_fk: number;
 
+  @Column({ type: 'varchar', nullable: true })
+  val_cr_descriptionOthers: string;
+
   @Column({ nullable: true })
   val_cr_risktype_id_fk: number;
 

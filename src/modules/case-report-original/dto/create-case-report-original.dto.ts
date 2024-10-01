@@ -83,6 +83,10 @@ export class CreateCaseReportOriginalDto {
   @IsNotEmpty()
   ori_cr_event_id_fk: number;
 
+  @IsString()
+  @IsOptional()
+  ori_cr_descriptionOthers: string;
+
   @IsNumber()
   @IsOptional()
   ori_cr_risktype_id_fk: number;
