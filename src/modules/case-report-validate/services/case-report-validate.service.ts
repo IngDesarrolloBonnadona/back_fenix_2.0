@@ -400,6 +400,7 @@ export class CaseReportValidateService {
     caseReportOriginalId: string,
   ) {
     const caseReportValidate = this.caseReportValidateRepository.create({
+      val_cr_dateofcase: caseReportOriginal.ori_cr_dateofcase,
       val_cr_consecutive_id: 1,
       val_cr_previous_id: 0,
       val_cr_originalcase_id_fk: caseReportOriginalId,
