@@ -29,6 +29,9 @@ export class CaseReportOriginal {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Column({ type: 'date' })
+  ori_cr_dateofcase: Date;
+
   @Column({ nullable: true })
   ori_cr_casetype_id_fk: number;
 

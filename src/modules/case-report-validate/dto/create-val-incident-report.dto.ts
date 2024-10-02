@@ -7,11 +7,15 @@ import {
   ValidateNested,
 } from '@nestjs/class-validator';
 import { Type } from 'class-transformer';
-import { IsBoolean } from 'class-validator';
+import { IsBoolean, IsDateString } from 'class-validator';
 import { CreateDeviceDto } from 'src/modules/device-case-report/dto/create-device.dto';
 import { CreateMedicineDto } from 'src/modules/medicine-case-report/dto/create-medicine.dto';
 
 export class CreateValIncidentReportDto {
+  @IsDateString()
+  @IsNotEmpty()
+  val_cr_dateofcase: Date;
+
   @IsNumber()
   @IsNotEmpty()
   val_cr_casetype_id_fk: number;

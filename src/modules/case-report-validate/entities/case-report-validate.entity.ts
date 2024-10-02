@@ -35,6 +35,9 @@ export class CaseReportValidate {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Column({ type: 'date' })
+  val_cr_dateofcase: Date;
+
   @Column({ nullable: true })
   val_cr_consecutive_id: number;
 

@@ -1,6 +1,7 @@
 import {
   IsArray,
   IsBoolean,
+  IsDateString,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -12,6 +13,10 @@ import { CreateDeviceDto } from 'src/modules/device-case-report/dto/create-devic
 import { CreateMedicineDto } from 'src/modules/medicine-case-report/dto/create-medicine.dto';
 
 export class CreateOriAdverseEventReportDto {
+  @IsDateString()
+  @IsNotEmpty()
+  ori_cr_dateofcase: Date;
+
   @IsNumber()
   @IsNotEmpty()
   ori_cr_casetype_id_fk: number;

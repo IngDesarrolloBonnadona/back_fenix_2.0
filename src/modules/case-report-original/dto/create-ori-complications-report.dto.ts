@@ -6,12 +6,17 @@ import {
   IsString,
   IsArray,
   ValidateNested,
+  IsDateString,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { CreateDeviceDto } from 'src/modules/device-case-report/dto/create-device.dto';
 import { CreateMedicineDto } from 'src/modules/medicine-case-report/dto/create-medicine.dto';
 
 export class CreateOriComplicationsReportDto {
+  @IsDateString()
+  @IsNotEmpty()
+  ori_cr_dateofcase: Date;
+
   @IsNumber()
   @IsNotEmpty()
   ori_cr_casetype_id_fk: number;

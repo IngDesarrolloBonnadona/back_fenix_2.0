@@ -1,5 +1,6 @@
 import {
   IsBoolean,
+  IsDateString,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -7,6 +8,10 @@ import {
 } from 'class-validator';
 
 export class CreateCaseReportOriginalDto {
+  @IsDateString()
+  @IsNotEmpty()
+  ori_cr_dateofcase: Date;
+
   @IsNumber()
   @IsNotEmpty()
   ori_cr_casetype_id_fk: number;

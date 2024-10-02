@@ -1,5 +1,6 @@
 import {
   IsBoolean,
+  IsDateString,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -8,6 +9,10 @@ import {
 } from 'class-validator';
 
 export class CreateCaseReportValidateDto {
+  @IsDateString()
+  @IsNotEmpty()
+  val_cr_dateofcase: Date;
+
   @IsNumber()
   @IsNotEmpty()
   val_cr_consecutive_id: number;
