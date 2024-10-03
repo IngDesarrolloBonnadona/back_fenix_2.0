@@ -1,4 +1,5 @@
 import { CaseReportValidate } from 'src/modules/case-report-validate/entities/case-report-validate.entity';
+import { EventType } from 'src/modules/event-type/entities/event-type.entity';
 import {
   Column,
   CreateDateColumn,
@@ -37,4 +38,7 @@ export class CharacterizationCase {
     (caseReportValidate) => caseReportValidate.characterizationCase,
   )
   caseReportValidate: CaseReportValidate[];
+
+  @OneToMany(() => EventType, (eventType) => eventType.characterizationCase)
+  eventType: EventType[];
 }

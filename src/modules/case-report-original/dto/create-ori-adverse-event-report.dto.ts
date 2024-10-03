@@ -1,107 +1,131 @@
-import { IsArray, IsNotEmpty, IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
-import { Type } from "class-transformer";
-import { CreateDeviceDto } from "src/modules/device-case-report/dto/create-device.dto";
-import { CreateMedicineDto } from "src/modules/medicine-case-report/dto/create-medicine.dto";
+import {
+  IsArray,
+  IsBoolean,
+  IsDateString,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
+import { Type } from 'class-transformer';
+import { CreateDeviceDto } from 'src/modules/device-case-report/dto/create-device.dto';
+import { CreateMedicineDto } from 'src/modules/medicine-case-report/dto/create-medicine.dto';
 
 export class CreateOriAdverseEventReportDto {
+  @IsDateString()
+  @IsNotEmpty()
+  ori_cr_dateofcase: Date;
 
-    @IsNumber()
-    @IsNotEmpty()
-    ori_cr_casetype_id_fk: number
+  @IsNumber()
+  @IsNotEmpty()
+  ori_cr_casetype_id_fk: number;
 
-    @IsString()
-    @IsNotEmpty()
-    ori_cr_reporter_id: string;
+  @IsBoolean()
+  @IsNotEmpty()
+  ori_cr_anonymoususer: boolean;
 
-    @IsNumber()
-    @IsNotEmpty()
-    ori_cr_origin_id_fk: number;
+  @IsString()
+  @IsOptional()
+  ori_cr_reporter_id: string;
 
-    @IsNumber()
-    @IsNotEmpty()
-    ori_cr_suborigin_id_fk: number;
-    
-    @IsNumber()
-    @IsNotEmpty()
-    ori_cr_originservice_id_fk: number;
+  @IsNumber()
+  @IsNotEmpty()
+  ori_cr_origin_id_fk: number;
 
-    @IsNumber()
-    @IsNotEmpty()
-    ori_cr_reportingservice_id_fk: number;
+  @IsNumber()
+  @IsNotEmpty()
+  ori_cr_suborigin_id_fk: number;
 
-    @IsString()
-    @IsNotEmpty()
-    ori_cr_documentpatient: string;
+  @IsNumber()
+  @IsNotEmpty()
+  ori_cr_originservice_id_fk: number;
 
-    @IsString()
-    @IsNotEmpty()
-    ori_cr_doctypepatient: string
+  @IsNumber()
+  @IsNotEmpty()
+  ori_cr_reportingservice_id_fk: number;
 
-    @IsString()
-    @IsNotEmpty()
-    ori_cr_firstnamepatient: string
+  @IsString()
+  @IsNotEmpty()
+  ori_cr_documentpatient: string;
 
-    @IsString()
-    @IsNotEmpty()
-    ori_cr_secondnamepatient: string
+  @IsString()
+  @IsNotEmpty()
+  ori_cr_doctypepatient: string;
 
-    @IsString()
-    @IsNotEmpty()
-    ori_cr_firstlastnamepatient: string
+  @IsString()
+  @IsNotEmpty()
+  ori_cr_firstnamepatient: string;
 
-    @IsString()
-    @IsNotEmpty()
-    ori_cr_secondlastnamepatient: string
+  @IsString()
+  @IsNotEmpty()
+  ori_cr_secondnamepatient: string;
 
-    @IsNumber()
-    @IsNotEmpty()
-    ori_cr_agepatient: number
+  @IsString()
+  @IsNotEmpty()
+  ori_cr_firstlastnamepatient: string;
 
-    @IsString()
-    @IsNotEmpty()
-    ori_cr_genderpatient: string
+  @IsString()
+  @IsNotEmpty()
+  ori_cr_secondlastnamepatient: string;
 
-    @IsString()
-    @IsNotEmpty()
-    ori_cr_epspatient: string
+  @IsNumber()
+  @IsNotEmpty()
+  ori_cr_agepatient: number;
 
-    @IsNumber()
-    @IsNotEmpty()
-    ori_cr_admconsecutivepatient: number
-    
-    @IsNumber()
-    @IsNotEmpty()
-    ori_cr_severityclasif_id_fk: number; 
+  @IsString()
+  @IsNotEmpty()
+  ori_cr_genderpatient: string;
 
-    @IsNumber()
-    @IsNotEmpty()
-    ori_cr_eventtype_id_fk: number;
+  @IsString()
+  @IsNotEmpty()
+  ori_cr_epspatient: string;
 
-    @IsNumber()
-    @IsNotEmpty()
-    ori_cr_event_id_fk: number;
+  @IsString()
+  @IsOptional()
+  ori_cr_diagnosticcode: string;
 
-    @IsNumber()
-    @IsNotEmpty()
-    ori_cr_risklevel_id_fk: number; 
+  @IsString()
+  @IsOptional()
+  ori_cr_diagnosticdescription: string;
 
-    @IsNotEmpty()
-    @IsString()
-    ori_cr_description: string;
+  @IsNumber()
+  @IsOptional()
+  ori_cr_admconsecutivepatient: number;
 
-    @IsOptional()
-    @IsString()
-    ori_cr_inmediateaction: string;
+  @IsNumber()
+  @IsNotEmpty()
+  ori_cr_severityclasif_id_fk: number;
 
-    @IsOptional()
-    @IsArray()
-    @ValidateNested({ each: true })
-    @Type(() => CreateMedicineDto)
-    medicines: CreateMedicineDto[]
+  @IsNumber()
+  @IsNotEmpty()
+  ori_cr_eventtype_id_fk: number;
 
-    @IsOptional()
-    @IsArray()
-    @ValidateNested({ each: true })
-    @Type(() => CreateDeviceDto)
-    devices: CreateDeviceDto[];
+  @IsNumber()
+  @IsNotEmpty()
+  ori_cr_event_id_fk: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  ori_cr_risklevel_id_fk: number;
+
+  @IsNotEmpty()
+  @IsString()
+  ori_cr_description: string;
+
+  @IsOptional()
+  @IsString()
+  ori_cr_inmediateaction: string;
+
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateMedicineDto)
+  medicines: CreateMedicineDto[];
+
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateDeviceDto)
+  devices: CreateDeviceDto[];
 }

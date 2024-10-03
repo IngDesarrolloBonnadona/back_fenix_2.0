@@ -161,31 +161,31 @@ export class EventService {
     return event;
   }
 
-  // async findEventByEventTypeAndIdUnitId(eventTypeId: number, unitId?: number) {
-  //   const where: any = { eve_eventtype_id_fk: eventTypeId };
+  async findEventByEventTypeAndIdUnitId(eventTypeId: number, unitId?: number) {
+    const where: any = { eve_eventtype_id_fk: eventTypeId };
 
-  //   if (unitId !== undefined) {
-  //     where.eve_unit_id_fk = unitId;
-  //   }
+    if (unitId !== undefined || unitId !== null) {
+      where.eve_unit_id_fk = unitId;
+    }
 
-  //   where.eve_status = true;
+    where.eve_status = true;
 
-  //   const events = await this.eventRepository.find({
-  //     where,
-  //     order: {
-  //       eve_name: 'ASC',
-  //     },
-  //   });
+    const events = await this.eventRepository.find({
+      where,
+      order: {
+        eve_name: 'ASC',
+      },
+    });
 
-  //   if (events.length === 0) {
-  //     return new HttpException(
-  //       'No se encontró la lista de sucesos relacionados con el tipo de suceso.',
-  //       HttpStatus.NOT_FOUND,
-  //     );
-  //   }
+    if (events.length === 0) {
+      return new HttpException(
+        'No se encontró la lista de sucesos relacionados con el tipo de suceso.',
+        HttpStatus.NOT_FOUND,
+      );
+    }
 
-  //   return events;
-  // }
+    return events;
+  }
 
   async findEventByEventTypeId(eventTypeId: number) {
     if (!eventTypeId) {

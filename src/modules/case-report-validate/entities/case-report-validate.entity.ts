@@ -35,6 +35,9 @@ export class CaseReportValidate {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Column({ type: 'date' })
+  val_cr_dateofcase: Date;
+
   @Column({ nullable: true })
   val_cr_consecutive_id: number;
 
@@ -77,8 +80,17 @@ export class CaseReportValidate {
   @Column({ nullable: true })
   val_cr_epspatient: string;
 
+  @Column({ type: 'varchar', nullable: true })
+  val_cr_diagnosticcode: string;
+
+  @Column({ type: 'varchar', nullable: true })
+  val_cr_diagnosticdescription: string;
+
   @Column({ nullable: true })
   val_cr_admconsecutivepatient: number;
+
+  @Column({ nullable: true })
+  val_cr_anonymoususer: boolean;
 
   @Column({ nullable: true })
   val_cr_reporter_id: string;

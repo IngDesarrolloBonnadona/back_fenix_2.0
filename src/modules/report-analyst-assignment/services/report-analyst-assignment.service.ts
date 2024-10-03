@@ -24,7 +24,7 @@ import { CaseType as CaseTypeEntity } from 'src/modules/case-type/entities/case-
 import { caseTypeReport } from 'src/utils/enums/caseType-report.enum';
 import { SeverityClasification as SeverityClasificationEntity } from 'src/modules/severity-clasification/entities/severity-clasification.entity';
 import { severityClasification } from 'src/utils/enums/severity-clasif.enum';
-import { sentinelTime } from '../../../utils/enums/sentinel-time.enum';
+import { sentinelTime } from 'src/utils/enums/sentinel-time.enum';
 import { QueryReportAnalystAssignmentDto } from '../dto/query-report-analyst-assignment.dto';
 import { MovementReportService } from 'src/modules/movement-report/services/movement-report.service';
 import { ReportResearcherAssignment as ReportResearcherAssignmentEntity } from 'src/modules/report-researchers-assignment/entities/report-researchers-assignment.entity';

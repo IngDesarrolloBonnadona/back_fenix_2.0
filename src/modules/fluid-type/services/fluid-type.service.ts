@@ -114,8 +114,8 @@ export class FluidTypeService {
     if (!fluidTypeFound) {
       return new HttpException(
         `Tipo de fluido no encontrado, favor recargar.`,
-        HttpStatus.NOT_FOUND
-      )
+        HttpStatus.NOT_FOUND,
+      );
     }
 
     const result = await this.fluidTypeRespository.softDelete(id);

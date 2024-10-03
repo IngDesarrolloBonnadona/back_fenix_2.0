@@ -18,7 +18,7 @@ export class Log {
   @Column({ type: 'uuid' })
   log_validatedcase_id_fk: string;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', nullable: true })
   log_user_id: string;
 
   @Column({ type: 'varchar' })

@@ -1,6 +1,7 @@
 import {
   IsArray,
   IsBoolean,
+  IsDateString,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -13,12 +14,20 @@ import { CreateDeviceDto } from 'src/modules/device-case-report/dto/create-devic
 import { CreateMedicineDto } from 'src/modules/medicine-case-report/dto/create-medicine.dto';
 
 export class CreateValIndicatingUnsafeCareReportDto {
+  @IsDateString()
+  @IsNotEmpty()
+  val_cr_dateofcase: Date;
+
   @IsNumber()
   @IsNotEmpty()
   val_cr_casetype_id_fk: number;
 
-  @IsString()
+  @IsBoolean()
   @IsNotEmpty()
+  val_cr_anonymoususer: boolean;
+
+  @IsString()
+  @IsOptional()
   val_cr_reporter_id: string;
 
   @IsNumber()
@@ -65,8 +74,16 @@ export class CreateValIndicatingUnsafeCareReportDto {
   @IsNotEmpty()
   val_cr_epspatient: string;
 
+  @IsString()
+  @IsOptional()
+  val_cr_diagnosticcode: string;
+
+  @IsString()
+  @IsOptional()
+  val_cr_diagnosticdescription: string;
+  
   @IsNumber()
-  @IsNotEmpty()
+  @IsOptional()
   val_cr_admconsecutivepatient: number;
 
   @IsNumber()
