@@ -1,78 +1,272 @@
-import { CaseReportOriginal } from "src/modules/case-report-original/entities/case-report-original.entity";
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { ReportAnalystAssignment } from 'src/modules/report-analyst-assignment/entities/report-analyst-assignment.entity';
+import { CaseReportOriginal } from 'src/modules/case-report-original/entities/case-report-original.entity';
+import { Log } from 'src/modules/log/entities/log.entity';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { Synergy } from 'src/modules/synergy/entities/synergy.entity';
+import { CaseType } from 'src/modules/case-type/entities/case-type.entity';
+import { RiskType } from 'src/modules/risk-type/entities/risk-type.entity';
+import { SeverityClasification } from 'src/modules/severity-clasification/entities/severity-clasification.entity';
+import { Origin } from 'src/modules/origin/entities/origin.entity';
+import { SubOrigin } from 'src/modules/sub-origin/entities/sub-origin.entity';
+import { RiskLevel } from 'src/modules/risk-level/entities/risk-level.entity';
+import { EventType } from 'src/modules/event-type/entities/event-type.entity';
+import { Event } from 'src/modules/event/entities/event.entity';
+import { Service } from 'src/modules/service/entities/service.entity';
+import { Unit } from 'src/modules/unit/entities/unit.entity';
+import { ReportResearcherAssignment } from 'src/modules/report-researchers-assignment/entities/report-researchers-assignment.entity';
+import { Priority } from 'src/modules/priority/entities/priority.entity';
+import { MovementReport } from 'src/modules/movement-report/entities/movement-report.entity';
+import { CharacterizationCase } from 'src/modules/characterization-cases/entities/characterization-case.entity';
+import { ObservationReturnCase } from 'src/modules/observation-return-case/entities/observation-return-case.entity';
+import { ClinicalResearchCaseReportValidate } from 'src/modules/clinical-research-case-report-validate/entities/clinical-research-case-report-validate.entity';
 
-@Entity({ name: 'ReportesCasoValidado'})
+@Entity({ name: 'fenix_case_report_validate' })
 export class CaseReportValidate {
-    @PrimaryGeneratedColumn()
-    id: number
-    
-    @Column()
-    rcval_id_caso_original_FK: number
-    
-    @Column()
-    rcval_id_tipocaso_FK: number
-    
-    @Column()
-    rcval_id_paciente_FK: number;
-    
-    @Column()
-    rcval_id_reportante_FK: number;
-    
-    @Column()
-    rcval_id_tipo_suceso_FK: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    @Column()
-    rcval_id_servicio_FK: number;
+  @Column({ type: 'date' })
+  val_cr_dateofcase: Date;
 
-    @Column()
-    rcval_id_suceso_FK: number;
+  @Column({ nullable: true })
+  val_cr_consecutive_id: number;
 
-    @Column({ nullable: true })
-    rcval_id_tipo_riesgo_FK: number;
-    
-    @Column({ nullable: true })
-    rcval_id_clasif_severidad_FK: number;
-    
-    @Column()
-    rcval_id_fuente_FK: number;
-    
-    @Column()
-    rcval_id_subfuente_FK: number;
-    
-    @Column({ nullable: true })
-    rcval_id_nivel_riesgo_FK: number;
+  @Column({ nullable: true })
+  val_cr_previous_id: number;
 
-    @Column()
-    rcval_id_unidad_FK: number;
-    
-    @Column({ type: 'varchar', nullable: true })
-    rcval_descripcion: string;
-    
-    @Column({ type: 'varchar', nullable: true })
-    rcval_acc_inmediatas: string;
-    
-    @Column({ nullable: true })
-    rcval_ries_materializado: boolean;
-    
-    @Column({ nullable: true })
-    rcval_pac_asociado: boolean;
-    
-    @Column({ default: false })
-    rcval_validado: boolean;
+  @Column({ type: 'uuid', nullable: true })
+  val_cr_originalcase_id_fk: string;
 
-    @Column({ default: true })
-    rcval_estado: boolean;
+  @Column({ nullable: true })
+  val_cr_casetype_id_fk: number;
 
-    @CreateDateColumn()
-    rcval_fecha_creacion: Date;
-    
-    @UpdateDateColumn()
-    rcval_fecha_actualizacion: Date;
+  @Column({ type: 'varchar', nullable: true })
+  val_cr_filingnumber: string;
 
-    @DeleteDateColumn()
-    rcval_fecha_eliminacion: Date;
+  @Column({ nullable: true })
+  val_cr_documentpatient: string;
 
-    @ManyToOne(() => CaseReportOriginal, (caseReportOriginal) => caseReportOriginal.caseReportValidate)
-    @JoinColumn({name: "rcval_id_caso_original_FK"})
-    caseReportOriginal: CaseReportOriginal
-}   
+  @Column({ nullable: true })
+  val_cr_doctypepatient: string;
+
+  @Column({ nullable: true })
+  val_cr_firstnamepatient: string;
+
+  @Column({ nullable: true })
+  val_cr_secondnamepatient: string;
+
+  @Column({ nullable: true })
+  val_cr_firstlastnamepatient: string;
+
+  @Column({ nullable: true })
+  val_cr_secondlastnamepatient: string;
+
+  @Column({ nullable: true })
+  val_cr_agepatient: number;
+
+  @Column({ nullable: true })
+  val_cr_genderpatient: string;
+
+  @Column({ nullable: true })
+  val_cr_epspatient: string;
+
+  @Column({ type: 'varchar', nullable: true })
+  val_cr_diagnosticcode: string;
+
+  @Column({ type: 'varchar', nullable: true })
+  val_cr_diagnosticdescription: string;
+
+  @Column({ nullable: true })
+  val_cr_admconsecutivepatient: number;
+
+  @Column({ nullable: true })
+  val_cr_anonymoususer: boolean;
+
+  @Column({ nullable: true })
+  val_cr_reporter_id: string;
+
+  @Column({ nullable: true })
+  val_cr_eventtype_id_fk: number;
+
+  @Column({ nullable: true })
+  val_cr_originservice_id_fk: number;
+
+  @Column({ nullable: true })
+  val_cr_reportingservice_id_fk: number;
+
+  @Column({ nullable: true })
+  val_cr_event_id_fk: number;
+
+  @Column({ type: 'varchar', nullable: true })
+  val_cr_descriptionOthers: string;
+
+  @Column({ nullable: true })
+  val_cr_risktype_id_fk: number;
+
+  @Column({ nullable: true })
+  val_cr_severityclasif_id_fk: number;
+
+  @Column({ nullable: true })
+  val_cr_origin_id_fk: number;
+
+  @Column({ nullable: true })
+  val_cr_suborigin_id_fk: number;
+
+  @Column({ nullable: true }) //
+  val_cr_risklevel_id_fk: number;
+
+  @Column({ nullable: true })
+  val_cr_priority_id_fk: number;
+
+  @Column({ nullable: true })
+  val_cr_statusmovement_id_fk: number;
+
+  @Column({ nullable: true })
+  val_cr_characterization_id_fk: number;
+
+  @Column({ nullable: true })
+  val_cr_infoprovidedfamily: boolean;
+
+  @Column({ nullable: true })
+  val_cr_clinicalfollowrequired: boolean;
+
+  @Column({ type: 'varchar', nullable: true })
+  val_cr_observationscharacterization: string;
+
+  @Column({ type: 'varchar', nullable: true }) //
+  val_cr_description: string;
+
+  @Column({ type: 'varchar', nullable: true }) //
+  val_cr_inmediateaction: string;
+
+  @Column({ nullable: true }) //
+  val_cr_materializedrisk: boolean;
+
+  @Column({ default: true }) //
+  val_cr_associatedpatient: boolean;
+
+  @Column({ default: false })
+  val_cr_validated: boolean;
+
+  @Column({ default: true })
+  val_cr_status: boolean;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updateAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
+
+  @ManyToOne(
+    () => CaseReportOriginal,
+    (caseReportOriginal) => caseReportOriginal.caseReportValidate,
+  )
+  @JoinColumn({ name: 'val_cr_originalcase_id_fk' })
+  caseReportOriginal: CaseReportOriginal;
+
+  @ManyToOne(() => CaseType, (caseType) => caseType.caseReportValidate)
+  @JoinColumn({ name: 'val_cr_casetype_id_fk' })
+  caseType: CaseType;
+
+  @ManyToOne(() => RiskType, (riskType) => riskType.caseReportValidate)
+  @JoinColumn({ name: 'val_cr_risktype_id_fk' })
+  riskType: RiskType;
+
+  @ManyToOne(
+    () => SeverityClasification,
+    (severityClasification) => severityClasification.caseReportValidate,
+  )
+  @JoinColumn({ name: 'val_cr_severityclasif_id_fk' })
+  severityClasification: SeverityClasification;
+
+  @ManyToOne(() => Origin, (origin) => origin.caseReportValidate)
+  @JoinColumn({ name: 'val_cr_origin_id_fk' })
+  origin: Origin;
+
+  @ManyToOne(() => SubOrigin, (subOrigin) => subOrigin.caseReportValidate)
+  @JoinColumn({ name: 'val_cr_suborigin_id_fk' })
+  subOrigin: SubOrigin;
+
+  @ManyToOne(() => RiskLevel, (riskLevel) => riskLevel.caseReportValidate)
+  @JoinColumn({ name: 'val_cr_risklevel_id_fk' })
+  riskLevel: RiskLevel;
+
+  @ManyToOne(() => EventType, (eventType) => eventType.caseReportValidate)
+  @JoinColumn({ name: 'val_cr_eventtype_id_fk' })
+  eventType: EventType;
+
+  @ManyToOne(() => Event, (event) => event.caseReportValidate)
+  @JoinColumn({ name: 'val_cr_event_id_fk' })
+  event: Event;
+
+  @ManyToOne(() => Service, (service) => service.caseReportValidate)
+  @JoinColumn({ name: 'val_cr_originservice_id_fk' })
+  originService: Service;
+
+  @ManyToOne(() => Service, (service) => service.caseReportValidate)
+  @JoinColumn({ name: 'val_cr_reportingservice_id_fk' })
+  reportingService: Service;
+
+  @ManyToOne(() => Priority, (priority) => priority.caseReportValidate)
+  @JoinColumn({ name: 'val_cr_priority_id_fk' })
+  priority: Priority;
+
+  @ManyToOne(
+    () => MovementReport,
+    (movementReport) => movementReport.caseReportValidate,
+  )
+  @JoinColumn({ name: 'val_cr_statusmovement_id_fk' })
+  movementReport: MovementReport;
+
+  @ManyToOne(
+    () => CharacterizationCase,
+    (characterizationCase) => characterizationCase.caseReportValidate,
+  )
+  @JoinColumn({ name: 'val_cr_characterization_id_fk' })
+  characterizationCase: CharacterizationCase;
+
+  @OneToMany(() => Log, (log) => log.caseReportValidate)
+  log: Log[];
+
+  @OneToMany(
+    () => ReportAnalystAssignment,
+    (reportAnalystAssignment) => reportAnalystAssignment.caseReportValidate,
+  )
+  reportAnalystAssignment: ReportAnalystAssignment[];
+
+  @OneToMany(() => Synergy, (synergy) => synergy.caseReportValidate)
+  synergy: Synergy[];
+
+  @OneToMany(
+    () => ReportResearcherAssignment,
+    (reportResearcherAssignment) =>
+      reportResearcherAssignment.caseReportValidate,
+  )
+  reportResearcherAssignment: ReportResearcherAssignment[];
+
+  @OneToMany(
+    () => ObservationReturnCase,
+    (observationReturnCase) => observationReturnCase.caseReportValidate,
+  )
+  observationReturnCase: ObservationReturnCase[];
+
+  @OneToMany(
+    () => ClinicalResearchCaseReportValidate,
+    (clinicalResearchCaseReportValidate) =>
+      clinicalResearchCaseReportValidate.caseReportValidate,
+  )
+  clinicalResearchCaseReportValidate: ClinicalResearchCaseReportValidate[];
+}

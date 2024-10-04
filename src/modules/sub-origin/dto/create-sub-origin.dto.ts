@@ -1,6 +1,15 @@
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+
 export class CreateSubOriginDto {
-    sfu_id_fuente_FK: number
-    sfu_nombre: string;
-    sfu_descripcion: string;
-    sfu_estado: boolean;
+  @IsNumber()
+  @IsNotEmpty()
+  sub_o_origin_id_fk: number;
+
+  @IsNotEmpty()
+  @IsString()
+  sub_o_name: string;
+
+  @IsOptional()
+  @IsString()
+  sub_o_description: string;
 }

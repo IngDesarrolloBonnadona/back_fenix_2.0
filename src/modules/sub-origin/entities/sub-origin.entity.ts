@@ -1,34 +1,57 @@
-import { CaseReportOriginal } from "src/modules/case-report-original/entities/case-report-original.entity";
-import { Origin } from "src/modules/origin/entities/origin.entity";
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { CaseReportOriginal } from 'src/modules/case-report-original/entities/case-report-original.entity';
+import { CaseReportValidate } from 'src/modules/case-report-validate/entities/case-report-validate.entity';
+import { Origin } from 'src/modules/origin/entities/origin.entity';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
-@Entity({ name: 'SubFuentes'})
+@Entity({ name: 'fenix_sub_origin' })
 export class SubOrigin {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    sfu_id_fuente_FK: number
+  @Column()
+  sub_o_origin_id_fk: number;
 
-    @Column({ type: 'varchar' })
-    sfu_nombre: string;
+  @Column({ type: 'varchar' })
+  sub_o_name: string;
 
-    @Column({ type: 'varchar', nullable: true })
-    sfu_descripcion: string;
+  @Column({ type: 'varchar', nullable: true })
+  sub_o_description: string;
 
-    @Column({ default: true })
-    sfu_estado: boolean;
+  @Column({ default: true })
+  sub_o_status: boolean;
 
-    @Column({ default: () => 'CURRENT_TIMESTAMP' })
-    sfu_fecha_creacion: Date;
+  @CreateDateColumn()
+  createdAt: Date;
 
-    @Column({ default: () => 'CURRENT_TIMESTAMP' })
-    sfu_fecha_actualizacion: Date;
-    
-    @ManyToOne(() => Origin, (origin) => origin.subOrigins)
-    @JoinColumn({ name: 'sfu_id_fuente_FK'})
-    origin: Origin
+  @UpdateDateColumn()
+  updateAt: Date;
 
-    @OneToMany(() => CaseReportOriginal, (caseReportOriginal) => caseReportOriginal.subOrigin)
-    caseReportOriginal: CaseReportOriginal[];
+  @DeleteDateColumn()
+  deletedAt: Date;
+
+  @ManyToOne(() => Origin, (origin) => origin.subOrigins)
+  @JoinColumn({ name: 'sub_o_origin_id_fk' })
+  origin: Origin;
+
+  @OneToMany(
+    () => CaseReportOriginal,
+    (caseReportOriginal) => caseReportOriginal.subOrigin,
+  )
+  caseReportOriginal: CaseReportOriginal[];
+
+  @OneToMany(
+    () => CaseReportValidate,
+    (caseReportValidate) => caseReportValidate.subOrigin,
+  )
+  caseReportValidate: CaseReportValidate[];
 }

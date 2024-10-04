@@ -1,29 +1,50 @@
-import { StatusReport } from "src/modules/status-report/entities/status-report.entity";
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { CaseReportOriginal } from 'src/modules/case-report-original/entities/case-report-original.entity';
+import { CaseReportValidate } from 'src/modules/case-report-validate/entities/case-report-validate.entity';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
-@Entity({ name: 'MovimientosReporte'})
+@Entity({ name: 'fenix_movement_report' })
 export class MovementReport {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column({ type: 'varchar' })
-    mrep_nombre: string;
+  @Column({ type: 'varchar' })
+  mov_r_name: string;
 
-    @Column({ type: 'varchar', nullable: true })
-    mrep_descripcion: string;
+  @Column({ type: 'varchar', nullable: true })
+  mov_r_description: string;
 
-    @Column()
-    mrep_tiempo: number;
+  @Column()
+  mov_r_time: number;
 
-    @Column({ default: true })
-    mrep_estado: boolean;
+  @Column({ default: true })
+  mov_r_status: boolean;
 
-    @Column({ default: () => 'CURRENT_TIMESTAMP' })
-    mrep_fecha_creacion: Date;
+  @CreateDateColumn()
+  createdAt: Date;
 
-    @Column({ default: () => 'CURRENT_TIMESTAMP' })
-    mrep_fecha_actualizacion: Date;
+  @UpdateDateColumn()
+  updateAt: Date;
 
-    @OneToMany(() => StatusReport, (statusReport) => statusReport.movementReport)
-    statusReport: StatusReport[];
+  @DeleteDateColumn()
+  deletedAt: Date;
+
+  @OneToMany(
+    () => CaseReportOriginal,
+    (caseReportOriginal) => caseReportOriginal.movementReport,
+  )
+  caseReportOriginal: CaseReportOriginal[];
+
+  @OneToMany(
+    () => CaseReportValidate,
+    (caseReportValidate) => caseReportValidate.movementReport,
+  )
+  caseReportValidate: CaseReportValidate[];
 }

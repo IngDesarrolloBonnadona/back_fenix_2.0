@@ -1,6 +1,16 @@
+import { IsNotEmpty, IsNumber, IsOptional, IsString,  } from "class-validator";
+
 export class CreateMovementReportDto {
-    mrep_nombre: string;
-    mrep_descripcion: string;
-    mrep_tiempo: number;
-    mrep_estado: boolean;
+
+    @IsNotEmpty()
+    @IsString()
+    mov_r_name: string;
+
+    @IsOptional()
+    @IsString()
+    mov_r_description: string;
+
+    @IsNumber()
+    @IsNotEmpty()
+    mov_r_time: number;
 }

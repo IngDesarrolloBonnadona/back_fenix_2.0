@@ -1,5 +1,12 @@
+import { IsNotEmpty, IsOptional, IsString } from "class-validator";
+
 export class CreateOriginDto {
-    fu_nombre: string;
-    fu_descripcion: string;
-    fu_estado: boolean;
+
+    @IsNotEmpty()
+    @IsString()
+    orig_name: string;
+
+    @IsOptional()
+    @IsString()
+    orig_description: string;
 }

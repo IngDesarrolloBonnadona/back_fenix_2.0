@@ -1,30 +1,76 @@
-import { CaseReportOriginal } from "src/modules/case-report-original/entities/case-report-original.entity";
-import { Unit } from "src/modules/unit/entities/unit.entity";
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { ActionPlan } from 'src/modules/action-plan/entities/action-plan.entity';
+import { CaseReportOriginal } from 'src/modules/case-report-original/entities/case-report-original.entity';
+import { CaseReportValidate } from 'src/modules/case-report-validate/entities/case-report-validate.entity';
+import { Unit } from 'src/modules/unit/entities/unit.entity';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
-@Entity({ name: 'Servicios'})
+@Entity({ name: 'fenix_service' })
 export class Service {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column({ type: 'varchar' })
-    serv_nombre: string;
+  @Column()
+  serv_unit_id_fk: number;
 
-    @Column({ type: 'varchar', nullable: true })
-    serv_descripcion: string;
+  @Column({ type: 'varchar' })
+  serv_name: string;
 
-    @Column({ default: true })
-    serv_estado: boolean;
+  @Column({ type: 'varchar', nullable: true })
+  serv_description: string;
 
-    @Column({ default: () => 'CURRENT_TIMESTAMP' })
-    serv_fecha_creacion: Date;
+  @Column({ default: true })
+  serv_status: boolean;
 
-    @Column({ default: () => 'CURRENT_TIMESTAMP' })
-    serv_fecha_actualizacion: Date;
+  @CreateDateColumn()
+  createdAt: Date;
 
-    @OneToMany(() => Unit, (unit) => unit.service)
-    unit: Unit[];
+  @UpdateDateColumn()
+  updateAt: Date;
 
-    @OneToMany(() => CaseReportOriginal, (caseReportOriginal) => caseReportOriginal.service)
-    caseReportOriginal: CaseReportOriginal[];
+  @DeleteDateColumn()
+  deletedAt: Date;
+
+  @ManyToOne(() => Unit, (unit) => unit.service)
+  @JoinColumn({ name: 'serv_unit_id_fk' })
+  unit: Unit;
+
+  // @OneToMany(() => Unit, (unit) => unit.service)
+  // unit: Unit[];
+
+  @OneToMany(
+    () => CaseReportOriginal,
+    (caseReportOriginal) => caseReportOriginal.originService,
+  )
+  caseReportOriginal: CaseReportOriginal[];
+
+  @OneToMany(
+    () => CaseReportOriginal,
+    (caseReportOriginal) => caseReportOriginal.reportingService,
+  )
+  caseReportOriginal2: CaseReportOriginal[];
+
+  @OneToMany(
+    () => CaseReportValidate,
+    (caseReportValidate) => caseReportValidate.originService,
+  )
+  caseReportValidate: CaseReportValidate[];
+
+  @OneToMany(
+    () => CaseReportValidate,
+    (caseReportValidate) => caseReportValidate.reportingService,
+  )
+  caseReportValidate2: CaseReportValidate[];
+
+  @OneToMany(() => ActionPlan, (actionPlan) => actionPlan.service)
+  actionPlan: ActionPlan[];
 }

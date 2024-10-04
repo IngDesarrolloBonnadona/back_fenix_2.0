@@ -1,5 +1,11 @@
+import { IsNotEmpty, IsOptional, IsString } from "class-validator";
+
 export class CreateRiskTypeDto {
-    tries_nombre: string;
-    tries_descripcion: string;
-    tries_estado: boolean;
+    @IsNotEmpty()
+    @IsString()
+    ris_t_name: string;
+
+    @IsOptional()
+    @IsString()
+    ris_t_description: string;
 }

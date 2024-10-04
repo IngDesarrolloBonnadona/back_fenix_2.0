@@ -1,5 +1,15 @@
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+
 export class CreateServiceDto {
-    serv_nombre: string;
-    serv_descripcion: string;
-    serv_estado: boolean;
+    @IsNotEmpty()
+    @IsString()
+    serv_name: string;
+
+    @IsNumber()
+    @IsNotEmpty()
+    serv_unit_id_fk: number;
+
+    @IsOptional()
+    @IsString()
+    serv_description: string;
 }
