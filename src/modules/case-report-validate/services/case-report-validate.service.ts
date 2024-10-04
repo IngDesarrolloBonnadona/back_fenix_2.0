@@ -101,7 +101,6 @@ export class CaseReportValidateService {
     if (
       !similarCaseReportValidate ||
       !similarCaseReportValidate.val_cr_casetype_id_fk ||
-      !similarCaseReportValidate.val_cr_documentpatient ||
       !similarCaseReportValidate.val_cr_event_id_fk ||
       !similarCaseReportValidate.val_cr_eventtype_id_fk ||
       !similarCaseReportValidate.val_cr_reportingservice_id_fk
@@ -114,11 +113,11 @@ export class CaseReportValidateService {
 
     const similarReport = await this.caseReportValidateRepository.find({
       where: {
+        val_cr_documentpatient:
+          similarCaseReportValidate.val_cr_documentpatient,
         val_cr_casetype_id_fk: similarCaseReportValidate.val_cr_casetype_id_fk,
         val_cr_reportingservice_id_fk:
           similarCaseReportValidate.val_cr_reportingservice_id_fk,
-        val_cr_documentpatient:
-          similarCaseReportValidate.val_cr_documentpatient,
         val_cr_event_id_fk: similarCaseReportValidate.val_cr_event_id_fk,
         val_cr_eventtype_id_fk:
           similarCaseReportValidate.val_cr_eventtype_id_fk,
