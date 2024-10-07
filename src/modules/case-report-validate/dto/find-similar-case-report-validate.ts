@@ -3,6 +3,10 @@ import { IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 export class FindSimilarCaseReportValidateDto {
     @IsString()
     @IsOptional()
+    val_cr_doctypepatient: string;
+
+    @IsString()
+    @IsOptional()
     val_cr_documentpatient: string;
 
     @IsNumber()

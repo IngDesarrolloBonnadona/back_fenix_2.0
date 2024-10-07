@@ -113,6 +113,7 @@ export class CaseReportValidateService {
 
     const similarReport = await this.caseReportValidateRepository.find({
       where: {
+        val_cr_doctypepatient: similarCaseReportValidate.val_cr_doctypepatient,
         val_cr_documentpatient:
           similarCaseReportValidate.val_cr_documentpatient,
         val_cr_casetype_id_fk: similarCaseReportValidate.val_cr_casetype_id_fk,
@@ -132,7 +133,7 @@ export class CaseReportValidateService {
     if (similarReport.length > 0) {
       throw new HttpException(
         {
-          message: `¡Extisten ${similarReport.length} casos similares!`,
+          message: `¡Extisten ${similarReport.length} caso(s) similar(es)!`,
           data: similarReport,
         },
         HttpStatus.OK,
@@ -141,6 +142,7 @@ export class CaseReportValidateService {
       throw new HttpException(
         {
           message: '¡No existen casos similares!',
+          data: similarReport,
         },
         HttpStatus.NOT_FOUND,
       );
