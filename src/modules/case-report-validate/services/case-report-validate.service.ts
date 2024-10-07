@@ -131,21 +131,15 @@ export class CaseReportValidateService {
     });
 
     if (similarReport.length > 0) {
-      throw new HttpException(
-        {
-          message: `¡Extisten ${similarReport.length} caso(s) similar(es)!`,
-          data: similarReport,
-        },
-        HttpStatus.OK,
-      );
+      return {
+        message: `¡Existen ${similarReport.length} caso(s) similar(es)!`,
+        data: similarReport,
+      };
     } else {
-      throw new HttpException(
-        {
-          message: '¡No existen casos similares!',
-          data: similarReport,
-        },
-        HttpStatus.NOT_FOUND,
-      );
+      return {
+        message: '¡No existen casos similares!',
+        data: [],
+      };
     }
   }
 
