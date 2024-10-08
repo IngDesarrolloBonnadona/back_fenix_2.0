@@ -234,12 +234,14 @@ export class EventService {
       );
     }
 
-    const unitFound = await this.unitRepository.findOneBy({
-      id: updateEventDto.eve_unit_id_fk,
-    });
+    if (updateEventDto.eve_unit_id_fk) {
+      const unitFound = await this.unitRepository.findOneBy({
+        id: updateEventDto.eve_unit_id_fk,
+      });
 
-    if (!unitFound) {
-      return new HttpException(`Unidad no encontrada.`, HttpStatus.NOT_FOUND);
+      if (!unitFound) {
+        return new HttpException(`Unidad no encontrada.`, HttpStatus.NOT_FOUND);
+      }
     }
 
     const eventFound = await this.eventRepository.findOneBy({ id });
