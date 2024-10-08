@@ -112,8 +112,20 @@ export class ServiceService {
       );
     }
 
-    await this.findOneService(id);
-    await this.unitService.findOneUnit(updateServiceDto.serv_unit_id_fk);
+    const FindService = await this.serviceRepository.findOne({
+      where: {
+        serv_name: updateServiceDto.serv_name,
+        serv_unit_id_fk: updateServiceDto.serv_unit_id_fk,
+        serv_status: true,
+      },
+    });
+
+    if (FindService) {
+      return new HttpException(
+        'El servicio ya existe con la unidad seleccionada.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
 
     const result = await this.serviceRepository.update(id, updateServiceDto);
 
