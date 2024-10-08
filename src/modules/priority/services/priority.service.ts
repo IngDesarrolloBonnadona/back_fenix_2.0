@@ -31,9 +31,13 @@ export class PriorityService {
       );
     }
 
-    const findSeverityClasif = await this.severityClasificationRepository.findOne({
-      where: { id: createPriorityDto.prior_severityclasif_id_fk, sev_c_status: true },
-    });
+    const findSeverityClasif =
+      await this.severityClasificationRepository.findOne({
+        where: {
+          id: createPriorityDto.prior_severityclasif_id_fk,
+          sev_c_status: true,
+        },
+      });
 
     if (!findSeverityClasif) {
       return new HttpException(
@@ -139,7 +143,37 @@ export class PriorityService {
       );
     }
 
-    await this.findOnePriority(id);
+    // await this.findOnePriority(id);
+    const findPriority = await this.priorityRepository.findOne({
+      where: [
+        { prior_name: updateStatusPriority.prior_name, prior_status: true },
+        {
+          prior_severityclasif_id_fk:
+            updateStatusPriority.prior_severityclasif_id_fk,
+          prior_status: true,
+        },
+      ],
+    });
+
+    if (findPriority) {
+      if (findPriority.prior_name === updateStatusPriority.prior_name) {
+        return new HttpException(
+          'El nombre de la prioridad ya existe.',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
+
+      if (
+        findPriority.prior_severityclasif_id_fk ===
+        updateStatusPriority.prior_severityclasif_id_fk
+      ) {
+        return new HttpException(
+          'La clasificación de severidad ya existe.',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
+    }
+    
     const result = await this.priorityRepository.update(
       id,
       updateStatusPriority,
