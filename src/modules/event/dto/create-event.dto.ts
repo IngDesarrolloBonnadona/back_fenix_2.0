@@ -10,8 +10,4 @@ export class CreateEventDto {
   @IsNotEmpty()
   @IsString()
   eve_name: string;
-
-  @IsOptional()
-  @IsString()
-  eve_description: string;
 }

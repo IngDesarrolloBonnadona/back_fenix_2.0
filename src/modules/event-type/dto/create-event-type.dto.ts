@@ -16,8 +16,4 @@ export class CreateEventTypeDto {
   @IsNotEmpty()
   @IsString()
   eve_t_name: string;
-
-  @IsOptional()
-  @IsString()
-  eve_t_description: string;
 }

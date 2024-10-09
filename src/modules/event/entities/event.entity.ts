@@ -29,9 +29,6 @@ export class Event {
   @Column({ type: 'varchar' })
   eve_name: string;
 
-  @Column({ type: 'varchar', nullable: true })
-  eve_description: string;
-
   @Column({ default: true })
   eve_status: boolean;
 

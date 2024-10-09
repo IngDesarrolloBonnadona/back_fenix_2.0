@@ -34,9 +34,6 @@ export class EventType {
   @Column({ type: 'varchar' })
   eve_t_name: string;
 
-  @Column({ type: 'varchar', nullable: true })
-  eve_t_description: string;
-
   @Column({ default: true })
   eve_t_status: boolean;
 
