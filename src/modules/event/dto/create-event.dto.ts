@@ -14,7 +14,7 @@ export class CreateEventDto {
   eve_oncologycategory_id_fk: number;
 
   @IsNumber()
-  @IsNotEmpty()
+  @IsOptional()
   eve_characterizationcase_id_fk: number;
 
   @IsNotEmpty()
