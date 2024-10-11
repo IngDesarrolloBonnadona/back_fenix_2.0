@@ -5,13 +5,13 @@ export class CreateEventTypeDto {
   @IsNotEmpty()
   eve_t_casetype_id_fk: number;
 
-  @IsNumber()
-  @IsNotEmpty()
-  eve_t_oncologycategory_id_fk: number;
+  // @IsNumber()
+  // @IsNotEmpty()
+  // eve_t_oncologycategory_id_fk: number;
 
-  @IsNumber()
-  @IsNotEmpty()
-  eve_t_characterizationcase_id_fk: number;
+  // @IsNumber()
+  // @IsNotEmpty()
+  // eve_t_characterizationcase_id_fk: number;
 
   @IsNotEmpty()
   @IsString()

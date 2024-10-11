@@ -97,8 +97,6 @@ export class EventTypeService {
       relations: {
         event: true,
         caseType: true,
-        oncologyCategory: true,
-        characterizationCase: true
       },
       order: {
         eve_t_name: 'ASC',

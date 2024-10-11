@@ -25,11 +25,11 @@ export class EventType {
   @Column()
   eve_t_casetype_id_fk: number;
 
-  @Column({ nullable: true })
-  eve_t_oncologycategory_id_fk: number;
+  // @Column({ nullable: true })
+  // eve_t_oncologycategory_id_fk: number;
 
-  @Column({ nullable: true })
-  eve_t_characterizationcase_id_fk: number;
+  // @Column({ nullable: true })
+  // eve_t_characterizationcase_id_fk: number;
 
   @Column({ type: 'varchar' })
   eve_t_name: string;
@@ -53,13 +53,13 @@ export class EventType {
   @JoinColumn({ name: 'eve_t_casetype_id_fk' })
   caseType: CaseType;
 
-  @ManyToOne(() => OncologyCategory, (oncologyCategory) => oncologyCategory.eventType)
-  @JoinColumn({ name: 'eve_t_oncologycategory_id_fk' })
-  oncologyCategory: OncologyCategory;
+  // @ManyToOne(() => OncologyCategory, (oncologyCategory) => oncologyCategory.eventType)
+  // @JoinColumn({ name: 'eve_t_oncologycategory_id_fk' })
+  // oncologyCategory: OncologyCategory;
 
-  @ManyToOne(() => CharacterizationCase, (characterizationCase) => characterizationCase.eventType)
-  @JoinColumn({ name: 'eve_t_characterizationcase_id_fk' })
-  characterizationCase: CharacterizationCase;
+  // @ManyToOne(() => CharacterizationCase, (characterizationCase) => characterizationCase.eventType)
+  // @JoinColumn({ name: 'eve_t_characterizationcase_id_fk' })
+  // characterizationCase: CharacterizationCase;
 
   @OneToMany(
     () => CaseReportOriginal,

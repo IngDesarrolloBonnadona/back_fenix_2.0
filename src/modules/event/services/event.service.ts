@@ -123,6 +123,8 @@ export class EventService {
           caseType: true,
         },
         unit: true,
+        oncologyCategory: true,
+        characterizationCase: true,
       },
       order: {
         eve_name: 'ASC',

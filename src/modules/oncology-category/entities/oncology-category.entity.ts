@@ -1,4 +1,4 @@
-import { EventType } from 'src/modules/event-type/entities/event-type.entity';
+import { Event } from 'src/modules/event/entities/event.entity';
 import {
   Column,
   CreateDateColumn,
@@ -32,6 +32,6 @@ export class OncologyCategory {
   @DeleteDateColumn()
   deletedAt: Date;
 
-  @OneToMany(() => EventType, (eventType) => eventType.oncologyCategory)
-  eventType: EventType[];
+  @OneToMany(() => Event, (event) => event.oncologyCategory)
+  event: Event[];
 }
