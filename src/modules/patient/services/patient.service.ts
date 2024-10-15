@@ -5,7 +5,7 @@ import { HttpPatientService } from '../http/http-patient.service';
 export class PatientService {
   constructor(private readonly httpPatientService: HttpPatientService) {}
 
-  async getPatient(idNumber: string, idType: string) {
+  async getPatient(idNumber: string, type: string) {
     if (!idNumber) {
       throw new HttpException(
         'El numero de identificación del paciente es requerido.',
@@ -13,7 +13,7 @@ export class PatientService {
       );
     }
 
-    if (!idType) {
+    if (!type) {
       throw new HttpException(
         'El tipo de identificación del paciente es requerido.',
         HttpStatus.BAD_REQUEST,
@@ -22,7 +22,7 @@ export class PatientService {
 
     const response = await this.httpPatientService.getPatientData(
       idNumber,
-      idType,
+      type,
     );
     const patient = response.data.data;
 

@@ -11,10 +11,10 @@ export class HttpPatientService {
 
   async getPatientData(
     idNumber: string,
-    idType: string,
+    type: string,
   ) {
     try {
-      const url = `${process.env.URL_PATIENTS}/${idNumber}/${idType}`;
+      const url = `${process.env.URL_PATIENTS}/${idNumber}/${type}`;
 
       const response = firstValueFrom(
         this.httpPatientService.get(url, {
