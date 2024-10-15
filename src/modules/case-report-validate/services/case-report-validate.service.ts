@@ -127,7 +127,9 @@ export class CaseReportValidateService {
       },
       relations:{
         caseType: true,
-        event: true
+        event: true,
+        eventType: true,
+        reportingService: true,
       },
       order: {
         createdAt: 'DESC',
