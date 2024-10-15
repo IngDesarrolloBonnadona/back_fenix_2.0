@@ -125,6 +125,10 @@ export class CaseReportValidateService {
         val_cr_status: true,
         val_cr_validated: false,
       },
+      relations:{
+        caseType: true,
+        event: true
+      },
       order: {
         createdAt: 'DESC',
       },
