@@ -7,11 +7,11 @@ import { ApiTags } from '@nestjs/swagger';
 export class PatientController {
   constructor(private readonly patientService: PatientService) {}
 
-  @Get('/infoPatient/:idNumber/:idType')
+  @Get('/infoPatient/:idNumber/:type')
   infoPatient(
     @Param('idNumber') idNumber: string,
-    @Param('idType') idType: string,
+    @Param('type') type: string,
   ) {
-    return this.patientService.getPatient(idNumber, idType);
+    return this.patientService.getPatient(idNumber, type);
   }
 }

@@ -7,5 +7,5 @@ export class PatientDto {
 
   @IsNotEmpty()
   @IsString()
-  idType: string;
+  type: string;
 }
