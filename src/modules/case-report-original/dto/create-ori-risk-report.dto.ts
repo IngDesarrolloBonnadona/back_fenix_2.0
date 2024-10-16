@@ -103,7 +103,7 @@ export class CreateOriRiskReportDto {
 
   @IsString()
   @IsOptional()
-  ori_cr_descriptionOthers: string;
+  ori_cr_descriptionothers: string;
 
   @IsNumber()
   @IsOptional()

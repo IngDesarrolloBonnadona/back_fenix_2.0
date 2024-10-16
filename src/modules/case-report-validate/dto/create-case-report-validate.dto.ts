@@ -115,7 +115,7 @@ export class CreateCaseReportValidateDto {
 
   @IsString()
   @IsOptional()
-  val_cr_descriptionOthers: string;
+  val_cr_descriptionothers: string;
 
   @IsNumber()
   @IsOptional()
