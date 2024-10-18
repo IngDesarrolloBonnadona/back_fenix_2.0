@@ -15,7 +15,7 @@ import { CreateMedicineDto } from 'src/modules/medicine-case-report/dto/create-m
 export class CreateOriRiskReportDto {
   @IsDateString()
   @IsNotEmpty()
-  ori_cr_dateofcase: Date; 
+  ori_cr_dateofcase: Date;
 
   @IsNumber()
   @IsNotEmpty()
@@ -24,7 +24,7 @@ export class CreateOriRiskReportDto {
   @IsBoolean()
   @IsNotEmpty()
   ori_cr_anonymoususer: boolean;
-  
+
   @IsString()
   @IsOptional()
   ori_cr_reporter_id: string;
@@ -83,15 +83,19 @@ export class CreateOriRiskReportDto {
 
   @IsString()
   @IsOptional()
-  ori_cr_diagnosticcode: string;
+  ori_cr_diagnosticcodepatient: string;
 
   @IsString()
   @IsOptional()
-  ori_cr_diagnosticdescription: string;
+  ori_cr_diagnosticdescriptionpatient: string;
 
   @IsNumber()
   @IsOptional()
   ori_cr_admconsecutivepatient: number;
+
+  @IsNumber()
+  @IsOptional()
+  ori_cr_foliopatient: number;
 
   @IsNumber()
   @IsNotEmpty()

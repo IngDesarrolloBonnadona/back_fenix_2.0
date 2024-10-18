@@ -74,15 +74,19 @@ export class CreateValIncidentReportDto {
 
   @IsString()
   @IsOptional()
-  val_cr_diagnosticcode: string;
+  val_cr_diagnosticcodepatient: string;
 
   @IsString()
   @IsOptional()
-  val_cr_diagnosticdescription: string;
-  
+  val_cr_diagnosticdescriptionpatient: string;
+
   @IsNumber()
   @IsOptional()
   val_cr_admconsecutivepatient: number;
+
+  @IsNumber()
+  @IsOptional()
+  val_cr_foliopatient: number;
 
   @IsNumber()
   @IsNotEmpty()

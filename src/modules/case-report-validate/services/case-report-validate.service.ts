@@ -125,7 +125,7 @@ export class CaseReportValidateService {
         val_cr_status: true,
         val_cr_validated: false,
       },
-      relations:{
+      relations: {
         caseType: true,
         event: true,
         eventType: true,
@@ -420,6 +420,11 @@ export class CaseReportValidateService {
       val_cr_epspatient: caseReportOriginal.ori_cr_epspatient,
       val_cr_admconsecutivepatient:
         caseReportOriginal.ori_cr_admconsecutivepatient,
+      val_cr_diagnosticcodepatient:
+        caseReportOriginal.ori_cr_diagnosticcodepatient,
+      val_cr_diagnosticdescriptionpatient:
+        caseReportOriginal.ori_cr_diagnosticdescriptionpatient,
+      val_cr_foliopatient: caseReportOriginal.ori_cr_foliopatient,
       val_cr_anonymoususer: caseReportOriginal.ori_cr_anonymoususer,
       val_cr_reporter_id: caseReportOriginal.ori_cr_reporter_id,
       val_cr_eventtype_id_fk: caseReportOriginal.ori_cr_eventtype_id_fk,

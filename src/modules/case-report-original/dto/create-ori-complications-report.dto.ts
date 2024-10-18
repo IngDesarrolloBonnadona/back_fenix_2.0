@@ -83,15 +83,19 @@ export class CreateOriComplicationsReportDto {
 
   @IsString()
   @IsOptional()
-  ori_cr_diagnosticcode: string;
+  ori_cr_diagnosticcodepatient: string;
 
   @IsString()
   @IsOptional()
-  ori_cr_diagnosticdescription: string;
+  ori_cr_diagnosticdescriptionpatient: string;
 
   @IsNumber()
   @IsOptional()
   ori_cr_admconsecutivepatient: number;
+
+  @IsNumber()
+  @IsOptional()
+  ori_cr_foliopatient: number;
 
   @IsNumber()
   @IsNotEmpty()

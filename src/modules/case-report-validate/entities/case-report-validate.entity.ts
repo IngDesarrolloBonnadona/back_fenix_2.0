@@ -81,13 +81,16 @@ export class CaseReportValidate {
   val_cr_epspatient: string;
 
   @Column({ type: 'varchar', nullable: true })
-  val_cr_diagnosticcode: string;
+  val_cr_diagnosticcodepatient: string;
 
   @Column({ type: 'varchar', nullable: true })
-  val_cr_diagnosticdescription: string;
+  val_cr_diagnosticdescriptionpatient: string;
 
   @Column({ nullable: true })
   val_cr_admconsecutivepatient: number;
+
+  @Column({ nullable: true })
+  val_cr_foliopatient: number;
 
   @Column({ nullable: true })
   val_cr_anonymoususer: boolean;
