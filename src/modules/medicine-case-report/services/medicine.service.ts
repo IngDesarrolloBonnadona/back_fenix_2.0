@@ -91,14 +91,7 @@ export class MedicineService {
     medicine: string,
   ): Promise<AxiosResponse<any>> {
     const url = `${process.env.URL_MEDICINES}?medicine=${medicine}`;
-
-    if (!medicine) {
-      throw new HttpException(
-        'El dato del medicamento es requerido.',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
+    
     try {
       const response = await lastValueFrom(
         this.httpMedicineService.get(url, {
