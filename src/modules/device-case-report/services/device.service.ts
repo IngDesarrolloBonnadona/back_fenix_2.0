@@ -1,17 +1,26 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateDeviceDto } from '../dto/create-device.dto';
-import { UpdateDeviceDto } from '../dto/update-device.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Device as DeviceEntity } from '../entities/device.entity';
-import { QueryRunner, Repository } from 'typeorm';
 import { HttpException } from '@nestjs/common';
 import { HttpStatus } from '@nestjs/common';
+import { HttpService } from '@nestjs/axios';
+
+import { CreateDeviceDto } from '../dto/create-device.dto';
+import { UpdateDeviceDto } from '../dto/update-device.dto';
+
+import { Device as DeviceEntity } from '../entities/device.entity';
+
+import { QueryRunner, Repository } from 'typeorm';
+
+import { AxiosResponse } from 'axios';
+import { lastValueFrom } from 'rxjs';
 
 @Injectable()
 export class DeviceService {
   constructor(
     @InjectRepository(DeviceEntity)
     private readonly deviceRepository: Repository<DeviceEntity>,
+
+    private readonly httpDeviceService: HttpService,
   ) {}
 
   async createDeviceTransation(
@@ -73,6 +82,43 @@ export class DeviceService {
     }
 
     return device;
+  }
+
+  async findExternalDevicesQuery(
+    device: string,
+  ): Promise<AxiosResponse<any>> {
+    const url = `${process.env.URL_DEVICES}?device=${device}`;
+
+    if (!device) {
+      throw new HttpException(
+        'El dato del dispositivo es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    try {
+      const response = await lastValueFrom(
+        this.httpDeviceService.get(url, {
+          headers: {
+            'X-Authorization': process.env.X_TOKEN_VALUE_DEVICES,
+          },
+        }),
+      );
+      
+      if (response.status !== 200 || !response.data) {
+        throw new HttpException(
+          'Error al consultar la información del dispositivo',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      return response.data;
+    } catch (error) {
+      throw new HttpException(
+        'Error al conectar con el servidor externo',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   async updateDevice(id: number, updateDeviceDto: UpdateDeviceDto) {

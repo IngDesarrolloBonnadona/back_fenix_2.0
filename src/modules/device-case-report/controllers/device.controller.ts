@@ -8,6 +8,7 @@ import {
   Delete,
   Put,
   HttpException,
+  Query,
 } from '@nestjs/common';
 import { DeviceService } from '../services/device.service';
 import { CreateDeviceDto } from '../dto/create-device.dto';
@@ -28,6 +29,11 @@ export class DeviceController {
   @Get('/findDevice/:id')
   findDevice(@Param('id') id: number) {
     return this.deviceService.findOneDevice(id);
+  }
+
+  @Get('/findExternalDevice')
+  async findExternalMedicine(@Query('device') device: string) {
+    return this.deviceService.findExternalDevicesQuery(device)
   }
 
   @Patch('/updateDevice/:id')

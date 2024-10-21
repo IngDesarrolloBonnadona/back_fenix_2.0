@@ -1,17 +1,28 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateMedicineDto } from '../dto/create-medicine.dto';
-import { UpdateMedicineDto } from '../dto/update-medicine.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Medicine as MedicineEntity } from '../entities/medicine.entity';
-import { QueryRunner, Repository } from 'typeorm';
 import { HttpException } from '@nestjs/common';
 import { HttpStatus } from '@nestjs/common';
+import { HttpService } from '@nestjs/axios';
+
+import { CreateMedicineDto } from '../dto/create-medicine.dto';
+import { UpdateMedicineDto } from '../dto/update-medicine.dto';
+
+import { Medicine as MedicineEntity } from '../entities/medicine.entity';
+
+import { QueryRunner, Repository } from 'typeorm';
+
+import { AxiosResponse } from 'axios';
+import { lastValueFrom } from 'rxjs';
+
+require('dotenv').config();
 
 @Injectable()
 export class MedicineService {
   constructor(
     @InjectRepository(MedicineEntity)
     private readonly medicineRepository: Repository<MedicineEntity>,
+
+    private readonly httpMedicineService: HttpService,
   ) {}
 
   async createMedicineTransaction(
@@ -74,6 +85,43 @@ export class MedicineService {
     }
 
     return medicine;
+  }
+
+  async findExternalMedidicinesQuery(
+    medicine: string,
+  ): Promise<AxiosResponse<any>> {
+    const url = `${process.env.URL_MEDICINES}?medicine=${medicine}`;
+
+    if (!medicine) {
+      throw new HttpException(
+        'El dato del medicamento es requerido.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    try {
+      const response = await lastValueFrom(
+        this.httpMedicineService.get(url, {
+          headers: {
+            'X-Authorization': process.env.X_TOKEN_VALUE_MEDICINES,
+          },
+        }),
+      );
+      
+      if (response.status !== 200 || !response.data) {
+        throw new HttpException(
+          'Error al consultar la información del medicamento',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      return response.data;
+    } catch (error) {
+      throw new HttpException(
+        'Error al conectar con el servidor externo',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   async updateMedicine(id: number, updateMedicineDto: UpdateMedicineDto) {

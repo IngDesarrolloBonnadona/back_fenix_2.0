@@ -9,6 +9,7 @@ import {
   HttpException,
   HttpStatus,
   Put,
+  Query,
 } from '@nestjs/common';
 import { MedicineService } from '../services/medicine.service';
 import { CreateMedicineDto } from '../dto/create-medicine.dto';
@@ -21,11 +22,6 @@ import { ApiTags } from '@nestjs/swagger';
 export class MedicineController {
   constructor(private readonly medicineService: MedicineService) {}
 
-  // @Post('/createMedicine')
-  // createMedicine(@Body() createMedicineDto: CreateMedicineDto) {
-  //   return this.medicineService.createMedicine(createMedicineDto);
-  // }
-
   @Get('/listMedicines')
   listMedicines() {
     return this.medicineService.findAllMedicines();
@@ -34,6 +30,11 @@ export class MedicineController {
   @Get('/findMedicine/:id')
   findMedicine(@Param('id') id: number) {
     return this.medicineService.findOneMedicine(id);
+  }
+
+  @Get('/findExternalMedicine')
+  async findExternalMedicine(@Query('medicine') medicine: string) {
+    return this.medicineService.findExternalMedidicinesQuery(medicine)
   }
 
   @Patch('/updateMedicine/:id')
