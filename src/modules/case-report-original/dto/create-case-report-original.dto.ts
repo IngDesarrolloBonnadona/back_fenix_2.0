@@ -60,9 +60,9 @@ export class CreateCaseReportOriginalDto {
   @IsOptional()
   ori_cr_secondlastnamepatient: string;
 
-  @IsNumber()
+  @IsString()
   @IsOptional()
-  ori_cr_agepatient: number;
+  ori_cr_agepatient: string;
 
   @IsString()
   @IsOptional()

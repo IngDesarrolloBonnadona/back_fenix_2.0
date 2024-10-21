@@ -57,7 +57,7 @@ export class CaseReportOriginal {
   ori_cr_secondlastnamepatient: string;
 
   @Column({ nullable: true })
-  ori_cr_agepatient: number;
+  ori_cr_agepatient: string;
 
   @Column({ type: 'varchar', nullable: true })
   ori_cr_genderpatient: string;

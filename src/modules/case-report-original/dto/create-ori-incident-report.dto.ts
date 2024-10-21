@@ -61,9 +61,9 @@ export class CreateOriIncidentReportDto {
   @IsNotEmpty()
   ori_cr_secondlastnamepatient: string;
 
-  @IsNumber()
+  @IsString()
   @IsNotEmpty()
-  ori_cr_agepatient: number;
+  ori_cr_agepatient: string;
 
   @IsString()
   @IsNotEmpty()

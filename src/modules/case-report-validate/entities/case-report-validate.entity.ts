@@ -72,7 +72,7 @@ export class CaseReportValidate {
   val_cr_secondlastnamepatient: string;
 
   @Column({ nullable: true })
-  val_cr_agepatient: number;
+  val_cr_agepatient: string;
 
   @Column({ nullable: true })
   val_cr_genderpatient: string;

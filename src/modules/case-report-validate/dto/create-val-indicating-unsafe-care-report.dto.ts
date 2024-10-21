@@ -62,9 +62,9 @@ export class CreateValIndicatingUnsafeCareReportDto {
   @IsNotEmpty()
   val_cr_secondlastnamepatient: string;
 
-  @IsNumber()
+  @IsString()
   @IsNotEmpty()
-  val_cr_agepatient: number;
+  val_cr_agepatient: string;
 
   @IsString()
   @IsNotEmpty()

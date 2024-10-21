@@ -70,9 +70,9 @@ export class CreateValRiskReportDto {
   @IsOptional()
   val_cr_secondlastnamepatient: string;
 
-  @IsNumber()
+  @IsString()
   @IsOptional()
-  val_cr_agepatient: number;
+  val_cr_agepatient: string;
 
   @IsString()
   @IsOptional()
