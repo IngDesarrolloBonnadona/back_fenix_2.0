@@ -257,7 +257,7 @@ export class CaseReportOriginalService {
       await queryRunner.commitTransaction(); // registro
 
       return new HttpException(
-        `¡Has generado tu reporte ${caseReportOriginal.ori_cr_filingnumber} exitosamente.!`,
+        `¡Tu reporte ha sido registrado exitosamente con el #${caseReportOriginal.ori_cr_filingnumber}.!`,
         HttpStatus.CREATED,
       );
     } catch (error) {

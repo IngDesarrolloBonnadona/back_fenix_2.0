@@ -380,7 +380,7 @@ export class CaseReportValidateService {
       await queryRunner.commitTransaction();
 
       return new HttpException(
-        `¡Reporte ${caseReportValidate.val_cr_filingnumber} se validó satisfactoriamente.!`,
+        `¡El reporte #${caseReportValidate.val_cr_filingnumber} se validó exitosamente.!`,
         HttpStatus.CREATED,
       );
     } catch (error) {
