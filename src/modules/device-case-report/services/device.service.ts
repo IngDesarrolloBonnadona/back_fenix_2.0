@@ -1,13 +1,12 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { HttpException } from '@nestjs/common';
 import { HttpStatus } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 
 import { CreateDeviceDto } from '../dto/create-device.dto';
-import { UpdateDeviceDto } from '../dto/update-device.dto';
 
-import { Device as DeviceEntity } from '../entities/device.entity';
+import { Device } from '../entities/device.entity';
 
 import { QueryRunner, Repository } from 'typeorm';
 
@@ -17,8 +16,8 @@ import { lastValueFrom } from 'rxjs';
 @Injectable()
 export class DeviceService {
   constructor(
-    @InjectRepository(DeviceEntity)
-    private readonly deviceRepository: Repository<DeviceEntity>,
+    @InjectRepository(Device)
+    private readonly deviceRepository: Repository<Device>,
 
     private readonly httpDeviceService: HttpService,
   ) {}
@@ -89,13 +88,6 @@ export class DeviceService {
   ): Promise<AxiosResponse<any>> {
     const url = `${process.env.URL_DEVICES}?device=${device}`;
 
-    if (!device) {
-      throw new HttpException(
-        'El dato del dispositivo es requerido.',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
     try {
       const response = await lastValueFrom(
         this.httpDeviceService.get(url, {
@@ -119,33 +111,6 @@ export class DeviceService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-  }
-
-  async updateDevice(id: number, updateDeviceDto: UpdateDeviceDto) {
-    if (!updateDeviceDto) {
-      throw new HttpException(
-        'Los datos para actualizar el dispositivo son requeridos.',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
-    const device = await this.findOneDevice(id);
-    const result = await this.deviceRepository.update(
-      device.id,
-      updateDeviceDto,
-    );
-
-    if (result.affected === 0) {
-      return new HttpException(
-        `No se pudo actualizar el dispositivo.`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-
-    return new HttpException(
-      `¡Datos actualizados correctamente!`,
-      HttpStatus.OK,
-    );
   }
 
   async deleteDevice(id: number) {

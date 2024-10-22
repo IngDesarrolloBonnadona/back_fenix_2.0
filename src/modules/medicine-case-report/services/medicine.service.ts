@@ -1,13 +1,12 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { HttpException } from '@nestjs/common';
 import { HttpStatus } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 
 import { CreateMedicineDto } from '../dto/create-medicine.dto';
-import { UpdateMedicineDto } from '../dto/update-medicine.dto';
 
-import { Medicine as MedicineEntity } from '../entities/medicine.entity';
+import { Medicine } from '../entities/medicine.entity';
 
 import { QueryRunner, Repository } from 'typeorm';
 
@@ -19,8 +18,8 @@ require('dotenv').config();
 @Injectable()
 export class MedicineService {
   constructor(
-    @InjectRepository(MedicineEntity)
-    private readonly medicineRepository: Repository<MedicineEntity>,
+    @InjectRepository(Medicine)
+    private readonly medicineRepository: Repository<Medicine>,
 
     private readonly httpMedicineService: HttpService,
   ) {}
@@ -115,33 +114,6 @@ export class MedicineService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-  }
-
-  async updateMedicine(id: number, updateMedicineDto: UpdateMedicineDto) {
-    if (!updateMedicineDto) {
-      throw new HttpException(
-        'Los datos para actualizar el medicamento son requeridos.',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
-    const medicine = await this.findOneMedicine(id);
-    const result = await this.medicineRepository.update(
-      medicine.id,
-      updateMedicineDto,
-    );
-
-    if (result.affected === 0) {
-      return new HttpException(
-        `No se pudo actualizar el medicamento`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-
-    return new HttpException(
-      `¡Datos actualizados correctamente!`,
-      HttpStatus.OK,
-    );
   }
 
   async deleteMedicine(id: number) {
