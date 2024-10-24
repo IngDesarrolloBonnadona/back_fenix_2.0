@@ -1,15 +1,17 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { CreateCompressionConceptReportDto } from '../dto/create-compression-concept-report.dto';
-import { UpdateCompressionConceptReportDto } from '../dto/update-compression-concept-report.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CompressionConceptReport as CompressionConceptReportEntity } from '../entities/compression-concept-report.entity';
+
 import { Repository } from 'typeorm';
+
+import { CreateCompressionConceptReportDto } from '../dto/create-compression-concept-report.dto';
+
+import { CompressionConceptReport } from '../entities/compression-concept-report.entity';
 
 @Injectable()
 export class CompressionConceptReportService {
   constructor(
-    @InjectRepository(CompressionConceptReportEntity)
-    private readonly CompressionConceptReportRepository: Repository<CompressionConceptReportEntity>,
+    @InjectRepository(CompressionConceptReport)
+    private readonly CompressionConceptReportRepository: Repository<CompressionConceptReport>,
   ) {}
 
   async createCompressionConceptReport(

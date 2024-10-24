@@ -1,15 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { CreateClinicalResearchCaseReportValidateDto } from '../dto/create-clinical-research-case-report-validate.dto';
-import { UpdateClinicalResearchCaseReportValidateDto } from '../dto/update-clinical-research-case-report-validate.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ClinicalResearchCaseReportValidate as ClinicalResearchCaseReportValidateEntity } from '../entities/clinical-research-case-report-validate.entity';
+
 import { QueryRunner, Repository } from 'typeorm';
+
+import { CreateClinicalResearchCaseReportValidateDto } from '../dto/create-clinical-research-case-report-validate.dto';
+
+import { ClinicalResearchCaseReportValidate } from '../entities/clinical-research-case-report-validate.entity';
 
 @Injectable()
 export class ClinicalResearchCaseReportValidateService {
   constructor(
-    @InjectRepository(ClinicalResearchCaseReportValidateEntity)
-    private readonly clinicalResearchCaseReportValidateRepository: Repository<ClinicalResearchCaseReportValidateEntity>,
+    @InjectRepository(ClinicalResearchCaseReportValidate)
+    private readonly clinicalResearchCaseReportValidateRepository: Repository<ClinicalResearchCaseReportValidate>,
   ) {}
   async createClinicalResearchCaseReportValidateTransaction(
     clinicalResearchCaseReportValidate: CreateClinicalResearchCaseReportValidateDto[],
@@ -17,7 +19,7 @@ export class ClinicalResearchCaseReportValidateService {
     queryRunner: QueryRunner,
   ) {
     const existingClinicalResearchCaseReportValidate =
-      await queryRunner.manager.find(ClinicalResearchCaseReportValidateEntity, {
+      await queryRunner.manager.find(ClinicalResearchCaseReportValidate, {
         where: { res_crv_clinicalresearch_id_fk: clinicalResearchId },
       });
 
@@ -29,7 +31,7 @@ export class ClinicalResearchCaseReportValidateService {
 
     for (const clinicalResearchCRV of clinicalResearchCaseReportValidate) {
       const data = queryRunner.manager.create(
-        ClinicalResearchCaseReportValidateEntity,
+        ClinicalResearchCaseReportValidate,
         {
           ...clinicalResearchCRV,
           res_crv_clinicalresearch_id_fk: clinicalResearchId,

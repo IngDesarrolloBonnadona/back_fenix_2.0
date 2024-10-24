@@ -5,19 +5,23 @@ import {
   Injectable,
   forwardRef,
 } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+
+import { Repository } from 'typeorm';
+
 import { CreateObservationReturnCaseDto } from '../dto/create-observation-return-case.dto';
 import { UpdateObservationReturnCaseDto } from '../dto/update-observation-return-case.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { ObservationReturnCase as ObservationReturnCaseEntity } from '../entities/observation-return-case.entity';
-import { Repository } from 'typeorm';
+
+import { ObservationReturnCase } from '../entities/observation-return-case.entity';
+
 import { ReasonReturnCaseService } from 'src/modules/reason-return-case/services/reason-return-case.service';
 import { CaseReportValidateService } from 'src/modules/case-report-validate/services/case-report-validate.service';
 
 @Injectable()
 export class ObservationReturnCaseService {
   constructor(
-    @InjectRepository(ObservationReturnCaseEntity)
-    private readonly observationReturnRepository: Repository<ObservationReturnCaseEntity>,
+    @InjectRepository(ObservationReturnCase)
+    private readonly observationReturnRepository: Repository<ObservationReturnCase>,
 
     private readonly reasonReturnCaseService: ReasonReturnCaseService,
     @Inject(forwardRef(() => CaseReportValidateService))

@@ -1,21 +1,19 @@
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+
+import { Repository } from 'typeorm';
+
 import { CreateSubOriginDto } from '../dto/create-sub-origin.dto';
 import { UpdateSubOriginDto } from '../dto/update-sub-origin.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { SubOrigin as SubOriginEntity } from '../entities/sub-origin.entity';
-import { Repository } from 'typeorm';
+
+import { SubOrigin } from '../entities/sub-origin.entity';
 import { OriginService } from 'src/modules/origin/services/origin.service';
 
 @Injectable()
 export class SubOriginService {
   constructor(
-    @InjectRepository(SubOriginEntity)
-    private readonly subOriginRepository: Repository<SubOriginEntity>,
+    @InjectRepository(SubOrigin)
+    private readonly subOriginRepository: Repository<SubOrigin>,
 
     private readonly originService: OriginService,
   ) {}

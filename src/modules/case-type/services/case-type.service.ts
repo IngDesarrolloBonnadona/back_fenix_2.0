@@ -1,15 +1,18 @@
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+
 import { CreateCaseTypeDto } from '../dto/create-case-type.dto';
 import { UpdateCaseTypeDto } from '../dto/update-case-type.dto';
-import { Repository } from 'typeorm';
-import { CaseType as CaseTypeEntity } from '../entities/case-type.entity';
-import { InjectRepository } from '@nestjs/typeorm';
+
+import { CaseType } from '../entities/case-type.entity';
 
 @Injectable()
 export class CaseTypeService {
   constructor(
-    @InjectRepository(CaseTypeEntity)
-    private readonly caseTypeRepository: Repository<CaseTypeEntity>,
+    @InjectRepository(CaseType)
+    private readonly caseTypeRepository: Repository<CaseType>,
   ) {}
 
   async createCaseType(createCaseTypeDto: CreateCaseTypeDto) {

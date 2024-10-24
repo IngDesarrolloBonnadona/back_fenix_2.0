@@ -1,17 +1,21 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+
+import { Repository } from 'typeorm';
+
 import { CreateRoleResponseTimeDto } from '../dto/create-role-response-time.dto';
 import { UpdateRoleResponseTimeDto } from '../dto/update-role-response-time.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { RoleResponseTime as RoleResponseTimeResponseTimeEntity } from '../entities/role-response-time.entity';
-import { Repository } from 'typeorm';
+
+import { RoleResponseTime } from '../entities/role-response-time.entity';
+
 import { SeverityClasificationService } from 'src/modules/severity-clasification/services/severity-clasification.service';
 import { RolePermissionService } from 'src/modules/role-permission/services/role-permission.service';
 
 @Injectable()
 export class RoleResponseTimeService {
   constructor(
-    @InjectRepository(RoleResponseTimeResponseTimeEntity)
-    private readonly roleResponseTimeRepository: Repository<RoleResponseTimeResponseTimeEntity>,
+    @InjectRepository(RoleResponseTime)
+    private readonly roleResponseTimeRepository: Repository<RoleResponseTime>,
 
     private readonly severityClasificationService: SeverityClasificationService,
     private readonly roleService: RolePermissionService,

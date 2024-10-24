@@ -1,15 +1,18 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+
+import { Repository } from 'typeorm';
+
 import { CreateDeviceTypeDto } from '../dto/create-device-type.dto';
 import { UpdateDeviceTypeDto } from '../dto/update-device-type.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { DeviceType as DeviceTypeEntity } from '../entities/device-type.entity';
-import { Repository } from 'typeorm';
+
+import { DeviceType } from '../entities/device-type.entity';
 
 @Injectable()
 export class DeviceTypeService {
   constructor(
-    @InjectRepository(DeviceTypeEntity)
-    private readonly deviceTypeRepository: Repository<DeviceTypeEntity>,
+    @InjectRepository(DeviceType)
+    private readonly deviceTypeRepository: Repository<DeviceType>,
   ) {}
   async createDeviceType(createDeviceTypeDto: CreateDeviceTypeDto) {
     if (!createDeviceTypeDto || !createDeviceTypeDto.dev_t_name) {

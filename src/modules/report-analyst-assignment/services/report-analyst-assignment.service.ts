@@ -5,50 +5,54 @@ import {
   Injectable,
   forwardRef,
 } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+
+import { FindOptionsWhere, Repository } from 'typeorm';
+
 import { CreateReportAnalystAssignmentDto } from '../dto/create-report-analyst-assignment.dto';
 import { UpdateReportAnalystAssignmentDto } from '../dto/update-report-analyst-assignment.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { ReportAnalystAssignment as ReportAnalystAssignmentEntity } from '../entities/report-analyst-assignment.entity';
-import { FindOptionsWhere, Repository } from 'typeorm';
-import { LogService } from 'src/modules/log/services/log.service';
+import { QueryReportAnalystAssignmentDto } from '../dto/query-report-analyst-assignment.dto';
+
+import { ReportAnalystAssignment } from '../entities/report-analyst-assignment.entity';
+import { CaseReportValidate } from 'src/modules/case-report-validate/entities/case-report-validate.entity';
+import { RoleResponseTime } from 'src/modules/role-response-time/entities/role-response-time.entity';
+import { RolePermission } from 'src/modules/role-permission/entities/role-permission.entity';
+import { CaseType } from 'src/modules/case-type/entities/case-type.entity';
+import { SeverityClasification } from 'src/modules/severity-clasification/entities/severity-clasification.entity';
+import { ReportResearcherAssignment } from 'src/modules/report-researchers-assignment/entities/report-researchers-assignment.entity';
+import { MovementReport } from 'src/modules/movement-report/entities/movement-report.entity';
+
 import { logReports } from 'src/utils/enums/logs.enum';
+import { movementReport } from 'src/utils/enums/movement-report.enum';
+import { userRoles } from 'src/utils/enums/user-roles.enum';
+import { caseTypeReport } from 'src/utils/enums/caseType-report.enum';
+import { severityClasification } from 'src/utils/enums/severity-clasif.enum';
+import { sentinelTime } from 'src/utils/enums/sentinel-time.enum';
+
+import { LogService } from 'src/modules/log/services/log.service';
 import { CaseReportValidateService } from 'src/modules/case-report-validate/services/case-report-validate.service';
 import { PositionService } from 'src/modules/position/services/position.service';
 import { HttpPositionService } from 'src/modules/position/http/http-position.service';
-import { movementReport } from 'src/utils/enums/movement-report.enum';
-import { CaseReportValidate as CaseReportValidateEntity } from 'src/modules/case-report-validate/entities/case-report-validate.entity';
-import { RoleResponseTime as RoleResponseTimeEntity } from 'src/modules/role-response-time/entities/role-response-time.entity';
-import { RolePermission as RoleEntity } from 'src/modules/role-permission/entities/role-permission.entity';
-import { userRoles } from 'src/utils/enums/user-roles.enum';
-import { CaseType as CaseTypeEntity } from 'src/modules/case-type/entities/case-type.entity';
-import { caseTypeReport } from 'src/utils/enums/caseType-report.enum';
-import { SeverityClasification as SeverityClasificationEntity } from 'src/modules/severity-clasification/entities/severity-clasification.entity';
-import { severityClasification } from 'src/utils/enums/severity-clasif.enum';
-import { sentinelTime } from 'src/utils/enums/sentinel-time.enum';
-import { QueryReportAnalystAssignmentDto } from '../dto/query-report-analyst-assignment.dto';
-import { MovementReportService } from 'src/modules/movement-report/services/movement-report.service';
-import { ReportResearcherAssignment as ReportResearcherAssignmentEntity } from 'src/modules/report-researchers-assignment/entities/report-researchers-assignment.entity';
-import { MovementReport as MovementReportEntity } from 'src/modules/movement-report/entities/movement-report.entity';
 
 @Injectable()
 export class ReportAnalystAssignmentService {
   constructor(
-    @InjectRepository(ReportAnalystAssignmentEntity)
-    private readonly reportAnalystAssignmentRepository: Repository<ReportAnalystAssignmentEntity>,
-    @InjectRepository(CaseReportValidateEntity)
-    private readonly caseReportValidateRepository: Repository<CaseReportValidateEntity>,
-    @InjectRepository(RoleEntity)
-    private readonly roleRepository: Repository<RoleEntity>,
-    @InjectRepository(RoleResponseTimeEntity)
-    private readonly roleResponseTimeRepository: Repository<RoleResponseTimeEntity>,
-    @InjectRepository(CaseTypeEntity)
-    private readonly caseTypeRepository: Repository<CaseTypeEntity>,
-    @InjectRepository(SeverityClasificationEntity)
-    private readonly severityClasificationRepository: Repository<SeverityClasificationEntity>,
-    @InjectRepository(ReportResearcherAssignmentEntity)
-    private readonly reportResearcherAssignmentRepository: Repository<ReportResearcherAssignmentEntity>,
-    @InjectRepository(MovementReportEntity)
-    private readonly movementReportRepository: Repository<MovementReportEntity>,
+    @InjectRepository(ReportAnalystAssignment)
+    private readonly reportAnalystAssignmentRepository: Repository<ReportAnalystAssignment>,
+    @InjectRepository(CaseReportValidate)
+    private readonly caseReportValidateRepository: Repository<CaseReportValidate>,
+    @InjectRepository(RolePermission)
+    private readonly roleRepository: Repository<RolePermission>,
+    @InjectRepository(RoleResponseTime)
+    private readonly roleResponseTimeRepository: Repository<RoleResponseTime>,
+    @InjectRepository(CaseType)
+    private readonly caseTypeRepository: Repository<CaseType>,
+    @InjectRepository(SeverityClasification)
+    private readonly severityClasificationRepository: Repository<SeverityClasification>,
+    @InjectRepository(ReportResearcherAssignment)
+    private readonly reportResearcherAssignmentRepository: Repository<ReportResearcherAssignment>,
+    @InjectRepository(MovementReport)
+    private readonly movementReportRepository: Repository<MovementReport>,
 
     private readonly logService: LogService,
     private readonly positionService: PositionService,
@@ -609,7 +613,7 @@ export class ReportAnalystAssignmentService {
   }
 
   async findAssignedAnalystsByPosition(query: QueryReportAnalystAssignmentDto) {
-    const where: FindOptionsWhere<ReportAnalystAssignmentEntity> = {};
+    const where: FindOptionsWhere<ReportAnalystAssignment> = {};
 
     if (query.positionId) {
       where.ana_position_id_fk = query.positionId;

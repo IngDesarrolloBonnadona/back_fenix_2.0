@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateActionPlanDto } from '../dto/create-action-plan.dto';
-import { ActionPlan as ActionPlanEntity } from '../entities/action-plan.entity';
+import { ActionPlan } from '../entities/action-plan.entity';
 import { DataSource, FindOptionsWhere, Like, Repository } from 'typeorm';
 import { CaseReportValidateService } from 'src/modules/case-report-validate/services/case-report-validate.service';
 import { CaseTypeService } from 'src/modules/case-type/services/case-type.service';
@@ -16,8 +16,8 @@ import { ActionPlanActivitiesService } from 'src/modules/action-plan-activities/
 @Injectable()
 export class ActionPlanService {
   constructor(
-    @InjectRepository(ActionPlanEntity)
-    private readonly actionPlanRepository: Repository<ActionPlanEntity>,
+    @InjectRepository(ActionPlan)
+    private readonly actionPlanRepository: Repository<ActionPlan>,
 
     private dataSource: DataSource,
     private readonly caseReportValidateService: CaseReportValidateService,
@@ -84,7 +84,7 @@ export class ActionPlanService {
     eventTypeId?: number,
     eventId?: number,
   ) {
-    const where: FindOptionsWhere<ActionPlanEntity> = {};
+    const where: FindOptionsWhere<ActionPlan> = {};
 
     if (actionPlanName) {
       where.plan_a_name = Like(`%${actionPlanName}%`);

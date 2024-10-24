@@ -1,8 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Users } from '../entities/bonnadonaUsers.entity';
+
 import { Repository } from 'typeorm';
-import { IUserPermission } from '../interfaces/IUserPermissions.interface';
+
+import { Users } from '../entities/bonnadonaUsers.entity';
+
+import { UserPermission } from '../interfaces/userPermissions.interface';
 
 @Injectable()
 export class UserService {
@@ -12,7 +15,7 @@ export class UserService {
   ) {}
 
   async getUserPermissions(userId: string) {
-    const permissions: IUserPermission[] = await this.userRepository
+    const permissions: UserPermission[] = await this.userRepository
       .createQueryBuilder('u')
       .select(['p.name AS name', 'm.name as module'])
       .where('u.id = :userId', { userId })

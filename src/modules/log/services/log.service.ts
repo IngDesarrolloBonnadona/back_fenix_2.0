@@ -1,15 +1,17 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { CreateLogDto } from '../dto/create-log.dto';
-import { UpdateLogDto } from '../dto/update-log.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Log as LogEntity } from '../entities/log.entity';
+
 import { QueryRunner, Repository } from 'typeorm';
+
+import { CreateLogDto } from '../dto/create-log.dto';
+
+import { Log } from '../entities/log.entity';
 
 @Injectable()
 export class LogService {
   constructor(
-    @InjectRepository(LogEntity)
-    private readonly logRepository: Repository<LogEntity>,
+    @InjectRepository(Log)
+    private readonly logRepository: Repository<Log>,
   ) {}
 
   async createLogTransaction(

@@ -5,9 +5,8 @@ import {
   Injectable,
   forwardRef,
 } from '@nestjs/common';
-import { UpdateCaseReportValidateDto } from '../dto/update-case-report-validate.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CaseReportValidate as CaseReportValidateEntity } from '../entities/case-report-validate.entity';
+
 import {
   Between,
   DataSource,
@@ -17,28 +16,22 @@ import {
   QueryRunner,
   Repository,
 } from 'typeorm';
-import { CreateCaseReportOriginalDto } from 'src/modules/case-report-original/dto/create-case-report-original.dto';
-import { FindSimilarCaseReportValidateDto } from '../dto/find-similar-case-report-validate';
-import { ValDtoValidator } from '../helper/val-dto-validator.helper';
-import { CaseType as CaseTypeEntity } from 'src/modules/case-type/entities/case-type.entity';
+
+import { CaseReportValidate } from '../entities/case-report-validate.entity';
+import { MovementReport } from 'src/modules/movement-report/entities/movement-report.entity';
+import { CaseType } from 'src/modules/case-type/entities/case-type.entity';
+import { ReportAnalystAssignment } from 'src/modules/report-analyst-assignment/entities/report-analyst-assignment.entity';
+import { Synergy } from 'src/modules/synergy/entities/synergy.entity';
+import { ReportResearcherAssignment } from 'src/modules/report-researchers-assignment/entities/report-researchers-assignment.entity';
+import { Priority } from 'src/modules/priority/entities/priority.entity';
+import { ObservationReturnCase } from 'src/modules/observation-return-case/entities/observation-return-case.entity';
+
 import { MedicineService } from 'src/modules/medicine-case-report/services/medicine.service';
 import { DeviceService } from 'src/modules/device-case-report/services/device.service';
-import { MovementReport as MovementReportEntity } from 'src/modules/movement-report/entities/movement-report.entity';
-import { movementReport } from 'src/utils/enums/movement-report.enum';
 import { LogService } from 'src/modules/log/services/log.service';
-import { logReports } from 'src/utils/enums/logs.enum';
-import { ReportAnalystAssignment as ReportAnalystAssignmentEntity } from 'src/modules/report-analyst-assignment/entities/report-analyst-assignment.entity';
 import { ReportAnalystAssignmentService } from 'src/modules/report-analyst-assignment/services/report-analyst-assignment.service';
-import { Synergy as SynergyEntity } from 'src/modules/synergy/entities/synergy.entity';
 import { SynergyService } from 'src/modules/synergy/services/synergy.service';
-import { ReportResearcherAssignment as ReportResearcherAssignmentEntity } from 'src/modules/report-researchers-assignment/entities/report-researchers-assignment.entity';
 import { ResearchersService } from 'src/modules/report-researchers-assignment/services/report-researchers-assignment.service';
-import { caseTypeReport } from 'src/utils/enums/caseType-report.enum';
-import { CreateValRiskReportDto } from '../dto/create-val-risk-report.dto';
-import { CreateValAdverseEventReportDto } from '../dto/create-val-adverse-event-report.dto';
-import { CreateValIncidentReportDto } from '../dto/create-val-incident-report.dto';
-import { CreateValIndicatingUnsafeCareReportDto } from '../dto/create-val-indicating-unsafe-care-report.dto';
-import { CreateValComplicationsReportDto } from '../dto/create-val-complications-report.dto';
 import { CharacterizationCasesService } from 'src/modules/characterization-cases/services/characterization-cases.service';
 import { RiskTypeService } from 'src/modules/risk-type/services/risk-type.service';
 import { EventTypeService } from 'src/modules/event-type/services/event-type.service';
@@ -48,30 +41,41 @@ import { SeverityClasificationService } from 'src/modules/severity-clasification
 import { OriginService } from 'src/modules/origin/services/origin.service';
 import { SubOriginService } from 'src/modules/sub-origin/services/sub-origin.service';
 import { RiskLevelService } from 'src/modules/risk-level/services/risk-level.service';
-import { Priority as PriorityEntity } from 'src/modules/priority/entities/priority.entity';
-import { ObservationReturnCase as ObservationReturnCaseEntity } from 'src/modules/observation-return-case/entities/observation-return-case.entity';
 import { ObservationReturnCaseService } from 'src/modules/observation-return-case/services/observation-return-case.service';
-import { MovementReportService } from 'src/modules/movement-report/services/movement-report.service';
+
+import { ValDtoValidator } from '../helper/val-dto-validator.helper';
+
+import { movementReport } from 'src/utils/enums/movement-report.enum';
+import { logReports } from 'src/utils/enums/logs.enum';
+import { caseTypeReport } from 'src/utils/enums/caseType-report.enum';
+
+import { CreateCaseReportOriginalDto } from 'src/modules/case-report-original/dto/create-case-report-original.dto';
+import { FindSimilarCaseReportValidateDto } from '../dto/find-similar-case-report-validate';
+import { CreateValRiskReportDto } from '../dto/create-val-risk-report.dto';
+import { CreateValAdverseEventReportDto } from '../dto/create-val-adverse-event-report.dto';
+import { CreateValIncidentReportDto } from '../dto/create-val-incident-report.dto';
+import { CreateValIndicatingUnsafeCareReportDto } from '../dto/create-val-indicating-unsafe-care-report.dto';
+import { CreateValComplicationsReportDto } from '../dto/create-val-complications-report.dto';
 
 @Injectable()
 export class CaseReportValidateService {
   constructor(
-    @InjectRepository(CaseReportValidateEntity)
-    private readonly caseReportValidateRepository: Repository<CaseReportValidateEntity>,
-    @InjectRepository(CaseTypeEntity)
-    private readonly caseTypeRepository: Repository<CaseTypeEntity>,
-    @InjectRepository(MovementReportEntity)
-    private readonly movementReportRepository: Repository<MovementReportEntity>,
-    @InjectRepository(ReportAnalystAssignmentEntity)
-    private readonly reportAnalystAssignmentRepository: Repository<ReportAnalystAssignmentEntity>,
-    @InjectRepository(SynergyEntity)
-    private readonly synergyRepository: Repository<SynergyEntity>,
-    @InjectRepository(ReportResearcherAssignmentEntity)
-    private readonly researchRepository: Repository<ReportResearcherAssignmentEntity>,
+    @InjectRepository(CaseReportValidate)
+    private readonly caseReportValidateRepository: Repository<CaseReportValidate>,
+    @InjectRepository(CaseType)
+    private readonly caseTypeRepository: Repository<CaseType>,
+    @InjectRepository(MovementReport)
+    private readonly movementReportRepository: Repository<MovementReport>,
+    @InjectRepository(ReportAnalystAssignment)
+    private readonly reportAnalystAssignmentRepository: Repository<ReportAnalystAssignment>,
+    @InjectRepository(Synergy)
+    private readonly synergyRepository: Repository<Synergy>,
+    @InjectRepository(ReportResearcherAssignment)
+    private readonly researchRepository: Repository<ReportResearcherAssignment>,
     // @InjectRepository(PriorityEntity)
     // private readonly priorityRepository: Repository<PriorityEntity>,
-    @InjectRepository(ObservationReturnCaseEntity)
-    private readonly observationReturnCaseRepository: Repository<ObservationReturnCaseEntity>,
+    @InjectRepository(ObservationReturnCase)
+    private readonly observationReturnCaseRepository: Repository<ObservationReturnCase>,
 
     private dataSource: DataSource,
     private readonly medicineService: MedicineService,
@@ -300,7 +304,7 @@ export class CaseReportValidateService {
       const previousId = previousReport.val_cr_previous_id + 1;
 
       const movementReportFound = await queryRunner.manager.findOne(
-        MovementReportEntity,
+        MovementReport,
         {
           where: { mov_r_name: movementReport.VALIDATION, mov_r_status: true },
         },
@@ -317,7 +321,7 @@ export class CaseReportValidateService {
         createReportValDto.val_cr_severityclasif_id_fk !== null &&
         createReportValDto.val_cr_severityclasif_id_fk !== undefined
       ) {
-        const priorityFind = await queryRunner.manager.findOne(PriorityEntity, {
+        const priorityFind = await queryRunner.manager.findOne(Priority, {
           where: {
             prior_severityclasif_id_fk:
               createReportValDto.val_cr_severityclasif_id_fk,
@@ -459,7 +463,7 @@ export class CaseReportValidateService {
     priorityId?: number,
     severityClasificationId?: number,
   ) {
-    const where: FindOptionsWhere<CaseReportValidateEntity> = {};
+    const where: FindOptionsWhere<CaseReportValidate> = {};
 
     if (creationDate) {
       const nextDay = new Date(creationDate);
@@ -532,7 +536,7 @@ export class CaseReportValidateService {
     priorityId?: number,
     creationDate?: Date,
   ) {
-    const where: FindOptionsWhere<CaseReportValidateEntity> = {};
+    const where: FindOptionsWhere<CaseReportValidate> = {};
 
     if (creationDate) {
       const nextDay = new Date(creationDate);
@@ -596,7 +600,7 @@ export class CaseReportValidateService {
     priorityId?: number,
     creationDate?: Date,
   ) {
-    const where: FindOptionsWhere<CaseReportValidateEntity> = {};
+    const where: FindOptionsWhere<CaseReportValidate> = {};
 
     if (creationDate) {
       const nextDay = new Date(creationDate);

@@ -1,15 +1,18 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+
+import { Repository } from 'typeorm';
+
 import { CreateSafetyBarrierDto } from '../dto/create-safety-barrier.dto';
 import { UpdateSafetyBarrierDto } from '../dto/update-safety-barrier.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { SafetyBarrier as SafetyBarrierEntity } from '../entities/safety-barrier.entity';
-import { Repository } from 'typeorm';
+
+import { SafetyBarrier } from '../entities/safety-barrier.entity';
 
 @Injectable()
 export class SafetyBarriersService {
   constructor(
-    @InjectRepository(SafetyBarrierEntity)
-    private readonly safetyBarrierRepository: Repository<SafetyBarrierEntity>,
+    @InjectRepository(SafetyBarrier)
+    private readonly safetyBarrierRepository: Repository<SafetyBarrier>,
   ) {}
 
   async createSafetyBarrier(createSafetyBarrierDto: CreateSafetyBarrierDto) {

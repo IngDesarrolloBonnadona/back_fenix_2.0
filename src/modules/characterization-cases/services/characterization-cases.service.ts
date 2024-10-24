@@ -2,14 +2,14 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateCharacterizationCaseDto } from '../dto/create-characterization-case.dto';
 import { UpdateCharacterizationCaseDto } from '../dto/update-characterization-case.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CharacterizationCase as CharacterizationCaseEntity } from '../entities/characterization-case.entity';
+import { CharacterizationCase } from '../entities/characterization-case.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
 export class CharacterizationCasesService {
   constructor(
-    @InjectRepository(CharacterizationCaseEntity)
-    private readonly characterizationCaseRepository: Repository<CharacterizationCaseEntity>,
+    @InjectRepository(CharacterizationCase)
+    private readonly characterizationCaseRepository: Repository<CharacterizationCase>,
   ) {}
 
   async createCharacterization(

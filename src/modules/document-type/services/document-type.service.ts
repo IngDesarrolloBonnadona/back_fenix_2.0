@@ -1,9 +1,12 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+
+import { Repository } from 'typeorm';
+
 import { CreateDocumentTypeDto } from '../dto/create-document-type.dto';
 import { UpdateDocumentTypeDto } from '../dto/update-document-type.dto';
-import { InjectRepository } from '@nestjs/typeorm';
+
 import { DocumentType } from '../entities/document-type.entity';
-import { Repository } from 'typeorm';
 
 @Injectable()
 export class DocumentTypeService {

@@ -1,16 +1,20 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+
+import { Repository } from 'typeorm';
+
 import { CreateEventTypeDto } from '../dto/create-event-type.dto';
 import { UpdateEventTypeDto } from '../dto/update-event-type.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { EventType as EventTypeEntity } from '../entities/event-type.entity';
-import { Repository } from 'typeorm';
+
+import { EventType } from '../entities/event-type.entity';
+
 import { CaseTypeService } from 'src/modules/case-type/services/case-type.service';
 
 @Injectable()
 export class EventTypeService {
   constructor(
-    @InjectRepository(EventTypeEntity)
-    private readonly eventTypeRepository: Repository<EventTypeEntity>,
+    @InjectRepository(EventType)
+    private readonly eventTypeRepository: Repository<EventType>,
 
     private readonly caseTypeService: CaseTypeService,
   ) {}

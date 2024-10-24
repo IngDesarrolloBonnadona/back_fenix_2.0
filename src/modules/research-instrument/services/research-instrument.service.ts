@@ -1,15 +1,18 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+
+import { Repository } from 'typeorm';
+
 import { CreateResearchInstrumentDto } from '../dto/create-research-instrument.dto';
 import { UpdateResearchInstrumentDto } from '../dto/update-research-instrument.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { ResearchInstrument as ResearchInstrumentEntity } from '../entities/research-instrument.entity';
-import { Repository } from 'typeorm';
+
+import { ResearchInstrument } from '../entities/research-instrument.entity';
 
 @Injectable()
 export class ResearchInstrumentService {
   constructor(
-    @InjectRepository(ResearchInstrumentEntity)
-    private readonly researchInstrumentRepository: Repository<ResearchInstrumentEntity>,
+    @InjectRepository(ResearchInstrument)
+    private readonly researchInstrumentRepository: Repository<ResearchInstrument>,
   ) {}
 
   async createResearchInstrument(

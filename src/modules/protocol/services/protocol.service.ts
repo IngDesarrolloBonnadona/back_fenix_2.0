@@ -1,15 +1,18 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+
+import { Repository } from 'typeorm';
+
 import { CreateProtocolDto } from '../dto/create-protocol.dto';
 import { UpdateProtocolDto } from '../dto/update-protocol.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Protocol as ProtocolEntity } from '../entities/protocol.entity';
-import { Repository } from 'typeorm';
+
+import { Protocol } from '../entities/protocol.entity';
 
 @Injectable()
 export class ProtocolService {
   constructor(
-    @InjectRepository(ProtocolEntity)
-    private readonly protocolRepository: Repository<ProtocolEntity>,
+    @InjectRepository(Protocol)
+    private readonly protocolRepository: Repository<Protocol>,
   ) {}
 
   async createProtocol(createProtocolDto: CreateProtocolDto) {

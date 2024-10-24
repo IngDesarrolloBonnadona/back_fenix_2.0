@@ -2,14 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { CreateActionPlanActivityDto } from '../dto/create-action-plan-activity.dto';
 import { UpdateActionPlanActivityDto } from '../dto/update-action-plan-activity.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ActionPlanActivity as ActionPlanActivityEntity } from '../entities/action-plan-activity.entity';
+import { ActionPlanActivity } from '../entities/action-plan-activity.entity';
 import { QueryRunner, Repository } from 'typeorm';
 
 @Injectable()
 export class ActionPlanActivitiesService {
   constructor(
-    @InjectRepository(ActionPlanActivityEntity)
-    private readonly actionPlanActivityRepository: Repository<ActionPlanActivityEntity>,
+    @InjectRepository(ActionPlanActivity)
+    private readonly actionPlanActivityRepository: Repository<ActionPlanActivity>,
   ) {}
   async createActionPlanActivity(
     actionPlanActivities: CreateActionPlanActivityDto[],
