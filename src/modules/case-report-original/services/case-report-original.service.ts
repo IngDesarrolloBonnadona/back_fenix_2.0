@@ -257,7 +257,7 @@ export class CaseReportOriginalService {
       await queryRunner.commitTransaction(); // registro
 
       return new HttpException(
-        `¡Tu reporte ha sido registrado exitosamente con el #${caseReportOriginal.ori_cr_filingnumber}.!`,
+        `Tu reporte ha sido registrado exitosamente con el consecutivo #${caseReportOriginal.ori_cr_filingnumber}`,
         HttpStatus.CREATED,
       );
     } catch (error) {
@@ -331,7 +331,7 @@ export class CaseReportOriginalService {
           event: true,
           eventType: true,
           originService: true,
-          reportingService: true
+          reportingService: true,
         },
       },
     );
