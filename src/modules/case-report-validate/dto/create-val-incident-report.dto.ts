@@ -108,6 +108,10 @@ export class CreateValIncidentReportDto {
   @IsNotEmpty()
   val_cr_event_id_fk: number;
 
+  @IsString()
+  @IsOptional()
+  val_cr_descriptionothers: string;
+  
   @IsNotEmpty()
   @IsString()
   val_cr_description: string;

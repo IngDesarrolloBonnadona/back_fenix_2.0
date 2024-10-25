@@ -109,6 +109,10 @@ export class CreateOriIndicatingUnsafeCareReportDto {
   @IsNotEmpty()
   ori_cr_event_id_fk: number;
 
+  @IsString()
+  @IsOptional()
+  ori_cr_descriptionothers: string;
+  
   @IsNotEmpty()
   @IsString()
   ori_cr_description: string;

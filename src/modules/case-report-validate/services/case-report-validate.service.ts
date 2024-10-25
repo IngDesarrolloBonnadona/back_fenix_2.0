@@ -436,6 +436,7 @@ export class CaseReportValidateService {
       val_cr_reportingservice_id_fk:
         caseReportOriginal.ori_cr_reportingservice_id_fk,
       val_cr_event_id_fk: caseReportOriginal.ori_cr_event_id_fk,
+      val_cr_descriptionothers: caseReportOriginal.ori_cr_descriptionothers,
       val_cr_risktype_id_fk: caseReportOriginal.ori_cr_risktype_id_fk,
       val_cr_severityclasif_id_fk:
         caseReportOriginal.ori_cr_severityclasif_id_fk,

@@ -109,6 +109,10 @@ export class CreateOriAdverseEventReportDto {
   @IsNotEmpty()
   ori_cr_event_id_fk: number;
 
+  @IsString()
+  @IsOptional()
+  ori_cr_descriptionothers: string;
+
   @IsNumber()
   @IsNotEmpty()
   ori_cr_risklevel_id_fk: number;

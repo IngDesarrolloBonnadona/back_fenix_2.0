@@ -110,6 +110,10 @@ export class CreateValAdverseEventReportDto {
   @IsNotEmpty()
   val_cr_event_id_fk: number;
 
+  @IsString()
+  @IsOptional()
+  val_cr_descriptionothers: string;
+  
   @IsNumber()
   @IsNotEmpty()
   val_cr_risklevel_id_fk: number;
