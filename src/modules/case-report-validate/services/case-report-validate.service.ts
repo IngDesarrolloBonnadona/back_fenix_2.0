@@ -529,7 +529,7 @@ export class CaseReportValidateService {
     return caseReportsValidate;
   }
 
-  async summaryReportsForValidator(
+  async validateCases(
     filingNumber?: string,
     statusMovementId?: number,
     caseTypeId?: number,
@@ -593,7 +593,7 @@ export class CaseReportValidateService {
     return caseReportsValidate;
   }
 
-  async summaryReportsForReview(
+  async otherCases(
     filingNumber?: string,
     statusMovementId?: number,
     caseTypeId?: number,
