@@ -112,6 +112,10 @@ export class CreateOriIncidentReportDto {
   @IsString()
   @IsOptional()
   ori_cr_descriptionothers: string;
+
+  @IsNumber()
+  @IsNotEmpty()
+  ori_cr_risklevel_id_fk: number;
   
   @IsNotEmpty()
   @IsString()

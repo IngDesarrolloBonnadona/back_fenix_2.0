@@ -114,6 +114,10 @@ export class CreateValIndicatingUnsafeCareReportDto {
   @IsOptional()
   val_cr_descriptionothers: string;
   
+  @IsNumber()
+  @IsNotEmpty()
+  val_cr_risklevel_id_fk: number;
+
   @IsNotEmpty()
   @IsString()
   val_cr_description: string;
