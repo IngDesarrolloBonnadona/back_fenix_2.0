@@ -1,15 +1,17 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
 import { CreateFluidTypeDto } from '../dto/create-fluid-type.dto';
 import { UpdateFluidTypeDto } from '../dto/update-fluid-type.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { FluidType as FluidTypeEntity } from '../entities/fluid-type.entity';
-import { Repository } from 'typeorm';
+
+import { FluidType } from '../entities/fluid-type.entity';
 
 @Injectable()
 export class FluidTypeService {
   constructor(
-    @InjectRepository(FluidTypeEntity)
-    private readonly fluidTypeRespository: Repository<FluidTypeEntity>,
+    @InjectRepository(FluidType)
+    private readonly fluidTypeRespository: Repository<FluidType>,
   ) {}
 
   async createFluidType(createFluidTypeDto: CreateFluidTypeDto) {

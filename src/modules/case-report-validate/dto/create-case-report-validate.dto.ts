@@ -33,6 +33,14 @@ export class CreateCaseReportValidateDto {
   @IsOptional()
   val_cr_reporter_id: string;
 
+  @IsString()
+  @IsOptional()
+  val_cr_fullnamereporter: string;
+
+  @IsString()
+  @IsOptional()
+  val_cr_documentreporter: string;
+
   @IsNumber()
   @IsNotEmpty()
   val_cr_origin_id_fk: number;
@@ -69,9 +77,9 @@ export class CreateCaseReportValidateDto {
   @IsOptional()
   val_cr_secondlastnamepatient: string;
 
-  @IsNumber()
+  @IsString()
   @IsOptional()
-  val_cr_agepatient: number;
+  val_cr_agepatient: string;
 
   @IsString()
   @IsOptional()
@@ -83,15 +91,19 @@ export class CreateCaseReportValidateDto {
 
   @IsString()
   @IsOptional()
-  val_cr_diagnosticcode: string;
+  val_cr_diagnosticcodepatient: string;
 
   @IsString()
   @IsOptional()
-  val_cr_diagnosticdescription: string;
+  val_cr_diagnosticdescriptionpatient: string;
 
   @IsNumber()
   @IsOptional()
   val_cr_admconsecutivepatient: number;
+
+  @IsNumber()
+  @IsOptional()
+  val_cr_foliopatient: number;
 
   @IsNumber()
   @IsNotEmpty()
@@ -115,7 +127,7 @@ export class CreateCaseReportValidateDto {
 
   @IsString()
   @IsOptional()
-  val_cr_descriptionOthers: string;
+  val_cr_descriptionothers: string;
 
   @IsNumber()
   @IsOptional()

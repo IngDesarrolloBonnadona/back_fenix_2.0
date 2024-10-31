@@ -28,6 +28,14 @@ export class CreateCaseReportOriginalDto {
   @IsOptional()
   ori_cr_reporter_id: string;
 
+  @IsString()
+  @IsOptional()
+  ori_cr_fullnamereporter: string;
+
+  @IsString()
+  @IsOptional()
+  ori_cr_documentreporter: string;
+
   @IsNumber()
   @IsNotEmpty()
   ori_cr_origin_id_fk: number;
@@ -60,9 +68,9 @@ export class CreateCaseReportOriginalDto {
   @IsOptional()
   ori_cr_secondlastnamepatient: string;
 
-  @IsNumber()
+  @IsString()
   @IsOptional()
-  ori_cr_agepatient: number;
+  ori_cr_agepatient: string;
 
   @IsString()
   @IsOptional()
@@ -74,15 +82,19 @@ export class CreateCaseReportOriginalDto {
 
   @IsString()
   @IsOptional()
-  ori_cr_diagnosticcode: string;
+  ori_cr_diagnosticcodepatient: string;
 
   @IsString()
   @IsOptional()
-  ori_cr_diagnosticdescription: string;
+  ori_cr_diagnosticdescriptionpatient: string;
 
   @IsNumber()
   @IsOptional()
   ori_cr_admconsecutivepatient: number;
+
+  @IsNumber()
+  @IsOptional()
+  ori_cr_foliopatient: number;
 
   @IsNumber()
   @IsNotEmpty()
@@ -102,7 +114,7 @@ export class CreateCaseReportOriginalDto {
 
   @IsString()
   @IsOptional()
-  ori_cr_descriptionOthers: string;
+  ori_cr_descriptionothers: string;
 
   @IsNumber()
   @IsOptional()

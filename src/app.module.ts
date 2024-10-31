@@ -46,6 +46,7 @@ import { UnsafeActionModule } from './modules/unsafe-action/unsafe-action.module
 import { ClinicalResearchCaseReportValidateModule } from './modules/clinical-research-case-report-validate/clinical-research-case-report-validate.module';
 import { CompressionConceptReportModule } from './modules/compression-concept-report/compression-concept-report.module';
 import { OncologyCategoryModule } from './modules/oncology-category/oncology-category.module';
+import { DocumentTypeModule } from './modules/document-type/document-type.module';
 
 require('dotenv').config();
 
@@ -121,6 +122,7 @@ require('dotenv').config();
     ClinicalResearchCaseReportValidateModule,
     CompressionConceptReportModule,
     OncologyCategoryModule,
+    DocumentTypeModule,
   ],
   controllers: [],
   providers: [],

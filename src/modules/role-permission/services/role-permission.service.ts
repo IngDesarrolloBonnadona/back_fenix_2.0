@@ -1,15 +1,19 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+
+import { InjectRepository } from '@nestjs/typeorm';
+
+import { Repository } from 'typeorm';
+
 import { CreateRolePermissionDto } from '../dto/create-role-permission.dto';
 import { UpdateRolePermissionDto } from '../dto/update-role-permission.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { RolePermission as RolePermissionEntity } from '../entities/role-permission.entity';
-import { Repository } from 'typeorm';
+
+import { RolePermission } from '../entities/role-permission.entity';
 
 @Injectable()
 export class RolePermissionService {
   constructor(
-    @InjectRepository(RolePermissionEntity)
-    private readonly roleRepository: Repository<RolePermissionEntity>,
+    @InjectRepository(RolePermission)
+    private readonly roleRepository: Repository<RolePermission>,
   ) {}
 
   async createRole(createRoleDto: CreateRolePermissionDto) {

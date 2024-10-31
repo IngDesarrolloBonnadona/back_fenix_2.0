@@ -1,15 +1,18 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+
+import { Repository } from 'typeorm';
+
 import { CreateRiskFactorDto } from '../dto/create-risk-factor.dto';
 import { UpdateRiskFactorDto } from '../dto/update-risk-factor.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { RiskFactor as RiskFactorEntity } from '../entities/risk-factor.entity';
-import { Repository } from 'typeorm';
+
+import { RiskFactor } from '../entities/risk-factor.entity';
 
 @Injectable()
 export class RiskFactorService {
   constructor(
-    @InjectRepository(RiskFactorEntity)
-    private readonly riskFactorRepository: Repository<RiskFactorEntity>,
+    @InjectRepository(RiskFactor)
+    private readonly riskFactorRepository: Repository<RiskFactor>,
   ) {}
 
   async createRiskFactor(createRiskFactorDto: CreateRiskFactorDto) {

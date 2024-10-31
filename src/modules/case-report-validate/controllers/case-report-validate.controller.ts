@@ -31,7 +31,7 @@ export class CaseReportValidateController {
     private readonly caseReportValidateService: CaseReportValidateService,
   ) {}
 
-  @Get('/findReportsSimilar')
+  @Post('/findReportsSimilar')
   async findReportsSimilar(
     @Body() similarCaseReportValidate: FindSimilarCaseReportValidateDto,
   ) {
@@ -57,9 +57,7 @@ export class CaseReportValidateController {
   }
 
   @Get('/summaryReports')
-  async SummaryReports(
-    @Query() query: QueryCaseReportValidateDto,
-  ) {
+  async summaryReports(@Query() query: QueryCaseReportValidateDto) {
     const creationDateObj = query.creationDate
       ? new Date(query.creationDate)
       : undefined;
@@ -76,9 +74,9 @@ export class CaseReportValidateController {
     );
   }
 
-  @Get('/summaryReportsForValidator/:userIdPermission')
+  @Get('/validateCases/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.VALIDATOR)
-  async SummaryReportsForValidator(
+  async validateCases(
     @Query('filingNumber') filingNumber?: string,
     @Query('statusMovementId') statusMovementId?: number,
     @Query('caseTypeId') caseTypeId?: number,
@@ -88,7 +86,7 @@ export class CaseReportValidateController {
   ) {
     const creationDateObj = creationDate ? new Date(creationDate) : undefined;
 
-    return await this.caseReportValidateService.summaryReportsForValidator(
+    return await this.caseReportValidateService.validateCases(
       filingNumber,
       statusMovementId,
       caseTypeId,
@@ -98,16 +96,14 @@ export class CaseReportValidateController {
     );
   }
 
-  @Get('/summaryReportsForReview/:userIdPermission')
+  @Get('/otherCases/:userIdPermission')
   @Permission(permissions.SUPER_ADMIN, permissions.VALIDATOR)
-  async summaryReportsForReview(
-    @Query() query: QueryCaseReportValidateDto,
-  ) {
+  async otherCases(@Query() query: QueryCaseReportValidateDto) {
     const creationDateObj = query.creationDate
       ? new Date(query.creationDate)
       : undefined;
 
-    return await this.caseReportValidateService.summaryReportsForReview(
+    return await this.caseReportValidateService.otherCases(
       query.filingNumber,
       query.statusMovementId,
       query.caseTypeId,
@@ -128,9 +124,7 @@ export class CaseReportValidateController {
   }
 
   @Get('/findReportValidateByConsecutive/:consecutive')
-  findReportValidateByConsecutive(
-    @Param('consecutive') consecutive: string,
-  ) {
+  findReportValidateByConsecutive(@Param('consecutive') consecutive: string) {
     return this.caseReportValidateService.findOneReportValidateByConsecutive(
       consecutive,
     );

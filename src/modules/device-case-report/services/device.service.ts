@@ -1,17 +1,25 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateDeviceDto } from '../dto/create-device.dto';
-import { UpdateDeviceDto } from '../dto/update-device.dto';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Device as DeviceEntity } from '../entities/device.entity';
-import { QueryRunner, Repository } from 'typeorm';
 import { HttpException } from '@nestjs/common';
 import { HttpStatus } from '@nestjs/common';
+import { HttpService } from '@nestjs/axios';
+
+import { CreateDeviceDto } from '../dto/create-device.dto';
+
+import { Device } from '../entities/device.entity';
+
+import { QueryRunner, Repository } from 'typeorm';
+
+import { AxiosResponse } from 'axios';
+import { lastValueFrom } from 'rxjs';
 
 @Injectable()
 export class DeviceService {
   constructor(
-    @InjectRepository(DeviceEntity)
-    private readonly deviceRepository: Repository<DeviceEntity>,
+    @InjectRepository(Device)
+    private readonly deviceRepository: Repository<Device>,
+
+    private readonly httpDeviceService: HttpService,
   ) {}
 
   async createDeviceTransation(
@@ -75,31 +83,34 @@ export class DeviceService {
     return device;
   }
 
-  async updateDevice(id: number, updateDeviceDto: UpdateDeviceDto) {
-    if (!updateDeviceDto) {
-      throw new HttpException(
-        'Los datos para actualizar el dispositivo son requeridos.',
-        HttpStatus.BAD_REQUEST,
+  async findExternalDevicesQuery(
+    device: string,
+  ): Promise<AxiosResponse<any>> {
+    const url = `${process.env.URL_DEVICES}?device=${device}`;
+
+    try {
+      const response = await lastValueFrom(
+        this.httpDeviceService.get(url, {
+          headers: {
+            'X-Authorization': process.env.X_TOKEN_VALUE_DEVICES,
+          },
+        }),
       );
-    }
+      
+      if (response.status !== 200 || !response.data) {
+        throw new HttpException(
+          'Error al consultar la información del dispositivo',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
 
-    const device = await this.findOneDevice(id);
-    const result = await this.deviceRepository.update(
-      device.id,
-      updateDeviceDto,
-    );
-
-    if (result.affected === 0) {
-      return new HttpException(
-        `No se pudo actualizar el dispositivo.`,
+      return response.data;
+    } catch (error) {
+      throw new HttpException(
+        'Error al conectar con el servidor externo',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-
-    return new HttpException(
-      `¡Datos actualizados correctamente!`,
-      HttpStatus.OK,
-    );
   }
 
   async deleteDevice(id: number) {

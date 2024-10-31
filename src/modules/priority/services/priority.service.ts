@@ -1,21 +1,22 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+
+import { Not, Repository } from 'typeorm';
+
 import { CreatePriorityDto } from '../dto/create-priority.dto';
 import { UpdatePriorityDto } from '../dto/update-priority.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Priority as PriorityEntity } from '../entities/priority.entity';
-import { Repository } from 'typeorm';
-import { SeverityClasificationService } from 'src/modules/severity-clasification/services/severity-clasification.service';
-import { SeverityClasification as SeverityClasificationEntity } from 'src/modules/severity-clasification/entities/severity-clasification.entity';
+
+import { Priority } from '../entities/priority.entity';
+import { SeverityClasification } from 'src/modules/severity-clasification/entities/severity-clasification.entity';
 
 @Injectable()
 export class PriorityService {
   constructor(
-    @InjectRepository(PriorityEntity)
-    private readonly priorityRepository: Repository<PriorityEntity>,
-    @InjectRepository(SeverityClasificationEntity)
-    private readonly severityClasificationRepository: Repository<SeverityClasificationEntity>,
+    @InjectRepository(Priority)
+    private readonly priorityRepository: Repository<Priority>,
+    @InjectRepository(SeverityClasification)
+    private readonly severityClasificationRepository: Repository<SeverityClasification>,
 
-    private readonly severityClasificationService: SeverityClasificationService,
   ) {}
 
   async createPriority(createPriorityDto: CreatePriorityDto) {
@@ -31,9 +32,13 @@ export class PriorityService {
       );
     }
 
-    const findSeverityClasif = await this.severityClasificationRepository.findOne({
-      where: { id: createPriorityDto.prior_severityclasif_id_fk, sev_c_status: true },
-    });
+    const findSeverityClasif =
+      await this.severityClasificationRepository.findOne({
+        where: {
+          id: createPriorityDto.prior_severityclasif_id_fk,
+          sev_c_status: true,
+        },
+      });
 
     if (!findSeverityClasif) {
       return new HttpException(
@@ -133,24 +138,81 @@ export class PriorityService {
     updateStatusPriority: UpdatePriorityDto,
   ) {
     if (!updateStatusPriority) {
-      return new HttpException(
+      throw new HttpException(
         'Los datos para actualizar la prioridad son requeridos.',
         HttpStatus.BAD_REQUEST,
       );
     }
 
-    await this.findOnePriority(id);
-    const result = await this.priorityRepository.update(
-      id,
-      updateStatusPriority,
-    );
+    const existingPriority = await this.priorityRepository.findOne({
+      where: { id },
+    });
 
-    if (result.affected === 0) {
-      return new HttpException(
-        `No se pudo actualizar el estado de la prioridad`,
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+    if (!existingPriority) {
+      throw new HttpException('La prioridad no existe.', HttpStatus.NOT_FOUND);
     }
+
+    // Si los valores de prior_name y prior_severityclasif_id_fk no han cambiado
+    if (
+      existingPriority.prior_name === updateStatusPriority.prior_name &&
+      existingPriority.prior_severityclasif_id_fk ===
+        updateStatusPriority.prior_severityclasif_id_fk
+    ) {
+      // Solo permitir actualizar si el tiempo de respuesta ha cambiado
+      if (
+        existingPriority.prior_responsetime !==
+        updateStatusPriority.prior_responsetime
+      ) {
+        await this.priorityRepository.update(id, {
+          prior_responsetime: updateStatusPriority.prior_responsetime,
+        });
+
+        return new HttpException(
+          `¡Datos actualizados correctamente!`,
+          HttpStatus.OK,
+        );
+      }
+    }
+
+    // Verificar si la prioridad con el mismo nombre o clasificación ya existe, pero omitiendo el id actual
+    const duplicatePriority = await this.priorityRepository.findOne({
+      where: [
+        {
+          prior_name: updateStatusPriority.prior_name,
+          prior_status: true,
+          id: Not(id),
+        },
+        {
+          prior_severityclasif_id_fk:
+            updateStatusPriority.prior_severityclasif_id_fk,
+          prior_status: true,
+          id: Not(id),
+        },
+      ],
+    });
+
+    if (duplicatePriority) {
+      if (duplicatePriority.prior_name === updateStatusPriority.prior_name) {
+        return new HttpException(
+          'El nombre de la prioridad ya existe.',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
+
+      if (
+        duplicatePriority.prior_severityclasif_id_fk ===
+        updateStatusPriority.prior_severityclasif_id_fk
+      ) {
+        return new HttpException(
+          'La clasificación de severidad ya existe.',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
+    }
+
+    // Actualizar todos los campos si los valores han cambiado
+    await this.priorityRepository.update(id, updateStatusPriority);
+
     return new HttpException(
       `¡Datos actualizados correctamente!`,
       HttpStatus.OK,

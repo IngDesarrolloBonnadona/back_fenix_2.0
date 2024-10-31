@@ -72,7 +72,7 @@ export class CaseReportValidate {
   val_cr_secondlastnamepatient: string;
 
   @Column({ nullable: true })
-  val_cr_agepatient: number;
+  val_cr_agepatient: string;
 
   @Column({ nullable: true })
   val_cr_genderpatient: string;
@@ -81,19 +81,28 @@ export class CaseReportValidate {
   val_cr_epspatient: string;
 
   @Column({ type: 'varchar', nullable: true })
-  val_cr_diagnosticcode: string;
+  val_cr_diagnosticcodepatient: string;
 
   @Column({ type: 'varchar', nullable: true })
-  val_cr_diagnosticdescription: string;
+  val_cr_diagnosticdescriptionpatient: string;
 
   @Column({ nullable: true })
   val_cr_admconsecutivepatient: number;
+
+  @Column({ nullable: true })
+  val_cr_foliopatient: number;
 
   @Column({ nullable: true })
   val_cr_anonymoususer: boolean;
 
   @Column({ nullable: true })
   val_cr_reporter_id: string;
+
+  @Column({ nullable: true })
+  val_cr_fullnamereporter: string;
+
+  @Column({ nullable: true })
+  val_cr_documentreporter: string;
 
   @Column({ nullable: true })
   val_cr_eventtype_id_fk: number;
@@ -108,7 +117,7 @@ export class CaseReportValidate {
   val_cr_event_id_fk: number;
 
   @Column({ type: 'varchar', nullable: true })
-  val_cr_descriptionOthers: string;
+  val_cr_descriptionothers: string;
 
   @Column({ nullable: true })
   val_cr_risktype_id_fk: number;

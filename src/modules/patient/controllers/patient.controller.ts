@@ -1,17 +1,17 @@
-import { Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { PatientService } from '../services/patient.service';
 import { ApiTags } from '@nestjs/swagger';
+import { PatientDto } from '../dto/patient.dto';
 
 @ApiTags('patient')
 @Controller('patient')
 export class PatientController {
   constructor(private readonly patientService: PatientService) {}
 
-  @Get('/infoPatient/:idNumber/:idType')
+  @Post('/infoPatient')
   infoPatient(
-    @Param('idNumber') idNumber: string,
-    @Param('idType') idType: string,
+    @Body() patientDto: PatientDto,
   ) {
-    return this.patientService.getPatient(idNumber, idType);
+    return this.patientService.getPatient(patientDto);
   }
 }

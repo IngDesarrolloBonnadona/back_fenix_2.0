@@ -1,7 +1,9 @@
 import { ActionPlan } from 'src/modules/action-plan/entities/action-plan.entity';
 import { CaseReportOriginal } from 'src/modules/case-report-original/entities/case-report-original.entity';
 import { CaseReportValidate } from 'src/modules/case-report-validate/entities/case-report-validate.entity';
+import { CharacterizationCase } from 'src/modules/characterization-cases/entities/characterization-case.entity';
 import { EventType } from 'src/modules/event-type/entities/event-type.entity';
+import { OncologyCategory } from 'src/modules/oncology-category/entities/oncology-category.entity';
 import { Unit } from 'src/modules/unit/entities/unit.entity';
 import {
   Column,
@@ -26,11 +28,14 @@ export class Event {
   @Column({ nullable: true })
   eve_unit_id_fk: number;
 
+  @Column({ nullable: true })
+  eve_oncologycategory_id_fk: number;
+
+  @Column({ nullable: true })
+  eve_characterizationcase_id_fk: number;
+
   @Column({ type: 'varchar' })
   eve_name: string;
-
-  @Column({ type: 'varchar', nullable: true })
-  eve_description: string;
 
   @Column({ default: true })
   eve_status: boolean;
@@ -66,4 +71,12 @@ export class Event {
   @ManyToOne(() => Unit, (unit) => unit.event)
   @JoinColumn({ name: 'eve_unit_id_fk' })
   unit: Unit;
+
+  @ManyToOne(() => OncologyCategory, (oncologyCategory) => oncologyCategory.event)
+  @JoinColumn({ name: 'eve_oncologycategory_id_fk' })
+  oncologyCategory: OncologyCategory;
+
+  @ManyToOne(() => CharacterizationCase, (characterizationCase) => characterizationCase.event)
+  @JoinColumn({ name: 'eve_characterizationcase_id_fk' })
+  characterizationCase: CharacterizationCase;
 }

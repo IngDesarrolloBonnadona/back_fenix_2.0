@@ -1,21 +1,20 @@
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+
+import { Repository } from 'typeorm';
+
 import { CreateServiceDto } from '../dto/create-service.dto';
 import { UpdateServiceDto } from '../dto/update-service.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Service as ServiceEntity } from '../entities/service.entity';
-import { Repository } from 'typeorm';
+
+import { Service } from '../entities/service.entity';
+
 import { UnitService } from 'src/modules/unit/services/unit.service';
 
 @Injectable()
 export class ServiceService {
   constructor(
-    @InjectRepository(ServiceEntity)
-    private readonly serviceRepository: Repository<ServiceEntity>,
+    @InjectRepository(Service)
+    private readonly serviceRepository: Repository<Service>,
 
     private readonly unitService: UnitService,
   ) {}
@@ -112,8 +111,20 @@ export class ServiceService {
       );
     }
 
-    await this.findOneService(id);
-    await this.unitService.findOneUnit(updateServiceDto.serv_unit_id_fk);
+    const FindService = await this.serviceRepository.findOne({
+      where: {
+        serv_name: updateServiceDto.serv_name,
+        serv_unit_id_fk: updateServiceDto.serv_unit_id_fk,
+        serv_status: true,
+      },
+    });
+
+    if (FindService) {
+      return new HttpException(
+        'El servicio ya existe con la unidad seleccionada.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
 
     const result = await this.serviceRepository.update(id, updateServiceDto);
 

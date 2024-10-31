@@ -1,11 +1,11 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 
-export class PatientDto {
+export class CreateDocumentTypeDto {
   @IsNotEmpty()
   @IsString()
-  idNumber: string;
+  doc_t_code: string;
 
   @IsNotEmpty()
   @IsString()
-  type: string;
+  doc_t_name: string;
 }

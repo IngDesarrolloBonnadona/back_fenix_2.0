@@ -57,7 +57,7 @@ export class CaseReportOriginal {
   ori_cr_secondlastnamepatient: string;
 
   @Column({ nullable: true })
-  ori_cr_agepatient: number;
+  ori_cr_agepatient: string;
 
   @Column({ type: 'varchar', nullable: true })
   ori_cr_genderpatient: string;
@@ -66,19 +66,28 @@ export class CaseReportOriginal {
   ori_cr_epspatient: string;
 
   @Column({ type: 'varchar', nullable: true })
-  ori_cr_diagnosticcode: string;
+  ori_cr_diagnosticcodepatient: string;
 
   @Column({ type: 'varchar', nullable: true })
-  ori_cr_diagnosticdescription: string;
+  ori_cr_diagnosticdescriptionpatient: string;
 
   @Column({ nullable: true })
   ori_cr_admconsecutivepatient: number;
+
+  @Column({ nullable: true })
+  ori_cr_foliopatient: number;
 
   @Column({ nullable: true })
   ori_cr_anonymoususer: boolean;
 
   @Column({ nullable: true })
   ori_cr_reporter_id: string;
+
+  @Column({ nullable: true })
+  ori_cr_fullnamereporter: string;
+
+  @Column({ nullable: true })
+  ori_cr_documentreporter: string;
 
   @Column({ nullable: true })
   ori_cr_eventtype_id_fk: number;
@@ -93,7 +102,7 @@ export class CaseReportOriginal {
   ori_cr_event_id_fk: number;
 
   @Column({ type: 'varchar', nullable: true })
-  ori_cr_descriptionOthers: string;
+  ori_cr_descriptionothers: string;
 
   @Column({ nullable: true }) //
   ori_cr_risktype_id_fk: number;

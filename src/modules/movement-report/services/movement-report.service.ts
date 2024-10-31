@@ -1,15 +1,18 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+
+import { Repository } from 'typeorm';
+
 import { CreateMovementReportDto } from '../dto/create-movement-report.dto';
 import { UpdateMovementReportDto } from '../dto/update-movement-report.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { MovementReport as MovementReportEntity } from '../entities/movement-report.entity';
-import { Repository } from 'typeorm';
+
+import { MovementReport } from '../entities/movement-report.entity';
 
 @Injectable()
 export class MovementReportService {
   constructor(
-    @InjectRepository(MovementReportEntity)
-    private readonly movementReportRepository: Repository<MovementReportEntity>,
+    @InjectRepository(MovementReport)
+    private readonly movementReportRepository: Repository<MovementReport>,
   ) {}
 
   async createMovementReport(createMovementReportDto: CreateMovementReportDto) {

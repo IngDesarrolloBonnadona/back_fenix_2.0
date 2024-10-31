@@ -1,18 +1,11 @@
 import {
   Controller,
   Get,
-  Post,
-  Body,
-  Patch,
   Param,
   Delete,
-  Put,
-  HttpException,
+  Query,
 } from '@nestjs/common';
 import { DeviceService } from '../services/device.service';
-import { CreateDeviceDto } from '../dto/create-device.dto';
-import { UpdateDeviceDto } from '../dto/update-device.dto';
-import { Device } from '../entities/device.entity';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('device')
@@ -30,12 +23,9 @@ export class DeviceController {
     return this.deviceService.findOneDevice(id);
   }
 
-  @Patch('/updateDevice/:id')
-  updateDevice(
-    @Param('id') id: number,
-    @Body() updateDeviceDto: UpdateDeviceDto,
-  ) {
-    return this.deviceService.updateDevice(id, updateDeviceDto);
+  @Get('/findExternalDevice')
+  async findExternalMedicine(@Query('device') device: string) {
+    return this.deviceService.findExternalDevicesQuery(device)
   }
 
   @Delete('/deleteDevice/:id')

@@ -2,25 +2,27 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
-  NotFoundException,
 } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+
+import { Repository } from 'typeorm';
+
 import { CreateEventDto } from '../dto/create-event.dto';
 import { UpdateEventDto } from '../dto/update-event.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Event as EventEntity } from '../entities/event.entity';
-import { Repository } from 'typeorm';
-import { EventType as EventTypeEntity } from 'src/modules/event-type/entities/event-type.entity';
-import { Unit as UnitEntity } from 'src/modules/unit/entities/unit.entity';
+
+import { Event } from '../entities/event.entity';
+import { EventType } from 'src/modules/event-type/entities/event-type.entity';
+import { Unit } from 'src/modules/unit/entities/unit.entity';
 
 @Injectable()
 export class EventService {
   constructor(
-    @InjectRepository(EventEntity)
-    private readonly eventRepository: Repository<EventEntity>,
-    @InjectRepository(EventTypeEntity)
-    private readonly eventTypeRepository: Repository<EventTypeEntity>,
-    @InjectRepository(UnitEntity)
-    private readonly unitRepository: Repository<UnitEntity>,
+    @InjectRepository(Event)
+    private readonly eventRepository: Repository<Event>,
+    @InjectRepository(EventType)
+    private readonly eventTypeRepository: Repository<EventType>,
+    @InjectRepository(Unit)
+    private readonly unitRepository: Repository<Unit>,
   ) {}
 
   async createEvent(createEventDto: CreateEventDto) {
@@ -123,6 +125,8 @@ export class EventService {
           caseType: true,
         },
         unit: true,
+        oncologyCategory: true,
+        characterizationCase: true,
       },
       order: {
         eve_name: 'ASC',
@@ -234,12 +238,14 @@ export class EventService {
       );
     }
 
-    const unitFound = await this.unitRepository.findOneBy({
-      id: updateEventDto.eve_unit_id_fk,
-    });
+    if (updateEventDto.eve_unit_id_fk) {
+      const unitFound = await this.unitRepository.findOneBy({
+        id: updateEventDto.eve_unit_id_fk,
+      });
 
-    if (!unitFound) {
-      return new HttpException(`Unidad no encontrada.`, HttpStatus.NOT_FOUND);
+      if (!unitFound) {
+        return new HttpException(`Unidad no encontrada.`, HttpStatus.NOT_FOUND);
+      }
     }
 
     const eventFound = await this.eventRepository.findOneBy({ id });
