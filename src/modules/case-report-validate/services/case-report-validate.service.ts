@@ -431,6 +431,8 @@ export class CaseReportValidateService {
       val_cr_foliopatient: caseReportOriginal.ori_cr_foliopatient,
       val_cr_anonymoususer: caseReportOriginal.ori_cr_anonymoususer,
       val_cr_reporter_id: caseReportOriginal.ori_cr_reporter_id,
+      val_cr_documentreporter: caseReportOriginal.ori_cr_documentreporter,
+      val_cr_fullnamereporter: caseReportOriginal.ori_cr_fullnamereporter,
       val_cr_eventtype_id_fk: caseReportOriginal.ori_cr_eventtype_id_fk,
       val_cr_originservice_id_fk: caseReportOriginal.ori_cr_originservice_id_fk,
       val_cr_reportingservice_id_fk:

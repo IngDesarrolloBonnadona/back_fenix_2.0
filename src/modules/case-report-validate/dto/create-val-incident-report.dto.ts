@@ -28,6 +28,14 @@ export class CreateValIncidentReportDto {
   @IsOptional()
   val_cr_reporter_id: string;
 
+  @IsString()
+  @IsOptional()
+  val_cr_fullnamereporter: string;
+
+  @IsString()
+  @IsOptional()
+  val_cr_documentreporter: string;
+
   @IsNumber()
   @IsNotEmpty()
   val_cr_origin_id_fk: number;

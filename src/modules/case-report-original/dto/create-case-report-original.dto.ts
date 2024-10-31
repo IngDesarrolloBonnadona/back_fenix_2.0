@@ -28,6 +28,14 @@ export class CreateCaseReportOriginalDto {
   @IsOptional()
   ori_cr_reporter_id: string;
 
+  @IsString()
+  @IsOptional()
+  ori_cr_fullnamereporter: string;
+
+  @IsString()
+  @IsOptional()
+  ori_cr_documentreporter: string;
+
   @IsNumber()
   @IsNotEmpty()
   ori_cr_origin_id_fk: number;

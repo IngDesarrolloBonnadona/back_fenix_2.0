@@ -99,6 +99,12 @@ export class CaseReportValidate {
   val_cr_reporter_id: string;
 
   @Column({ nullable: true })
+  val_cr_fullnamereporter: string;
+
+  @Column({ nullable: true })
+  val_cr_documentreporter: string;
+
+  @Column({ nullable: true })
   val_cr_eventtype_id_fk: number;
 
   @Column({ nullable: true })
